@@ -1,1 +1,7 @@
 Django==1.8.1
+flake8==2.4.0
+flake8-docstrings==0.2.1.post1
+mccabe==0.3
+pep257==0.5.0
+pep8==1.5.7
+pyflakes==0.8.1
