@@ -2,7 +2,7 @@ from django.shortcuts import render
 from django.views.generic.edit import CreateView
 from django.core.urlresolvers import reverse_lazy
 
-from adesao.models import Prefeitura, Responsavel, Secretario, Usuario
+from adesao.models import Municipio, Responsavel, Secretario, Usuario
 
 
 # Create your views here.
@@ -29,8 +29,8 @@ class CadastrarUsuario(CreateView):
     success_url = reverse_lazy('index')
 
 
-class CadastrarPrefeitura(CreateView):
-    model = Prefeitura
+class CadastrarMunicipio(CreateView):
+    model = Municipio
     fields = [
         'cpf_prefeito',
         'nome_prefeito',
@@ -47,7 +47,7 @@ class CadastrarPrefeitura(CreateView):
         'email_institucional_prefeito'
     ]
     template_name = 'prefeitura/cadastrar_prefeitura.html'
-    success_url = reverse_lazy('responsavel')
+    success_url = reverse_lazy('adesao:responsavel')
 
 
 def alterar_prefeitura(request, prefeitura_id):
@@ -67,7 +67,7 @@ class CadastrarResponsavel(CreateView):
         'email_institucional_responsavel'
     ]
     template_name = 'responsavel/cadastrar_responsavel.html'
-    success_url = reverse_lazy('secretario')
+    success_url = reverse_lazy('adesao:secretario')
 
 
 def alterar_responsavel(request, responsavel_id):
@@ -80,14 +80,14 @@ class CadastrarSecretario(CreateView):
         'cpf_secretario',
         'nome_secretario',
         'cargo_secretario',
-        'instituicao_responsavel',
+        'instituicao_secretario',
         'telefone_um',
         'telefone_dois',
         'telefone_tres',
         'email_institucional_secretario'
     ]
     template_name = 'secretario/cadastrar_secretario.html'
-    success_url = reverse_lazy('index')
+    success_url = reverse_lazy('adesao:index')
 
 
 def alterar_secretario(request, secretario_id):

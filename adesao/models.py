@@ -19,10 +19,16 @@ class Uf(models.Model):
         return self.nome
 
 
-class Prefeitura(models.Model):
-    cpf_prefeito = models.CharField(max_length=14, unique=True)
+class Municipio(models.Model):
+    cpf_prefeito = models.CharField(
+        max_length=14,
+        unique=True,
+        verbose_name='CPF')
     nome_prefeito = models.CharField(max_length=100)
-    cnpj_prefeitura = models.CharField(max_length=18, unique=True)
+    cnpj_prefeitura = models.CharField(
+        max_length=18,
+        unique=True,
+        verbose_name='CNPJ')
     endereco = models.CharField(max_length=100)
     complemento = models.CharField(max_length=100)
     cep = models.CharField(max_length=9)
@@ -35,14 +41,17 @@ class Prefeitura(models.Model):
     email_institucional_prefeito = models.EmailField()
 
     def __str__(self):
-        return self.cpf_prefeito
+        return self.cnpj_prefeito
 
     class Meta:
         unique_together = ('cidade', 'estado')
 
 
 class Responsavel(models.Model):
-    cpf_responsavel = models.CharField(max_length=14, unique=True)
+    cpf_responsavel = models.CharField(
+        max_length=14,
+        unique=True,
+        verbose_name='CPF')
     nome_responsavel = models.CharField(max_length=100)
     cargo_responsavel = models.CharField(max_length=100)
     instituicao_responsavel = models.CharField(max_length=100)
@@ -56,10 +65,13 @@ class Responsavel(models.Model):
 
 
 class Secretario(models.Model):
-    cpf_secretario = models.CharField(max_length=14, unique=True)
+    cpf_secretario = models.CharField(
+        max_length=14,
+        unique=True,
+        verbose_name='CPF')
     nome_secretario = models.CharField(max_length=100)
     cargo_secretario = models.CharField(max_length=100)
-    instituicao_responsavel = models.CharField(max_length=100)
+    instituicao_secretario = models.CharField(max_length=100)
     telefone_um = models.CharField(max_length=15)
     telefone_dois = models.CharField(max_length=15, blank=True)
     telefone_tres = models.CharField(max_length=15, blank=True)
@@ -73,8 +85,8 @@ class Usuario(models.Model):
     user = models.OneToOneField(User)
     cpf_usuario = models.CharField(max_length=14, unique=True)
     nome_usuario = models.CharField(max_length=100)
-    email_usuario = models.EmailField()
-    prefeitura = models.OneToOneField('Prefeitura', blank=True, null=True)
+    email_usuario = models.EmailField(unique=True)
+    prefeitura = models.OneToOneField('Municipio', blank=True, null=True)
     responsavel = models.OneToOneField('Responsavel', blank=True, null=True)
     secretario = models.OneToOneField('Secretario', blank=True, null=True)
 

@@ -9,10 +9,10 @@ urlpatterns = [
     url(r'^usuario/$', views.CadastrarUsuario.as_view(), name='usuario'),
 
     # Cadastro e alteração de prefeitura
-    url(r'^prefeitura/$', views.CadastrarPrefeitura.as_view(),
-        name='prefeitura'),
-    url(r'^prefeitura/(?P<prefeitura_id>[0-9]+)/$',
-        views.alterar_prefeitura, name='alterar_prefeitura'),
+    url(r'^municipio/$', views.CadastrarMunicipio.as_view(),
+        name='municipio'),
+    url(r'^prefeitura/(?P<municipio_id>[0-9]+)/$',
+        views.alterar_prefeitura, name='alterar_municipio'),
 
     # Cadastro e alteração de responsável
     url(r'^responsavel/$', views.CadastrarResponsavel.as_view(),
