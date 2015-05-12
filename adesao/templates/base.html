@@ -1,0 +1,48 @@
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>Sistema Nacional de Cultura</title>
+
+    {% load staticfiles %}
+
+    <!-- Bootstrap core CSS -->
+    <link href="{% static 'css/bootstrap.min.css' %}" rel="stylesheet">
+
+    <!-- Custom style -->
+    <link href="{% static 'css/style.css' %}" rel="stylesheet">
+  </head>
+
+  <body>
+
+    <div class="container">
+      <div class="header clearfix">
+        {% block menu %}
+        <nav class="navbar navbar-default">
+          <div class="navbar-header">
+            <a class="navbar-brand" href="#">
+              Sistema Nacional de Cultura
+            </a>
+          </div>
+          <ul class="nav nav-pills pull-right">
+            <li role="presentation" class="active"><a href="#">Início</a></li>
+            <li role="presentation"><a href="#">Sobre</a></li>
+            <li role="presentation"><a href="#">Contato</a></li>
+          </ul>
+        </nav>
+        {% endblock menu %}
+      </div>
+
+      {% block content %}
+      {% endblock content%}
+
+      <footer class="footer">
+      	<a href="http://www.cultura.gov.br"><font color="black"> © Ministério da Cultura 2015
+      </footer>
+    </div>
+
+</body>

@@ -1,0 +1,84 @@
+{% extends "base.html" %}
+{% load widget_tweaks %}
+
+{% block content %}
+<div class="container">
+  <div class="container">
+    <div align="center">
+      <h3>Cadastro do Responsável</h3>
+      <p>Preencha o formulário abaixo com os dados do responsável pela elaboração do Plano de Trabalho.</p>
+    </div>
+  </div>
+  <form class="form-horizontal" method="post">{% csrf_token %}
+    <div class="form-group">
+      <label for="{{ form.cpf_responsavel.id_for_label }}" class="col-sm-3 control-label">CPF</label>
+
+      <div class="col-sm-4">
+        {% render_field form.cpf_responsavel class="form-control" %}
+        {{ form.cpf_responsavel.errors }}
+      </div>
+
+    </div>
+
+    <div class="form-group">
+      <label for="{{ form.nome_responsavel.id_for_label }}" class="col-sm-3 control-label">Nome</label>
+
+      <div class="col-sm-9">
+        {% render_field form.nome_responsavel class="form-control" %}
+        {{ form.nome_responsavel.errors }}
+      </div>
+
+    </div>
+
+    <div class="form-group">
+      <label for="{{ form.cargo_responsavel.id_for_label }}" class="col-sm-3 control-label">Cargo</label>
+
+      <div class="col-sm-9">
+        {% render_field form.cargo_responsavel class="form-control" %}
+        {{ form.cargo_responsavel.errors }}
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="{{ form.instituicao_responsavel.id_for_label }}" class="col-sm-3 control-label">Instituicao</label>
+
+      <div class="col-sm-9">
+        {% render_field form.instituicao_responsavel class="form-control" %}
+        {{ form.instituicao_responsavel.errors }}
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="{{ form.telefone_um.id_for_label }}" class="col-sm-3 control-label">Telefones</label>
+
+      <div class="col-sm-4">
+        {% render_field form.telefone_um class="form-control" %}
+        {{ form.telefone_um.errors }}
+      </div>
+
+      <div class="col-sm-4">
+        {% render_field form.telefone_dois class="form-control" %}
+        {{ form.telefone_dois.errors }}
+      </div>
+
+    </div>
+
+    <div class="form-group">
+      <label for="{{ form.email_institucional_responsavel.id_for_label }}" class="col-sm-3 control-label">E-mail</label>
+
+      <div class="col-sm-9">
+        {% render_field form.email_institucional_responsavel class="form-control" %}
+        {{ form.email_institucional_responsavel.errors }}
+      </div>
+
+    </div>
+
+    <div class="form-group">
+      <div class="col-sm-offset-3 col-sm-10">
+        <input type="submit" class="btn btn-default" value="Cadastrar" />
+        <a class="btn btn-default" href="{% url 'adesao:index' %}">Voltar</a>
+      </div>
+    </div>
+  </form>
+</div>
+{% endblock content %}
