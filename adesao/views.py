@@ -34,6 +34,9 @@ class CadastrarMunicipio(CreateView):
     fields = [
         'cpf_prefeito',
         'nome_prefeito',
+        'rg_prefeito',
+        'orgao_expeditor_rg',
+        'estado_expeditor',
         'cnpj_prefeitura',
         'endereco',
         'complemento',
@@ -59,6 +62,9 @@ class CadastrarResponsavel(CreateView):
     fields = [
         'cpf_responsavel',
         'nome_responsavel',
+        'rg_responsavel',
+        'orgao_expeditor_rg',
+        'estado_expeditor',
         'cargo_responsavel',
         'instituicao_responsavel',
         'telefone_um',
@@ -67,7 +73,7 @@ class CadastrarResponsavel(CreateView):
         'email_institucional_responsavel'
     ]
     template_name = 'responsavel/cadastrar_responsavel.html'
-    success_url = reverse_lazy('adesao:secretario')
+    success_url = reverse_lazy('adesao:index')
 
 
 def alterar_responsavel(request, responsavel_id):
@@ -79,6 +85,9 @@ class CadastrarSecretario(CreateView):
     fields = [
         'cpf_secretario',
         'nome_secretario',
+        'rg_secretario',
+        'orgao_expeditor_rg',
+        'estado_expeditor',
         'cargo_secretario',
         'instituicao_secretario',
         'telefone_um',
@@ -87,7 +96,7 @@ class CadastrarSecretario(CreateView):
         'email_institucional_secretario'
     ]
     template_name = 'secretario/cadastrar_secretario.html'
-    success_url = reverse_lazy('adesao:index')
+    success_url = reverse_lazy('adesao:responsavel')
 
 
 def alterar_secretario(request, secretario_id):

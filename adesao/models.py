@@ -8,6 +8,17 @@ TIPO_USUARIO = (
     ('secretario', 'Secretário'),
 )
 
+LISTA_ESTADOS_PROCESSO = (
+    ('0', 'Solicitação Expirada'),
+    ('1', 'Aguardando envio da documentação'),
+    ('2', ''),
+    ('3', ''),
+    ('4', ''),
+    ('5', ''),
+    ('6', ''),
+    ('7', ''),
+)
+
 
 # Create your models here.
 class Uf(models.Model):
@@ -29,11 +40,14 @@ class Municipio(models.Model):
         max_length=18,
         unique=True,
         verbose_name='CNPJ')
+    rg_prefeito = models.CharField(max_length=15, verbose_name='RG')
+    orgao_expeditor_rg = models.CharField(max_length=50)
+    estado_expeditor = models.ForeignKey('Uf', related_name='estado_expeditor')
     endereco = models.CharField(max_length=100)
     complemento = models.CharField(max_length=100)
     cep = models.CharField(max_length=9)
     bairro = models.CharField(max_length=50)
-    cidade = models.CharField(max_length=50)
+    cidade = models.CharField(max_length=50, blank=True)
     estado = models.ForeignKey('Uf')
     telefone_um = models.CharField(max_length=15)
     telefone_dois = models.CharField(max_length=15, blank=True)
@@ -41,7 +55,7 @@ class Municipio(models.Model):
     email_institucional_prefeito = models.EmailField()
 
     def __str__(self):
-        return self.cnpj_prefeito
+        return self.cnpj_prefeitura
 
     class Meta:
         unique_together = ('cidade', 'estado')
@@ -52,6 +66,9 @@ class Responsavel(models.Model):
         max_length=14,
         unique=True,
         verbose_name='CPF')
+    rg_responsavel = models.CharField(max_length=15, verbose_name='RG')
+    orgao_expeditor_rg = models.CharField(max_length=50)
+    estado_expeditor = models.ForeignKey('Uf')
     nome_responsavel = models.CharField(max_length=100)
     cargo_responsavel = models.CharField(max_length=100)
     instituicao_responsavel = models.CharField(max_length=100)
@@ -69,6 +86,9 @@ class Secretario(models.Model):
         max_length=14,
         unique=True,
         verbose_name='CPF')
+    rg_secretario = models.CharField(max_length=15, verbose_name='RG')
+    orgao_expeditor_rg = models.CharField(max_length=50)
+    estado_expeditor = models.ForeignKey('Uf')
     nome_secretario = models.CharField(max_length=100)
     cargo_secretario = models.CharField(max_length=100)
     instituicao_secretario = models.CharField(max_length=100)
@@ -86,9 +106,13 @@ class Usuario(models.Model):
     cpf_usuario = models.CharField(max_length=14, unique=True)
     nome_usuario = models.CharField(max_length=100)
     email_usuario = models.EmailField(unique=True)
-    prefeitura = models.OneToOneField('Municipio', blank=True, null=True)
+    municipio = models.OneToOneField('Municipio', blank=True, null=True)
     responsavel = models.OneToOneField('Responsavel', blank=True, null=True)
     secretario = models.OneToOneField('Secretario', blank=True, null=True)
+    estado_processo = models.CharField(
+        max_length=1,
+        choices=LISTA_ESTADOS_PROCESSO,
+        default='1')
 
 
 class Historico(models.Model):

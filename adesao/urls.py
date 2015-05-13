@@ -4,7 +4,11 @@ from . import views
 
 urlpatterns = [
     url(r'^$', views.index, name='index'),
-    url(r'^login/$', views.login, name='login'),
+    url(r'^login/$', 'django.contrib.auth.views.login',
+        {'template_name': 'login.html'}, name='login'),
+    url(r'^sair/$', 'django.contrib.auth.views.logout',
+        {'template_name': 'logout.html'}, name='logout'),
+    url(r'^password_reset/$', 'django.contrib.auth.views.password_reset'),
     url(r'^home/', views.home, name='home'),
     url(r'^usuario/$', views.CadastrarUsuario.as_view(), name='usuario'),
 

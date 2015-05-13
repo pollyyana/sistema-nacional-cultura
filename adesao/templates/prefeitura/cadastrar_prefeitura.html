@@ -108,20 +108,16 @@
 
       <label for="{{ form.telefone_um.id_for_label }}" class="col-sm-offset-2 col-sm-2 control-label">Telefones</label>
 
-      <div class="col-sm-2">
+      <div class="col-sm-3">
         {% render_field form.telefone_um class="form-control" %}
         {{ form.telefone_um.errors }}
       </div>
 
-      <div class="col-sm-2">
-        {% render_field form.telefone_um class="form-control" %}
-        {{ form.telefone_um.errors }}
+      <div class="col-sm-3">
+        {% render_field form.telefone_dois class="form-control" %}
+        {{ form.telefone_dois.errors }}
       </div>
 
-      <div class="col-sm-2">
-        {% render_field form.telefone_um class="form-control" %}
-        {{ form.telefone_um.errors }}
-      </div>
     </div>
 
   </div>
