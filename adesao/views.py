@@ -48,6 +48,11 @@ class CadastrarMunicipio(CreateView):
     template_name = 'prefeitura/cadastrar_prefeitura.html'
     success_url = reverse_lazy('adesao:responsavel')
 
+    def form_valid(self, form):
+        self.request.user.usuario.municipio = self.object
+        self.request.user.usuario.save()
+        return super(CadastrarMunicipio, self).form_valid(form)
+
     def dispatch(self, *args, **kwargs):
         municipio = self.request.user.usuario.municipio
         if municipio:
@@ -98,6 +103,11 @@ class CadastrarResponsavel(CreateView):
     template_name = 'responsavel/cadastrar_responsavel.html'
     success_url = reverse_lazy('adesao:index')
 
+    def form_valid(self, form):
+        self.request.user.usuario.responsavel = self.object
+        self.request.user.usuario.save()
+        return super(CadastrarResponsavel, self).form_valid(form)
+
     def dispatch(self, *args, **kwargs):
         responsavel = self.request.user.usuario.responsavel
         if responsavel:
@@ -144,6 +154,11 @@ class CadastrarSecretario(CreateView):
     ]
     template_name = 'secretario/cadastrar_secretario.html'
     success_url = reverse_lazy('adesao:responsavel')
+
+    def form_valid(self, form):
+        self.request.user.usuario.secretario = self.object
+        self.request.user.usuario.save()
+        return super(CadastrarSecretario, self).form_valid(form)
 
     def dispatch(self, *args, **kwargs):
         secretario = self.request.user.usuario.secretario

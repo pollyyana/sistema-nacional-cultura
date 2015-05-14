@@ -41,6 +41,19 @@
       {% endblock content%}
 
       <footer class="footer">
+        <script src="{% static 'js/jquery-1.11.3.min.js'%}"></script>
+
+        <script type="text/javascript">
+          $(document).ready(function(){
+            $("#add").click(function(){
+              $("#telefone_2").fadeIn();
+            });
+
+            $("#add2").click(function(){
+              $("#telefone_3").fadeIn();
+            });
+          });
+        </script>
       </footer>
     </div>
 

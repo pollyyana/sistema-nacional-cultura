@@ -6,6 +6,7 @@ from django.utils.crypto import get_random_string
 
 from .models import Usuario
 from .utils import validar_cpf
+import re
 
 
 class CadastrarUsuarioForm(UserCreationForm):
@@ -35,7 +36,10 @@ class CadastrarUsuarioForm(UserCreationForm):
             raise forms.ValidationError('Por favor, digite um CPF válido!')
 
         try:
-            User.objects.get(username=self.cleaned_data['username'])
+            User.objects.get(username=''.join(re.findall(
+                '\d+',
+                self.cleaned_data['username'])))
+            raise forms.ValidationError('Esse CPF já foi cadastrado.')
         except User.DoesNotExist:
             return self.cleaned_data['username']
 
@@ -43,7 +47,9 @@ class CadastrarUsuarioForm(UserCreationForm):
 
     def save(self, commit=True):
         user = super(CadastrarUsuarioForm, self).save(commit=False)
-        user.username = self.cleaned_data['username']
+        user.username = ''.join(re.findall(
+            '\d+',
+            self.cleaned_data['username']))
         user.set_password(make_password(get_random_string(length=8)))
         user.email = self.cleaned_data['email']
         if commit:
