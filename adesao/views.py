@@ -3,6 +3,7 @@ from django.views.generic.edit import CreateView
 from django.core.urlresolvers import reverse_lazy
 
 from adesao.models import Municipio, Responsavel, Secretario, Usuario
+from adesao.forms import CadastrarUsuarioForm
 
 
 # Create your views here.
@@ -19,14 +20,9 @@ def home(request):
 
 
 class CadastrarUsuario(CreateView):
-    model = Usuario
-    fields = [
-        'user',
-        'nome_usuario',
-        'email_usuario'
-    ]
+    form_class = CadastrarUsuarioForm
     template_name = 'usuario/cadastrar_usuario.html'
-    success_url = reverse_lazy('index')
+    success_url = reverse_lazy('adesao:index')
 
 
 class CadastrarMunicipio(CreateView):

@@ -103,9 +103,7 @@ class Secretario(models.Model):
 
 class Usuario(models.Model):
     user = models.OneToOneField(User)
-    cpf_usuario = models.CharField(max_length=14, unique=True)
     nome_usuario = models.CharField(max_length=100)
-    email_usuario = models.EmailField(unique=True)
     municipio = models.OneToOneField('Municipio', blank=True, null=True)
     responsavel = models.OneToOneField('Responsavel', blank=True, null=True)
     secretario = models.OneToOneField('Secretario', blank=True, null=True)
@@ -113,6 +111,9 @@ class Usuario(models.Model):
         max_length=1,
         choices=LISTA_ESTADOS_PROCESSO,
         default='1')
+
+    def __str__(self):
+        return self.user.username
 
 
 class Historico(models.Model):
