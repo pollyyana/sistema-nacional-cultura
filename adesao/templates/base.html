@@ -41,7 +41,16 @@
       {% endblock content%}
 
       <footer class="footer">
+        {% block footer %}
+        <address>
+          <strong>SAI - Secretaria de Articulação Institucional</strong><br>
+          Edifício Parque Cidade Corporate – SCS, Quadra 09, Lote C, Torre B, 10º Andar <br>
+          CEP: 70308-200 Brasília-DF <br>
+          <abbr title="Phone"></abbr> (61) 2024-2325- acordosnc@cultura.gov.br
+        </address>
+        {% endblock footer %}
         <script src="{% static 'js/jquery-1.11.3.min.js'%}"></script>
+        <script src="{% static 'js/jquery.maskedinput.js' %}"></script>
 
         <script type="text/javascript">
           $(document).ready(function(){
@@ -52,6 +61,15 @@
             $("#add2").click(function(){
               $("#telefone_3").fadeIn();
             });
+
+            $("#id_cnpj_prefeitura").mask("99.999.999/9999-99");
+            $("#id_cpf_prefeito").mask("999.999.999-99");
+            $("#id_cpf_responsavel").mask("999.999.999-99");
+            $("#id_cpf_secretario").mask("999.999.999-99");
+            $("#id_cep").mask("99.999-999");
+            $("#id_telefone_um").mask("(99)99999-9999");
+            $("#id_telefone_dois").mask("(99)99999-9999");
+            $("#id_telefone_tres").mask("(99)9999-9999?9");
           });
         </script>
       </footer>

@@ -65,6 +65,35 @@
     </div>
 
     <div class="form-group">
+      <div class="col-sm-offset-4 col-sm-4">
+        <span class="btn btn-default btn-file">
+          <strong>Termo de Posse</strong>{% render_field form.termo_posse_prefeito %}
+        </span>
+        {{ form.termo_posse_prefeito.errors }}
+      </div>
+    </div>
+
+    <div class="form-group">
+      <div class="col-sm-offset-4 col-sm-4">
+        <span class="btn btn-default btn-file">
+          <strong>Cópia do CPF</strong>{% render_field form.cpf_copia_prefeito %}
+        </span>
+        {{ form.cpf_copia_prefeito.errors }}
+      </div>
+
+    </div>
+
+    <div class="form-group">
+      <div class="col-sm-offset-4 col-sm-4">
+        <span class="btn btn-default btn-file">
+          <strong>Cópia do RG</strong>{% render_field form.rg_copia_prefeito %}
+        </span>
+        {{ form.rg_copia_prefeito.errors }}
+      </div>
+
+    </div>
+
+    <div class="form-group">
       <label for="{{ form.nome_prefeito.id_for_label }}" class="col-sm-4 control-label">Nome do Prefeito</label>
 
       <div class="col-sm-8">
@@ -161,7 +190,7 @@
     <div class="form-group">
       <div class="col-sm-offset-3 col-sm-10">
         <input type="submit" class="btn btn-default" value="Cadastrar" />
-        <a class="btn btn-default" href="{% url 'adesao:index' %}">Voltar</a>
+        <a class="btn btn-default" href="{% url 'adesao:home' %}">Voltar</a>
       </div>
     </div>
   </form>

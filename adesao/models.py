@@ -1,6 +1,8 @@
 from django.db import models
 from django.contrib.auth.models import User
 
+from validatedfile.fields import ValidatedFileField
+
 
 TIPO_USUARIO = (
     ('prefeitura', 'Prefeitura'),
@@ -53,6 +55,36 @@ class Municipio(models.Model):
     telefone_dois = models.CharField(max_length=15, blank=True)
     telefone_tres = models.CharField(max_length=15, blank=True)
     email_institucional_prefeito = models.EmailField()
+    termo_posse_prefeito = ValidatedFileField(
+        upload_to='termo_posse',
+        max_upload_size=10240,
+        content_types=[
+            'image/png',
+            'application/pdf',
+            'application/msword',
+            'application/vnd.oasis.opendocument.text',
+            'text/plain']
+    )
+    rg_copia_prefeito = ValidatedFileField(
+        upload_to='rg_copia',
+        max_upload_size=10240,
+        content_types=[
+            'image/png',
+            'application/pdf',
+            'application/msword',
+            'application/vnd.oasis.opendocument.text',
+            'text/plain']
+    )
+    cpf_copia_prefeito = ValidatedFileField(
+        upload_to='cpf_copia',
+        max_upload_size=10240,
+        content_types=[
+            'image/png',
+            'application/pdf',
+            'application/msword',
+            'application/vnd.oasis.opendocument.text',
+            'text/plain']
+    )
 
     def __str__(self):
         return self.cnpj_prefeitura
@@ -111,6 +143,7 @@ class Usuario(models.Model):
         max_length=1,
         choices=LISTA_ESTADOS_PROCESSO,
         default='1')
+    data_publicacao_acordo = models.DateField(blank=True, null=True)
 
     def __str__(self):
         return self.user.username

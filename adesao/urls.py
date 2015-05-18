@@ -34,4 +34,12 @@ urlpatterns = [
     url(r'^secretario/(?P<secretario_id>[0-9]+)/$',
         login_required(views.AlterarSecretario.as_view()),
         name='alterar_secretario'),
+
+    # Minuta de acordo e termo de solicitação
+    url(r'^termo/minuta/$',
+        login_required(views.MinutaAcordo.as_view()),
+        name='minuta'),
+    url(r'^termo/solicitacao/$',
+        login_required(views.TermoSolicitacao.as_view()),
+        name='solicitacao'),
 ]

@@ -1,4 +1,50 @@
-{% extends "base.html" %}
-
-{% block content %}
+{% extends "base.html" %} {% block content %}
+<div class="content">
+  <center>
+    {% if request.user.usuario.municipio %}
+    <a class="btn btn-success" href="{% url 'adesao:alterar_municipio' request.user.usuario.municipio %}">Alterar Dados do Município</a>
+    {% else %}
+    <a class="btn btn-primary" href="{% url 'adesao:municipio' %}">Cadastrar Município</a>
+    {% endif %}
+    {% if request.user.usuario.secretario %}
+    <a class="btn btn-success" href="{% url 'adesao:alterar_secretario' request.user.usuario.secretario %}">Alterar Dados do Interlocutor</a>
+    {% else %}
+    <a class="btn btn-primary" href="{% url 'adesao:secretario' %}">Cadastrar Interlocutor</a>
+    {% endif %}
+    {% if request.user.usuario.responsavel %}
+    <a class="btn btn-success" href="{% url 'adesao:alterar_responsavel' request.user.usuario.responsavel %}">Alterar Dados do Responsável</a>
+    {% else %}
+    <a class="btn btn-primary" href="{% url 'adesao:responsavel' %}">Cadastrar Responsável</a>
+    {% endif %}
+  </center>
+  <p><br><strong>Acompanhamento de Solicitação de Integração ao SNC</strong></p>
+  <table class="table table-bordered">
+    <tr>
+      <td><strong>Município-Estado</strong></td>
+      <td>Brasília-DF</td>
+    </tr>
+    <tr>
+      <td><strong>CNPJ</strong></td>
+      <td>18.715.425/0001-42</td>
+    </tr>
+    <tr>
+      <td><strong>Governador/Prefeito</strong></td>
+      <td>GABRIEL AVALONI AZEREDO</td>
+    </tr>
+    <tr>
+      <td><strong>Situação</strong></td>
+      <td>Solicitação Expirada</td>
+    </tr>
+    <tr>
+      <td><strong>Data</strong></td>
+      <td>18/05/2015</td>
+    </tr>
+  </table>
+  <center>
+    {% if request.user.usuario.estado_processo == '1' %}
+    <a class="btn btn-warning" href="{% url 'adesao:minuta' %}">Imprimir Minuta</a>
+    <a class="btn btn-warning" href="{% url 'adesao:solicitacao' %}">Imprimir Termo de Solicitação</a>
+    {% endif %}
+  </center>
+</div>
 {% endblock content %}
