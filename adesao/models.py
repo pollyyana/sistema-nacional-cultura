@@ -2,6 +2,7 @@ from django.db import models
 from django.contrib.auth.models import User
 
 from validatedfile.fields import ValidatedFileField
+from smart_selects.db_fields import ChainedForeignKey
 
 
 LISTA_ESTADOS_PROCESSO = (
@@ -25,13 +26,20 @@ class Uf(models.Model):
     def __str__(self):
         return self.nome_uf
 
+    class Meta:
+        ordering = ['nome_uf']
+
 
 class Cidade(models.Model):
     codigo_ibge = models.IntegerField(unique=True)
+    uf = models.ForeignKey('Uf')
     nome_municipio = models.CharField(max_length=100)
 
     def __str__(self):
         return self.nome_municipio
+
+    class Meta:
+        ordering = ['nome_municipio']
 
 
 class Municipio(models.Model):
@@ -51,7 +59,15 @@ class Municipio(models.Model):
     complemento = models.CharField(max_length=100)
     cep = models.CharField(max_length=9)
     bairro = models.CharField(max_length=50)
-    cidade = models.ForeignKey('Cidade', blank=True, null=True)
+    cidade = ChainedForeignKey(
+        Cidade,
+        chained_field='uf',
+        chained_model_field='nome_uf',
+        show_all=False,
+        auto_choose=True,
+        blank=True,
+        null=True
+    )
     estado = models.ForeignKey('Uf')
     telefone_um = models.CharField(max_length=15)
     telefone_dois = models.CharField(max_length=15, blank=True)
