@@ -5,7 +5,7 @@ from django.utils.crypto import get_random_string
 from django.core.mail import send_mail
 from django.forms import ModelForm
 
-from _thread import start_new_thread
+from threading import Thread
 
 from .models import Usuario, Municipio, Responsavel, Secretario
 from .utils import validar_cpf, validar_cnpj
@@ -65,7 +65,7 @@ class CadastrarUsuarioForm(UserCreationForm):
         if commit:
             usuario.save()
 
-        start_new_thread(send_mail(
+        Thread(target=send_mail, args=(
             'MINISTÉRIO DA CULTURA - SNC - CREDENCIAIS DE ACESSO',
             'Prezado '+usuario.nome_usuario+',\n' +
             'Recebemos o seu cadastro no Sistema Nacional de Cultura.' +
@@ -75,9 +75,9 @@ class CadastrarUsuarioForm(UserCreationForm):
             'Atenciosamente,\n\n' +
             'Equipe SAI - Ministério da Cultura',
             'snc@cultura.gov.br',
-            [user.email],
-            fail_silently=False
-        ))
+            [user.email],),
+            kwargs = {'fail_silently': 'False', }
+        ).start()
         return user
 
 
