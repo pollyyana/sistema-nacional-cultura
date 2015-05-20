@@ -19,6 +19,7 @@
   </center>
   <p><br><strong>Acompanhamento de Solicitação de Integração ao SNC</strong></p>
   <table class="table table-bordered">
+    {% if request.user.usuario.municipio %}
     <tr>
       <td><strong>Município-Estado</strong></td>
       <td>Brasília-DF</td>
@@ -39,6 +40,9 @@
       <td><strong>Data</strong></td>
       <td>18/05/2015</td>
     </tr>
+  {% else %}
+  Você ainda não possui solicitação. Clique no botão "Cadastrar Município" para dar início ao processo de integração ao SNC.
+  {% endif %}
   </table>
   <center>
     {% if request.user.usuario.estado_processo == '1' %}

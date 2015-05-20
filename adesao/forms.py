@@ -3,9 +3,11 @@ from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.hashers import make_password
 from django.utils.crypto import get_random_string
+from django.core.mail import send_mail
+from django.forms import ModelForm
 
-from .models import Usuario
-from .utils import validar_cpf
+from .models import Usuario, Municipio, Responsavel, Secretario
+from .utils import validar_cpf, validar_cnpj
 import re
 
 
@@ -50,7 +52,8 @@ class CadastrarUsuarioForm(UserCreationForm):
         user.username = ''.join(re.findall(
             '\d+',
             self.cleaned_data['username']))
-        user.set_password(make_password(get_random_string(length=8)))
+        random_password = get_random_string(length=8)
+        user.set_password(random_password)
         user.email = self.cleaned_data['email']
         if commit:
             user.save()
@@ -60,4 +63,60 @@ class CadastrarUsuarioForm(UserCreationForm):
         usuario.nome_usuario = self.cleaned_data['nome_usuario']
         if commit:
             usuario.save()
+
+        send_mail(
+            'MINISTÉRIO DA CULTURA - SNC - CREDENCIAIS DE ACESSO',
+            'Prezado '+usuario.nome_usuario+',\n' +
+            'Recebemos o seu cadastro no Sistema Nacional de Cultura.' +
+            'Seguem abaixo suas credenciais de acesso:\n\n' +
+            'Login: '+user.username+'\n' +
+            'Senha: '+random_password+'\n\n' +
+            'Atenciosamente,\n\n' +
+            'Equipe SAI - Ministério da Cultura',
+            'snc@cultura.gov.br',
+            [user.email],
+            fail_silently=False
+        )
         return user
+
+
+class CadastrarMunicipio(ModelForm):
+    def clean_cpf_prefeito(self):
+        if not validar_cpf(self.cleaned_data['cpf_prefeito']):
+            raise forms.ValidationError('Por favor, digite um CPF válido!')
+
+        return self.cleaned_data['cpf_prefeito']
+
+    def clean_cnpj_prefeitura(self):
+        if not validar_cnpj(self.cleaned_data['cnpj_prefeitura']):
+            raise forms.ValidationError('Por favor, digite um CNPJ válido!')
+
+        return self.cleaned_data['cnpj_prefeitura']
+
+    class Meta:
+        model = Municipio
+        fields = '__all__'
+
+
+class CadastrarSecretario(ModelForm):
+    def clean_cpf_secretario(self):
+        if not validar_cpf(self.cleaned_data['cpf_secretario']):
+            raise forms.ValidationError('Por favor, digite um CPF válido!')
+
+        return self.cleaned_data['cpf_secretario']
+
+    class Meta:
+        model = Secretario
+        fields = '__all__'
+
+
+class CadastrarResponsavel(ModelForm):
+    def clean_cpf_secretario(self):
+        if not validar_cpf(self.cleaned_data['cpf_responsavel']):
+            raise forms.ValidationError('Por favor, digite um CPF válido!')
+
+        return self.cleaned_data['cpf_responsavel']
+
+    class Meta:
+        model = Responsavel
+        fields = '__all__'
