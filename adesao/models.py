@@ -4,12 +4,6 @@ from django.contrib.auth.models import User
 from validatedfile.fields import ValidatedFileField
 
 
-TIPO_USUARIO = (
-    ('prefeitura', 'Prefeitura'),
-    ('responsavel', 'Responsável'),
-    ('secretario', 'Secretário'),
-)
-
 LISTA_ESTADOS_PROCESSO = (
     ('0', 'Solicitação Expirada'),
     ('1', 'Aguardando envio da documentação'),
