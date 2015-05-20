@@ -1,78 +1,79 @@
 <head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <meta name="description" content="">
-    <meta name="author" content="">
+  <meta name="description" content="">
+  <meta name="author" content="">
 
-    <title>Sistema Nacional de Cultura</title>
+  <title>Sistema Nacional de Cultura</title>
 
-    {% load staticfiles %}
+  {% load staticfiles %}
 
-    <!-- Bootstrap core CSS -->
-    <link href="{% static 'css/bootstrap.min.css' %}" rel="stylesheet">
+  <!-- Bootstrap core CSS -->
+  <link href="{% static 'css/bootstrap.min.css' %}" rel="stylesheet">
 
-    <!-- Custom style -->
-    <link href="{% static 'css/style.css' %}" rel="stylesheet">
-  </head>
+  <!-- Custom style -->
+  <link href="{% static 'css/style.css' %}" rel="stylesheet">
+</head>
 
-  <body>
+<body>
+  <div id="barra-brasil" style="background:#7F7F7F; height: 20px; padding:0 0 0 10px;display:block;">
+    <ul id="menu-barra-temp" style="list-style:none;">
+      <li style="display:inline; float:left;padding-right:10px; margin-right:10px; border-right:1px solid #EDEDED"><a href="http://brasil.gov.br" style="font-family:sans,sans-serif; text-decoration:none; color:white;">Portal do Governo Brasileiro</a></li>
+      <li><a style="font-family:sans,sans-serif; text-decoration:none; color:white;" href="http://epwg.governoeletronico.gov.br/barra/atualize.html">Atualize sua Barra de Governo</a></li>
+    </ul>
+  </div>
 
-    <div class="container">
-      <div class="header clearfix">
-        {% block menu %}
-        <nav class="navbar navbar-default">
-          <div class="navbar-header">
-            <a class="navbar-brand" href="#">
-              Sistema Nacional de Cultura
-            </a>
-          </div>
-          <ul class="nav nav-pills pull-right">
-            {% if user.is_authenticated %}
-            <li role="presentation" class="active"><a href="{% url 'adesao:logout' %}"><i class="icon-home"></i>Sair</a></li>
-            {% endif %}
-          </ul>
-        </nav>
-        {% endblock menu %}
+  <div class="container">
+    <div class="header clearfix">
+      <div>
+        <img src="{% static 'images/logo_snc_small.png' %}" /> {% if user.is_authenticated %}
+        <a class="btn btn-danger btn-xs" href="{% url 'adesao:logout' %}">
+          <span class="glyphicon glyphicon-log-out"></span>Sair
+        </a>
+        {% endif %}
       </div>
-
-      {% block content %}
-      {% endblock content%}
-
-      <footer class="footer">
-        {% block footer %}
-        <address>
-          <strong>SAI - Secretaria de Articulação Institucional</strong><br>
-          Edifício Parque Cidade Corporate – SCS, Quadra 09, Lote C, Torre B, 10º Andar <br>
-          CEP: 70308-200 Brasília-DF <br>
-          <abbr title="Phone"></abbr> (61) 2024-2325- acordosnc@cultura.gov.br
-        </address>
-        {% endblock footer %}
-        <script src="{% static 'js/jquery-1.11.3.min.js'%}"></script>
-        <script src="{% static 'js/jquery.maskedinput.js' %}"></script>
-
-        <script type="text/javascript">
-          $(document).ready(function(){
-            $("#add").click(function(){
-              $("#telefone_2").fadeIn();
-            });
-
-            $("#add2").click(function(){
-              $("#telefone_3").fadeIn();
-            });
-
-            $("#id_cnpj_prefeitura").mask("99.999.999/9999-99");
-            $("#id_cpf_prefeito").mask("999.999.999-99");
-            $("#id_cpf_responsavel").mask("999.999.999-99");
-            $("#id_cpf_secretario").mask("999.999.999-99");
-            $("#id_cep").mask("99.999-999");
-            $("#id_telefone_um").mask("(99)99999-9999");
-            $("#id_telefone_dois").mask("(99)99999-9999");
-            $("#id_telefone_tres").mask("(99)9999-9999?9");
-          });
-        </script>
-      </footer>
     </div>
 
+    {% block content %} {% endblock content%}
+
+    <footer class="footer">
+      {% block footer %}
+      <address>
+        <strong>SAI - Secretaria de Articulação Institucional</strong>
+        <br> Edifício Parque Cidade Corporate – SCS, Quadra 09, Lote C, Torre B, 10º Andar
+        <br> CEP: 70308-200 Brasília-DF
+        <br>
+        <abbr title="Phone"></abbr> (61) 2024-2325- acordosnc@cultura.gov.br
+      </address>
+      {% endblock footer %}
+      <script src="{% static 'js/jquery-1.11.3.min.js'%}"></script>
+      <script src="{% static 'js/jquery.maskedinput.js' %}"></script>
+
+      <script type="text/javascript">
+        $(document).ready(function() {
+          $("#add").click(function() {
+            $("#telefone_2").fadeIn();
+          });
+
+          $("#add2").click(function() {
+            $("#telefone_3").fadeIn();
+          });
+
+          $("#id_cnpj_prefeitura").mask("99.999.999/9999-99");
+          $("#id_cpf_prefeito").mask("999.999.999-99");
+          $("#id_cpf_responsavel").mask("999.999.999-99");
+          $("#id_cpf_secretario").mask("999.999.999-99");
+          $("#id_cep").mask("99.999-999");
+          $("#id_telefone_um").mask("(99)99999-9999");
+          $("#id_telefone_dois").mask("(99)99999-9999");
+          $("#id_telefone_tres").mask("(99)9999-9999?9");
+        });
+      </script>
+
+      <script src="//barra.brasil.gov.br/barra.js" defer></script>
+    </footer>
+  </div>
+  <div id="footer-brasil"></div>
 </body>

@@ -11,19 +11,27 @@ LISTA_ESTADOS_PROCESSO = (
     ('3', ''),
     ('4', ''),
     ('5', ''),
-    ('6', ''),
-    ('7', ''),
+    ('6', 'Acordo publicado'),
+    ('7', 'Responsável confirmado'),
 )
 
 
 # Create your models here.
 class Uf(models.Model):
+    codigo_ibge = models.IntegerField()
     sigla = models.CharField(max_length=2)
-    nome = models.CharField(max_length=100)
-    regiao = models.CharField(max_length=60)
+    nome_uf = models.CharField(max_length=100)
 
     def __str__(self):
-        return self.nome
+        return self.nome_uf
+
+
+class Cidade(models.Model):
+    codigo_ibge = models.IntegerField(unique=True)
+    nome_municipio = models.CharField(max_length=100)
+
+    def __str__(self):
+        return self.nome_municipio
 
 
 class Municipio(models.Model):
@@ -43,7 +51,7 @@ class Municipio(models.Model):
     complemento = models.CharField(max_length=100)
     cep = models.CharField(max_length=9)
     bairro = models.CharField(max_length=50)
-    cidade = models.CharField(max_length=50, blank=True)
+    cidade = models.ForeignKey('Cidade', blank=True, null=True)
     estado = models.ForeignKey('Uf')
     telefone_um = models.CharField(max_length=15)
     telefone_dois = models.CharField(max_length=15, blank=True)
@@ -57,6 +65,8 @@ class Municipio(models.Model):
             'application/pdf',
             'application/msword',
             'application/vnd.oasis.opendocument.text',
+            'application/vnd.openxmlformats-officedocument.' +
+            'wordprocessingml.document',
             'text/plain']
     )
     rg_copia_prefeito = ValidatedFileField(
@@ -67,6 +77,8 @@ class Municipio(models.Model):
             'application/pdf',
             'application/msword',
             'application/vnd.oasis.opendocument.text',
+            'application/vnd.openxmlformats-officedocument.' +
+            'wordprocessingml.document',
             'text/plain']
     )
     cpf_copia_prefeito = ValidatedFileField(
@@ -77,6 +89,8 @@ class Municipio(models.Model):
             'application/pdf',
             'application/msword',
             'application/vnd.oasis.opendocument.text',
+            'application/vnd.openxmlformats-officedocument.' +
+            'wordprocessingml.document',
             'text/plain']
     )
 
@@ -145,5 +159,4 @@ class Usuario(models.Model):
 
 class Historico(models.Model):
     usuario = models.OneToOneField(User)
-    tipo_usuario = models.CharField(max_length=20, choices=TIPO_USUARIO)
     data_alteracao = models.DateTimeField(auto_now_add=True)

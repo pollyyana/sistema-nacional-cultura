@@ -14,10 +14,17 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.CreateModel(
+            name='Cidade',
+            fields=[
+                ('id', models.AutoField(verbose_name='ID', primary_key=True, auto_created=True, serialize=False)),
+                ('codigo_ibge', models.IntegerField(unique=True)),
+                ('nome_municipio', models.CharField(max_length=100)),
+            ],
+        ),
+        migrations.CreateModel(
             name='Historico',
             fields=[
-                ('id', models.AutoField(serialize=False, auto_created=True, primary_key=True, verbose_name='ID')),
-                ('tipo_usuario', models.CharField(choices=[('prefeitura', 'Prefeitura'), ('responsavel', 'Responsável'), ('secretario', 'Secretário')], max_length=20)),
+                ('id', models.AutoField(verbose_name='ID', primary_key=True, auto_created=True, serialize=False)),
                 ('data_alteracao', models.DateTimeField(auto_now_add=True)),
                 ('usuario', models.OneToOneField(to=settings.AUTH_USER_MODEL)),
             ],
@@ -25,17 +32,16 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='Municipio',
             fields=[
-                ('id', models.AutoField(serialize=False, auto_created=True, primary_key=True, verbose_name='ID')),
-                ('cpf_prefeito', models.CharField(max_length=14, verbose_name='CPF', unique=True)),
+                ('id', models.AutoField(verbose_name='ID', primary_key=True, auto_created=True, serialize=False)),
+                ('cpf_prefeito', models.CharField(verbose_name='CPF', unique=True, max_length=14)),
                 ('nome_prefeito', models.CharField(max_length=100)),
-                ('cnpj_prefeitura', models.CharField(max_length=18, verbose_name='CNPJ', unique=True)),
-                ('rg_prefeito', models.CharField(max_length=15, verbose_name='RG')),
+                ('cnpj_prefeitura', models.CharField(verbose_name='CNPJ', unique=True, max_length=18)),
+                ('rg_prefeito', models.CharField(verbose_name='RG', max_length=15)),
                 ('orgao_expeditor_rg', models.CharField(max_length=50)),
                 ('endereco', models.CharField(max_length=100)),
                 ('complemento', models.CharField(max_length=100)),
                 ('cep', models.CharField(max_length=9)),
                 ('bairro', models.CharField(max_length=50)),
-                ('cidade', models.CharField(blank=True, max_length=50)),
                 ('telefone_um', models.CharField(max_length=15)),
                 ('telefone_dois', models.CharField(blank=True, max_length=15)),
                 ('telefone_tres', models.CharField(blank=True, max_length=15)),
@@ -43,14 +49,15 @@ class Migration(migrations.Migration):
                 ('termo_posse_prefeito', validatedfile.fields.ValidatedFileField(upload_to='termo_posse')),
                 ('rg_copia_prefeito', validatedfile.fields.ValidatedFileField(upload_to='rg_copia')),
                 ('cpf_copia_prefeito', validatedfile.fields.ValidatedFileField(upload_to='cpf_copia')),
+                ('cidade', models.ForeignKey(to='adesao.Cidade', blank=True)),
             ],
         ),
         migrations.CreateModel(
             name='Responsavel',
             fields=[
-                ('id', models.AutoField(serialize=False, auto_created=True, primary_key=True, verbose_name='ID')),
-                ('cpf_responsavel', models.CharField(max_length=14, verbose_name='CPF', unique=True)),
-                ('rg_responsavel', models.CharField(max_length=15, verbose_name='RG')),
+                ('id', models.AutoField(verbose_name='ID', primary_key=True, auto_created=True, serialize=False)),
+                ('cpf_responsavel', models.CharField(verbose_name='CPF', unique=True, max_length=14)),
+                ('rg_responsavel', models.CharField(verbose_name='RG', max_length=15)),
                 ('orgao_expeditor_rg', models.CharField(max_length=50)),
                 ('nome_responsavel', models.CharField(max_length=100)),
                 ('cargo_responsavel', models.CharField(max_length=100)),
@@ -64,9 +71,9 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='Secretario',
             fields=[
-                ('id', models.AutoField(serialize=False, auto_created=True, primary_key=True, verbose_name='ID')),
-                ('cpf_secretario', models.CharField(max_length=14, verbose_name='CPF', unique=True)),
-                ('rg_secretario', models.CharField(max_length=15, verbose_name='RG')),
+                ('id', models.AutoField(verbose_name='ID', primary_key=True, auto_created=True, serialize=False)),
+                ('cpf_secretario', models.CharField(verbose_name='CPF', unique=True, max_length=14)),
+                ('rg_secretario', models.CharField(verbose_name='RG', max_length=15)),
                 ('orgao_expeditor_rg', models.CharField(max_length=50)),
                 ('nome_secretario', models.CharField(max_length=100)),
                 ('cargo_secretario', models.CharField(max_length=100)),
@@ -80,21 +87,23 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='Uf',
             fields=[
-                ('id', models.AutoField(serialize=False, auto_created=True, primary_key=True, verbose_name='ID')),
+                ('id', models.AutoField(verbose_name='ID', primary_key=True, auto_created=True, serialize=False)),
+                ('codigo_ibge', models.IntegerField()),
                 ('sigla', models.CharField(max_length=2)),
-                ('nome', models.CharField(max_length=100)),
+                ('nome_uf', models.CharField(max_length=100)),
                 ('regiao', models.CharField(max_length=60)),
             ],
         ),
         migrations.CreateModel(
             name='Usuario',
             fields=[
-                ('id', models.AutoField(serialize=False, auto_created=True, primary_key=True, verbose_name='ID')),
+                ('id', models.AutoField(verbose_name='ID', primary_key=True, auto_created=True, serialize=False)),
                 ('nome_usuario', models.CharField(max_length=100)),
-                ('estado_processo', models.CharField(default='1', choices=[('0', 'Solicitação Expirada'), ('1', 'Aguardando envio da documentação'), ('2', ''), ('3', ''), ('4', ''), ('5', ''), ('6', ''), ('7', '')], max_length=1)),
-                ('municipio', models.OneToOneField(blank=True, null=True, to='adesao.Municipio')),
-                ('responsavel', models.OneToOneField(blank=True, null=True, to='adesao.Responsavel')),
-                ('secretario', models.OneToOneField(blank=True, null=True, to='adesao.Secretario')),
+                ('estado_processo', models.CharField(max_length=1, default='1', choices=[('0', 'Solicitação Expirada'), ('1', 'Aguardando envio da documentação'), ('2', ''), ('3', ''), ('4', ''), ('5', ''), ('6', 'Acordo publicado'), ('7', 'Responsável confirmado')])),
+                ('data_publicacao_acordo', models.DateField(null=True, blank=True)),
+                ('municipio', models.OneToOneField(null=True, blank=True, to='adesao.Municipio')),
+                ('responsavel', models.OneToOneField(null=True, blank=True, to='adesao.Responsavel')),
+                ('secretario', models.OneToOneField(null=True, blank=True, to='adesao.Secretario')),
                 ('user', models.OneToOneField(to=settings.AUTH_USER_MODEL)),
             ],
         ),

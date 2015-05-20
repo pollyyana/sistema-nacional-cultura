@@ -11,7 +11,7 @@ body {
 }
 
 .header {
-  padding-bottom: 20px;
+  padding-bottom: 5px;
   border-bottom: 1px solid #e5e5e5;
 }
 
@@ -65,4 +65,10 @@ body {
   .jumbotron {
     border-bottom: 0;
   }
+}
+
+#footer-brasil {
+   background: none repeat scroll 0% 0% #0042b1;
+   padding: 1em 0px;
+   max-width: 100%;
 }
