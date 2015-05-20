@@ -19,7 +19,7 @@ LISTA_ESTADOS_PROCESSO = (
 
 # Create your models here.
 class Uf(models.Model):
-    codigo_ibge = models.IntegerField()
+    codigo_ibge = models.IntegerField(unique=True)
     sigla = models.CharField(max_length=2)
     nome_uf = models.CharField(max_length=100)
 
@@ -32,7 +32,7 @@ class Uf(models.Model):
 
 class Cidade(models.Model):
     codigo_ibge = models.IntegerField(unique=True)
-    uf = models.ForeignKey('Uf')
+    uf = models.ForeignKey('Uf', to_field='codigo_ibge')
     nome_municipio = models.CharField(max_length=100)
 
     def __str__(self):
