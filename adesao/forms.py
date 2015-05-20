@@ -64,7 +64,7 @@ class CadastrarUsuarioForm(UserCreationForm):
         usuario.nome_usuario = self.cleaned_data['nome_usuario']
         if commit:
             usuario.save()
-
+        print(user.email)
         Thread(target=send_mail, args=(
             'MINISTÉRIO DA CULTURA - SNC - CREDENCIAIS DE ACESSO',
             'Prezado '+usuario.nome_usuario+',\n' +
@@ -74,7 +74,7 @@ class CadastrarUsuarioForm(UserCreationForm):
             'Senha: '+random_password+'\n\n' +
             'Atenciosamente,\n\n' +
             'Equipe SAI - Ministério da Cultura',
-            'snc@cultura.gov.br',
+            '',
             [user.email],),
             kwargs = {'fail_silently': 'False', }
         ).start()
