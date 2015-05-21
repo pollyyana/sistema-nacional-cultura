@@ -76,6 +76,8 @@ class Municipio(models.Model):
     termo_posse_prefeito = ValidatedFileField(
         upload_to='termo_posse',
         max_upload_size=10240,
+	blank=True,
+	null=True,
         content_types=[
             'image/png',
             'application/pdf',
@@ -88,6 +90,8 @@ class Municipio(models.Model):
     rg_copia_prefeito = ValidatedFileField(
         upload_to='rg_copia',
         max_upload_size=10240,
+	blank=True,
+	null=True,
         content_types=[
             'image/png',
             'application/pdf',
@@ -100,6 +104,8 @@ class Municipio(models.Model):
     cpf_copia_prefeito = ValidatedFileField(
         upload_to='cpf_copia',
         max_upload_size=10240,
+	blank=True,
+	null=True,
         content_types=[
             'image/png',
             'application/pdf',
