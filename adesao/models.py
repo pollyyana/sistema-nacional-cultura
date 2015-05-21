@@ -19,7 +19,7 @@ LISTA_ESTADOS_PROCESSO = (
 
 # Create your models here.
 class Uf(models.Model):
-    codigo_ibge = models.IntegerField(unique=True)
+    codigo_ibge = models.IntegerField(primary_key=True)
     sigla = models.CharField(max_length=2)
     nome_uf = models.CharField(max_length=100)
 
@@ -59,16 +59,16 @@ class Municipio(models.Model):
     complemento = models.CharField(max_length=100)
     cep = models.CharField(max_length=9)
     bairro = models.CharField(max_length=50)
+    estado = models.ForeignKey('Uf')
     cidade = ChainedForeignKey(
         Cidade,
-        chained_field='uf',
-        chained_model_field='nome_uf',
+        chained_field='estado',
+        chained_model_field='uf',
         show_all=False,
         auto_choose=True,
         blank=True,
         null=True
     )
-    estado = models.ForeignKey('Uf')
     telefone_um = models.CharField(max_length=15)
     telefone_dois = models.CharField(max_length=15, blank=True)
     telefone_tres = models.CharField(max_length=15, blank=True)
