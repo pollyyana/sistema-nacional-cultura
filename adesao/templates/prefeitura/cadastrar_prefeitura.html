@@ -9,11 +9,11 @@
       <p>Preencha o formulário abaixo com os dados do município.</p>
     </div>
   </div>
-  <form class="form-horizontal" method="post">{% csrf_token %}
+  <form class="form-horizontal" method="post" enctype="multipart/form-data">{% csrf_token %}
     <div class="form-group">
       <label for="{{ form.estado.id_for_label }}" class="col-sm-4 control-label">Estado</label>
 
-      <div class="col-sm-4">
+      <div class="col-sm-2">
         {% render_field form.estado class="form-control" %}
         {{ form.estado.errors }}
       </div>
@@ -56,12 +56,23 @@
         {{ form.rg_prefeito.errors }}
       </div>
 
-      <label for="{{ form.orgao_expeditor_rg.id_for_label }}" class="col-sm-3 control-label">Órgão Expeditor</label>
+    </div>
 
-      <div class="col-sm-2">
+    <div class="form-group">
+      <label for="{{ form.orgao_expeditor_rg.id_for_label }}" class="col-sm-4 control-label">Órgão Expeditor</label>
+
+      <div class="col-sm-3">
         {% render_field form.orgao_expeditor_rg class="form-control" %}
         {{ form.orgao_expeditor_rg.errors }}
       </div>
+
+      <label for="{{ form.estado_expeditor.id_for_label }}" class="col-sm-1 control-label">UF</label>
+
+      <div class="col-sm-2">
+        {% render_field form.estado_expeditor class="form-control" %}
+        {{ form.estado_expeditor.errors }}
+      </div>
+
     </div>
 
     <div class="form-group">

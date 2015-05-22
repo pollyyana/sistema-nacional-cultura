@@ -1,7 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
 
-from validatedfile.fields import ValidatedFileField
 from smart_selects.db_fields import ChainedForeignKey
 
 
@@ -24,10 +23,10 @@ class Uf(models.Model):
     nome_uf = models.CharField(max_length=100)
 
     def __str__(self):
-        return self.nome_uf
+        return self.sigla
 
     class Meta:
-        ordering = ['nome_uf']
+        ordering = ['sigla']
 
 
 class Cidade(models.Model):
@@ -57,7 +56,7 @@ class Municipio(models.Model):
     estado_expeditor = models.ForeignKey('Uf', related_name='estado_expeditor')
     endereco = models.CharField(max_length=100)
     complemento = models.CharField(max_length=100)
-    cep = models.CharField(max_length=9)
+    cep = models.CharField(max_length=10)
     bairro = models.CharField(max_length=50)
     estado = models.ForeignKey('Uf')
     cidade = ChainedForeignKey(
@@ -73,48 +72,9 @@ class Municipio(models.Model):
     telefone_dois = models.CharField(max_length=15, blank=True)
     telefone_tres = models.CharField(max_length=15, blank=True)
     email_institucional_prefeito = models.EmailField()
-    termo_posse_prefeito = ValidatedFileField(
-        upload_to='termo_posse',
-        max_upload_size=10240,
-	blank=True,
-	null=True,
-        content_types=[
-            'image/png',
-            'application/pdf',
-            'application/msword',
-            'application/vnd.oasis.opendocument.text',
-            'application/vnd.openxmlformats-officedocument.' +
-            'wordprocessingml.document',
-            'text/plain']
-    )
-    rg_copia_prefeito = ValidatedFileField(
-        upload_to='rg_copia',
-        max_upload_size=10240,
-	blank=True,
-	null=True,
-        content_types=[
-            'image/png',
-            'application/pdf',
-            'application/msword',
-            'application/vnd.oasis.opendocument.text',
-            'application/vnd.openxmlformats-officedocument.' +
-            'wordprocessingml.document',
-            'text/plain']
-    )
-    cpf_copia_prefeito = ValidatedFileField(
-        upload_to='cpf_copia',
-        max_upload_size=10240,
-	blank=True,
-	null=True,
-        content_types=[
-            'image/png',
-            'application/pdf',
-            'application/msword',
-            'application/vnd.oasis.opendocument.text',
-            'application/vnd.openxmlformats-officedocument.' +
-            'wordprocessingml.document',
-            'text/plain']
-    )
+    termo_posse_prefeito = models.FileField(upload_to='termo_posse')
+    rg_copia_prefeito = models.FileField(upload_to='rg_copia')
+    cpf_copia_prefeito = models.FileField(upload_to='cpf_copia')
 
     def __str__(self):
         return self.cnpj_prefeitura

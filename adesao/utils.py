@@ -51,7 +51,7 @@ def validar_cnpj(cnpj):
     if (not cnpj) or (len(cnpj) < 14):
         return False
 
-    inteiros = map(int, cnpj)
+    inteiros = list(map(int, cnpj))
     novo = inteiros[:12]
 
     prod = [5, 4, 3, 2, 9, 8, 7, 6, 5, 4, 3, 2]
@@ -67,3 +67,7 @@ def validar_cnpj(cnpj):
     if novo == inteiros:
         return cnpj
     return False
+
+
+def limpar_mascara(mascara):
+    return ''.join(re.findall('\d+', mascara))

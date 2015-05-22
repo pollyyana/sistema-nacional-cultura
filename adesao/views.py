@@ -1,10 +1,11 @@
 from django.shortcuts import render, redirect
-from django.views.generic.edit import CreateView, UpdateView
+from django.views.generic.edit import CreateView, UpdateView, FormView
 from django.core.urlresolvers import reverse_lazy
 from django.contrib.auth.decorators import login_required
 
 from adesao.models import Municipio, Responsavel, Secretario
-from adesao.forms import CadastrarUsuarioForm
+from adesao.forms import CadastrarUsuarioForm, CadastrarMunicipioForm
+from adesao.forms import CadastrarResponsavelForm, CadastrarSecretarioForm
 
 from wkhtmltopdf.views import PDFTemplateView
 
@@ -25,35 +26,13 @@ class CadastrarUsuario(CreateView):
     success_url = reverse_lazy('adesao:index')
 
 
-class CadastrarMunicipio(CreateView):
-    model = Municipio
-    fields = [
-        'cpf_prefeito',
-        'nome_prefeito',
-        'rg_prefeito',
-        'orgao_expeditor_rg',
-        'estado_expeditor',
-        'cnpj_prefeitura',
-        'endereco',
-        'complemento',
-        'cep',
-        'bairro',
-        'cidade',
-        'estado',
-        'telefone_um',
-        'telefone_dois',
-        'telefone_tres',
-        'email_institucional_prefeito',
-        'termo_posse_prefeito',
-        'rg_copia_prefeito',
-        'cpf_copia_prefeito'
-    ]
+class CadastrarMunicipio(FormView):
+    form_class = CadastrarMunicipioForm
     template_name = 'prefeitura/cadastrar_prefeitura.html'
     success_url = reverse_lazy('adesao:responsavel')
 
     def form_valid(self, form):
-        self.request.user.usuario.municipio = self.object
-        self.request.user.usuario.save()
+        self.request.user.usuario.municipio = form.save(commit=True)
         return super(CadastrarMunicipio, self).form_valid(form)
 
     def dispatch(self, *args, **kwargs):
@@ -65,44 +44,13 @@ class CadastrarMunicipio(CreateView):
 
 
 class AlterarMunicipio(UpdateView):
-    model = Municipio
-    fields = [
-        'cpf_prefeito',
-        'nome_prefeito',
-        'rg_prefeito',
-        'orgao_expeditor_rg',
-        'estado_expeditor',
-        'cnpj_prefeitura',
-        'endereco',
-        'complemento',
-        'cep',
-        'bairro',
-        'cidade',
-        'estado',
-        'telefone_um',
-        'telefone_dois',
-        'telefone_tres',
-        'email_institucional_prefeito'
-    ]
+    form_class = CadastrarMunicipioForm
     template_name = 'prefeitura/cadastrar_prefeitura.html'
     success_url = reverse_lazy('adesao:responsavel')
 
 
 class CadastrarResponsavel(CreateView):
-    model = Responsavel
-    fields = [
-        'cpf_responsavel',
-        'nome_responsavel',
-        'rg_responsavel',
-        'orgao_expeditor_rg',
-        'estado_expeditor',
-        'cargo_responsavel',
-        'instituicao_responsavel',
-        'telefone_um',
-        'telefone_dois',
-        'telefone_tres',
-        'email_institucional_responsavel'
-    ]
+    form_class = CadastrarResponsavelForm
     template_name = 'responsavel/cadastrar_responsavel.html'
     success_url = reverse_lazy('adesao:index')
 
@@ -122,39 +70,13 @@ class CadastrarResponsavel(CreateView):
 
 
 class AlterarResponsavel(UpdateView):
-    model = Responsavel
-    fields = [
-        'cpf_responsavel',
-        'nome_responsavel',
-        'rg_responsavel',
-        'orgao_expeditor_rg',
-        'estado_expeditor',
-        'cargo_responsavel',
-        'instituicao_responsavel',
-        'telefone_um',
-        'telefone_dois',
-        'telefone_tres',
-        'email_institucional_responsavel'
-    ]
+    form_class = CadastrarResponsavelForm
     template_name = 'responsavel/cadastrar_responsavel.html'
     success_url = reverse_lazy('adesao:index')
 
 
 class CadastrarSecretario(CreateView):
-    model = Secretario
-    fields = [
-        'cpf_secretario',
-        'nome_secretario',
-        'rg_secretario',
-        'orgao_expeditor_rg',
-        'estado_expeditor',
-        'cargo_secretario',
-        'instituicao_secretario',
-        'telefone_um',
-        'telefone_dois',
-        'telefone_tres',
-        'email_institucional_secretario'
-    ]
+    form_class = CadastrarSecretarioForm
     template_name = 'secretario/cadastrar_secretario.html'
     success_url = reverse_lazy('adesao:responsavel')
 
@@ -172,20 +94,7 @@ class CadastrarSecretario(CreateView):
 
 
 class AlterarSecretario(UpdateView):
-        model = Secretario
-        fields = [
-            'cpf_secretario',
-            'nome_secretario',
-            'rg_secretario',
-            'orgao_expeditor_rg',
-            'estado_expeditor',
-            'cargo_secretario',
-            'instituicao_secretario',
-            'telefone_um',
-            'telefone_dois',
-            'telefone_tres',
-            'email_institucional_secretario'
-        ]
+        form_class = CadastrarSecretarioForm
         template_name = 'secretario/cadastrar_secretario.html'
         success_url = reverse_lazy('adesao:responsavel')
 

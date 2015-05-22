@@ -4,12 +4,63 @@ from django.contrib.auth.forms import UserCreationForm
 from django.utils.crypto import get_random_string
 from django.core.mail import send_mail
 from django.forms import ModelForm
+from django.template.defaultfilters import filesizeformat
 
 from threading import Thread
 
 from .models import Usuario, Municipio, Responsavel, Secretario
-from .utils import validar_cpf, validar_cnpj
+from .utils import validar_cpf, validar_cnpj, limpar_mascara
 import re
+
+content_types = [
+    'image/png',
+    'application/pdf',
+    'application/msword',
+    'application/vnd.oasis.opendocument.text',
+    'application/vnd.openxmlformats-officedocument.' +
+    'wordprocessingml.document',
+    'text/plain']
+
+
+class RestrictedFileField(forms.FileField):
+    """
+    Same as FileField, but you can specify:
+    * content_types - list containing allowed content_types.
+    Example: ['application/pdf', 'image/jpeg']
+    * max_upload_size - tamanho máximo para upload
+        2.5MB - 2621440
+        5MB - 5242880
+        10MB - 10485760
+        20MB - 20971520
+        50MB - 5242880
+        100MB - 104857600
+        250MB - 214958080
+        500MB - 429916160
+"""
+
+    def __init__(self, *args, **kwargs):
+        self.content_types = kwargs.pop("content_types")
+        self.max_upload_size = kwargs.pop("max_upload_size")
+
+        super(RestrictedFileField, self).__init__(*args, **kwargs)
+
+    def clean(self, data, initial=None):
+        file = super(RestrictedFileField, self).clean(data, initial)
+
+        try:
+            content_type = file.content_type
+            if content_type in self.content_types:
+                if file._size > self.max_upload_size:
+                    raise forms.ValidationError(
+                        'O arquivo deve ter menos de %s. Tamanho atual %s'
+                        % (filesizeformat(self.max_upload_size),
+                            filesizeformat(file._size)))
+            else:
+                raise forms.ValidationError('Tipo do arquivo não aceito.')
+        except AttributeError:
+            pass
+
+        return data
 
 
 class CadastrarUsuarioForm(UserCreationForm):
@@ -50,9 +101,7 @@ class CadastrarUsuarioForm(UserCreationForm):
 
     def save(self, commit=True):
         user = super(CadastrarUsuarioForm, self).save(commit=False)
-        user.username = ''.join(re.findall(
-            '\d+',
-            self.cleaned_data['username']))
+        user.username = limpar_mascara(self.cleaned_data['username'])
         random_password = get_random_string(length=8)
         user.set_password(random_password)
         user.email = self.cleaned_data['email']
@@ -81,42 +130,56 @@ class CadastrarUsuarioForm(UserCreationForm):
         return user
 
 
-class CadastrarMunicipio(ModelForm):
+class CadastrarMunicipioForm(ModelForm):
+    termo_posse_prefeito = RestrictedFileField(
+        content_types=content_types,
+        max_upload_size=5242880)
+    rg_copia_prefeito = RestrictedFileField(
+        content_types=content_types,
+        max_upload_size=5242880)
+    cpf_copia_prefeito = RestrictedFileField(
+        content_types=content_types,
+        max_upload_size=5242880)
+
     def clean_cpf_prefeito(self):
-        if not validar_cpf(self.cleaned_data['cpf_prefeito']):
+        cpf_prefeito = limpar_mascara(self.cleaned_data['cpf_prefeito'])
+        if not validar_cpf(cpf_prefeito):
             raise forms.ValidationError('Por favor, digite um CPF válido!')
 
-        return self.cleaned_data['cpf_prefeito']
+        return cpf_prefeito
 
     def clean_cnpj_prefeitura(self):
-        if not validar_cnpj(self.cleaned_data['cnpj_prefeitura']):
+        cnpj_prefeitura = limpar_mascara(self.cleaned_data['cnpj_prefeitura'])
+        if not validar_cnpj(cnpj_prefeitura):
             raise forms.ValidationError('Por favor, digite um CNPJ válido!')
 
-        return self.cleaned_data['cnpj_prefeitura']
+        return cnpj_prefeitura
 
     class Meta:
         model = Municipio
         fields = '__all__'
 
 
-class CadastrarSecretario(ModelForm):
+class CadastrarSecretarioForm(ModelForm):
     def clean_cpf_secretario(self):
-        if not validar_cpf(self.cleaned_data['cpf_secretario']):
+        cpf_secretario = limpar_mascara(self.cleaned_data['cpf_secretario'])
+        if not validar_cpf(cpf_secretario):
             raise forms.ValidationError('Por favor, digite um CPF válido!')
 
-        return self.cleaned_data['cpf_secretario']
+        return cpf_secretario
 
     class Meta:
         model = Secretario
         fields = '__all__'
 
 
-class CadastrarResponsavel(ModelForm):
-    def clean_cpf_secretario(self):
-        if not validar_cpf(self.cleaned_data['cpf_responsavel']):
+class CadastrarResponsavelForm(ModelForm):
+    def clean_cpf_responsavel(self):
+        cpf_responsavel = limpar_mascara(self.cleaned_data['cpf_responsavel'])
+        if not validar_cpf(cpf_responsavel):
             raise forms.ValidationError('Por favor, digite um CPF válido!')
 
-        return self.cleaned_data['cpf_responsavel']
+        return cpf_responsavel
 
     class Meta:
         model = Responsavel

@@ -17,7 +17,7 @@
   <link href="{% static 'css/style.css' %}" rel="stylesheet">
 
   <script src="{% static 'js/jquery-1.11.3.min.js'%}"></script>
-  <script src="{% static 'js/jquery.maskedinput.js' %}"></script>
+  <script src="{% static 'js/jquery.formatter.min.js' %}"></script>
 </head>
 
 <body>
@@ -62,14 +62,40 @@
             $("#telefone_3").fadeIn();
           });
 
-          $("#id_cnpj_prefeitura").mask("99.999.999/9999-99");
-          $("#id_cpf_prefeito").mask("999.999.999-99");
-          $("#id_cpf_responsavel").mask("999.999.999-99");
-          $("#id_cpf_secretario").mask("999.999.999-99");
-          //$("#id_cep").mask("99.999-999");
-          $("#id_telefone_um").mask("(99)99999-9999");
-          $("#id_telefone_dois").mask("(99)99999-9999");
-          $("#id_telefone_tres").mask("(99)9999-9999?9");
+          {% verbatim %}
+          $("#id_cnpj_prefeitura").formatter({
+            'pattern': '{{99}}.{{999}}.{{999}}/{{9999}}-{{99}}',
+            'persistent': false,
+          });
+          $("#id_cpf_prefeito").formatter({
+            'pattern': '{{999}}.{{999}}.{{999}}-{{99}}',
+            'persistent': false,
+          });
+          $("#id_cpf_responsavel").formatter({
+            'pattern': '{{999}}.{{999}}.{{999}}-{{99}}',
+            'persistent' : false,
+          });
+          $("#id_cpf_secretario").formatter({
+            'pattern': '{{999}}.{{999}}.{{999}}-{{99}}',
+            'persistent': false,
+          });
+          $("#id_cep").formatter({
+            'pattern': '{{99}}.{{999}}-{{999}}',
+            'persistent': false,
+          });
+          $("#id_telefone_um").formatter({
+            'pattern': '({{99}}){{99999}}-{{9999}}',
+            'persistent' : false,
+          });
+          $("#id_telefone_dois").formatter({
+            'pattern': '({{99}}){{99999}}-{{9999}}',
+            'persistent': false,
+          });
+          $("#id_telefone_tres").formatter({
+            'pattern': '({{99}}){{99999}}-{{9999}}',
+            'persistent': false,
+          });
+          {% endverbatim %}
         });
       </script>
 
