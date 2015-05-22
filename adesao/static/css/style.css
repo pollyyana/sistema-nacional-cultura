@@ -67,3 +67,7 @@
    padding: 1em 0px;
    max-width: 100%;
 }
+
+.hide {
+  display: none;
+}

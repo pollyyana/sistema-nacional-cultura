@@ -33,6 +33,7 @@ class CadastrarMunicipio(FormView):
 
     def form_valid(self, form):
         self.request.user.usuario.municipio = form.save(commit=True)
+        self.request.user.usuario.save()
         return super(CadastrarMunicipio, self).form_valid(form)
 
     def dispatch(self, *args, **kwargs):
@@ -45,6 +46,7 @@ class CadastrarMunicipio(FormView):
 
 class AlterarMunicipio(UpdateView):
     form_class = CadastrarMunicipioForm
+    model = Municipio
     template_name = 'prefeitura/cadastrar_prefeitura.html'
     success_url = reverse_lazy('adesao:responsavel')
 
@@ -55,7 +57,7 @@ class CadastrarResponsavel(CreateView):
     success_url = reverse_lazy('adesao:index')
 
     def form_valid(self, form):
-        self.request.user.usuario.responsavel = self.object
+        self.request.user.usuario.responsavel = form.save(commit=True)
         self.request.user.usuario.save()
         return super(CadastrarResponsavel, self).form_valid(form)
 
@@ -71,6 +73,7 @@ class CadastrarResponsavel(CreateView):
 
 class AlterarResponsavel(UpdateView):
     form_class = CadastrarResponsavelForm
+    model = Responsavel
     template_name = 'responsavel/cadastrar_responsavel.html'
     success_url = reverse_lazy('adesao:index')
 
@@ -81,7 +84,7 @@ class CadastrarSecretario(CreateView):
     success_url = reverse_lazy('adesao:responsavel')
 
     def form_valid(self, form):
-        self.request.user.usuario.secretario = self.object
+        self.request.user.usuario.secretario = form.save(commit=True)
         self.request.user.usuario.save()
         return super(CadastrarSecretario, self).form_valid(form)
 
@@ -95,6 +98,7 @@ class CadastrarSecretario(CreateView):
 
 class AlterarSecretario(UpdateView):
         form_class = CadastrarSecretarioForm
+        model = Secretario
         template_name = 'secretario/cadastrar_secretario.html'
         success_url = reverse_lazy('adesao:responsavel')
 
@@ -111,6 +115,7 @@ class MinutaAcordo(PDFTemplateView):
 
     def get_context_data(self, **kwargs):
         context = super(MinutaAcordo, self).get_context_data(**kwargs)
+        context['request'] = self.request
         return context
 
 
@@ -126,4 +131,5 @@ class TermoSolicitacao(PDFTemplateView):
 
     def get_context_data(self, **kwargs):
         context = super(TermoSolicitacao, self).get_context_data(**kwargs)
+        context['request'] = self.request
         return context

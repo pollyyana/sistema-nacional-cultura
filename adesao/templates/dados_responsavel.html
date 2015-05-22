@@ -1,0 +1,27 @@
+<table class="table table-striped table-bordered">
+  <caption>Dados do Responsável</caption>
+  <tr>
+    <td>
+      <strong>Nome</strong>
+    </td>
+    <td>{{ request.user.usuario.responsavel.nome_responsavel }}</td>
+  </tr>
+  <tr>
+    <td>
+      <strong>CNPJ</strong>
+    </td>
+    <td>{{ request.user.usuario.responsavel.cpf_responsavel }}</td>
+  </tr>
+  <tr>
+    <td>
+      <strong>Cargo</strong>
+    </td>
+    <td>{{ request.user.usuario.responsavel.cargo_responsavel }}</td>
+  </tr>
+  <tr>
+    <td>
+      <strong>Instituição</strong>
+    </td>
+    <td>{{ request.user.usuario.responsavel.instituicao_responsavel }}</td>
+  </tr>
+</table>

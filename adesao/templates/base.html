@@ -16,7 +16,9 @@
   <!-- Custom style -->
   <link href="{% static 'css/style.css' %}" rel="stylesheet">
 
+  <!-- Javascripts -->
   <script src="{% static 'js/jquery-1.11.3.min.js'%}"></script>
+  <script src="{% static 'js/bootstrap.min.js' %}"></script>
   <script src="{% static 'js/jquery.formatter.min.js' %}"></script>
 </head>
 
@@ -54,6 +56,23 @@
 
       <script type="text/javascript">
         $(document).ready(function() {
+          $("#radio_municipio").click(function(){
+            if(!$("#form_estado").hasClass('hide')) {
+              $("#form_estado").addClass('hide');
+              $("#form_estado").fadeOut();
+            }
+            $("#form_municipio").removeClass('hide');
+            $("#form_municipio").fadeIn();
+          });
+          $("#radio_estado").click(function(){
+            if(!$("#form_municipio").hasClass('hide')) {
+              $("#form_municipio").addClass('hide');
+              $("#form_municipio").fadeOut();
+            }
+            $("#form_estado").removeClass('hide');
+            $("#form_estado").fadeIn();
+          });
+
           $("#add").click(function() {
             $("#telefone_2").fadeIn();
           });

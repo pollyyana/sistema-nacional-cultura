@@ -17,21 +17,21 @@ urlpatterns = [
     # Cadastro e alteração de prefeitura
     url(r'^municipio/$', login_required(views.CadastrarMunicipio.as_view()),
         name='municipio'),
-    url(r'^prefeitura/(?P<municipio_id>[0-9]+)/$',
+    url(r'^municipio/(?P<pk>[0-9]+)/$',
         login_required(views.AlterarMunicipio.as_view()),
         name='alterar_municipio'),
 
     # Cadastro e alteração de responsável
     url(r'^responsavel/$', login_required(views.CadastrarResponsavel.as_view()),
         name='responsavel'),
-    url(r'^responsavel/(?P<responsavel_id>[0-9]+)/$',
+    url(r'^responsavel/(?P<pk>[0-9]+)/$',
         login_required(views.AlterarResponsavel.as_view()),
         name='alterar_responsavel'),
 
     # Cadastro e alteração de secretário
     url(r'^secretario/$', login_required(views.CadastrarSecretario.as_view()),
         name='secretario'),
-    url(r'^secretario/(?P<secretario_id>[0-9]+)/$',
+    url(r'^secretario/(?P<pk>[0-9]+)/$',
         login_required(views.AlterarSecretario.as_view()),
         name='alterar_secretario'),
 

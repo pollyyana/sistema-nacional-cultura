@@ -142,18 +142,16 @@ class CadastrarMunicipioForm(ModelForm):
         max_upload_size=5242880)
 
     def clean_cpf_prefeito(self):
-        cpf_prefeito = limpar_mascara(self.cleaned_data['cpf_prefeito'])
-        if not validar_cpf(cpf_prefeito):
+        if not validar_cpf(self.cleaned_data['cpf_prefeito']):
             raise forms.ValidationError('Por favor, digite um CPF válido!')
 
-        return cpf_prefeito
+        return self.cleaned_data['cpf_prefeito']
 
     def clean_cnpj_prefeitura(self):
-        cnpj_prefeitura = limpar_mascara(self.cleaned_data['cnpj_prefeitura'])
-        if not validar_cnpj(cnpj_prefeitura):
+        if not validar_cnpj(self.cleaned_data['cnpj_prefeitura']):
             raise forms.ValidationError('Por favor, digite um CNPJ válido!')
 
-        return cnpj_prefeitura
+        return self.cleaned_data['cnpj_prefeitura']
 
     class Meta:
         model = Municipio
@@ -162,11 +160,10 @@ class CadastrarMunicipioForm(ModelForm):
 
 class CadastrarSecretarioForm(ModelForm):
     def clean_cpf_secretario(self):
-        cpf_secretario = limpar_mascara(self.cleaned_data['cpf_secretario'])
-        if not validar_cpf(cpf_secretario):
+        if not validar_cpf(self.cleaned_data['cpf_secretario']):
             raise forms.ValidationError('Por favor, digite um CPF válido!')
 
-        return cpf_secretario
+        return self.cleaned_data['cpf_secretario']
 
     class Meta:
         model = Secretario
@@ -175,11 +172,10 @@ class CadastrarSecretarioForm(ModelForm):
 
 class CadastrarResponsavelForm(ModelForm):
     def clean_cpf_responsavel(self):
-        cpf_responsavel = limpar_mascara(self.cleaned_data['cpf_responsavel'])
-        if not validar_cpf(cpf_responsavel):
+        if not validar_cpf(self.cleaned_data['cpf_responsavel']):
             raise forms.ValidationError('Por favor, digite um CPF válido!')
 
-        return cpf_responsavel
+        return self.cleaned_data['cpf_responsavel']
 
     class Meta:
         model = Responsavel

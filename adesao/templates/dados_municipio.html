@@ -1,0 +1,33 @@
+<table class="table table-striped table-bordered">
+  <caption>Dados do {% if request.user.usuario.municipio.cidade %}Município{% else %}Governo{% endif %}</caption>
+  <tr>
+    <td>
+      <strong>{% if request.user.usuario.municipio.cidade %}Município-{% endif %}Estado</strong>
+    </td>
+    <td>{{ request.user.usuario.municipio.cidade }}-{{ request.user.usuario.municipio.estado }}</td>
+  </tr>
+  <tr>
+    <td>
+      <strong>CNPJ</strong>
+    </td>
+    <td>{{ request.user.usuario.municipio.cnpj_prefeitura }}</td>
+  </tr>
+  <tr>
+    <td>
+      <strong>Governador/Prefeito</strong>
+    </td>
+    <td>{{ request.user.usuario.municipio.nome_prefeito }}</td>
+  </tr>
+  <tr>
+    <td>
+      <strong>Situação</strong>
+    </td>
+    <td>{{ request.user.usuario.get_estado_processo_display }}</td>
+  </tr>
+  <tr>
+    <td>
+      <strong>Data da última alteração</strong>
+    </td>
+    <td>{{ request.user.usuario.municipio.data_alteracao }}</td>
+  </tr>
+</table>

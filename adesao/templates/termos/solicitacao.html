@@ -12,40 +12,31 @@
     </center>
     <hr style="background-color:black;" />
     <div class="col-xs-6">
-      Município: Itaparica
+      Município: {{request.user.usuario.municipio.cidade}}
     </div>
     <div class="col-xs-6">
-      CNPJ: 13.882.949/0001-04
+      CNPJ: {{request.user.usuario.municipio.cnpj_prefeitura}}
     </div>
     <div class="col-xs-6">
-      CEP: 44460-000
+      CEP: {{request.user.usuario.municipio.cep}}
     </div>
     <div class="col-xs-6">
-      Tipo Logradouro: Rua
+      Logradouro: {{request.user.usuario.municipio.endereco}}
     </div>
     <div class="col-xs-6">
-      Logradouro: Antonio Calmon
+      UF: {{request.user.usuario.municipio.estado}}
     </div>
     <div class="col-xs-6">
-      UF: BA
+      Complemento: {{request.user.usuario.municipio.complemento}}
     </div>
     <div class="col-xs-6">
-      Número: 0
+      Bairro: {{request.user.usuario.municipio.bairro}}
     </div>
     <div class="col-xs-6">
-      Complemento: Prédio
+      Email Institucional:{{request.user.usuario.municipio.email_institucional_prefeito}}
     </div>
-    <div class="col-xs-6">
-      Bairro: Centro
-    </div>
-    <div class="col-xs-6">
-      Email Institucional:turismoculturaitaparica@gmail.com
-    </div>
-    <div class="col-xs-6">
-      Telefone Institucional: (71) 36313 -065 ; ;
-    </div>
-    <div class="col-xs-6">
-      Telefone: (71) 36313 -065 ; ;
+    <div class="col-xs-10">
+      Telefone Institucional: {{request.user.usuario.municipio.telefone_um}}; {{request.user.usuario.municipio.telefone_dois}}; {{request.user.usuario.municipio.telefone_tres}}
     </div>
   </div>
 
@@ -56,19 +47,19 @@
     </center>
     <hr style="background-color:black;" />
     <div class="col-xs-12">
-      CPF: 547.290.765-91
+      CPF: {{request.user.usuario.municipio.cpf_prefeito}}
     </div>
     <div class="col-xs-6">
-      Nome Completo: RAIMUNDO NONATO DA HORA FILHO
+      Nome Completo: {{request.user.usuario.municipio.nome_prefeito}}
     </div>
     <div class="col-xs-6">
-      RG: 03227581-14
+      RG: {{request.user.usuario.municipio.rg_prefeito}}
     </div>
     <div class="col-xs-6">
-      Órgão Expeditor: SSP
+      Órgão Expeditor: {{request.user.usuario.municipio.orgao_expeditor_rg}}
     </div>
-    <div class="col-xs-12">
-      Email Institucional: turismoculturaitaparica@gmail.com
+    <div class="col-xs-10">
+      Email Institucional: {{request.user.usuario.municipio.email_institucional_prefeito}}
     </div>
   </div>
 
@@ -79,40 +70,31 @@
     </center>
     <hr style="background-color:black;" />
     <div class="col-xs-12">
-      CPF: 069.064.195-87
+      CPF: {{request.user.usuario.secretario.cpf_secretario}}
     </div>
     <div class="col-xs-12">
-      Nome Completo: Ermeval Bomfim Ferreira da Hora
+      Nome Completo: {{request.user.usuario.secretario.nome_secretario}}
     </div>
-    <div class="col-xs-6">
-      RG: 00785.262-21
+    <div class="col-xs-4">
+      RG: {{request.user.usuario.secretario.rg_secretario}}
     </div>
-    <div class="col-xs-6">
-      Órgão Expeditor: SSP
+    <div class="col-xs-4">
+      Órgão Expeditor: {{request.user.usuario.secretario.rg_secretario}}
     </div>
-    <div class="col-xs-6">
-      UF: Bahia
-    </div>
-    <div class="col-xs-6">
-      CEP: 44460-000
+    <div class="col-xs-4">
+      UF: {{request.user.usuario.secretario.estado_expeditor}}
     </div>
     <div class="col-xs-12">
-      Endereço Institucional: Morada de Ponta de Areia Quadra C
-    </div>
-    <div class="col-xs-6">
-      Complemento: casa
-    </div>
-    <div class="col-xs-6">
-      Bairro: Ponta de Areia
+      Cargo: {{request.user.usuario.secretario.cargo_secretario}}
     </div>
     <div class="col-xs-12">
-      Email Institucional: ermevalbonfim17@gmail.com
+      Instituição: {{request.user.usuario.secretario.instituicao_secretario}}
     </div>
-    <div class="col-xs-6">
-      Telefone Institucional: (71) 87620 -592
+    <div class="col-xs-12">
+      Email Institucional: {{request.user.usuario.secretario.email_institucional_secretario}}
     </div>
-    <div class="col-xs-6">
-      Telefone: (71) 87620 -592
+    <div class="col-xs-10">
+      Telefone Institucional: {{request.user.usuario.secretario.telefone_um}}; {{request.user.usuario.secretario.telefone_dois}}; {{request.user.usuario.secretario.telefone_tres}}
     </div>
   </div>
 
@@ -122,44 +104,33 @@
       <strong>Informações do Responsável Indicado - Acompanhamento de Acordo</strong>
     </center>
     <hr style="background-color:black;" />
-    <div class="col-xs-12">
       <div class="col-xs-12">
-        CPF: 069.064.195-87
-      </div>
-      <div class="col-xs-12">
-        Nome Completo: Ermeval Bomfim Ferreira da Hora
-      </div>
-      <div class="col-xs-6">
-        RG: 00785.262-21
-      </div>
-      <div class="col-xs-6">
-        Órgão Expeditor: SSP
-      </div>
-      <div class="col-xs-6">
-        UF: Bahia
-      </div>
-      <div class="col-xs-6">
-        CEP: 44460-000
+        CPF: {{request.user.usuario.responsavel.cpf_responsavel}}
       </div>
       <div class="col-xs-12">
-        Endereço Institucional: Morada de Ponta de Areia Quadra C
+        Nome Completo: {{request.user.usuario.responsavel.nome_responsavel}}
       </div>
-      <div class="col-xs-6">
-        Complemento: casa
+      <div class="col-xs-4">
+        RG: {{request.user.usuario.responsavel.rg_responsavel}}
       </div>
-      <div class="col-xs-6">
-        Bairro: Ponta de Areia
+      <div class="col-xs-4">
+        Órgão Expeditor: {{request.user.usuario.responsavel.orgao_expeditor_rg}}
+      </div>
+      <div class="col-xs-4">
+        UF: {{request.user.usuario.responsavel.estado_expeditor}}
       </div>
       <div class="col-xs-12">
-        Email Institucional: ermevalbonfim17@gmail.com
+        Cargo: {{request.user.usuario.responsavel.cargo_responsavel}}
       </div>
-      <div class="col-xs-6">
-        Telefone Institucional: (71) 87620 -592
+      <div class="col-xs-12">
+        Instituição: {{request.user.usuario.responsavel.instituicao_responsavel}}
       </div>
-      <div class="col-xs-6">
-        Telefone: (71) 87620 -592
+      <div class="col-xs-12">
+        Email Institucional: {{request.user.usuario.responsavel.email_institucional_responsavel}}
       </div>
-    </div>
+      <div class="col-xs-10">
+        Telefone Institucional: {{request.user.usuario.responsavel.telefone_um}}; {{request.user.usuario.responsavel.telefone_dois}}; {{request.user.usuario.responsavel.telefone_tres}}
+      </div>
   </div>
 
   <div class="row">
@@ -170,13 +141,13 @@
     <hr style="background-color:black;" />
     <div class="col-xs-12">
       <div class="col-xs-12">
-        CPF: 06906419587
+        CPF: {{request.user.username}}
       </div>
       <div class="col-xs-12">
-        Nome Completo: Ermeval Bonfim Ferreira da Hora
+        Nome Completo: {{request.user.usuario.nome_usuario}}
       </div>
       <div class="col-xs-12">
-        Email: ermevalbonfim17@gmail.com
+        Email: {{request.user.emai}}
       </div>
       <div class="col-xs-12">
         *Cadastrador é quem insere as informações na Plataforma de Integração e Monitoramento do SNC, devendo assegurar a confiabilidade dos dados e arquivos apresentados.
@@ -215,9 +186,9 @@
         <br>___________________________ , ________ de ____________________ de 20_____
       </p>
       <p>
-        <strong>Nome Completo: RAIMUNDO NONATO DA HORA FILHO</strong>
+        <strong>Nome Completo: {{request.user.usuario.municipio.nome_prefeito}}</strong>
         <br>
-        <strong>Prefeito do Município: Itaparica</strong>
+        <strong>Prefeito do Município: {{request.user.usuario.municipio.cidade}}</strong>
       </p>
     </div>
   </div>

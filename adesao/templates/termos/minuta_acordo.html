@@ -23,8 +23,8 @@
           A
           <strong>UNIÃO</strong>, por intermédio do
           <strong>MINISTÉRIO DA CULTURA - MinC</strong>, inscrito no CNPJ/MF sob o N.° 01.264.142/0002-00, situado na Esplanada dos Ministérios, Bloco "B", Brasília - Distrito Federal, neste ato representado pelo Secretário de Articulação Institucional,
-          <strong>Vinicius Gomes Wu, residente em Brasília, de identidade nº 5122720468 SSP/RS e CPF/MF no 087.164.607-23, nomeado pela Portaria no 156, de 26 de janeiro de 2015,</strong> e conforme delegação de competência da Portaria No 47, de 17 de julho de
-          2009 e o Município de ITAPARICA/BA, CNPJ/MF sob o nº 13.882.949/0001-04, representado por RAIMUNDO NONATO DA HORA FILHO, Prefeito(a) Municipal, carteira de identidade nº 03227581-14, CPF/MF nº 547.290.765-91 firmam o presente Acordo de Cooperação
+          <strong>Vinicius Gomes Wu, residente em Brasília, de identidade nº 5122720468 SSP/RS e CPF/MF no 087.164.607-23, nomeado pela Portaria no 156, de 26 de janeiro de 2015,</strong> e conforme delegação de competência da Portaria Nº 47, de 17 de julho de
+          2009 e o Município de {{request.user.usuario.municipio.cidade}}/{{request.user.usuario.municipio.estado}}, CNPJ/MF sob o nº {{request.user.usuario.municipio.cnpj_prefeitura}}, representado por {{request.user.usuario.municipio.nome_prefeito}}, Prefeito(a) Municipal, carteira de identidade nº {{request.user.usuario.municipio.rg_prefeito}}, CPF/MF nº {{request.user.usuario.municipio.cpf_prefeito}} firmam o presente Acordo de Cooperação
           Federativa, que irá se reger pelas disposições do Art. 216-A da Constituição; da Lei no 8.666 de 21 de junho de 1993, no que couber; da Lei no 8.313/91, de 23 de dezembro de 1991 e demais disposições legais, pertinentes no que couber, tendo
           como justas e acordadas as seguintes cláusulas e condições:
         </p>
@@ -465,8 +465,8 @@
               <div class="col-xs-2"></div>
               <div class="col-xs-4">
                 <br/>________________________________________
-                <br/>RAIMUNDO NONATO DA HORA FILHO
-                <br/>Prefeito(a) do Município de Itaparica/BA
+                <br/>{{request.user.usuario.municipio.nome_prefeito}}
+                <br/>Prefeito(a) do Município de {{request.user.usuario.municipio.cidade}}/{{request.user.usuario.municipio.estado}}
               </div>
             </div>
           </div>
