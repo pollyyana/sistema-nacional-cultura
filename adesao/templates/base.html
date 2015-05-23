@@ -30,29 +30,50 @@
     </ul>
   </div>
 
-  <div class="container">
-    <div class="header clearfix">
-      <div>
-        <img src="{% static 'images/logo_snc_small.png' %}" /> {% if user.is_authenticated %}
-        <a class="btn btn-danger btn-xs" href="{% url 'adesao:logout' %}">
-          <span class="glyphicon glyphicon-log-out"></span>Sair
-        </a>
-        {% endif %}
-      </div>
-    </div>
+<!-- navegação -->
+{% url 'adesao:municipio' as url_municipio %}
+{% url 'adesao:alterar_municipio' as url_alt_municipio %}
+{% url 'adesao:responsavel' as url_responsavel %}
+{% url 'adesao:alterar_responsavel' as url_alt_responsavel %}
+{% url 'adesao:secretario' as url_secretario %}
+{% url 'adesao:alterar_secretario' as url_alt_secretario %}
+{% url 'adesao:minuta' as url_minuta %}
+{% url 'adesao:solicitacao' as url_solicitacao %}
 
-    {% block content %} {% endblock content%}
+{% if request.get_full_path = the_url %}something{% endif %}
 
-    <footer class="footer">
-      {% block footer %}
-      <address>
-        <strong>SAI - Secretaria de Articulação Institucional</strong>
-        <br> Edifício Parque Cidade Corporate – SCS, Quadra 09, Lote C, Torre B, 10º Andar
-        <br> CEP: 70308-200 Brasília-DF
-        <br>
-        <abbr title="Phone"></abbr> (61) 2024-2325- acordosnc@cultura.gov.br
-      </address>
-      {% endblock footer %}
+<div style="padding:10px">
+  <ul class="nav nav-tabs">
+
+    <li role="presentation" {% if request.path = '/adesao/home/' %} class="active" {% endif %}><a href="{% url 'adesao:home' %}">Início</a></li>
+    <li role="presentation" {% if request.path == url_municipio or request.path == url_alt_municipio %} class="active" {% endif %}>{% if request.user.usuario.municipio %}<a href="{% url 'adesao:alterar_municipio' request.user.usuario.municipio.id %}">{% else %} <a href="{% url 'adesao:municipio' %}"> {% endif %} Instituição</a></li>
+    <li role="presentation" {% if request.path == url_secretario or request.path == url_alt_secretario %} class="active" {% endif %}>{% if request.user.usuario.secretario %}<a href="{% url 'adesao:alterar_secretario' request.user.usuario.secretario.id %}"> {% else %} <a href="{% url 'adesao:secretario' %}"> {% endif %} Interlocutor</a></li>
+    <li role="presentation" {% if request.path == url_responsavel or request.path == url_alt_responsavel %} class="active" {% endif %}>{% if request.user.usuario.responsavel %}<a href="{% url 'adesao:alterar_responsavel' request.user.usuario.responsavel.id %}"> {% else %} <a href="{% url 'adesao:responsavel' %}">  {% endif %} Responsável</a></li>
+    {% if request.user.usuario.estado_processo == '1' %}
+    <li role="presentation" class="dropdown" {% if request.path == url_minuta or request.path == url_solicitacao %} class="active" {% endif %}>
+      <a class="dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-expanded="false">
+        Imprimir <span class="caret"></span>
+      </a>
+      <ul class="dropdown-menu" role="menu">
+          <li role="presentation" {% if request.path == url_minuta %} class="active" {% endif %}><a href="{% url 'adesao:minuta' %}">Acordo de Cooperação</a></li>
+          <li role="presentation" {% if request.path == url_solicitacao %} class="active" {% endif %}><a href="{% url 'adesao:solicitacao' %}">Termo de Solicitação</a></li>
+      </ul>
+    {% endif %}
+  </ul>
+</div>
+<h1>{{ adesao.municipio.get_absolute_url }}</h1>
+{% block content %} {% endblock content%}
+
+<footer class="footer">
+  {% block footer %}
+  <address>
+    <strong>SAI - Secretaria de Articulação Institucional</strong>
+    <br> Edifício Parque Cidade Corporate – SCS, Quadra 09, Lote C, Torre B, 10º Andar
+    <br> CEP: 70308-200 Brasília-DF
+    <br>
+    <abbr title="Phone"></abbr> (61) 2024-2325- acordosnc@cultura.gov.br
+  </address>
+{% endblock footer %}
 
       <script type="text/javascript">
         $(document).ready(function() {
