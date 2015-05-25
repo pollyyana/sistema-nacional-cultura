@@ -1,9 +1,13 @@
+from datetime import timedelta
+
 from django.shortcuts import render, redirect
+from django.http import Http404
 from django.views.generic.edit import CreateView, UpdateView, FormView
 from django.core.urlresolvers import reverse_lazy
 from django.contrib.auth.decorators import login_required
+from django.utils import timezone
 
-from adesao.models import Municipio, Responsavel, Secretario
+from adesao.models import Municipio, Responsavel, Secretario, Usuario
 from adesao.forms import CadastrarUsuarioForm, CadastrarMunicipioForm
 from adesao.forms import CadastrarResponsavelForm, CadastrarSecretarioForm
 
@@ -18,6 +22,22 @@ def index(request):
 @login_required
 def home(request):
     return render(request, 'home.html')
+
+
+def ativar_usuario(request, codigo):
+    usuario = Usuario.objects.get(codigo_ativacao=codigo)
+
+    if usuario is None:
+        raise Http404()
+
+    if timezone.now() > (usuario.data_cadastro + timedelta(days=3)):
+        raise Http404()
+
+    usuario.user.is_active = True
+    usuario.save()
+    usuario.user.save()
+
+    return render(request, 'confirmar_email.html')
 
 
 class CadastrarUsuario(CreateView):
@@ -39,7 +59,7 @@ class CadastrarMunicipio(FormView):
     def dispatch(self, *args, **kwargs):
         municipio = self.request.user.usuario.municipio
         if municipio:
-            return redirect('alterar_municipio', municipio_id=municipio.id)
+            return redirect('adesao:alterar_municipio', pk=municipio.id)
 
         return super(CadastrarMunicipio, self).dispatch(*args, **kwargs)
 
@@ -54,7 +74,7 @@ class AlterarMunicipio(UpdateView):
 class CadastrarResponsavel(CreateView):
     form_class = CadastrarResponsavelForm
     template_name = 'responsavel/cadastrar_responsavel.html'
-    success_url = reverse_lazy('adesao:index')
+    success_url = reverse_lazy('adesao:home')
 
     def form_valid(self, form):
         self.request.user.usuario.responsavel = form.save(commit=True)
@@ -65,8 +85,8 @@ class CadastrarResponsavel(CreateView):
         responsavel = self.request.user.usuario.responsavel
         if responsavel:
             return redirect(
-                'alterar_responsavel',
-                responsavel_id=responsavel.id)
+                'adesao:alterar_responsavel',
+                pk=responsavel.id)
 
         return super(CadastrarResponsavel, self).dispatch(*args, **kwargs)
 
@@ -75,7 +95,7 @@ class AlterarResponsavel(UpdateView):
     form_class = CadastrarResponsavelForm
     model = Responsavel
     template_name = 'responsavel/cadastrar_responsavel.html'
-    success_url = reverse_lazy('adesao:index')
+    success_url = reverse_lazy('adesao:home')
 
 
 class CadastrarSecretario(CreateView):
@@ -91,7 +111,7 @@ class CadastrarSecretario(CreateView):
     def dispatch(self, *args, **kwargs):
         secretario = self.request.user.usuario.secretario
         if secretario:
-            return redirect('alterar_secretario', secretario_id=secretario.id)
+            return redirect('adesao:alterar_secretario', pk=secretario.id)
 
         return super(CadastrarSecretario, self).dispatch(*args, **kwargs)
 

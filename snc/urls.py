@@ -24,4 +24,32 @@ urlpatterns = [
     url(r'^adesao/', include('adesao.urls', namespace="adesao")),
     url(r'^admin/', include(admin.site.urls)),
     url(r'^chaining/', include('smart_selects.urls')),
+
+    url(r'^password_reset/$',
+        'django.contrib.auth.views.password_reset',
+        {'template_name': 'password_reset_form.html'},
+        name='password_reset'),
+    url(r'^password_reset_done/$',
+        'django.contrib.auth.views.password_reset_done',
+        {'template_name': 'password_reset_done.html'},
+        name='password_reset_done'),
+    url(r'^password_reset_confirm/' +
+        '(?P<uidb64>[0-9A-Za-z_\-]+)/' +
+        '(?P<token>[0-9A-Za-z]{1,13}-[0-9A-Za-z]{1,20})/$',
+        'django.contrib.auth.views.password_reset_confirm',
+        {'template_name': 'password_reset_confirm.html'},
+        name='password_reset_confirm'),
+    url(r'^password_reset_complete/$',
+        'django.contrib.auth.views.password_reset_complete',
+        {'template_name': 'password_reset_complete.html'},
+        name='password_reset_complete'),
+
+    url(r'^mudar_senha/$',
+        'django.contrib.auth.views.password_change',
+        {'template_name': 'mudar_senha.html'},
+        name='mudar_senha'),
+    url(r'^mudar_senha_sucesso/$',
+        'django.contrib.auth.views.password_change_done',
+        {'template_name': 'mudar_senha_concluido.html'},
+        name='password_change_done')
 ] + static.static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

@@ -1,10 +1,12 @@
 from django import forms
+from django.http import HttpRequest
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm
 from django.utils.crypto import get_random_string
 from django.core.mail import send_mail
 from django.forms import ModelForm
 from django.template.defaultfilters import filesizeformat
+from django.core.urlresolvers import reverse
 
 from threading import Thread
 
@@ -23,21 +25,6 @@ content_types = [
 
 
 class RestrictedFileField(forms.FileField):
-    """
-    Same as FileField, but you can specify:
-    * content_types - list containing allowed content_types.
-    Example: ['application/pdf', 'image/jpeg']
-    * max_upload_size - tamanho máximo para upload
-        2.5MB - 2621440
-        5MB - 5242880
-        10MB - 10485760
-        20MB - 20971520
-        50MB - 5242880
-        100MB - 104857600
-        250MB - 214958080
-        500MB - 429916160
-"""
-
     def __init__(self, *args, **kwargs):
         self.content_types = kwargs.pop("content_types")
         self.max_upload_size = kwargs.pop("max_upload_size")
@@ -56,7 +43,8 @@ class RestrictedFileField(forms.FileField):
                         % (filesizeformat(self.max_upload_size),
                             filesizeformat(file._size)))
             else:
-                raise forms.ValidationError('Tipo do arquivo não aceito.')
+                raise forms.ValidationError(
+                    'Arquivos desse tipo não são aceitos.')
         except AttributeError:
             pass
 
@@ -65,25 +53,27 @@ class RestrictedFileField(forms.FileField):
 
 class CadastrarUsuarioForm(UserCreationForm):
     username = forms.CharField(max_length=14, required=True)
-    email = forms.EmailField(required=True)
     confirmar_email = forms.EmailField(required=True)
+    email = forms.EmailField(required=True)
     nome_usuario = forms.CharField(max_length=100)
 
     class Meta:
         model = User
-        fields = ('email', 'username')
-
-    def __init__(self, *args, **kwargs):
-        super(CadastrarUsuarioForm, self).__init__(*args, **kwargs)
-        self.fields['password1'].required = False
-        self.fields['password2'].required = False
+        fields = ('username', 'password1', 'password2')
 
     def clean_confirmar_email(self):
-        if self.cleaned_data['email'] != self.cleaned_data['confirmar_email']:
+        if self.data.get('email') != self.cleaned_data['confirmar_email']:
             raise forms.ValidationError(
                 'Confirmação de e-mail não confere.')
 
         return self.cleaned_data['confirmar_email']
+
+    def clean_email(self):
+        try:
+            User.objects.get(email=self.cleaned_data['email'])
+            raise forms.ValidationError('Este e-mail já foi cadastrado!')
+        except User.DoesNotExist:
+            return self.cleaned_data['email']
 
     def clean_username(self):
         if not validar_cpf(self.cleaned_data['username']):
@@ -102,25 +92,24 @@ class CadastrarUsuarioForm(UserCreationForm):
     def save(self, commit=True):
         user = super(CadastrarUsuarioForm, self).save(commit=False)
         user.username = limpar_mascara(self.cleaned_data['username'])
-        random_password = get_random_string(length=8)
-        user.set_password(random_password)
         user.email = self.cleaned_data['email']
+        user.is_active = False
         if commit:
             user.save()
 
         usuario = Usuario()
         usuario.user = user
         usuario.nome_usuario = self.cleaned_data['nome_usuario']
+        codigo_ativacao = get_random_string()
+        usuario.codigo_ativacao = codigo_ativacao
         if commit:
             usuario.save()
-        print(user.email)
         Thread(target=send_mail, args=(
             'MINISTÉRIO DA CULTURA - SNC - CREDENCIAIS DE ACESSO',
             'Prezado '+usuario.nome_usuario+',\n' +
             'Recebemos o seu cadastro no Sistema Nacional de Cultura.' +
-            'Seguem abaixo suas credenciais de acesso:\n\n' +
-            'Login: '+user.username+'\n' +
-            'Senha: '+random_password+'\n\n' +
+            'Por favor confirme seu e-mail clicando no endereço abaixo:\n\n' +
+            reverse('adesao:ativar_usuario', args=[codigo_ativacao])+'\n\n' +
             'Atenciosamente,\n\n' +
             'Equipe SAI - Ministério da Cultura',
             '',

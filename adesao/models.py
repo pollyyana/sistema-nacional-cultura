@@ -134,6 +134,8 @@ class Usuario(models.Model):
         choices=LISTA_ESTADOS_PROCESSO,
         default='1')
     data_publicacao_acordo = models.DateField(blank=True, null=True)
+    codigo_ativacao = models.CharField(max_length=12, unique=True)
+    data_cadastro = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
         return self.user.username
