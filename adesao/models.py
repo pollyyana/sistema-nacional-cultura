@@ -129,6 +129,10 @@ class Usuario(models.Model):
     municipio = models.OneToOneField('Municipio', blank=True, null=True)
     responsavel = models.OneToOneField('Responsavel', blank=True, null=True)
     secretario = models.OneToOneField('Secretario', blank=True, null=True)
+    plano_trabalho = models.OneToOneField(
+        'planotrabalho.PlanoTrabalho',
+        blank=True,
+        null=True)
     estado_processo = models.CharField(
         max_length=1,
         choices=LISTA_ESTADOS_PROCESSO,
