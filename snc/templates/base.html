@@ -46,9 +46,9 @@
     <ul class="nav nav-tabs">
 
       <li role="presentation" {% if request.path = '/adesao/home/' %} class="active" {% endif %}><a href="{% url 'adesao:home' %}">Início</a></li>
-      <li role="presentation" {% if request.path == url_municipio or request.path == url_alt_municipio %} class="active" {% endif %}>{% if request.user.usuario.municipio %}<a href="{% url 'adesao:alterar_municipio' request.user.usuario.municipio.id %}">{% else %} <a href="{% url 'adesao:municipio' %}"> {% endif %} Instituição</a></li>
-      <li role="presentation" {% if request.path == url_secretario or request.path == url_alt_secretario %} class="active" {% endif %}>{% if request.user.usuario.secretario %}<a href="{% url 'adesao:alterar_secretario' request.user.usuario.secretario.id %}"> {% else %} <a href="{% url 'adesao:secretario' %}"> {% endif %} Interlocutor</a></li>
-      <li role="presentation" {% if request.path == url_responsavel or request.path == url_alt_responsavel %} class="active" {% endif %}>{% if request.user.usuario.responsavel %}<a href="{% url 'adesao:alterar_responsavel' request.user.usuario.responsavel.id %}"> {% else %} <a href="{% url 'adesao:responsavel' %}">  {% endif %} Responsável</a></li>
+      <li role="presentation" {% if request.path == url_municipio or request.path == url_alt_municipio %} class="active" {% endif %}><a href="{% url 'adesao:municipio' %}">Instituição</a></li>
+      <li role="presentation" {% if request.path == url_secretario or request.path == url_alt_secretario %} class="active" {% endif %}><a href="{% url 'adesao:secretario' %}">Interlocutor</a></li>
+      <li role="presentation" {% if request.path == url_responsavel or request.path == url_alt_responsavel %} class="active" {% endif %}><a href="{% url 'adesao:responsavel' %}">Responsável</a></li>
       {% if request.user.usuario.estado_processo == '1' %}
       <li role="presentation" class="dropdown" {% if request.path == url_minuta or request.path == url_solicitacao %} class="active" {% endif %}>
         <a class="dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-expanded="false">
@@ -104,46 +104,30 @@
               $("#form_estado").fadeIn();
             });
 
-            $("#add").click(function() {
-              $("#telefone_2").fadeIn();
+            $(".add").click(function() {
+              $(".telefone2").fadeIn();
             });
 
-            $("#add2").click(function() {
-              $("#telefone_3").fadeIn();
+            $(".add2").click(function() {
+              $(".telefone3").fadeIn();
             });
 
             {% verbatim %}
-            $("#id_cnpj_prefeitura").formatter({
+            $(".cnpj").formatter({
               'pattern': '{{99}}.{{999}}.{{999}}/{{9999}}-{{99}}',
               'persistent': false,
             });
-            $("#id_cpf_prefeito").formatter({
+            $(".cpf").formatter({
               'pattern': '{{999}}.{{999}}.{{999}}-{{99}}',
               'persistent': false,
             });
-            $("#id_cpf_responsavel").formatter({
-              'pattern': '{{999}}.{{999}}.{{999}}-{{99}}',
-              'persistent' : false,
-            });
-            $("#id_cpf_secretario").formatter({
-              'pattern': '{{999}}.{{999}}.{{999}}-{{99}}',
-              'persistent': false,
-            });
-            $("#id_cep").formatter({
+            $(".cep").formatter({
               'pattern': '{{99}}.{{999}}-{{999}}',
               'persistent': false,
             });
-            $("#id_telefone_um").formatter({
+            $(".telefone").formatter({
               'pattern': '({{99}}){{99999}}-{{9999}}',
               'persistent' : false,
-            });
-            $("#id_telefone_dois").formatter({
-              'pattern': '({{99}}){{99999}}-{{9999}}',
-              'persistent': false,
-            });
-            $("#id_telefone_tres").formatter({
-              'pattern': '({{99}}){{99999}}-{{9999}}',
-              'persistent': false,
             });
             {% endverbatim %}
           });

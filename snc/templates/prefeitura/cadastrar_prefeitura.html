@@ -9,25 +9,36 @@
       <p>Preencha o formulário abaixo com os dados do município.</p>
     </div>
   </div>
+{% if request.user.usuario.municipio %}
+<div class="row">
+  <form class="form-horizontal" method="post" enctype="multipart/form-data">{% csrf_token %}
+  {% if request.user.usuario.municipio.estado and not request.user.usuario.municipio.cidade %}
+    {% include "prefeitura/alterar_estado.html" %}
+  {% else %}
+    {% include "prefeitura/alterar_municipio.html" %}
+  {% endif %}
+  </form>
+</div>
+{% else %}
+<div class="row" style="padding-bottom: 20px;">
+  <center>
+    <div class="btn-group" id="radio_button" data-toggle="buttons">
+      <label id="radio_municipio" class="btn btn-primary">
+        <input type="radio" name="options" autocomplete="off" > Município
+      </label>
+      <label id="radio_estado" class="btn btn-primary">
+        <input type="radio" name="options" autocomplete="off"> Estado
+      </label>
+    </div>
+  </center>
+</div>
 
-  <div class="row" style="padding-bottom: 20px;">
-    <center>
-      <div class="btn-group" id="radio_button" data-toggle="buttons">
-        <label id="radio_municipio" class="btn btn-primary">
-          <input type="radio" name="options" autocomplete="off" > Município
-        </label>
-        <label id="radio_estado" class="btn btn-primary">
-          <input type="radio" name="options" autocomplete="off"> Estado
-        </label>
-      </div>
-    </center>
-  </div>
-
-  <div class="row">
-    <form class="form-horizontal" method="post" enctype="multipart/form-data">{% csrf_token %}
-      {% include "prefeitura/formulario_municipio.html" %}
-      {% include "prefeitura/formulario_estado.html" %}
-    </form>
-  </div>
+<div class="row">
+  <form class="form-horizontal" method="post" enctype="multipart/form-data">{% csrf_token %}
+    {% include "prefeitura/formulario_municipio.html" %}
+    {% include "prefeitura/formulario_estado.html" %}
+  </form>
+</div>
+  {% endif %}
 </div>
 {% endblock content %}

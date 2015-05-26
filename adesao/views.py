@@ -70,6 +70,16 @@ class AlterarMunicipio(UpdateView):
     template_name = 'prefeitura/cadastrar_prefeitura.html'
     success_url = reverse_lazy('adesao:responsavel')
 
+    def dispatch(self, *args, **kwargs):
+        municipio = self.request.user.usuario.municipio.pk
+        print(municipio)
+        print(self.kwargs['pk'])
+        if str(municipio) != self.kwargs['pk']:
+            raise Http404()
+            # return redirect('adesao:alterar_municipio', pk=municipio)
+
+        return super(AlterarMunicipio, self).dispatch(*args, **kwargs)
+
 
 class CadastrarResponsavel(CreateView):
     form_class = CadastrarResponsavelForm

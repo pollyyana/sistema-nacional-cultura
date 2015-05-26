@@ -64,7 +64,7 @@ class Municipio(models.Model):
         chained_field='estado',
         chained_model_field='uf',
         show_all=False,
-        auto_choose=True,
+        auto_choose=False,
         blank=True,
         null=True
     )
@@ -144,3 +144,5 @@ class Usuario(models.Model):
 class Historico(models.Model):
     usuario = models.OneToOneField(User)
     data_alteracao = models.DateTimeField(auto_now_add=True)
+    arquivo = models.FileField(upload_to='historico', blank=True, null=True)
+    descricao = models.TextField(blank=True, null=True)

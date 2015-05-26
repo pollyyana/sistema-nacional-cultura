@@ -1,5 +1,5 @@
 {% load widget_tweaks %}
-<div id="form_municipio" class="hide">
+<div id="form_estado">
   <div class="form-group">
     <label for="{{ form.estado.id_for_label }}" class="col-sm-4 control-label">Estado</label>
 
@@ -10,23 +10,14 @@
   </div>
 
   <div class="form-group">
-    <label for="{{ form.cidade.id_for_label }}" class="col-sm-4 control-label">Cidade</label>
-
-    <div class="col-sm-2">
-      {% render_field form.cidade class="form-control" %} {{ form.cidade.errors }}
-    </div>
-
-  </div>
-
-  <div class="form-group">
-    <label for="{{ form.cnpj_prefeitura.id_for_label }}" class="col-sm-4 control-label">CNPJ da Prefeitura</label>
+    <label for="{{ form.cnpj_prefeitura.id_for_label }}" class="col-sm-4 control-label">CNPJ do Governo</label>
     <div class="col-sm-4">
       {% render_field form.cnpj_prefeitura class="form-control cnpj" %} {{ form.cnpj_prefeitura.errors }}
     </div>
   </div>
 
   <div class="form-group">
-    <label for="{{ form.cpf_prefeito.id_for_label }}" class="col-sm-4 control-label">CPF do Prefeito</label>
+    <label for="{{ form.cpf_prefeito.id_for_label }}" class="col-sm-4 control-label">CPF do Governador</label>
 
     <div class="col-sm-4">
       {% render_field form.cpf_prefeito class="form-control cpf" %} {{ form.cpf_prefeito.errors }}
@@ -35,7 +26,7 @@
   </div>
 
   <div class="form-group">
-    <label for="{{ form.rg_prefeito.id_for_label }}" class="col-sm-4 control-label">RG do Prefeito</label>
+    <label for="{{ form.rg_prefeito.id_for_label }}" class="col-sm-4 control-label">RG do Governador</label>
 
     <div class="col-sm-3">
       {% render_field form.rg_prefeito class="form-control" %} {{ form.rg_prefeito.errors }}
@@ -88,7 +79,7 @@
   </div>
 
   <div class="form-group">
-    <label for="{{ form.nome_prefeito.id_for_label }}" class="col-sm-4 control-label">Nome do Prefeito</label>
+    <label for="{{ form.nome_prefeito.id_for_label }}" class="col-sm-4 control-label">Nome do Governador</label>
 
     <div class="col-sm-8">
       {% render_field form.nome_prefeito class="form-control" %} {{ form.nome_prefeito.errors }}
@@ -144,7 +135,7 @@
       <div class="input-group input-group-sm">
         {% render_field form.telefone_um class="form-control telefone" %}
         <span class="input-group-btn">
-          <button type="button" class="btn btn-default add">
+          <button id="add" type="button" class="btn btn-default add">
             <span class="glyphicon glyphicon-plus"></span>
           </button>
         </span>

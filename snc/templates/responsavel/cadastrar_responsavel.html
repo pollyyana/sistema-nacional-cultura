@@ -14,14 +14,14 @@
       <label for="{{ form.rg_responsavel.id_for_label }}" class="col-sm-3 control-label">RG</label>
 
       <div class="col-sm-4">
-        {% render_field form.rg_responsavel class="form-control "%}
+        {% render_field form.rg_responsavel class="form-control" %}
         {{ form.rg_responsavel.errors }}
       </div>
 
       <label for="{{ form.cpf_responsavel.id_for_label }}" class="col-sm-1 control-label">CPF</label>
 
       <div class="col-sm-4">
-        {% render_field form.cpf_responsavel class="form-control" %}
+        {% render_field form.cpf_responsavel class="form-control cpf" %}
         {{ form.cpf_responsavel.errors }}
       </div>
 
@@ -85,17 +85,17 @@
       <label for="{{ form.telefone_um.id_for_label }}" class="col-sm-3 control-label">Telefones</label>
 
       <div class="col-sm-3">
-        {% render_field form.telefone_um class="form-control" %}
+        {% render_field form.telefone_um class="form-control telefone" %}
         {{ form.telefone_um.errors }}
       </div>
 
       <div class="col-sm-3">
-        {% render_field form.telefone_dois class="form-control" %}
+        {% render_field form.telefone_dois class="form-control telefone" %}
         {{ form.telefone_dois.errors }}
       </div>
 
       <div class="col-sm-3">
-        {% render_field form.telefone_tres class="form-control" %}
+        {% render_field form.telefone_tres class="form-control telefone" %}
         {{ form.telefone_tres.errors }}
       </div>
 

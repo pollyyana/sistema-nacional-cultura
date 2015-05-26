@@ -58,6 +58,7 @@ THIRD_PARTY_APPS = (
 
 LOCAL_APPS = (
     'adesao',
+    'planotrabalho',
 )
 
 INSTALLED_APPS = DEFAULT_APPS + THIRD_PARTY_APPS + LOCAL_APPS
