@@ -1,183 +1,185 @@
 {% load widget_tweaks %}
 <div id="form_municipio" class="hide">
-  <div class="form-group">
-    <label for="{{ form.estado.id_for_label }}" class="col-sm-4 control-label">Estado</label>
+  <form class="form-horizontal" method="post" enctype="multipart/form-data">{% csrf_token %}
+    <div class="form-group">
+      <label for="{{ form.estado.id_for_label }}" class="col-sm-4 control-label">Estado</label>
 
-    <div class="col-sm-2">
-      {% render_field form.estado class="form-control" %} {{ form.estado.errors }}
-    </div>
-
-  </div>
-
-  <div class="form-group">
-    <label for="{{ form.cidade.id_for_label }}" class="col-sm-4 control-label">Cidade</label>
-
-    <div class="col-sm-2">
-      {% render_field form.cidade class="form-control" %} {{ form.cidade.errors }}
-    </div>
-
-  </div>
-
-  <div class="form-group">
-    <label for="{{ form.cnpj_prefeitura.id_for_label }}" class="col-sm-4 control-label">CNPJ da Prefeitura</label>
-    <div class="col-sm-4">
-      {% render_field form.cnpj_prefeitura class="form-control cnpj" %} {{ form.cnpj_prefeitura.errors }}
-    </div>
-  </div>
-
-  <div class="form-group">
-    <label for="{{ form.cpf_prefeito.id_for_label }}" class="col-sm-4 control-label">CPF do Prefeito</label>
-
-    <div class="col-sm-4">
-      {% render_field form.cpf_prefeito class="form-control cpf" %} {{ form.cpf_prefeito.errors }}
-    </div>
-
-  </div>
-
-  <div class="form-group">
-    <label for="{{ form.rg_prefeito.id_for_label }}" class="col-sm-4 control-label">RG do Prefeito</label>
-
-    <div class="col-sm-3">
-      {% render_field form.rg_prefeito class="form-control" %} {{ form.rg_prefeito.errors }}
-    </div>
-
-  </div>
-
-  <div class="form-group">
-    <label for="{{ form.orgao_expeditor_rg.id_for_label }}" class="col-sm-4 control-label">Órgão Expeditor</label>
-
-    <div class="col-sm-3">
-      {% render_field form.orgao_expeditor_rg class="form-control" %} {{ form.orgao_expeditor_rg.errors }}
-    </div>
-
-    <label for="{{ form.estado_expeditor.id_for_label }}" class="col-sm-1 control-label">UF</label>
-
-    <div class="col-sm-2">
-      {% render_field form.estado_expeditor class="form-control" %} {{ form.estado_expeditor.errors }}
-    </div>
-
-  </div>
-
-  <div class="form-group">
-    <div class="col-sm-offset-4 col-sm-4">
-      <span class="btn btn-default btn-file">
-        <strong>Termo de Posse</strong>{% render_field form.termo_posse_prefeito %}
-      </span>
-      {{ form.termo_posse_prefeito.errors }}
-    </div>
-  </div>
-
-  <div class="form-group">
-    <div class="col-sm-offset-4 col-sm-4">
-      <span class="btn btn-default btn-file">
-        <strong>Cópia do CPF</strong>{% render_field form.cpf_copia_prefeito %}
-      </span>
-      {{ form.cpf_copia_prefeito.errors }}
-    </div>
-
-  </div>
-
-  <div class="form-group">
-    <div class="col-sm-offset-4 col-sm-4">
-      <span class="btn btn-default btn-file">
-        <strong>Cópia do RG</strong>{% render_field form.rg_copia_prefeito %}
-      </span>
-      {{ form.rg_copia_prefeito.errors }}
-    </div>
-
-  </div>
-
-  <div class="form-group">
-    <label for="{{ form.nome_prefeito.id_for_label }}" class="col-sm-4 control-label">Nome do Prefeito</label>
-
-    <div class="col-sm-8">
-      {% render_field form.nome_prefeito class="form-control" %} {{ form.nome_prefeito.errors }}
-    </div>
-
-  </div>
-
-  <div class="form-group">
-    <label for="{{ form.email_institucional_prefeito.id_for_label }}" class="col-sm-4 control-label">E-mail Institucional</label>
-
-    <div class="col-sm-8">
-      {% render_field form.email_institucional_prefeito class="form-control" %} {{ form.email_institucional_prefeito.errors }}
-    </div>
-
-  </div>
-
-  <div class="form-group">
-    <label for="{{ form.endereco.id_for_label }}" class="col-sm-4 control-label">Endereço Institucional</label>
-    <div class="col-sm-8">
-      {% render_field form.endereco class="form-control" %} {{ form.endereco.errors }}
-    </div>
-  </div>
-
-  <div class="form-group">
-    <label for="{{ form.complemento.id_for_label }}" class="col-sm-offset-1 col-sm-3 control-label">Complemento</label>
-
-    <div class="col-sm-3">
-      {% render_field form.complemento class="form-control" %} {{ form.complemento.errors }}
-    </div>
-
-    <label for="{{ form.bairro.id_for_label }}" class="col-sm-1 control-label">Bairro</label>
-
-    <div class="col-sm-4">
-      {% render_field form.bairro class="form-control" %} {{ form.bairro.errors }}
-    </div>
-
-  </div>
-
-  <div class="form-group">
-    <label for="{{ form.cep.id_for_label }}" class="col-sm-offset-1 col-sm-3 control-label">CEP</label>
-
-    <div class="col-sm-4">
-      {% render_field form.cep class="form-control cep" %} {{ form.cep.errors }}
-    </div>
-
-  </div>
-
-  <div class="form-group">
-
-    <label for="{{ form.telefone_um.id_for_label }}" class="col-sm-offset-2 col-sm-2 control-label">Telefones</label>
-
-    <div class="col-sm-4">
-      <div class="input-group input-group-sm">
-        {% render_field form.telefone_um class="form-control telefone" %}
-        <span class="input-group-btn">
-          <button type="button" class="btn btn-default add">
-            <span class="glyphicon glyphicon-plus"></span>
-          </button>
-        </span>
+      <div class="col-sm-2">
+        {% render_field form.estado class="form-control" %} {{ form.estado.errors }}
       </div>
-      {{ form.telefone_um.errors }}
+
     </div>
 
-  </div>
+    <div class="form-group">
+      <label for="{{ form.cidade.id_for_label }}" class="col-sm-4 control-label">Cidade</label>
 
-  <div style="display:none;" class="form-group telefone2">
-    <div class="col-sm-offset-4 col-sm-4">
-      <div class="input-group input-group-sm">
-        {% render_field form.telefone_dois class="form-control telefone" %}
-        <span class="input-group-btn">
-          <button type="button" class="btn btn-default add2">
-            <span class="glyphicon glyphicon-plus"></span>
-          </button>
-        </span>
+      <div class="col-sm-2">
+        {% render_field form.cidade class="form-control" %} {{ form.cidade.errors }}
       </div>
-      {{ form.telefone_dois.errors }}
-    </div>
-  </div>
 
-  <div style="display:none;" class="form-group telefone3">
-    <div class="col-sm-offset-4 col-sm-4">
-      {% render_field form.telefone_tres class="form-control telefone" %} {{ form.telefone_tres.errors }}
     </div>
-  </div>
 
-  <div class="form-group">
-    <div class="col-sm-offset-3 col-sm-10">
-      <input type="submit" class="btn btn-default" value="Cadastrar" />
-      <a class="btn btn-default" href="{% url 'adesao:home' %}">Voltar</a>
+    <div class="form-group">
+      <label for="{{ form.cnpj_prefeitura.id_for_label }}" class="col-sm-4 control-label">CNPJ da Prefeitura</label>
+      <div class="col-sm-4">
+        {% render_field form.cnpj_prefeitura class="form-control cnpj" %} {{ form.cnpj_prefeitura.errors }}
+      </div>
     </div>
-  </div>
+
+    <div class="form-group">
+      <label for="{{ form.cpf_prefeito.id_for_label }}" class="col-sm-4 control-label">CPF do Prefeito</label>
+
+      <div class="col-sm-4">
+        {% render_field form.cpf_prefeito class="form-control cpf" %} {{ form.cpf_prefeito.errors }}
+      </div>
+
+    </div>
+
+    <div class="form-group">
+      <label for="{{ form.rg_prefeito.id_for_label }}" class="col-sm-4 control-label">RG do Prefeito</label>
+
+      <div class="col-sm-3">
+        {% render_field form.rg_prefeito class="form-control" %} {{ form.rg_prefeito.errors }}
+      </div>
+
+    </div>
+
+    <div class="form-group">
+      <label for="{{ form.orgao_expeditor_rg.id_for_label }}" class="col-sm-4 control-label">Órgão Expeditor</label>
+
+      <div class="col-sm-3">
+        {% render_field form.orgao_expeditor_rg class="form-control" %} {{ form.orgao_expeditor_rg.errors }}
+      </div>
+
+      <label for="{{ form.estado_expeditor.id_for_label }}" class="col-sm-1 control-label">UF</label>
+
+      <div class="col-sm-2">
+        {% render_field form.estado_expeditor class="form-control" %} {{ form.estado_expeditor.errors }}
+      </div>
+
+    </div>
+
+    <div class="form-group">
+      <div class="col-sm-offset-4 col-sm-4">
+        <span class="btn btn-default btn-file">
+          <strong>Termo de Posse</strong>{% render_field form.termo_posse_prefeito %}
+        </span>
+        {{ form.termo_posse_prefeito.errors }}
+      </div>
+    </div>
+
+    <div class="form-group">
+      <div class="col-sm-offset-4 col-sm-4">
+        <span class="btn btn-default btn-file">
+          <strong>Cópia do CPF</strong>{% render_field form.cpf_copia_prefeito %}
+        </span>
+        {{ form.cpf_copia_prefeito.errors }}
+      </div>
+
+    </div>
+
+    <div class="form-group">
+      <div class="col-sm-offset-4 col-sm-4">
+        <span class="btn btn-default btn-file">
+          <strong>Cópia do RG</strong>{% render_field form.rg_copia_prefeito %}
+        </span>
+        {{ form.rg_copia_prefeito.errors }}
+      </div>
+
+    </div>
+
+    <div class="form-group">
+      <label for="{{ form.nome_prefeito.id_for_label }}" class="col-sm-4 control-label">Nome do Prefeito</label>
+
+      <div class="col-sm-8">
+        {% render_field form.nome_prefeito class="form-control" %} {{ form.nome_prefeito.errors }}
+      </div>
+
+    </div>
+
+    <div class="form-group">
+      <label for="{{ form.email_institucional_prefeito.id_for_label }}" class="col-sm-4 control-label">E-mail Institucional</label>
+
+      <div class="col-sm-8">
+        {% render_field form.email_institucional_prefeito class="form-control" %} {{ form.email_institucional_prefeito.errors }}
+      </div>
+
+    </div>
+
+    <div class="form-group">
+      <label for="{{ form.endereco.id_for_label }}" class="col-sm-4 control-label">Endereço Institucional</label>
+      <div class="col-sm-8">
+        {% render_field form.endereco class="form-control" %} {{ form.endereco.errors }}
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="{{ form.complemento.id_for_label }}" class="col-sm-offset-1 col-sm-3 control-label">Complemento</label>
+
+      <div class="col-sm-3">
+        {% render_field form.complemento class="form-control" %} {{ form.complemento.errors }}
+      </div>
+
+      <label for="{{ form.bairro.id_for_label }}" class="col-sm-1 control-label">Bairro</label>
+
+      <div class="col-sm-4">
+        {% render_field form.bairro class="form-control" %} {{ form.bairro.errors }}
+      </div>
+
+    </div>
+
+    <div class="form-group">
+      <label for="{{ form.cep.id_for_label }}" class="col-sm-offset-1 col-sm-3 control-label">CEP</label>
+
+      <div class="col-sm-4">
+        {% render_field form.cep class="form-control cep" %} {{ form.cep.errors }}
+      </div>
+
+    </div>
+
+    <div class="form-group">
+
+      <label for="{{ form.telefone_um.id_for_label }}" class="col-sm-offset-2 col-sm-2 control-label">Telefones</label>
+
+      <div class="col-sm-4">
+        <div class="input-group input-group-sm">
+          {% render_field form.telefone_um class="form-control telefone" %}
+          <span class="input-group-btn">
+            <button type="button" class="btn btn-default add">
+              <span class="glyphicon glyphicon-plus"></span>
+            </button>
+          </span>
+        </div>
+        {{ form.telefone_um.errors }}
+      </div>
+
+    </div>
+
+    <div style="display:none;" class="form-group telefone2">
+      <div class="col-sm-offset-4 col-sm-4">
+        <div class="input-group input-group-sm">
+          {% render_field form.telefone_dois class="form-control telefone" %}
+          <span class="input-group-btn">
+            <button type="button" class="btn btn-default add2">
+              <span class="glyphicon glyphicon-plus"></span>
+            </button>
+          </span>
+        </div>
+        {{ form.telefone_dois.errors }}
+      </div>
+    </div>
+
+    <div style="display:none;" class="form-group telefone3">
+      <div class="col-sm-offset-4 col-sm-4">
+        {% render_field form.telefone_tres class="form-control telefone" %} {{ form.telefone_tres.errors }}
+      </div>
+    </div>
+
+    <div class="form-group">
+      <div class="col-sm-offset-3 col-sm-10">
+        <input type="submit" class="btn btn-default" value="Cadastrar" />
+        <a class="btn btn-default" href="{% url 'adesao:home' %}">Voltar</a>
+      </div>
+    </div>
+  </form>
 </div>

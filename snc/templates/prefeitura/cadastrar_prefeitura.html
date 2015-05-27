@@ -34,10 +34,8 @@
 </div>
 
 <div class="row">
-  <form class="form-horizontal" method="post" enctype="multipart/form-data">{% csrf_token %}
     {% include "prefeitura/formulario_municipio.html" %}
     {% include "prefeitura/formulario_estado.html" %}
-  </form>
 </div>
   {% endif %}
 </div>

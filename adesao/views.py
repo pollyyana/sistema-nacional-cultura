@@ -16,6 +16,8 @@ from wkhtmltopdf.views import PDFTemplateView
 
 # Create your views here.
 def index(request):
+    if request.user.is_authenticated():
+        return render(request, 'home.html')
     return render(request, 'index.html')
 
 
@@ -49,10 +51,10 @@ class CadastrarUsuario(CreateView):
 class CadastrarMunicipio(FormView):
     form_class = CadastrarMunicipioForm
     template_name = 'prefeitura/cadastrar_prefeitura.html'
-    success_url = reverse_lazy('adesao:responsavel')
+    success_url = reverse_lazy('adesao:secretario')
 
     def form_valid(self, form):
-        self.request.user.usuario.municipio = form.save(commit=True)
+        self.request.user.usuario.municipio = form.save()
         self.request.user.usuario.save()
         return super(CadastrarMunicipio, self).form_valid(form)
 
@@ -68,7 +70,7 @@ class AlterarMunicipio(UpdateView):
     form_class = CadastrarMunicipioForm
     model = Municipio
     template_name = 'prefeitura/cadastrar_prefeitura.html'
-    success_url = reverse_lazy('adesao:responsavel')
+    success_url = reverse_lazy('adesao:secretario')
 
     def dispatch(self, *args, **kwargs):
         municipio = self.request.user.usuario.municipio.pk
@@ -87,7 +89,7 @@ class CadastrarResponsavel(CreateView):
     success_url = reverse_lazy('adesao:home')
 
     def form_valid(self, form):
-        self.request.user.usuario.responsavel = form.save(commit=True)
+        self.request.user.usuario.responsavel = form.save()
         self.request.user.usuario.save()
         return super(CadastrarResponsavel, self).form_valid(form)
 
@@ -114,7 +116,7 @@ class CadastrarSecretario(CreateView):
     success_url = reverse_lazy('adesao:responsavel')
 
     def form_valid(self, form):
-        self.request.user.usuario.secretario = form.save(commit=True)
+        self.request.user.usuario.secretario = form.save()
         self.request.user.usuario.save()
         return super(CadastrarSecretario, self).form_valid(form)
 

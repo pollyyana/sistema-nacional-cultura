@@ -45,10 +45,10 @@
   <div style="padding:10px">
     <ul class="nav nav-tabs">
 
-      <li role="presentation" {% if request.path = '/adesao/home/' %} class="active" {% endif %}><a href="{% url 'adesao:home' %}">Início</a></li>
-      <li role="presentation" {% if request.path == url_municipio or request.path == url_alt_municipio %} class="active" {% endif %}><a href="{% url 'adesao:municipio' %}">Instituição</a></li>
-      <li role="presentation" {% if request.path == url_secretario or request.path == url_alt_secretario %} class="active" {% endif %}><a href="{% url 'adesao:secretario' %}">Interlocutor</a></li>
-      <li role="presentation" {% if request.path == url_responsavel or request.path == url_alt_responsavel %} class="active" {% endif %}><a href="{% url 'adesao:responsavel' %}">Responsável</a></li>
+      <li role="presentation" {% if request.path == '/adesao/home/' %} class="active" {% endif %}><a href="{% url 'adesao:home' %}">Início</a></li>
+      <li role="presentation" {% if request.path == url_municipio or request.path in url_alt_municipio %} class="active" {% endif %}><a href="{% url 'adesao:municipio' %}">Instituição</a></li>
+      <li role="presentation" {% if request.path == url_secretario or request.path in url_alt_secretario %} class="active" {% endif %}><a href="{% url 'adesao:secretario' %}">Interlocutor</a></li>
+      <li role="presentation" {% if request.path == url_responsavel or request.path in url_alt_responsavel %} class="active" {% endif %}><a href="{% url 'adesao:responsavel' %}">Responsável</a></li>
       {% if request.user.usuario.estado_processo == '1' %}
       <li role="presentation" class="dropdown" {% if request.path == url_minuta or request.path == url_solicitacao %} class="active" {% endif %}>
         <a class="dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-expanded="false">
@@ -59,6 +59,7 @@
             <li role="presentation" {% if request.path == url_solicitacao %} class="active" {% endif %}><a href="{% url 'adesao:solicitacao' %}">Termo de Solicitação</a></li>
         </ul>
       {% endif %}
+      <li role="presentation"><a href="{% url 'planotrabalho:planotrabalho' request.user.usuario.plano_trabalho.id %}">Plano de Trabalho</a></li>
       <li role="presentation" class="dropdown" >
         <a class="dropdown-toggle glyphicon glyphicon-user" data-toggle="dropdown" href="#" role="button" aria-expanded="false">
           {{ request.user.usuario.nome_usuario }} <span class="caret"></span>
@@ -71,8 +72,9 @@
     </ul>
   </div>
 {% endif %}
+<div class="container">
 {% block content %} {% endblock content%}
-  <div style="padding:10px; text-align:center">
+  <footer class="footer">
       {% block footer %}
         <address>
           <strong>Ministério da Cultura</strong>
@@ -81,8 +83,8 @@
           <br> CEP: 70308-200 Brasília-DF - (61) 2024-2325 <a href="mailto:acordosnc@cultura.gov.br"> acordosnc@cultura.gov.br</a>
         </address>
       {% endblock footer %}
-
-  </div>
+  </footer>
+</div>
 
 
         <script type="text/javascript">

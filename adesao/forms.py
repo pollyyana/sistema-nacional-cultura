@@ -1,5 +1,4 @@
 from django import forms
-from django.http import HttpRequest
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm
 from django.utils.crypto import get_random_string
@@ -11,6 +10,7 @@ from django.core.urlresolvers import reverse
 from threading import Thread
 
 from .models import Usuario, Municipio, Responsavel, Secretario
+from planotrabalho.models import PlanoTrabalho
 from .utils import validar_cpf, validar_cnpj, limpar_mascara
 import re
 
@@ -102,6 +102,9 @@ class CadastrarUsuarioForm(UserCreationForm):
         usuario.nome_usuario = self.cleaned_data['nome_usuario']
         codigo_ativacao = get_random_string()
         usuario.codigo_ativacao = codigo_ativacao
+        plano_trabalho = PlanoTrabalho()
+        plano_trabalho.save()
+        usuario.plano_trabalho = plano_trabalho
         if commit:
             usuario.save()
         Thread(target=send_mail, args=(
@@ -141,6 +144,15 @@ class CadastrarMunicipioForm(ModelForm):
             raise forms.ValidationError('Por favor, digite um CNPJ válido!')
 
         return self.cleaned_data['cnpj_prefeitura']
+
+    def clean(self):
+        cleaned_data = super(CadastrarMunicipioForm, self).clean()
+        estado = cleaned_data.get("estado")
+        cidade = cleaned_data.get("cidade")
+
+        if estado:
+            if Municipio.objects.filter(estado=estado, cidade=cidade).exists():
+                self.add_error('estado', 'Município/Estado já cadastrado')
 
     class Meta:
         model = Municipio

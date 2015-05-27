@@ -4,11 +4,26 @@ from django.db import models
 
 
 class PlanoTrabalho(models.Model):
-    criacao_sistema = models.OneToOneField('CriacaoSistema')
-    orgao_gestor = models.OneToOneField('OrgaoGestor')
-    conselho_cultural = models.OneToOneField('ConselhoCultural')
-    fundo_cultura = models.OneToOneField('FundoCultura')
-    plano_cultura = models.OneToOneField('PlanoCultura')
+    criacao_sistema = models.OneToOneField(
+        'CriacaoSistema',
+        blank=True,
+        null=True)
+    orgao_gestor = models.OneToOneField(
+        'OrgaoGestor',
+        blank=True,
+        null=True)
+    conselho_cultural = models.OneToOneField(
+        'ConselhoCultural',
+        blank=True,
+        null=True)
+    fundo_cultura = models.OneToOneField(
+        'FundoCultura',
+        blank=True,
+        null=True)
+    plano_cultura = models.OneToOneField(
+        'PlanoCultura',
+        blank=True,
+        null=True)
 
 
 class CriacaoSistema(models.Model):
