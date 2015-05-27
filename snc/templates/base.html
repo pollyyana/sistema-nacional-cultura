@@ -10,8 +10,9 @@
 
   {% load staticfiles %}
 
-  <!-- Bootstrap core CSS -->
+  <!-- CSS Externo -->
   <link href="{% static 'css/bootstrap.min.css' %}" rel="stylesheet">
+  <link href="{% static 'css/jquery-ui.min.css' %}" rel="stylesheet">
 
   <!-- Custom style -->
   <link href="{% static 'css/style.css' %}" rel="stylesheet">
@@ -20,6 +21,8 @@
   <script src="{% static 'js/jquery-1.11.3.min.js'%}"></script>
   <script src="{% static 'js/bootstrap.min.js' %}"></script>
   <script src="{% static 'js/jquery.formatter.min.js' %}"></script>
+  <script src="{% static 'js/jquery-ui.min.js' %}"></script>
+  <script src="{% static 'js/datepicker-pt-BR.js' %}"></script>
 </head>
 
 <body>
@@ -112,6 +115,11 @@
 
             $(".add2").click(function() {
               $(".telefone3").fadeIn();
+            });
+
+            $(".date").datepicker({
+              showButtonPanel: true,
+              regional: "pt-BR"
             });
 
             {% verbatim %}

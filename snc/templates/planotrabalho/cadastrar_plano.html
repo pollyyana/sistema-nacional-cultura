@@ -1,0 +1,149 @@
+{% extends "base.html" %}
+{% load widget_tweaks %}
+{% block content %}
+<div class="container">
+<form method="post" enctype="multipart/form-data">
+  {% csrf_token %}
+  <h3>
+    <strong>Etapa C - Elaboração do Plano de Cultura</strong>
+  </h3>
+  <h5>
+    <strong>3.1 Sensibilização e estabelecimento das instâncias para elaboração do Plano de Trabalho</strong>
+  </h5>
+  <div class="form-group">
+    <label for={{ form.data_final_estabelecimento_instancias.id_for_label }} class="col-sm-12">
+      Data final para estabelecimento das instâncias
+    </label>
+    {% render_field form.data_final_estabelecimento_instancias class="date"%}
+    {{ form.data_final_estabelecimento_instancias.errors }}
+  </div>
+
+  <div class="form-group">
+    <label for="{{ form.relatorio_diretrizes_aprovadas.id_for_label }}">
+      Relatório da conferência com as diretrizes aprovadas
+    </label>
+    {% render_field form.relatorio_diretrizes_aprovadas %}
+    {{ form.relatorio_diretrizes_aprovadas.errors }}
+  </div>
+
+  <div class="alert alert-info" role="alert">
+    <strong>Para execução, sugerimos as seguintes atividades:</strong><br>
+    - Sensibilização e mobilização dos atores sociais chaves para participar do processo de elaboração de um plano de cultura;<br>
+    - Definição das instâncias de consulta e debate: espaço para divulgação e consulta sobre as questões relevantes para cultura (tem caráter temporário/sazonal). Alguns exemplos são: mesa de debate, oficinas, seminários, fóruns ou conferências de cultura;<br>
+    - Definição da instância técnica: criar comissão técnica ou grupo de trabalho para elaborar minuta do Plano de Cultura (pode ser uma comissão no Conselho de Política Cultural). Esta instância encarregar-se-á da coordenação do processo de discussão e sistematização das diversas fases<br>
+    - O Conselho de Política Cultural é a instância de coordenação e validação.Na sua ausência, os estados/municípios podem aproveitar o desafio de elaboração dos planos culturais para impulsionar a criação do colegiado. Nestes casos, é importante construir um fórum próprio para o Plano de Cultura, reunindo representantes da sociedade e do poder público. Este é o primeiro passo para a criação do Conselho de Políticas Culturais,que se constitui como espaço de validação do Plano.
+  </div>
+
+  <hr />
+  <h5>
+    <strong>3.2 Elaboração do Plano de Cultura</strong>
+  </h5>
+  <div class="form-group">
+    <label for={{ form.data_final_elaboracao_plano_cultura.id_for_label }} class="col-sm-12">
+      Data final para elaboração do Plano de Cultura
+    </label>
+    {% render_field form.data_final_elaboracao_plano_cultura class="date"%}
+    {{ form.data_final_elaboracao_plano_cultura.errors }}
+  </div>
+
+  <div class="form-group">
+    <label for="{{ form.minuta_preparada.id_for_label }}">
+      Minuta preparada
+    </label>
+    {% render_field form.minuta_preparada %}
+    {{ form.minuta_preparada.errors }}
+  </div>
+
+  <div class="alert alert-info" role="alert">
+    <strong>Para execução, sugerimos as seguintes atividades:</strong><br>
+    - Elaboração do Plano de Cultura;<br>
+    a) Passo 1 - elaborar uma análise situacional (diagnóstico da cultura) com base em indicadores sociais disponíveis;<br>
+    b) Passo 2 - elaborar prognóstico com objetivos, estratégias, metas e ações. É a projeção de um futuro desejado, uma situação desafiadora e viável no prazo do horizonte temporal do plano;<br>
+    c) Passo 3 - realizar consulta pública para validar o texto do plano;<br>
+    d) Passo 4 - revisar o plano com base nas considerações compiladas durante a consulta pública.
+  </div>
+
+  <hr />
+  <h5>
+    <strong>3.3 Aprovação do plano pelo Conselho de Política Cultural</strong>
+  </h5>
+  <div class="form-group">
+    <label for={{ form.data_final_aprovacao_plano_cultura.id_for_label }} class="col-sm-12">
+      Data final para aprovação do plano pelo Conselho de Política Cultural
+    </label>
+    {% render_field form.data_final_aprovacao_plano_cultura class="date"%}
+    {{ form.data_final_aprovacao_plano_cultura.errors }}
+  </div>
+
+  <div class="form-group">
+    <label for="{{ form.ata_reuniao_aprovacao_plano.id_for_label }}">
+      Ata de Reunião do Conselho
+    </label>
+    {% render_field form.ata_reuniao_aprovacao_plano %}
+    {{ form.ata_reuniao_aprovacao_plano.errors }}
+  </div>
+
+  <div class="alert alert-info" role="alert">
+    <strong>Para execução, sugerimos as seguintes atividades:</strong><br>
+    - Submeter ao Conselho de Política Cultural a minuta do Plano de Cultura para apreciação e debate.
+  </div>
+
+  <hr />
+  <h5>
+    <strong>3.4 Encaminhamento e tramitação do Projeto de Lei do Plano de Cultura no Poder Legislativo</strong>
+  </h5>
+  <div class="form-group">
+    <label for={{ form.data_final_tramitacao_projeto_lei.id_for_label }} class="col-sm-12">
+      Data Final para tramitação do Projeto de Lei do Plano de Cultura
+    </label>
+    {% render_field form.data_final_tramitacao_projeto_lei class="date"%}
+    {{ form.data_final_tramitacao_projeto_lei.errors }}
+  </div>
+
+  <div class="form-group">
+    <label for="{{ form.ata_votacao_projeto_lei.id_for_label }}">
+      Ata/pauta da votação do Projeto de Lei
+    </label>
+    {% render_field form.ata_votacao_projeto_lei %}
+    {{ form.ata_votacao_projeto_lei.errors }}
+  </div>
+
+  <div class="alert alert-info" role="alert">
+    <strong>Para execução, sugerimos as seguintes atividades:</strong><br>
+    - Encaminhar à procuradoria jurídica do estado/município para análise e parecer;<br>
+    - Encaminhar minuta ao governador/prefeito para aprovação e envio de Projeto de Lei ao Poder Legislativo;<br>
+    - Acompanhar as atividades legislativas;<br>
+    - Participar de audiências e consultas públicas;<br>
+    - Realizar articulação política junto aos parlamentares.
+  </div>
+
+  <hr />
+  <h5>
+    <strong>3.5 Sanção da Lei do Plano de Cultura pelo Governador/Prefeito</strong>
+  </h5>
+  <div class="form-group">
+    <label for={{ form.data_final_sancao_lei_plano_cultura.id_for_label }} class="col-sm-12">
+      Data final para sanção da lei do Plano de Cultura
+    </label>
+    {% render_field form.data_final_sancao_lei_plano_cultura class="date"%}
+    {{ form.data_final_sancao_lei_plano_cultura.errors }}
+  </div>
+
+  <div class="form-group">
+    <label for="{{ form.lei_plano_cultura.id_for_label }}">
+      Publicação da Lei no Diário Oficial
+    </label>
+    {% render_field form.lei_plano_cultura %}
+    {{ form.lei_plano_cultura.errors }}
+  </div>
+
+  <div class="alert alert-info" role="alert">
+    <strong>Para execução, sugerimos as seguintes atividades:</strong><br>
+    - Encaminhar para assinatura do governador/prefeito;<br>
+    - Publicar no Diário Oficial.
+  </div>
+
+  <input type="submit" class="btn btn-success" value="Próximo" />
+</form>
+</div>
+{% endblock content %}

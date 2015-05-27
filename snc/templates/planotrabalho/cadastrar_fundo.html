@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+{% load widget_tweaks %}
+{% block content %}
+<div class="container">
+<form method="post" enctype="multipart/form-data">
+  {% csrf_token %}
+  <h3>
+    <strong>Etapa B - Estruturação dos Componentes</strong>
+  </h3>
+  <h5>
+    <strong>2.3 Instituição do Fundo de Cultura</strong>
+  </h5>
+  <div class="form-group">
+    <label for={{ form.data_final_instituicao_fundo_cultura.id_for_label }} class="col-sm-12">
+      Data final para instituição do Fundo de Cultura
+    </label>
+    {% render_field form.data_final_instituicao_fundo_cultura class="date"%}
+    {{ form.data_final_instituicao_fundo_cultura.errors }}
+  </div>
+
+  <div class="form-group">
+    <label for="{{ form.cnpj_fundo_cultura.id_for_label }}" class="col-sm-12">
+      CNPJ
+    </label>
+    {% render_field form.cnpj_fundo_cultura class="cnpj" %}
+    {{ form.cnpj_fundo_cultura.errors }}
+  </div>
+
+  <div class="form-group">
+    <label for="{{ form.lei_fundo_cultura.id_for_label }}">
+      Lei de criação do Fundo Estadual/Municipal de Cultura e CNPJ
+      (Clique na caixa ao lado para anexar o arquivo referente à comprovação de realização desta tarefa.)
+    </label>
+    {% render_field form.lei_fundo_cultura %}
+    {{ form.lei_fundo_cultura.errors }}
+  </div>
+
+  <div class="alert alert-info" role="alert">
+    <strong>Para execução, sugerimos as seguintes atividades!</strong><br>
+    - Elaborar minuta (proposta) de regulamentação do fundo e de outros mecanismos de financiamento;<br>
+    - Encaminhar para discussão a minuta para avaliação e aprovação;<br>
+    - Publicar no Diário Oficial a regulamentação do fundo e dos outros mecanismos de financiamento.
+  </div>
+
+  <input type="submit" class="btn btn-success" value="Próximo" />
+</form>
+</div>
+{% endblock content %}

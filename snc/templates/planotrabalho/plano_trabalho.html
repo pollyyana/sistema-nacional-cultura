@@ -1,16 +1,4 @@
 {% extends "base.html" %}
-{% load widget_tweaks %}
-{% url 'planotrabalho:sistema' as sistema %}
-{% url 'planotrabalho:alterar_sistema' request.user.usuario.plano_trabalho.criacao_sistema  as alt_sistema %}
-{% url 'planotrabalho:gestor' as gestor %}
-{% url 'planotrabalho:alterar_gestor' request.user.usuario.plano_trabalho.orgao_gestor as alt_gestor %}
-{% url 'planotrabalho:conselho' as conselho %}
-{% url 'planotrabalho:alterar_conselho' request.user.usuario.plano_trabalho.conselho_cultural as alt_conselho %}
-{% url 'planotrabalho:fundo' as fundo %}
-{% url 'planotrabalho:alterar_fundo' request.user.usuario.plano_trabalho.fundo_cultura as alt_fundo %}
-{% url 'planotrabalho:plano' as plano %}
-{% url 'planotrabalho:alterar_plano' request.user.usuario.plano_trabalho.plano_cultura as alt_plano %}
-{% with user_sistema=request.user.usuario.plano_trabalho.criacao_sistema user_orgao=request.user.usuario.plano_trabalho.orgao_gestor user_conselho=request.user.usuario.plano_trabalho.conselho_cultural user_fundo=request.user.usuario.plano_trabalho.fundo_cultura user_plano=request.user.usuario.plano_trabalho.plano_cultura %}
 {% block content %}
 <div class="container">
   <p>
@@ -25,62 +13,51 @@
     de execução do Plano de Trabalho poderá ser acompanhado.
   </p>
   <hr />
+
   <ul class="list-group">
 
     <li class="list-group-item">
-      <form class="form-horizontal" action="{% if user_sistema %} {{ alt_sistema }} {% else %} {{ sistema }} {% endif %}" method="post" enctype="multipart/form-data">
-        {% csrf_token %}
-        <p>
-          <strong>I. Institucionalização do Sistema Estadual/Municipal de Cultura</strong>
-        </p>
-        <p>
-          <strong>a) Lei de Criação do Sistema de Cultura</strong>
-        </p>
-        {{ form_sistema }}
-      </form>
+      <p>
+        <strong>I. Institucionalização do Sistema Estadual/Municipal de Cultura</strong>
+      </p>
+      <p>
+        <strong>a) Lei de Criação do Sistema de Cultura</strong>
+      </p>
+      <a class ="btn btn-warning" href="{% url 'planotrabalho:sistema' %}" >Preencher</a>
     </li>
 
     <li class="list-group-item">
       <p>
         <strong>II. Estruturação dos Componentes</strong>
       </p>
-      <form class="form-horizontal" action="{% if user_orgao %} {{ alt_gestor }} {% else %} {{ gestor }} {% endif %}" method="post" enctype="multipart/form-data">
-        {% csrf_token %}
+
         <p>
           <strong>a) Órgão Gestor</strong>
         </p>
-        {{ form_gestor }}
-      </form>
-      <form class="form-horizontal" action="{% if user_conselho %} {{ alt_conselho }} {% else %} {{ conselho }} {% endif %}" method="post" enctype="multipart/form-data">
-        {% csrf_token %}
+        <a class="btn btn-warning" href="{% url 'planotrabalho:gestor' %}" />Preencher</a>
+
         <p>
           <strong>b) Conselho de Política Cultural</strong>
         </p>
-        {{ form_conselho }}
-      </form>
-      <form class="form-horizontal" action="{% if user_fundo %} {{ alt_fundo }} {% else %} {{ fundo }} {% endif %}" method="post" enctype="multipart/form-data">
-        {% csrf_token %}
+        <a class="btn btn-warning" href="{% url 'planotrabalho:conselho' %}" >Preencher</a>
+
         <p>
           <strong>c) Fundo de Cultura</strong>
         </p>
-        {{ form_fundo }}
-      </form>
+        <a class="btn btn-warning" href="{% url 'planotrabalho:fundo' %}" >Preencher</a>
+
     </li>
 
     <li class="list-group-item">
-      <form class="form-horizontal" action="{% if user_plano %} {{ alt_plano }} {% else %} {{ fundo }} {% endif %}" method="post" enctype="multipart/form-data">
-        {% csrf_token %}
         <p>
           <strong>III. Elaboração do Plano de Cultura</strong>
         </p>
         <p>
           <strong>a) Plano de Cultura</strong>
         </p>
-        {{ form_plano }}
-      </form>
+        <a class="btn btn-warning" href="{% url 'planotrabalho:plano' %}" >Preencher</a>
     </li>
 
   </ul>
 </div>
 {% endblock content %}
-{% endwith %}

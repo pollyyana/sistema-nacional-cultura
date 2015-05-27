@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+{% load widget_tweaks %}
+{% block content %}
+<div class="container">
+<form method="post" enctype="multipart/form-data">
+  {% csrf_token %}
+  <h3>
+    <strong>Etapa B - Estruturação dos Componentes</strong>
+  </h3>
+  <h5>
+    <strong>2.2 Instalação do Conselho de Política Cultural</strong>
+  </h5>
+  <div class="form-group">
+    <label for={{ form.data_final_instalacao_conselho.id_for_label }} class="col-sm-12">
+      Data final para instalação do Conselho de Política Cultural
+    </label>
+    {% render_field form.data_final_instalacao_conselho class="date"%}
+    {{ form.data_final_instalacao_conselho.errors }}
+  </div>
+
+  <div class="form-group">
+    <label for="{{ form.ata_regimento_aprovado.id_for_label }}">
+      Ata da reunião de instalação e Regimento Aprovado
+      (Clique na caixa ao lado para anexar o arquivo referente à comprovação de realização desta tarefa.)
+    </label>
+    {% render_field form.ata_regimento_aprovado %}
+    {{ form.ata_regimento_aprovado.errors }}
+  </div>
+
+  <div class="alert alert-info" role="alert">
+    <strong>Para execução, sugerimos as seguintes atividades!</strong><br>
+    - Mobilizar a sociedade, em especial as redes culturais;<br>
+    - Realizar o processo de eleição;<br>
+    - Definir estrutura de apoio/suporte ao conselho;<br>
+    - Convocar os Conselheiros eleitos e realizar reunião de instalação e posse;<br>
+    - Aprovar o regimento Interno do Conselho. 
+  </div>
+
+  <input type="submit" class="btn btn-success" value="Próximo" />
+</form>
+</div>
+{% endblock content %}

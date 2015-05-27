@@ -74,11 +74,9 @@ class AlterarMunicipio(UpdateView):
 
     def dispatch(self, *args, **kwargs):
         municipio = self.request.user.usuario.municipio.pk
-        print(municipio)
         print(self.kwargs['pk'])
         if str(municipio) != self.kwargs['pk']:
             raise Http404()
-            # return redirect('adesao:alterar_municipio', pk=municipio)
 
         return super(AlterarMunicipio, self).dispatch(*args, **kwargs)
 

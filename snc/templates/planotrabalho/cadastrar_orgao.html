@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+{% load widget_tweaks %}
+{% block content %}
+<div class="container">
+<form method="post" enctype="multipart/form-data">
+  {% csrf_token %}
+  <h3>
+    <strong>Etapa B - Estruturação dos Componentes</strong>
+  </h3>
+  <h5>
+    <strong>2.1 Estruturação e implementação da Secretaria de Cultura ou órgão equivalente
+      (Secretaria em conjunto com outras políticas, fundação de cultura, departamento, coordenação, diretoria, etc)</strong>
+  </h5>
+  <div class="form-group">
+    <label for={{ form.data_final_estruturacao_secretaria.id_for_label }} class="col-sm-12">
+      Data final para estruturação da Secretaria de Cultura
+    </label>
+    {% render_field form.data_final_estruturacao_secretaria class="date"%}
+    {{ form.data_final_estruturacao_secretaria.errors }}
+  </div>
+
+  <div class="form-group">
+    <label for="{{ form.relatorio_atividade_secretaria.id_for_label }}">
+      Relatórios de documentos de atividades/gestão da Secretaria (Clique na caixa ao lado para anexar o arquivo referente à comprovação de realização desta tarefa.)
+    </label>
+    {% render_field form.relatorio_atividade_secretaria %}
+    {{ form.relatorio_atividade_secretaria.errors }}
+  </div>
+
+  <div class="alert alert-info" role="alert">
+    <strong>Para execução, sugerimos as seguintes atividades!</strong><br>
+    - Elaborar minuta;<br>
+    - Discutir e consultar a sociedade civil (através de seminários, reuniões com entidade civil, audiências, etc);<br>
+    - Encaminhar para análise jurídica;<br>
+    - Encaminhar ao governador/prefeito para aprovação;<br>
+    - Encaminhar ao Poder Legislativo. 
+  </div>
+
+  <input type="submit" class="btn btn-success" value="Próximo" />
+</form>
+</div>
+{% endblock content %}
