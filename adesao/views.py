@@ -145,6 +145,7 @@ class MinutaAcordo(PDFTemplateView):
     def get_context_data(self, **kwargs):
         context = super(MinutaAcordo, self).get_context_data(**kwargs)
         context['request'] = self.request
+        context['static'] = self.request.get_host()
         return context
 
 
@@ -161,4 +162,5 @@ class TermoSolicitacao(PDFTemplateView):
     def get_context_data(self, **kwargs):
         context = super(TermoSolicitacao, self).get_context_data(**kwargs)
         context['request'] = self.request
+        context['static'] = self.request.get_host()
         return context
