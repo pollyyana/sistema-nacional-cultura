@@ -7,11 +7,11 @@ from smart_selects.db_fields import ChainedForeignKey
 LISTA_ESTADOS_PROCESSO = (
     ('0', 'Solicitação Expirada'),
     ('1', 'Aguardando envio da documentação'),
-    ('2', ''),
-    ('3', ''),
-    ('4', ''),
-    ('5', ''),
-    ('6', 'Acordo publicado'),
+    ('2', 'Documentação Recebida - Aguarda Análise'),
+    ('3', 'Diligência Documental'),
+    ('4', 'Encaminhado para assinatura do Secretário SAI'),
+    ('5', 'Aguarda Publicação no DOU'),
+    ('6', 'Publicado no DOU'),
     ('7', 'Responsável confirmado'),
 )
 

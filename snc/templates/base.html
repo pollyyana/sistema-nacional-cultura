@@ -58,8 +58,8 @@
           Imprimir <span class="caret"></span>
         </a>
         <ul class="dropdown-menu" role="menu">
-            <li role="presentation" {% if request.path == url_minuta %} class="active" {% endif %}><a href="{% url 'adesao:minuta' %}">Acordo de Cooperação</a></li>
-            <li role="presentation" {% if request.path == url_solicitacao %} class="active" {% endif %}><a href="{% url 'adesao:solicitacao' %}">Termo de Solicitação</a></li>
+            <li role="presentation" {% if request.path == url_minuta %} class="active" {% endif %}><a href="{% url 'adesao:minuta' %}" target="_blank" >Acordo de Cooperação</a></li>
+            <li role="presentation" {% if request.path == url_solicitacao %} class="active" {% endif %}><a href="{% url 'adesao:solicitacao' %}" target="_blank" >Termo de Solicitação</a></li>
         </ul>
       {% endif %}
       <li role="presentation"><a href="{% url 'planotrabalho:planotrabalho' request.user.usuario.plano_trabalho.id %}">Plano de Trabalho</a></li>
@@ -77,20 +77,19 @@
 {% endif %}
 <div class="container">
 {% block content %} {% endblock content%}
-  <footer class="footer">
-      {% block footer %}
-        <address>
-          <strong>Ministério da Cultura</strong>
-          <br><strong>SAI - Secretaria de Articulação Institucional</strong>
-          - Edifício Parque Cidade Corporate – SCS, Quadra 09, Lote C, Torre B, 10º Andar
-          <br> CEP: 70308-200 Brasília-DF - (61) 2024-2325 <a href="mailto:acordosnc@cultura.gov.br"> acordosnc@cultura.gov.br</a>
-        </address>
-      {% endblock footer %}
-  </footer>
 </div>
-
-
-        <script type="text/javascript">
+<footer class="footer">
+    {% block footer %}
+      <address>
+        <strong>Ministério da Cultura</strong>
+        <br><strong>SAI - Secretaria de Articulação Institucional</strong>
+        - Edifício Parque Cidade Corporate – SCS, Quadra 09, Lote C, Torre B, 10º Andar
+        <br> CEP: 70308-200 Brasília-DF - (61) 2024-2325 <a href="mailto:acordosnc@cultura.gov.br"> acordosnc@cultura.gov.br</a>
+      </address>
+    {% endblock footer %}
+    <div id="footer-brasil"></div>
+</footer>
+    <script type="text/javascript">
           $(document).ready(function() {
             $("#radio_municipio").click(function(){
               if(!$("#form_estado").hasClass('hide')) {
@@ -145,5 +144,4 @@
 
         <script src="//barra.brasil.gov.br/barra.js" defer></script>
   </div>
-<div id="footer-brasil"></div>
 </body>
