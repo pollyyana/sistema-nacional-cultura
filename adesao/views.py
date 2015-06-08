@@ -1,9 +1,11 @@
 from datetime import timedelta
+from threading import Thread
 
 from django.shortcuts import render, redirect
 from django.http import Http404
 from django.views.generic.edit import CreateView, UpdateView, FormView
-from django.core.urlresolvers import reverse_lazy
+from django.core.urlresolvers import reverse_lazy, reverse
+from django.core.mail import send_mail
 from django.contrib.auth.decorators import login_required
 from django.utils import timezone
 
@@ -46,6 +48,23 @@ class CadastrarUsuario(CreateView):
     form_class = CadastrarUsuarioForm
     template_name = 'usuario/cadastrar_usuario.html'
     success_url = reverse_lazy('adesao:index')
+
+    def get_success_url(self):
+        Thread(target=send_mail, args=(
+            'MINISTÉRIO DA CULTURA - SNC - CREDENCIAIS DE ACESSO',
+            'Prezado '+self.object.username+',\n' +
+            'Recebemos o seu cadastro no Sistema Nacional de Cultura.' +
+            'Por favor confirme seu e-mail clicando no endereço abaixo:\n\n' +
+            self.request.build_absolute_uri(reverse(
+                'adesao:ativar_usuario',
+                args=[self.object.usuario.codigo_ativacao]))+'\n\n' +
+            'Atenciosamente,\n\n' +
+            'Equipe SAI - Ministério da Cultura',
+            '',
+            [self.object.email],),
+            kwargs = {'fail_silently': 'False', }
+        ).start()
+        return super(CadastrarUsuario, self).get_success_url()
 
 
 class CadastrarMunicipio(FormView):

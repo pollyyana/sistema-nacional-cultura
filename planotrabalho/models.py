@@ -25,6 +25,9 @@ class PlanoTrabalho(models.Model):
         blank=True,
         null=True)
 
+    def __str__(self):
+        return str(self.id)
+
 
 class CriacaoSistema(models.Model):
     data_final_elaboracao_projeto_lei = models.DateField()

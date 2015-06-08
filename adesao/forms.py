@@ -107,18 +107,7 @@ class CadastrarUsuarioForm(UserCreationForm):
         usuario.plano_trabalho = plano_trabalho
         if commit:
             usuario.save()
-        Thread(target=send_mail, args=(
-            'MINISTÉRIO DA CULTURA - SNC - CREDENCIAIS DE ACESSO',
-            'Prezado '+usuario.nome_usuario+',\n' +
-            'Recebemos o seu cadastro no Sistema Nacional de Cultura.' +
-            'Por favor confirme seu e-mail clicando no endereço abaixo:\n\n' +
-            reverse('adesao:ativar_usuario', args=[codigo_ativacao])+'\n\n' +
-            'Atenciosamente,\n\n' +
-            'Equipe SAI - Ministério da Cultura',
-            '',
-            [user.email],),
-            kwargs = {'fail_silently': 'False', }
-        ).start()
+
         return user
 
 

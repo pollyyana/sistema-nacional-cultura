@@ -23,7 +23,12 @@
       <p>
         <strong>a) Lei de Criação do Sistema de Cultura</strong>
       </p>
+      {% if request.user.usuario.plano_trabalho.criacao_sistema %}
+      <strong>Data final para sanção da Lei do Sistema de Cultura:</strong> {{request.user.usuario.plano_trabalho.criacao_sistema.data_final_sancao_lei}}<br>
+      <a class="btn btn-success" href="{% url 'planotrabalho:sistema' %}">Modificar</a>
+      {% else %}
       <a class ="btn btn-warning" href="{% url 'planotrabalho:sistema' %}" >Preencher</a>
+      {% endif %}
     </li>
 
     <li class="list-group-item">
@@ -34,17 +39,32 @@
         <p>
           <strong>a) Órgão Gestor</strong>
         </p>
+        {% if request.user.usuario.plano_trabalho.orgao_gestor %}
+        <strong>Data final para estruturação da Secretaria de Cultura:</strong> {{request.user.usuario.plano_trabalho.orgao_gestor.data_final_estruturacao_secretaria}} <br>
+        <a class="btn btn-success" href="{% url 'planotrabalho:gestor' %}" />Modificar</a>
+        {% else %}
         <a class="btn btn-warning" href="{% url 'planotrabalho:gestor' %}" />Preencher</a>
+        {% endif %}
 
         <p>
           <strong>b) Conselho de Política Cultural</strong>
         </p>
+        {% if request.user.usuario.plano_trabalho.conselho_cultural %}
+        <strong>Data final para instalação do Conselho de Política Cultural:</strong> {{request.user.usuario.plano_trabalho.conselho_cultural.data_final_instalacao_conselho}} <br>
+        <a class="btn btn-success" href="{% url 'planotrabalho:conselho' %}" >Modificar</a>
+        {% else %}
         <a class="btn btn-warning" href="{% url 'planotrabalho:conselho' %}" >Preencher</a>
+        {% endif %}
 
         <p>
           <strong>c) Fundo de Cultura</strong>
         </p>
+        {% if request.user.usuario.plano_trabalho.fundo_cultura %}
+        <strong>Data final para instituição do Fundo de Cultura:</strong> {{request.user.usuario.plano_trabalho.fundo_cultura.data_final_instituicao_fundo_cultura}} <br>
+        <a class="btn btn-success" href="{% url 'planotrabalho:fundo' %}" >Modificar</a>
+        {% else %}
         <a class="btn btn-warning" href="{% url 'planotrabalho:fundo' %}" >Preencher</a>
+        {% endif %}
 
     </li>
 
@@ -55,7 +75,12 @@
         <p>
           <strong>a) Plano de Cultura</strong>
         </p>
+        {% if request.user.usuario.plano_trabalho.plano_cultura %}
+        <strong>Data final para sanção da Lei do Plano de Cultura:</strong> {{request.user.usuario.plano_trabalho.plano_cultura.data_final_sancao_lei_plano_cultura}} <br>
+        <a class="btn btn-success" href="{% url 'planotrabalho:plano' %}" >Modificar</a>
+        {% else %}
         <a class="btn btn-warning" href="{% url 'planotrabalho:plano' %}" >Preencher</a>
+        {% endif %}
     </li>
 
   </ul>

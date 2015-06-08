@@ -49,7 +49,7 @@
     <ul class="nav nav-tabs">
 
       <li role="presentation" {% if request.path == '/adesao/home/' %} class="active" {% endif %}><a href="{% url 'adesao:home' %}">Início</a></li>
-      <li role="presentation" {% if request.path == url_municipio or request.path in url_alt_municipio %} class="active" {% endif %}><a href="{% url 'adesao:municipio' %}">Instituição</a></li>
+      <li role="presentation" {% if request.path == url_municipio or request.path in url_alt_municipio %} class="active" {% endif %}><a href="{% url 'adesao:municipio' %}">Ente Federado</a></li>
       <li role="presentation" {% if request.path == url_secretario or request.path in url_alt_secretario %} class="active" {% endif %}><a href="{% url 'adesao:secretario' %}">Interlocutor</a></li>
       <li role="presentation" {% if request.path == url_responsavel or request.path in url_alt_responsavel %} class="active" {% endif %}><a href="{% url 'adesao:responsavel' %}">Responsável</a></li>
       {% if request.user.usuario.estado_processo == '1' %}
