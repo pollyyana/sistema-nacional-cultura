@@ -67,10 +67,10 @@ class CadastrarUsuario(CreateView):
         return super(CadastrarUsuario, self).get_success_url()
 
 
-class CadastrarMunicipio(FormView):
+class CadastrarMunicipio(CreateView):
     form_class = CadastrarMunicipioForm
     template_name = 'prefeitura/cadastrar_prefeitura.html'
-    success_url = reverse_lazy('adesao:secretario')
+    success_url = reverse_lazy('adesao:home')
 
     def form_valid(self, form):
         self.request.user.usuario.municipio = form.save()
@@ -89,7 +89,7 @@ class AlterarMunicipio(UpdateView):
     form_class = CadastrarMunicipioForm
     model = Municipio
     template_name = 'prefeitura/cadastrar_prefeitura.html'
-    success_url = reverse_lazy('adesao:secretario')
+    success_url = reverse_lazy('adesao:home')
 
     def dispatch(self, *args, **kwargs):
         municipio = self.request.user.usuario.municipio.pk
@@ -129,7 +129,7 @@ class AlterarResponsavel(UpdateView):
 class CadastrarSecretario(CreateView):
     form_class = CadastrarSecretarioForm
     template_name = 'secretario/cadastrar_secretario.html'
-    success_url = reverse_lazy('adesao:responsavel')
+    success_url = reverse_lazy('adesao:home')
 
     def form_valid(self, form):
         self.request.user.usuario.secretario = form.save()
@@ -148,7 +148,7 @@ class AlterarSecretario(UpdateView):
         form_class = CadastrarSecretarioForm
         model = Secretario
         template_name = 'secretario/cadastrar_secretario.html'
-        success_url = reverse_lazy('adesao:responsavel')
+        success_url = reverse_lazy('adesao:home')
 
 
 class MinutaAcordo(PDFTemplateView):

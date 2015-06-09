@@ -134,15 +134,6 @@ class CadastrarMunicipioForm(ModelForm):
 
         return self.cleaned_data['cnpj_prefeitura']
 
-    def clean(self):
-        cleaned_data = super(CadastrarMunicipioForm, self).clean()
-        estado = cleaned_data.get("estado")
-        cidade = cleaned_data.get("cidade")
-
-        if estado:
-            if Municipio.objects.filter(estado=estado, cidade=cidade).exists():
-                self.add_error('estado', 'Município/Estado já cadastrado')
-
     class Meta:
         model = Municipio
         fields = '__all__'
