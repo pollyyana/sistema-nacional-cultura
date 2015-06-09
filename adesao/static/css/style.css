@@ -13,6 +13,11 @@ body {
   padding-left: 15px;
 }
 
+#address {
+  margin: 0px auto;
+  max-width: 500px;
+}
+
 .header {
   padding-bottom: 5px;
   border-bottom: 1px solid #e5e5e5;
