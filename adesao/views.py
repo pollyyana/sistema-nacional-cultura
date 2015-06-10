@@ -3,7 +3,7 @@ from threading import Thread
 
 from django.shortcuts import render, redirect
 from django.http import Http404
-from django.views.generic.edit import CreateView, UpdateView, FormView
+from django.views.generic.edit import CreateView, UpdateView
 from django.core.urlresolvers import reverse_lazy, reverse
 from django.core.mail import send_mail
 from django.contrib.auth.decorators import login_required
