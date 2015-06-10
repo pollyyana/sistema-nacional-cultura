@@ -20,22 +20,12 @@
   </form>
 </div>
 {% else %}
-<div class="row" style="padding-bottom: 20px;">
-  <center>
-    <div class="btn-group" id="radio_button" data-toggle="buttons">
-      <label id="radio_municipio" class="btn btn-primary">
-        <input type="radio" name="options" autocomplete="off" > Município
-      </label>
-      <label id="radio_estado" class="btn btn-primary">
-        <input type="radio" name="options" autocomplete="off"> Estado
-      </label>
-    </div>
-  </center>
-</div>
-
 <div class="row">
-    {% include "prefeitura/formulario_municipio.html" %}
+  {% if tipo_ente == "1" %}
     {% include "prefeitura/formulario_estado.html" %}
+  {% else %}
+    {% include "prefeitura/formulario_municipio.html" %}
+  {% endif %}
 </div>
   {% endif %}
 </div>

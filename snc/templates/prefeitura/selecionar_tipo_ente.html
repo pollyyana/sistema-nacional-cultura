@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container">
+  <div align="center">
+    <h3>Cadastro de Ente Federado</h3>
+    <p>Selecione uma das opções abaixo, dependendo de qual tipo de Ente Federado será cadastrado.</p>
+    <a class="btn btn-primary" href="{% url 'adesao:cadastrar_municipio' tipo_ente=0 %}">Prefeitura</a>
+    <a class="btn btn-primary" href="{% url 'adesao:cadastrar_municipio' tipo_ente=1 %}">Governo</a>
+  </div>
+</div>
+{% endblock content %}
