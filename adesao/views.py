@@ -72,11 +72,13 @@ class CadastrarUsuario(CreateView):
 def selecionar_tipo_ente(request):
     return render(request, 'prefeitura/selecionar_tipo_ente.html')
 
+def sucesso_municipio(request):
+    return render(request, 'prefeitura/mensagem_sucesso_prefeitura.html')
 
 class CadastrarMunicipio(CreateView):
     form_class = CadastrarMunicipioForm
     template_name = 'prefeitura/cadastrar_prefeitura.html'
-    success_url = reverse_lazy('adesao:home')
+    success_url = reverse_lazy('adesao:sucesso_municipio')
 
     def get_context_data(self, **kwargs):
         context = super(CadastrarMunicipio, self).get_context_data(**kwargs)
