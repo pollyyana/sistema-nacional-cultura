@@ -33,6 +33,7 @@ urlpatterns = [
     # Cadastro e alteração de responsável
     url(r'^responsavel/$', login_required(views.CadastrarResponsavel.as_view()),
         name='responsavel'),
+    url(r'^sucesso-cadastro-responsavel/$', views.sucesso_responsavel, name='sucesso_responsavel'),
     url(r'^responsavel/(?P<pk>[0-9]+)/$',
         login_required(views.AlterarResponsavel.as_view()),
         name='alterar_responsavel'),

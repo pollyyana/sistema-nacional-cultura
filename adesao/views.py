@@ -46,6 +46,9 @@ def ativar_usuario(request, codigo):
 def sucesso_usuario(request):
     return render(request, 'usuario/mensagem_sucesso.html')
 
+def sucesso_responsavel(request):
+    return render(request, 'responsavel/mensagem_sucesso.html')
+
 class CadastrarUsuario(CreateView):
     form_class = CadastrarUsuarioForm
     template_name = 'usuario/cadastrar_usuario.html'
@@ -113,7 +116,7 @@ class AlterarMunicipio(UpdateView):
 class CadastrarResponsavel(CreateView):
     form_class = CadastrarResponsavelForm
     template_name = 'responsavel/cadastrar_responsavel.html'
-    success_url = reverse_lazy('adesao:home')
+    success_url = reverse_lazy('adesao:sucesso_responsavel')
 
     def form_valid(self, form):
         self.request.user.usuario.responsavel = form.save()
@@ -134,7 +137,7 @@ class AlterarResponsavel(UpdateView):
     form_class = CadastrarResponsavelForm
     model = Responsavel
     template_name = 'responsavel/cadastrar_responsavel.html'
-    success_url = reverse_lazy('adesao:home')
+    success_url = reverse_lazy('adesao:sucesso_responsavel')
 
 
 class CadastrarSecretario(CreateView):
