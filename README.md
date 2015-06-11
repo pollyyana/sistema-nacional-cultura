@@ -38,7 +38,7 @@ O arquivo pode ser baixado de forma direta e rápida utilizando o comando wget -
 
 3. Instale o construtor de ambiente virtual
     ```
-    sudo apt-get python3-virtualenv
+    sudo apt-get install python3-virtualenv
     ```
 
 4. Instale o Postgre
