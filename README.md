@@ -26,7 +26,7 @@ sudo apt-get install python3.4
 ```
 + Instale o PIP no python3
 
-Baixe o arquivo get-pip.py que é um arquivo instalador executado pelo Python. O arquivo se encontra no link https://bootstrap.pypa.io/get-pip.py
+Baixe o arquivo get-pip.py que é um arquivo instalador executado pelo Python. O arquivo se encontra no link https://bootstrap.pypa.io/get-pip.py. 
 O arquivo pode ser baixado de forma direta e rápida utilizando o comando wget -c.
 
 ```
