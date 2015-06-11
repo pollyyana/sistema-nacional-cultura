@@ -1,0 +1,91 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2015-06-11 18:04-0300\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+
+#: templates/admin/base_site.html:3
+msgid "Django site admin"
+msgstr ""
+
+#: templates/planotrabalho/plano_trabalho.html:6
+msgid "Primeiro parágrafo da tela inicial do Plano de Trabalho"
+msgstr "Você está no ambiente do Plano de Trabalho. Nesta fase, será preciso estabelecer um prazo para a   criação de cada um dos componentes que deverão ser instituídos."
+
+#: templates/planotrabalho/plano_trabalho.html:9
+msgid ""
+"Lembramos que o prazo limite para a execução de todas as etapas do Plano de "
+"Trabalho é de 2 anos, contados a partir da publicação do Acordo de "
+"Cooperação Federativa no Diário Oficial da União."
+msgstr ""
+
+#: templates/planotrabalho/plano_trabalho.html:10
+msgid ""
+"Caso o Plano de Trabalho esteja próximo do prazo final, e as etapas ainda "
+"não estejam totalmente concluídas, será necessário solicitar a prorrogação, "
+"por meio de ofício assinado pelo Chefe do Executivo."
+msgstr ""
+
+#: templates/planotrabalho/plano_trabalho.html:13
+msgid ""
+"No momento em que as tarefas forem sendo concluídas, será preciso anexar "
+"comprovações de execução de cada uma delas (em campos disponíveis na "
+"plataforma) para serem validadas pela Secretaria de Articulação "
+"Institucional deste Ministério. Com isso, o progresso de execução do Plano "
+"de Trabalho poderá ser acompanhado."
+msgstr ""
+
+#: templates/registration/password_reset_complete.html:7
+msgid "Password reset complete"
+msgstr ""
+
+#: templates/registration/password_reset_complete.html:9
+msgid "Sua senha foi alterada com sucesso. Você já pode realizar o acesso."
+msgstr ""
+
+#: templates/registration/password_reset_email.html:2
+#, python-format
+msgid ""
+"You're receiving this email because you requested a password reset for your "
+"user account at %(site_name)s."
+msgstr ""
+
+#: templates/registration/password_reset_email.html:4
+msgid "Please go to the following page and choose a new password:"
+msgstr ""
+
+#: templates/registration/password_reset_email.html:8
+msgid "Your username, in case you've forgotten:"
+msgstr ""
+
+#~ msgid "plano_trabalho_1"
+#~ msgstr ""
+#~ "Você está no ambiente do Plano de Trabalho. Nesta fase, será preciso "
+#~ "estabelecer um prazo para a criação de cada um dos componentes que "
+#~ "deverão ser instituídos."
+
+#~ msgid "plano_trabalho_2"
+#~ msgstr ""
+#~ "Lembramos que o prazo limite para a execução de todas as etapas do Plano "
+#~ "de Trabalho é de 2 anos, contados a partir da publicação do Acordo de "
+#~ "Cooperação Federativa no Diário Oficial da União."
+
+#~ msgid "plano_trabalho_3"
+#~ msgstr ""
+#~ "Caso o Plano de Trabalho esteja próximo do prazo final, e as etapas ainda "
+#~ "não estejam totalmente concluídas, será necessário solicitar a "
+#~ "prorrogação, por meio de ofício assinado pelo Chefe do Executivo."
