@@ -57,7 +57,12 @@ sudo apt-get install python-magic
 sudo apt-get install wkhtmltopdf
 ```
 
-7. Instale as dependências python do projeto
+7. Instale as bibliotecas de desenvolvimento do servidor PostgreSQL
+```
+apt-get install postgresql-server-dev-9.4
+```
+
+8. Instale as dependências python do projeto
 ```
 sudo pip3 install -r requirements.txt
 ```
