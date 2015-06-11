@@ -8,9 +8,6 @@ O cadastro do SNC é feito sobre o framework Python-Django, Python3, com banco d
 As dependencias de pacotes estão no requirements.txt
 
 
-
-#Instalação
-
 ##Requisitos
 
 * Python3
@@ -21,7 +18,7 @@ As dependencias de pacotes estão no requirements.txt
 * python-magic
 * wkhtmltopdf
 
-##Passos
+##Passos da Instalação
 
 + Instale o python3
 ```
