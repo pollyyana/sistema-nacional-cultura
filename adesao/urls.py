@@ -6,6 +6,7 @@ from . import views
 
 urlpatterns = [
     url(r'^$', views.index, name='index'),
+    url(r'^sucesso-cadastro-usuario/$', views.sucesso_usuario, name='sucesso_usuario'),
     url(r'^login/$', 'django.contrib.auth.views.login',
         {'template_name': 'login.html'}, name='login'),
     url(r'^sair/$', 'django.contrib.auth.views.logout',
@@ -18,13 +19,8 @@ urlpatterns = [
     url(r'^usuario/$', views.CadastrarUsuario.as_view(), name='usuario'),
 
     # Cadastro e alteração de prefeitura
-    url(r'^municipio/selecionar$', views.selecionar_tipo_ente,
-        name='selecionar_tipo_ente'),
     url(r'^municipio/$', login_required(views.CadastrarMunicipio.as_view()),
         name='municipio'),
-    url(r'^municipio/cadastrar/(?P<tipo_ente>\d+)/$',
-        login_required(views.CadastrarMunicipio.as_view()),
-        name='cadastrar_municipio'),
     url(r'^municipio/(?P<pk>[0-9]+)/$',
         login_required(views.AlterarMunicipio.as_view()),
         name='alterar_municipio'),

@@ -3,7 +3,7 @@ from threading import Thread
 
 from django.shortcuts import render, redirect
 from django.http import Http404
-from django.views.generic.edit import CreateView, UpdateView
+from django.views.generic.edit import CreateView, UpdateView, FormView
 from django.core.urlresolvers import reverse_lazy, reverse
 from django.core.mail import send_mail
 from django.contrib.auth.decorators import login_required
@@ -43,11 +43,13 @@ def ativar_usuario(request, codigo):
 
     return render(request, 'confirmar_email.html')
 
+def sucesso_usuario(request):
+    return render(request, 'usuario/mensagem_sucesso.html')
 
 class CadastrarUsuario(CreateView):
     form_class = CadastrarUsuarioForm
     template_name = 'usuario/cadastrar_usuario.html'
-    success_url = reverse_lazy('adesao:index')
+    success_url = reverse_lazy('adesao:sucesso_usuario')
 
     def get_success_url(self):
         Thread(target=send_mail, args=(
@@ -67,20 +69,10 @@ class CadastrarUsuario(CreateView):
         return super(CadastrarUsuario, self).get_success_url()
 
 
-@login_required
-def selecionar_tipo_ente(request):
-    return render(request, 'prefeitura/selecionar_tipo_ente.html')
-
-
 class CadastrarMunicipio(CreateView):
     form_class = CadastrarMunicipioForm
     template_name = 'prefeitura/cadastrar_prefeitura.html'
     success_url = reverse_lazy('adesao:home')
-
-    def get_context_data(self, **kwargs):
-        context = super(CadastrarMunicipio, self).get_context_data(**kwargs)
-        context['tipo_ente'] = self.kwargs['tipo_ente']
-        return context
 
     def form_valid(self, form):
         self.request.user.usuario.municipio = form.save()

@@ -5,3 +5,6 @@
 *pycache*
 *migrations*
 *media*
+.project
+.pydevproject
+
