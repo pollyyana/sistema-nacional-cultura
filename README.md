@@ -21,48 +21,48 @@ As dependencias de pacotes estão no requirements.txt
 ##Passos da Instalação
 
 1. Instale o python3
-```
-sudo apt-get install python3.4
-```
+    ```
+    sudo apt-get install python3.4
+    ```
 
 2. Instale o PIP no python3
 
-Baixe o arquivo get-pip.py que é um arquivo instalador executado pelo Python. O arquivo se encontra no link https://bootstrap.pypa.io/get-pip.py. 
+    Baixe o arquivo get-pip.py que é um arquivo instalador executado pelo Python. O arquivo se encontra no link https://bootstrap.pypa.io/get-pip.py. 
 O arquivo pode ser baixado de forma direta e rápida utilizando o comando wget -c.
 
-```
-wget -c https://bootstrap.pypa.io/get-pip.py
+    ```
+    wget -c https://bootstrap.pypa.io/get-pip.py
 
-sudo python3 get-pip.py
-```
+    sudo python3 get-pip.py
+    ```
 
 3. Instale o construtor de ambiente virtual
-```
-sudo apt-get python3-virtualenv
-```
+    ```
+    sudo apt-get python3-virtualenv
+    ```
 
 4. Instale o Postgre
-```
-sudo apt-get install postgresql-9.4
-```
+    ```
+    sudo apt-get install postgresql-9.4
+    ```
 
 5. Instale a libmagic e o python magic
-```
-sudo apt-get install libmagic-dev
-sudo apt-get install python-magic
-```
+    ```
+    sudo apt-get install libmagic-dev
+    sudo apt-get install python-magic
+    ```
 
 6. Instale o wkhtmltopdf
-```
-sudo apt-get install wkhtmltopdf
-```
+    ```
+    sudo apt-get install wkhtmltopdf
+    ```
 
 7. Instale as bibliotecas de desenvolvimento do servidor PostgreSQL
-```
-apt-get install postgresql-server-dev-9.4
-```
+    ```
+    apt-get install postgresql-server-dev-9.4
+    ```
 
 8. Instale as dependências python do projeto
-```
-sudo pip3 install -r requirements.txt
-```
+    ```
+    sudo pip3 install -r requirements.txt
+    ```
