@@ -17,6 +17,7 @@ As dependencias de pacotes estão no requirements.txt
 * libmagic-dev
 * python-magic
 * wkhtmltopdf
+* postgresql-server-dev-9.4
 
 ##Passos da Instalação
 
