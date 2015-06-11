@@ -68,11 +68,20 @@ class CadastrarUsuario(CreateView):
         ).start()
         return super(CadastrarUsuario, self).get_success_url()
 
+@login_required
+def selecionar_tipo_ente(request):
+    return render(request, 'prefeitura/selecionar_tipo_ente.html')
+
 
 class CadastrarMunicipio(CreateView):
     form_class = CadastrarMunicipioForm
     template_name = 'prefeitura/cadastrar_prefeitura.html'
     success_url = reverse_lazy('adesao:home')
+
+    def get_context_data(self, **kwargs):
+        context = super(CadastrarMunicipio, self).get_context_data(**kwargs)
+        context['tipo_ente'] = self.kwargs['tipo_ente']
+        return context
 
     def form_valid(self, form):
         self.request.user.usuario.municipio = form.save()

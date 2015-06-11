@@ -19,8 +19,13 @@ urlpatterns = [
     url(r'^usuario/$', views.CadastrarUsuario.as_view(), name='usuario'),
 
     # Cadastro e alteração de prefeitura
+    url(r'^municipio/selecionar$', views.selecionar_tipo_ente,
+        name='selecionar_tipo_ente'),
     url(r'^municipio/$', login_required(views.CadastrarMunicipio.as_view()),
         name='municipio'),
+    url(r'^municipio/cadastrar/(?P<tipo_ente>\d+)/$',
+        login_required(views.CadastrarMunicipio.as_view()),
+        name='cadastrar_municipio'),
     url(r'^municipio/(?P<pk>[0-9]+)/$',
         login_required(views.AlterarMunicipio.as_view()),
         name='alterar_municipio'),
