@@ -105,7 +105,7 @@ class AlterarMunicipio(UpdateView):
     form_class = CadastrarMunicipioForm
     model = Municipio
     template_name = 'prefeitura/cadastrar_prefeitura.html'
-    success_url = reverse_lazy('adesao:home')
+    success_url = reverse_lazy('adesao:sucesso_municipio')
 
     def dispatch(self, *args, **kwargs):
         municipio = self.request.user.usuario.municipio.pk
@@ -141,12 +141,15 @@ class AlterarResponsavel(UpdateView):
     template_name = 'responsavel/cadastrar_responsavel.html'
     success_url = reverse_lazy('adesao:sucesso_responsavel')
 
+def sucesso_secretario(request):
+    return render(request, 'secretario/mensagem_sucesso_secretario.html')
+
 
 class CadastrarSecretario(CreateView):
     form_class = CadastrarSecretarioForm
     template_name = 'secretario/cadastrar_secretario.html'
-    success_url = reverse_lazy('adesao:home')
-
+    success_url = reverse_lazy('adesao:sucesso_secretario')
+    
     def form_valid(self, form):
         self.request.user.usuario.secretario = form.save()
         self.request.user.usuario.save()
@@ -164,7 +167,7 @@ class AlterarSecretario(UpdateView):
         form_class = CadastrarSecretarioForm
         model = Secretario
         template_name = 'secretario/cadastrar_secretario.html'
-        success_url = reverse_lazy('adesao:home')
+        success_url = reverse_lazy('adesao:sucesso_secretario')
 
 
 class MinutaAcordo(PDFTemplateView):

@@ -40,6 +40,7 @@ urlpatterns = [
         name='alterar_responsavel'),
 
     # Cadastro e alteração de secretário
+    url(r'^sucesso-cadastro-secretario/$', views.sucesso_secretario, name='sucesso_secretario'),
     url(r'^secretario/$', login_required(views.CadastrarSecretario.as_view()),
         name='secretario'),
     url(r'^secretario/(?P<pk>[0-9]+)/$',
