@@ -20,11 +20,12 @@ As dependencias de pacotes estão no requirements.txt
 
 ##Passos da Instalação
 
-+ Instale o python3
+1. Instale o python3
 ```
 sudo apt-get install python3.4
 ```
-+ Instale o PIP no python3
+
+2. Instale o PIP no python3
 
 Baixe o arquivo get-pip.py que é um arquivo instalador executado pelo Python. O arquivo se encontra no link https://bootstrap.pypa.io/get-pip.py. 
 O arquivo pode ser baixado de forma direta e rápida utilizando o comando wget -c.
@@ -34,21 +35,29 @@ wget -c https://bootstrap.pypa.io/get-pip.py
 
 sudo python3 get-pip.py
 ```
-+ Instale o construtor de ambiente virtual
+
+3. Instale o construtor de ambiente virtual
 ```
 sudo apt-get python3-virtualenv
 ```
-+ Instale o Postgre
+
+4. Instale o Postgre
 ```
 sudo apt-get install postgresql-9.4
 ```
-+ Instale a libmagic e o python magic
+
+5. Instale a libmagic e o python magic
 ```
 sudo apt-get install libmagic-dev
 sudo apt-get install python-magic
 ```
-+ Instale o wkhtmltopdf
+
+6. Instale o wkhtmltopdf
 ```
 sudo apt-get install wkhtmltopdf
 ```
 
+7. Instale as dependências python do projeto
+```
+sudo pip3 install -r requirements.txt
+```
