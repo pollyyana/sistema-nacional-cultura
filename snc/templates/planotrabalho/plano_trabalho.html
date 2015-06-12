@@ -1,16 +1,16 @@
 {% extends "base.html" %}
+{% load i18n %}
 {% block content %}
 <div class="container">
   <p>
-    Você está no ambiente do Plano de Trabalho. Nesta fase, será preciso estabelecer um prazo para a criação de cada um dos componentes que deverão ser instituídos.
+    {% blocktrans %}Primeiro parágrafo da tela inicial do Plano de Trabalho{% endblocktrans %}
   </p>
   <p>
-    <strong>Lembramos que o prazo limite para a execução de todas as etapas do Plano de Trabalho é de 2 anos, contados a partir da publicação do Acordo de Cooperação Federativa no Diário Oficial da União.</strong>
-    Caso o Plano de Trabalho esteja próximo do prazo final, e as etapas ainda não estejam totalmente concluídas, será necessário solicitar a prorrogação, por meio de ofício assinado pelo Chefe do Executivo.
+    <strong>{% blocktrans %}Lembramos que o prazo limite para a execução de todas as etapas do Plano de Trabalho é de 2 anos, contados a partir da publicação do Acordo de Cooperação Federativa no Diário Oficial da União.{% endblocktrans %}</strong>
+    {% blocktrans %}Caso o Plano de Trabalho esteja próximo do prazo final, e as etapas ainda não estejam totalmente concluídas, será necessário solicitar a prorrogação, por meio de ofício assinado pelo Chefe do Executivo.{% endblocktrans %}
   </p>
   <p>
-    No momento em que as tarefas forem sendo concluídas, será preciso anexar comprovações de execução de cada uma delas (em campos disponíveis na plataforma) para serem validadas pela Secretaria de Articulação Institucional deste Ministério. Com isso, o progresso
-    de execução do Plano de Trabalho poderá ser acompanhado.
+    {% blocktrans %}No momento em que as tarefas forem sendo concluídas, será preciso anexar comprovações de execução de cada uma delas (em campos disponíveis na plataforma) para serem validadas pela Secretaria de Articulação Institucional deste Ministério. Com isso, o progresso de execução do Plano de Trabalho poderá ser acompanhado.{% endblocktrans %}
   </p>
   <hr />
 
@@ -18,7 +18,7 @@
 
     <li class="list-group-item">
       <p>
-        <strong>I. Institucionalização do Sistema Estadual/Municipal de Cultura</strong>
+        <strong>{% blocktrans %}Título do primeiro passo do Plano de Trabalho{% endblocktrans %}</strong>
       </p>
       <p>
         <strong>a) Lei de Criação do Sistema de Cultura</strong>

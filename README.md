@@ -17,32 +17,69 @@ As dependencias de pacotes estão no requirements.txt
 * libmagic-dev
 * python-magic
 * wkhtmltopdf
+* postgresql-server-dev-9.4
 
-##Passos da Instalação
+##Passos da Instalação para Debian/Ubuntu
 
-+ Instale o python3
-```
-sudo apt-get install python3.4
-```
-+ Instale o PIP no python3
-```
-sudo python3 get-pip.py
-```
-+ Instale o construtor de ambiente virtual
-```
-python3-virtualenv
-```
-+ Instale o Postgre
-```
-sudo apt-get install postgresql-9.4
-```
-+ Instale a libmagic e o python magic
-```
-sudo apt-get install libmagic-dev
-sudo apt-get install python-magic
-```
-+ Instale o wkhtmltopdf
-```
-sudo apt-get install wkhtmltopdf
-```
+1. Instale o PIP que é o instalador de pacotes do python3
 
+    Baixe o arquivo get-pip.py que é um arquivo instalador executado pelo Python. O arquivo se encontra no link https://bootstrap.pypa.io/get-pip.py. 
+O arquivo pode ser baixado de forma direta e rápida utilizando o comando wget -c. A opção -c tem a função de continuar o download em caso de perda de conexão.
+
+    ```
+    wget -c https://bootstrap.pypa.io/get-pip.py
+
+    sudo python3 get-pip.py
+    ```
+
+2. Instale o construtor de ambiente virtual
+    ```
+    sudo apt-get install python3-virtualenv python3-venv
+    ```
+
+3. Instale a biblioteca de manipulação de imagem libmagic e o python magic
+    ```
+    sudo apt-get install libmagic-dev python-magic
+    ```
+
+4. Instale o wkhtmltopdf que é o aplicativo para renderizar html em pdf 
+    ```
+    sudo apt-get install wkhtmltopdf
+    ```
+
+5. Instale o PostgreSQL e as bibliotecas de desenvolvimento
+    ```
+    sudo apt-get install postgresql-9.4 postgresql-server-dev-9.4
+ 
+    ```    
+6. Crie o ambiente virtual
+    ```
+    pyvenv /caminho/para/o/ambiente/virtual
+ 
+    ```    
+7. Clone o repositório do projeto do github
+    ```
+    git clone https://github.com/culturagovbr/sistema-nacional-cultura.git snc & cd snc
+
+    ```
+    
+8. Ative o ambiente virtual
+    ```
+    source /caminho/para/o/ambiente/virtual/bin/activate
+
+    ```
+
+9. Instale as dependências python do projeto
+    ```
+    sudo pip3 install -r requirements.txt
+
+    ```
+10. Configure o arquivo settings.py
+
+11. Configure o banco de dados
+
+12. Execute a aplicação (É preciso ter o ambiente virtual ativado)
+    ```
+    python3 manage.py runserver
+
+    ```
