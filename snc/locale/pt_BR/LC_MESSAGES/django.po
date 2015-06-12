@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-06-11 18:04-0300\n"
+"POT-Creation-Date: 2015-06-12 10:31-0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -24,7 +24,10 @@ msgstr ""
 
 #: templates/planotrabalho/plano_trabalho.html:6
 msgid "Primeiro parágrafo da tela inicial do Plano de Trabalho"
-msgstr "Você está no ambiente do Plano de Trabalho. Nesta fase, será preciso estabelecer um prazo para a   criação de cada um dos componentes que deverão ser instituídos."
+msgstr ""
+"Você está no ambiente do Plano de Trabalho. Nesta fase, será preciso "
+"estabelecer um prazo para a   criação de cada um dos componentes que deverão "
+"ser instituídos."
 
 #: templates/planotrabalho/plano_trabalho.html:9
 msgid ""
@@ -48,6 +51,10 @@ msgid ""
 "Institucional deste Ministério. Com isso, o progresso de execução do Plano "
 "de Trabalho poderá ser acompanhado."
 msgstr ""
+
+#: templates/planotrabalho/plano_trabalho.html:21
+msgid "Título do primeiro passo do Plano de Trabalho"
+msgstr "I. Institucionalização do Sistema Estadual/Municipal de Cultura"
 
 #: templates/registration/password_reset_complete.html:7
 msgid "Password reset complete"
