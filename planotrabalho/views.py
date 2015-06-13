@@ -19,7 +19,14 @@ class CadastrarSistema(CreateView):
     form_class = CriarSistemaForm
     template_name = 'planotrabalho/cadastrar_sistema.html'
     success_url = reverse_lazy('planotrabalho:gestor')
-
+    
+    #sobreescrita metodo get para passagem da requisição(request) ao formulario
+    def get(self, request, *args, **kwargs):        
+        #context = super(CadastrarSistema, self).get_context_data(**kwargs)
+        form_class = self.get_form_class()        
+        kwargs['form'] = form_class(self.request.POST, request=request)
+        return CreateView.get(self, request, *args, **kwargs)
+    
     def form_valid(self, form):
         self.request.user.usuario.plano_trabalho.criacao_sistema = form.save()
         self.request.user.usuario.plano_trabalho.save()
