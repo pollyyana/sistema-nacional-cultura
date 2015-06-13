@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-06-13 18:04-0300\n"
+"POT-Creation-Date: 2015-06-13 18:15-0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -191,6 +191,24 @@ msgstr "a) Plano de Cultura"
 #: templates/planotrabalho/plano_trabalho.html:79
 msgid "Data final para sanção da Lei do Plano de Cultura:"
 msgstr "Data final para sanção da Lei do Plano de Cultura:"
+
+#: templates/prefeitura/selecionar_tipo_ente.html:6
+msgid "Cadastro de Ente Federado"
+msgstr "Cadastro de Ente Federado"
+
+#: templates/prefeitura/selecionar_tipo_ente.html:7
+msgid "Escolha de ente federado"
+msgstr ""
+"Selecione uma das opções abaixo, dependendo de qual tipo de Ente Federado "
+"você quer cadastrar."
+
+#: templates/prefeitura/selecionar_tipo_ente.html:8
+msgid "Prefeitura"
+msgstr "Prefeitura"
+
+#: templates/prefeitura/selecionar_tipo_ente.html:9
+msgid "Governo"
+msgstr "Governo Estadual"
 
 #: templates/registration/password_reset_complete.html:7
 msgid "Password reset complete"

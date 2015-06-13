@@ -1,8 +1,8 @@
 {% extends "base.html" %}
-
+{% load i18n %}
 {% block content %}
-<h3>Cadastro/Alteração Realizado com Sucesso!</h3>
-<p>O Ente Federado foi cadastrado/alterado com sucesso.</p>
-<a class="btn btn-success" href="{% url 'adesao:secretario' %}">Proximo</a>
-<a class="btn btn-success" href="{% url 'adesao:home' %}">Inicial</a>
+<h3>{% blocktrans %}Cadastro/Alteração Realizado com Sucesso!{% endblocktrans %}</h3>
+<p>{% blocktrans %}O Ente Federado foi cadastrado/alterado com sucesso.{% endblocktrans %}</p>
+<a class="btn btn-success" href="{% url 'adesao:secretario' %}">{% blocktrans %}Próximo{% endblocktrans %}</a>
+<a class="btn btn-success" href="{% url 'adesao:home' %}">{% blocktrans %}Inicial{% endblocktrans %}</a>
 {% endblock content %}
