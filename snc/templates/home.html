@@ -1,6 +1,8 @@
-{% extends "base.html" %} {% block content %}
+{% extends "base.html" %}
+{% load i18n %}
+{% block content %}
 <div class="container">
-    <h2>Bem vindo ao Sistema Nacional de Cultura<a class="anchorjs-link" href="#auto-truncating"><span class="anchorjs-icon"></span></a></h2>
-    <p>Entre com os seus dados no sistema para gerar o Acordo de Cooperação Técnica e a Solicitação de adesão do seu município ou do seu Estado no SNC.</p>
+    <h2>{% blocktrans %}Título da tela home{% endblocktrans %}<a class="anchorjs-link" href="#auto-truncating"><span class="anchorjs-icon"></span></a></h2>
+    <p>{% blocktrans %}Mensagem da tela home{% endblocktrans %}</p>
 </div>
 {% endblock content %}

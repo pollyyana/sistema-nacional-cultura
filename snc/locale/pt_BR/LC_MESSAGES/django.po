@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-06-13 17:55-0300\n"
+"POT-Creation-Date: 2015-06-13 18:04-0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -60,7 +60,7 @@ msgstr "Plano de Trabalho"
 
 #: templates/base.html:76
 msgid "Alterar Senha"
-msgstr ""
+msgstr "Alterar Senha"
 
 #: templates/base.html:77
 msgid "Sair"
@@ -83,6 +83,16 @@ msgstr ""
 #: templates/base.html:93
 msgid "Continuação do endereço do ministério"
 msgstr "CEP: 70308-200 Brasília-DF - (61) 2024-2325 "
+
+#: templates/home.html:5
+msgid "Título da tela home"
+msgstr "Bem vindo ao Sistema Nacional de Cultura"
+
+#: templates/home.html:6
+msgid "Mensagem da tela home"
+msgstr ""
+"Entre com os seus dados no sistema para gerar o Acordo de Cooperação Técnica "
+"e a Solicitação de adesão do seu município ou do seu Estado no SNC."
 
 #: templates/planotrabalho/plano_trabalho.html:6
 msgid "Primeiro parágrafo da tela inicial do Plano de Trabalho"
