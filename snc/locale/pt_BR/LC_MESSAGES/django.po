@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-06-12 10:31-0300\n"
+"POT-Creation-Date: 2015-06-13 17:38-0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -22,6 +22,64 @@ msgstr ""
 msgid "Django site admin"
 msgstr ""
 
+#: templates/base.html:51
+msgid "Início"
+msgstr "Início"
+
+#: templates/base.html:53 templates/base.html.py:55
+msgid "Ente Federado"
+msgstr "Ente Federado"
+
+#: templates/base.html:57
+msgid "Interlocutor"
+msgstr "Interlocutor"
+
+#: templates/base.html:58
+msgid "Responsável"
+msgstr "Responsável"
+
+#: templates/base.html:62
+msgid "Imprimir"
+msgstr "Imprimir "
+
+#: templates/base.html:65
+msgid "Acordo de Cooperação"
+msgstr "Acordo de Cooperação"
+
+#: templates/base.html:66
+msgid "Termo de Solicitação"
+msgstr "Termo de Solicitação"
+
+#: templates/base.html:69
+msgid "Plano de Trabalho"
+msgstr "Plano de Trabalho"
+
+#: templates/base.html:75
+msgid "Alterar Senha"
+msgstr ""
+
+#: templates/base.html:76
+msgid "Sair\t"
+msgstr ""
+
+#: templates/base.html:89
+msgid "Ministério da Cultura"
+msgstr ""
+
+#: templates/base.html:90
+msgid "SAI - Secretaria de Articulação Institucional"
+msgstr ""
+
+#: templates/base.html:91
+msgid ""
+"- Edifício Parque Cidade Corporate – SCS, Quadra 09, Lote C, Torre B, 10º "
+"Andar"
+msgstr ""
+
+#: templates/base.html:92
+msgid "CEP: 70308-200 Brasília-DF - (61) 2024-2325 "
+msgstr ""
+
 #: templates/planotrabalho/plano_trabalho.html:6
 msgid "Primeiro parágrafo da tela inicial do Plano de Trabalho"
 msgstr ""
@@ -30,31 +88,95 @@ msgstr ""
 "ser instituídos."
 
 #: templates/planotrabalho/plano_trabalho.html:9
-msgid ""
+msgid "Segundo parágrafo da tela inicial do Plano de Trabalho"
+msgstr ""
 "Lembramos que o prazo limite para a execução de todas as etapas do Plano de "
 "Trabalho é de 2 anos, contados a partir da publicação do Acordo de "
 "Cooperação Federativa no Diário Oficial da União."
-msgstr ""
 
 #: templates/planotrabalho/plano_trabalho.html:10
-msgid ""
+msgid "Terceiro parágrafo da tela inicial do Plano de Trabalho"
+msgstr ""
 "Caso o Plano de Trabalho esteja próximo do prazo final, e as etapas ainda "
 "não estejam totalmente concluídas, será necessário solicitar a prorrogação, "
 "por meio de ofício assinado pelo Chefe do Executivo."
-msgstr ""
 
 #: templates/planotrabalho/plano_trabalho.html:13
-msgid ""
+msgid "Quarto parágrafo da tela inicial do Plano de Trabalho"
+msgstr ""
 "No momento em que as tarefas forem sendo concluídas, será preciso anexar "
 "comprovações de execução de cada uma delas (em campos disponíveis na "
 "plataforma) para serem validadas pela Secretaria de Articulação "
 "Institucional deste Ministério. Com isso, o progresso de execução do Plano "
 "de Trabalho poderá ser acompanhado."
-msgstr ""
 
 #: templates/planotrabalho/plano_trabalho.html:21
 msgid "Título do primeiro passo do Plano de Trabalho"
 msgstr "I. Institucionalização do Sistema Estadual/Municipal de Cultura"
+
+#: templates/planotrabalho/plano_trabalho.html:24
+msgid "Item 1-a do Plano de Trabalho"
+msgstr "a) Lei de Criação do Sistema de Cultura"
+
+#: templates/planotrabalho/plano_trabalho.html:27
+msgid "Data final lei de cultura"
+msgstr "Data final para sanção da Lei do Sistema de Cultura:"
+
+#: templates/planotrabalho/plano_trabalho.html:28
+#: templates/planotrabalho/plano_trabalho.html:44
+#: templates/planotrabalho/plano_trabalho.html:54
+#: templates/planotrabalho/plano_trabalho.html:64
+#: templates/planotrabalho/plano_trabalho.html:80
+msgid "Modificar"
+msgstr "Modificar"
+
+#: templates/planotrabalho/plano_trabalho.html:30
+#: templates/planotrabalho/plano_trabalho.html:46
+#: templates/planotrabalho/plano_trabalho.html:56
+#: templates/planotrabalho/plano_trabalho.html:66
+#: templates/planotrabalho/plano_trabalho.html:82
+msgid "Preencher"
+msgstr "Preecher"
+
+#: templates/planotrabalho/plano_trabalho.html:36
+msgid "Título do segundo passo do plano de trabalho"
+msgstr "II. Estruturação dos Componentes"
+
+#: templates/planotrabalho/plano_trabalho.html:40
+msgid "item criação Órgão Gestor"
+msgstr "a) Órgão Gestor"
+
+#: templates/planotrabalho/plano_trabalho.html:43
+msgid "Data final para estruturação da Secretaria de Cultura:"
+msgstr "Data final para estruturação da Secretaria de Cultura:"
+
+#: templates/planotrabalho/plano_trabalho.html:50
+msgid "b) Conselho de Política Cultural"
+msgstr "b) Conselho de Política Cultural"
+
+#: templates/planotrabalho/plano_trabalho.html:53
+msgid "Data final para instalação do Conselho de Política Cultural:"
+msgstr "Data final para instalação do Conselho de Política Cultural:"
+
+#: templates/planotrabalho/plano_trabalho.html:60
+msgid "c) Fundo de Cultura"
+msgstr "c) Fundo de Cultura"
+
+#: templates/planotrabalho/plano_trabalho.html:63
+msgid "Data final para instituição do Fundo de Cultura:"
+msgstr "Data final para instituição do Fundo de Cultura:"
+
+#: templates/planotrabalho/plano_trabalho.html:73
+msgid "III. Elaboração do Plano de Cultura"
+msgstr "III. Elaboração do Plano de Cultura"
+
+#: templates/planotrabalho/plano_trabalho.html:76
+msgid "a) Plano de Cultura"
+msgstr "a) Plano de Cultura"
+
+#: templates/planotrabalho/plano_trabalho.html:79
+msgid "Data final para sanção da Lei do Plano de Cultura:"
+msgstr "Data final para sanção da Lei do Plano de Cultura:"
 
 #: templates/registration/password_reset_complete.html:7
 msgid "Password reset complete"

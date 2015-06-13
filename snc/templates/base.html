@@ -1,3 +1,4 @@
+{% load i18n %}
 <head>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -48,32 +49,32 @@
   <div style="padding:10px">
     <ul class="nav nav-tabs">
 
-      <li role="presentation" {% if request.path == '/adesao/home/' %} class="active" {% endif %}><a href="{% url 'adesao:home' %}">Início</a></li>
+      <li role="presentation" {% if request.path == '/adesao/home/' %} class="active" {% endif %}><a href="{% url 'adesao:home' %}">{% blocktrans %}Início{% endblocktrans %}</a></li>
       {% if request.user.usuario.municipio %}
-      <li role="presentation" {% if request.path == url_municipio or request.path in url_alt_municipio %} class="active" {% endif %}><a href="{% url 'adesao:municipio' %}">Ente Federado</a></li>
+      <li role="presentation" {% if request.path == url_municipio or request.path in url_alt_municipio %} class="active" {% endif %}><a href="{% url 'adesao:municipio' %}">{% blocktrans %}Ente Federado{% endblocktrans %}</a></li>
       {% else %}
-      <li role="presentation" {% if request.path == url_municipio or request.path in url_alt_municipio %} class="active" {% endif %}><a href="{% url 'adesao:selecionar_tipo_ente' %}">Ente Federado</a></li>
+      <li role="presentation" {% if request.path == url_municipio or request.path in url_alt_municipio %} class="active" {% endif %}><a href="{% url 'adesao:selecionar_tipo_ente' %}">{% blocktrans %}Ente Federado{% endblocktrans %}</a></li>
       {% endif %}
-      <li role="presentation" {% if request.path == url_secretario or request.path in url_alt_secretario %} class="active" {% endif %}><a href="{% url 'adesao:secretario' %}">Interlocutor</a></li>
-      <li role="presentation" {% if request.path == url_responsavel or request.path in url_alt_responsavel %} class="active" {% endif %}><a href="{% url 'adesao:responsavel' %}">Responsável</a></li>
+      <li role="presentation" {% if request.path == url_secretario or request.path in url_alt_secretario %} class="active" {% endif %}><a href="{% url 'adesao:secretario' %}">{% blocktrans %}Interlocutor{% endblocktrans %}</a></li>
+      <li role="presentation" {% if request.path == url_responsavel or request.path in url_alt_responsavel %} class="active" {% endif %}><a href="{% url 'adesao:responsavel' %}">{% blocktrans %}Responsável{% endblocktrans %}</a></li>
       {% if request.user.usuario.estado_processo == '1' %}
       <li role="presentation" class="dropdown" {% if request.path == url_minuta or request.path == url_solicitacao %} class="active" {% endif %}>
         <a class="dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-expanded="false">
-          Imprimir <span class="caret"></span>
+          {% blocktrans %}Imprimir{% endblocktrans %}<span class="caret"></span>
         </a>
         <ul class="dropdown-menu" role="menu">
-            <li role="presentation" {% if request.path == url_minuta %} class="active" {% endif %}><a href="{% url 'adesao:minuta' %}" target="_blank" >Acordo de Cooperação</a></li>
-            <li role="presentation" {% if request.path == url_solicitacao %} class="active" {% endif %}><a href="{% url 'adesao:solicitacao' %}" target="_blank" >Termo de Solicitação</a></li>
+            <li role="presentation" {% if request.path == url_minuta %} class="active" {% endif %}><a href="{% url 'adesao:minuta' %}" target="_blank" >{% blocktrans %}Acordo de Cooperação{% endblocktrans %}</a></li>
+            <li role="presentation" {% if request.path == url_solicitacao %} class="active" {% endif %}><a href="{% url 'adesao:solicitacao' %}" target="_blank" >{% blocktrans %}Termo de Solicitação{% endblocktrans %}</a></li>
         </ul>
       {% endif %}
-      <li role="presentation"><a href="{% url 'planotrabalho:planotrabalho' request.user.usuario.plano_trabalho.id %}">Plano de Trabalho</a></li>
+      <li role="presentation"><a href="{% url 'planotrabalho:planotrabalho' request.user.usuario.plano_trabalho.id %}">{% blocktrans %}Plano de Trabalho{% endblocktrans %}</a></li>
       <li role="presentation" class="dropdown" >
         <a class="dropdown-toggle glyphicon glyphicon-user" data-toggle="dropdown" href="#" role="button" aria-expanded="false">
           {{ request.user.usuario.nome_usuario }} <span class="caret"></span>
         </a>
         <ul class="dropdown-menu" role="menu">
-            <li role="presentation" ><a href="{% url 'mudar_senha' %}"> Alterar Senha </a></li>
-            <li role="presentation" ><a href="{% url 'adesao:logout' %}"> Sair </a></li>
+            <li role="presentation" ><a href="{% url 'mudar_senha' %}">{% blocktrans %}Alterar Senha{% endblocktrans %}</a></li>
+            <li role="presentation" ><a href="{% url 'adesao:logout' %}">{% blocktrans %}Sair	{% endblocktrans %}</a></li>
         </ul>
       </li>
     </ul>
@@ -86,10 +87,10 @@
     {% block footer %}
       <div id="address">
       <address>
-        <strong>Ministério da Cultura</strong>
-        <br><strong>SAI - Secretaria de Articulação Institucional</strong>
-        - Edifício Parque Cidade Corporate – SCS, Quadra 09, Lote C, Torre B, 10º Andar
-        <br> CEP: 70308-200 Brasília-DF - (61) 2024-2325 <a href="mailto:acordosnc@cultura.gov.br"> acordosnc@cultura.gov.br</a>
+        <strong>{% blocktrans %}Ministério da Cultura{% endblocktrans %}</strong>
+        <br><strong>{% blocktrans %}SAI - Secretaria de Articulação Institucional{% endblocktrans %}</strong>
+        {% blocktrans %}- Edifício Parque Cidade Corporate – SCS, Quadra 09, Lote C, Torre B, 10º Andar{% endblocktrans %}
+        <br>{% blocktrans %}CEP: 70308-200 Brasília-DF - (61) 2024-2325 {% endblocktrans %}<a href="mailto:acordosnc@cultura.gov.br"> acordosnc@cultura.gov.br</a>
       </address>
       </div>
     {% endblock footer %}

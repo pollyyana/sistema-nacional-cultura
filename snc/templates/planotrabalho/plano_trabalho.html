@@ -6,11 +6,11 @@
     {% blocktrans %}Primeiro parágrafo da tela inicial do Plano de Trabalho{% endblocktrans %}
   </p>
   <p>
-    <strong>{% blocktrans %}Lembramos que o prazo limite para a execução de todas as etapas do Plano de Trabalho é de 2 anos, contados a partir da publicação do Acordo de Cooperação Federativa no Diário Oficial da União.{% endblocktrans %}</strong>
-    {% blocktrans %}Caso o Plano de Trabalho esteja próximo do prazo final, e as etapas ainda não estejam totalmente concluídas, será necessário solicitar a prorrogação, por meio de ofício assinado pelo Chefe do Executivo.{% endblocktrans %}
+    <strong>{% blocktrans %}Segundo parágrafo da tela inicial do Plano de Trabalho{% endblocktrans %}</strong>
+    {% blocktrans %}Terceiro parágrafo da tela inicial do Plano de Trabalho{% endblocktrans %}
   </p>
   <p>
-    {% blocktrans %}No momento em que as tarefas forem sendo concluídas, será preciso anexar comprovações de execução de cada uma delas (em campos disponíveis na plataforma) para serem validadas pela Secretaria de Articulação Institucional deste Ministério. Com isso, o progresso de execução do Plano de Trabalho poderá ser acompanhado.{% endblocktrans %}
+    {% blocktrans %}Quarto parágrafo da tela inicial do Plano de Trabalho{% endblocktrans %}
   </p>
   <hr />
 
@@ -21,65 +21,65 @@
         <strong>{% blocktrans %}Título do primeiro passo do Plano de Trabalho{% endblocktrans %}</strong>
       </p>
       <p>
-        <strong>a) Lei de Criação do Sistema de Cultura</strong>
+        <strong>{% blocktrans %}Item 1-a do Plano de Trabalho{% endblocktrans %}</strong>
       </p>
       {% if request.user.usuario.plano_trabalho.criacao_sistema %}
-      <strong>Data final para sanção da Lei do Sistema de Cultura:</strong> {{request.user.usuario.plano_trabalho.criacao_sistema.data_final_sancao_lei}}<br>
-      <a class="btn btn-success" href="{% url 'planotrabalho:sistema' %}">Modificar</a>
+      <strong>{% blocktrans %}Data final lei de cultura{% endblocktrans %}</strong> {{request.user.usuario.plano_trabalho.criacao_sistema.data_final_sancao_lei}}<br>
+      <a class="btn btn-success" href="{% url 'planotrabalho:sistema' %}">{% blocktrans %}Modificar{% endblocktrans %}</a>
       {% else %}
-      <a class ="btn btn-warning" href="{% url 'planotrabalho:sistema' %}" >Preencher</a>
+      <a class ="btn btn-warning" href="{% url 'planotrabalho:sistema' %}" >{% blocktrans %}Preencher{% endblocktrans %}</a>
       {% endif %}
     </li>
 
     <li class="list-group-item">
       <p>
-        <strong>II. Estruturação dos Componentes</strong>
+        <strong>{% blocktrans %}Título do segundo passo do plano de trabalho{% endblocktrans %}</strong>
       </p>
 
         <p>
-          <strong>a) Órgão Gestor</strong>
+          <strong>{% blocktrans %}item criação Órgão Gestor{% endblocktrans %}</strong>
         </p>
         {% if request.user.usuario.plano_trabalho.orgao_gestor %}
-        <strong>Data final para estruturação da Secretaria de Cultura:</strong> {{request.user.usuario.plano_trabalho.orgao_gestor.data_final_estruturacao_secretaria}} <br>
-        <a class="btn btn-success" href="{% url 'planotrabalho:gestor' %}" />Modificar</a>
+        <strong>{% blocktrans %}Data final para estruturação da Secretaria de Cultura:{% endblocktrans %}</strong> {{request.user.usuario.plano_trabalho.orgao_gestor.data_final_estruturacao_secretaria}} <br>
+        <a class="btn btn-success" href="{% url 'planotrabalho:gestor' %}" />{% blocktrans %}Modificar{% endblocktrans %}</a>
         {% else %}
-        <a class="btn btn-warning" href="{% url 'planotrabalho:gestor' %}" />Preencher</a>
+        <a class="btn btn-warning" href="{% url 'planotrabalho:gestor' %}" />{% blocktrans %}Preencher{% endblocktrans %}</a>
         {% endif %}
 
         <p>
-          <strong>b) Conselho de Política Cultural</strong>
+          <strong>{% blocktrans %}b) Conselho de Política Cultural{% endblocktrans %}</strong>
         </p>
         {% if request.user.usuario.plano_trabalho.conselho_cultural %}
-        <strong>Data final para instalação do Conselho de Política Cultural:</strong> {{request.user.usuario.plano_trabalho.conselho_cultural.data_final_instalacao_conselho}} <br>
-        <a class="btn btn-success" href="{% url 'planotrabalho:conselho' %}" >Modificar</a>
+        <strong>{% blocktrans %}Data final para instalação do Conselho de Política Cultural:{% endblocktrans %}</strong> {{request.user.usuario.plano_trabalho.conselho_cultural.data_final_instalacao_conselho}} <br>
+        <a class="btn btn-success" href="{% url 'planotrabalho:conselho' %}" >{% blocktrans %}Modificar{% endblocktrans %}</a>
         {% else %}
-        <a class="btn btn-warning" href="{% url 'planotrabalho:conselho' %}" >Preencher</a>
+        <a class="btn btn-warning" href="{% url 'planotrabalho:conselho' %}" >{% blocktrans %}Preencher{% endblocktrans %}</a>
         {% endif %}
 
         <p>
-          <strong>c) Fundo de Cultura</strong>
+          <strong>{% blocktrans %}c) Fundo de Cultura{% endblocktrans %}</strong>
         </p>
         {% if request.user.usuario.plano_trabalho.fundo_cultura %}
-        <strong>Data final para instituição do Fundo de Cultura:</strong> {{request.user.usuario.plano_trabalho.fundo_cultura.data_final_instituicao_fundo_cultura}} <br>
-        <a class="btn btn-success" href="{% url 'planotrabalho:fundo' %}" >Modificar</a>
+        <strong>{% blocktrans %}Data final para instituição do Fundo de Cultura:{% endblocktrans %}</strong> {{request.user.usuario.plano_trabalho.fundo_cultura.data_final_instituicao_fundo_cultura}} <br>
+        <a class="btn btn-success" href="{% url 'planotrabalho:fundo' %}" >{% blocktrans %}Modificar{% endblocktrans %}</a>
         {% else %}
-        <a class="btn btn-warning" href="{% url 'planotrabalho:fundo' %}" >Preencher</a>
+        <a class="btn btn-warning" href="{% url 'planotrabalho:fundo' %}" >{% blocktrans %}Preencher{% endblocktrans %}</a>
         {% endif %}
 
     </li>
 
     <li class="list-group-item">
         <p>
-          <strong>III. Elaboração do Plano de Cultura</strong>
+          <strong>{% blocktrans %}III. Elaboração do Plano de Cultura{% endblocktrans %}</strong>
         </p>
         <p>
-          <strong>a) Plano de Cultura</strong>
+          <strong>{% blocktrans %}a) Plano de Cultura{% endblocktrans %}</strong>
         </p>
         {% if request.user.usuario.plano_trabalho.plano_cultura %}
-        <strong>Data final para sanção da Lei do Plano de Cultura:</strong> {{request.user.usuario.plano_trabalho.plano_cultura.data_final_sancao_lei_plano_cultura}} <br>
-        <a class="btn btn-success" href="{% url 'planotrabalho:plano' %}" >Modificar</a>
+        <strong>{% blocktrans %}Data final para sanção da Lei do Plano de Cultura:{% endblocktrans %}</strong> {{request.user.usuario.plano_trabalho.plano_cultura.data_final_sancao_lei_plano_cultura}} <br>
+        <a class="btn btn-success" href="{% url 'planotrabalho:plano' %}" >{% blocktrans %}Modificar{% endblocktrans %}</a>
         {% else %}
-        <a class="btn btn-warning" href="{% url 'planotrabalho:plano' %}" >Preencher</a>
+        <a class="btn btn-warning" href="{% url 'planotrabalho:plano' %}" >{% blocktrans %}Preencher{% endblocktrans %}</a>
         {% endif %}
     </li>
 
