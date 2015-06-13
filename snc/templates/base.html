@@ -7,7 +7,7 @@
   <meta name="description" content="">
   <meta name="author" content="">
 
-  <title>Sistema Nacional de Cultura</title>
+  <title>{% blocktrans %}Título do site{% endblocktrans %}</title>
 
   {% load staticfiles %}
 
@@ -74,7 +74,7 @@
         </a>
         <ul class="dropdown-menu" role="menu">
             <li role="presentation" ><a href="{% url 'mudar_senha' %}">{% blocktrans %}Alterar Senha{% endblocktrans %}</a></li>
-            <li role="presentation" ><a href="{% url 'adesao:logout' %}">{% blocktrans %}Sair	{% endblocktrans %}</a></li>
+            <li role="presentation" ><a href="{% url 'adesao:logout' %}">{% blocktrans %}Sair{% endblocktrans %}</a></li>
         </ul>
       </li>
     </ul>
@@ -88,9 +88,9 @@
       <div id="address">
       <address>
         <strong>{% blocktrans %}Ministério da Cultura{% endblocktrans %}</strong>
-        <br><strong>{% blocktrans %}SAI - Secretaria de Articulação Institucional{% endblocktrans %}</strong>
-        {% blocktrans %}- Edifício Parque Cidade Corporate – SCS, Quadra 09, Lote C, Torre B, 10º Andar{% endblocktrans %}
-        <br>{% blocktrans %}CEP: 70308-200 Brasília-DF - (61) 2024-2325 {% endblocktrans %}<a href="mailto:acordosnc@cultura.gov.br"> acordosnc@cultura.gov.br</a>
+        <br><strong>{% blocktrans %}Nome da secretaria{% endblocktrans %}</strong>
+        {% blocktrans %}Endereço do ministério{% endblocktrans %}
+        <br>{% blocktrans %}Continuação do endereço do ministério{% endblocktrans %}<a href="mailto:acordosnc@cultura.gov.br"> acordosnc@cultura.gov.br</a>
       </address>
       </div>
     {% endblock footer %}

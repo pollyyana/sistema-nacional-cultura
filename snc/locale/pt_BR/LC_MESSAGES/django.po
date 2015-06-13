@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-06-13 17:38-0300\n"
+"POT-Creation-Date: 2015-06-13 17:55-0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -22,63 +22,67 @@ msgstr ""
 msgid "Django site admin"
 msgstr ""
 
-#: templates/base.html:51
+#: templates/base.html:10
+msgid "Título do site"
+msgstr "Sistema Nacional de Cultura"
+
+#: templates/base.html:52
 msgid "Início"
 msgstr "Início"
 
-#: templates/base.html:53 templates/base.html.py:55
+#: templates/base.html:54 templates/base.html.py:56
 msgid "Ente Federado"
 msgstr "Ente Federado"
 
-#: templates/base.html:57
+#: templates/base.html:58
 msgid "Interlocutor"
 msgstr "Interlocutor"
 
-#: templates/base.html:58
+#: templates/base.html:59
 msgid "Responsável"
 msgstr "Responsável"
 
-#: templates/base.html:62
+#: templates/base.html:63
 msgid "Imprimir"
 msgstr "Imprimir "
 
-#: templates/base.html:65
+#: templates/base.html:66
 msgid "Acordo de Cooperação"
 msgstr "Acordo de Cooperação"
 
-#: templates/base.html:66
+#: templates/base.html:67
 msgid "Termo de Solicitação"
 msgstr "Termo de Solicitação"
 
-#: templates/base.html:69
+#: templates/base.html:70
 msgid "Plano de Trabalho"
 msgstr "Plano de Trabalho"
 
-#: templates/base.html:75
+#: templates/base.html:76
 msgid "Alterar Senha"
 msgstr ""
 
-#: templates/base.html:76
-msgid "Sair\t"
-msgstr ""
-
-#: templates/base.html:89
-msgid "Ministério da Cultura"
-msgstr ""
+#: templates/base.html:77
+msgid "Sair"
+msgstr "Sair"
 
 #: templates/base.html:90
-msgid "SAI - Secretaria de Articulação Institucional"
-msgstr ""
+msgid "Ministério da Cultura"
+msgstr "Ministério da Cultura"
 
 #: templates/base.html:91
-msgid ""
-"- Edifício Parque Cidade Corporate – SCS, Quadra 09, Lote C, Torre B, 10º "
-"Andar"
-msgstr ""
+msgid "Nome da secretaria"
+msgstr "SAI - Secretaria de Articulação Institucional"
 
 #: templates/base.html:92
-msgid "CEP: 70308-200 Brasília-DF - (61) 2024-2325 "
+msgid "Endereço do ministério"
 msgstr ""
+"- Edifício Parque Cidade Corporate – SCS, Quadra 09, Lote C, Torre B, 10º "
+"Andar"
+
+#: templates/base.html:93
+msgid "Continuação do endereço do ministério"
+msgstr "CEP: 70308-200 Brasília-DF - (61) 2024-2325 "
 
 #: templates/planotrabalho/plano_trabalho.html:6
 msgid "Primeiro parágrafo da tela inicial do Plano de Trabalho"
