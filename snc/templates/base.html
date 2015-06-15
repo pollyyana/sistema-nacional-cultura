@@ -69,8 +69,10 @@
       {% endif %}
       <li role="presentation"><a href="{% url 'planotrabalho:planotrabalho' request.user.usuario.plano_trabalho.id %}">{% blocktrans %}Plano de Trabalho{% endblocktrans %}</a></li>
       <li role="presentation" class="dropdown pull-right" >
-        <a class="dropdown-toggle glyphicon glyphicon-user" data-toggle="dropdown" href="#" role="button" aria-expanded="false">
-          {{ request.user.usuario.nome_usuario }} <span class="caret"></span>
+        <a data-toggle="dropdown" href="#" role="button" aria-expanded="false">
+          <span class="glyphicon glyphicon-user"></span>
+          {{ request.user.usuario.nome_usuario }}
+	  <span class="caret"></span>
         </a>
         <ul class="dropdown-menu" role="menu">
             <li role="presentation" ><a href="{% url 'mudar_senha' %}">{% blocktrans %}Alterar Senha{% endblocktrans %}</a></li>
