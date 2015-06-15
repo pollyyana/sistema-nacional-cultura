@@ -20,9 +20,9 @@ class CadastrarSistema(CreateView):
     template_name = 'planotrabalho/cadastrar_sistema.html'
     success_url = reverse_lazy('planotrabalho:gestor')
 
-    def get_form(self):
+    def get_form_kwargs(self):
         kwargs = super(CadastrarSistema, self).get_form_kwargs()
-        kwargs.update({'user': self.request.user})
+        kwargs['user'] = self.request.user.usuario
         return kwargs
 
     def form_valid(self, form):
@@ -44,11 +44,21 @@ class AlterarSistema(UpdateView):
     template_name = 'planotrabalho/cadastrar_sistema.html'
     success_url = reverse_lazy('planotrabalho:gestor')
 
+    def get_form_kwargs(self):
+        kwargs = super(AlterarSistema, self).get_form_kwargs()
+        kwargs['user'] = self.request.user.usuario
+        return kwargs
+
 
 class CadastrarOrgaoGestor(CreateView):
     form_class = OrgaoGestorForm
     template_name = 'planotrabalho/cadastrar_orgao.html'
     success_url = reverse_lazy('planotrabalho:conselho')
+
+    def get_form_kwargs(self):
+        kwargs = super(CadastrarOrgaoGestor, self).get_form_kwargs()
+        kwargs['user'] = self.request.user.usuario
+        return kwargs
 
     def form_valid(self, form):
         self.request.user.usuario.plano_trabalho.orgao_gestor = form.save()
@@ -69,11 +79,21 @@ class AlterarOrgaoGestor(UpdateView):
     template_name = 'planotrabalho/cadastrar_orgao.html'
     success_url = reverse_lazy('planotrabalho:conselho')
 
+    def get_form_kwargs(self):
+        kwargs = super(AlterarOrgaoGestor, self).get_form_kwargs()
+        kwargs['user'] = self.request.user.usuario
+        return kwargs
+
 
 class CadastrarConselho(CreateView):
     form_class = ConselhoCulturalForm
     template_name = 'planotrabalho/cadastrar_conselho.html'
     success_url = reverse_lazy('planotrabalho:fundo')
+
+    def get_form_kwargs(self):
+        kwargs = super(CadastrarConselho, self).get_form_kwargs()
+        kwargs['user'] = self.request.user.usuario
+        return kwargs
 
     def form_valid(self, form):
         self.request.user.usuario.plano_trabalho.conselho_cultural = form.save()
@@ -94,11 +114,21 @@ class AlterarConselho(UpdateView):
     template_name = 'planotrabalho/cadastrar_conselho.html'
     success_url = reverse_lazy('planotrabalho:fundo')
 
+    def get_form_kwargs(self):
+        kwargs = super(AlterarConselho, self).get_form_kwargs()
+        kwargs['user'] = self.request.user.usuario
+        return kwargs
+
 
 class CadastrarFundo(CreateView):
     form_class = FundoCulturaForm
     template_name = 'planotrabalho/cadastrar_fundo.html'
     success_url = reverse_lazy('planotrabalho:plano')
+
+    def get_form_kwargs(self):
+        kwargs = super(CadastrarFundo, self).get_form_kwargs()
+        kwargs['user'] = self.request.user.usuario
+        return kwargs
 
     def form_valid(self, form):
         self.request.user.usuario.plano_trabalho.fundo_cultura = form.save()
@@ -119,10 +149,21 @@ class AlterarFundo(UpdateView):
     template_name = 'planotrabalho/cadastrar_fundo.html'
     success_url = reverse_lazy('planotrabalho:plano')
 
+    def get_form_kwargs(self):
+        kwargs = super(AlterarFundo, self).get_form_kwargs()
+        kwargs['user'] = self.request.user.usuario
+        return kwargs
+
 
 class CadastrarPlano(CreateView):
     form_class = PlanoCulturaForm
     template_name = 'planotrabalho/cadastrar_plano.html'
+    success_url = reverse_lazy('planotrabalho:plano')
+
+    def get_form_kwargs(self):
+        kwargs = super(CadastrarPlano, self).get_form_kwargs()
+        kwargs['user'] = self.request.user.usuario
+        return kwargs
 
     def form_valid(self, form):
         self.request.user.usuario.plano_trabalho.plano_cultura = form.save()
@@ -145,6 +186,11 @@ class AlterarPlano(UpdateView):
     form_class = PlanoCulturaForm
     model = PlanoCultura
     template_name = 'planotrabalho/cadastrar_plano.html'
+
+    def get_form_kwargs(self):
+        kwargs = super(AlterarPlano, self).get_form_kwargs()
+        kwargs['user'] = self.request.user.usuario
+        return kwargs
 
     def get_success_url(self):
         trabalho = self.request.user.usuario.plano_trabalho
