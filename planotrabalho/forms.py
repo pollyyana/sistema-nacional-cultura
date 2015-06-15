@@ -11,20 +11,19 @@ from .utils import get_or_none
 
 class CriarSistemaForm(ModelForm):
     def __init__(self, **kwargs):
+        user = kwargs.pop('user')
         super(CriarSistemaForm, self).__init__(**kwargs)
-        user = kwargs.pop('user', None)
-        self.usuario = get_or_none(Usuario, user=user)
+        self.usuario = Usuario.objects.get(user=user)
 
     def clean_data_final_elaboracao_projeto_lei(self):
-        print()
-        data_limite = self.usuario.data_publicacao_acordo + timedelta(years=2)
+        data_limite = self.usuario.data_publicacao_acordo + timedelta(days=2*365)
         if self.cleaned_data['data_final_elaboracao_projeto_lei']  > (data_limite):
             raise forms.ValidationError('A data deve ser inferior a ' +(data_limite))
 
         return self.cleaned_data['data_final_elaboracao_projeto_lei']
 
     def clean_data_final_sancao_lei(self):
-        data_limite = self.usuario.data_publicacao_acordo + timedelta(years=2)
+        data_limite = self.usuario.data_publicacao_acordo + timedelta(days=2*365)
         if self.cleaned_data['data_final_sancao_lei'] > (data_limite):
             raise forms.ValidationError('A data deve ser inferior a '+(data_limite))
         return self.cleaned_data['data_final_sancao_lei']

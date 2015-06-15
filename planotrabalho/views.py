@@ -20,10 +20,9 @@ class CadastrarSistema(CreateView):
     template_name = 'planotrabalho/cadastrar_sistema.html'
     success_url = reverse_lazy('planotrabalho:gestor')
 
-    def get_form_kwargs(self, **kwargs):
-        kwargs = super(CadastrarSistema, self).get_form_kwargs(**kwargs)
-        kwargs.update('user', self.request.user)
-        print(kwargs)
+    def get_form(self):
+        kwargs = super(CadastrarSistema, self).get_form_kwargs()
+        kwargs.update({'user': self.request.user})
         return kwargs
 
     def form_valid(self, form):
