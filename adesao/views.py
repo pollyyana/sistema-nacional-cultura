@@ -57,15 +57,15 @@ class CadastrarUsuario(CreateView):
     def get_success_url(self):
         Thread(target=send_mail, args=(
             'MINISTÉRIO DA CULTURA - SNC - CREDENCIAIS DE ACESSO',
-            'Prezado '+self.object.username+',\n' +
-            'Recebemos o seu cadastro no Sistema Nacional de Cultura.' +
+            'Prezado '+self.object.nome_usuario+',\n' +
+            'Recebemos o seu cadastro no Sistema Nacional de Cultura. ' +
             'Por favor confirme seu e-mail clicando no endereço abaixo:\n\n' +
             self.request.build_absolute_uri(reverse(
                 'adesao:ativar_usuario',
                 args=[self.object.usuario.codigo_ativacao]))+'\n\n' +
             'Atenciosamente,\n\n' +
             'Equipe SAI - Ministério da Cultura',
-            '',
+            'naoresponda@cultura.gov.br',
             [self.object.email],),
             kwargs = {'fail_silently': 'False', }
         ).start()
@@ -149,7 +149,7 @@ class CadastrarSecretario(CreateView):
     form_class = CadastrarSecretarioForm
     template_name = 'secretario/cadastrar_secretario.html'
     success_url = reverse_lazy('adesao:sucesso_secretario')
-    
+
     def form_valid(self, form):
         self.request.user.usuario.secretario = form.save()
         self.request.user.usuario.save()

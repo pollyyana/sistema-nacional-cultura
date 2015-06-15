@@ -2,12 +2,8 @@ from django import forms
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm
 from django.utils.crypto import get_random_string
-from django.core.mail import send_mail
 from django.forms import ModelForm
 from django.template.defaultfilters import filesizeformat
-from django.core.urlresolvers import reverse
-
-from threading import Thread
 
 from .models import Usuario, Municipio, Responsavel, Secretario
 from planotrabalho.models import PlanoTrabalho
@@ -16,6 +12,8 @@ import re
 
 content_types = [
     'image/png',
+    'image/jpg',
+    'image/jpeg',
     'application/pdf',
     'application/msword',
     'application/vnd.oasis.opendocument.text',

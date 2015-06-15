@@ -72,9 +72,21 @@ class Municipio(models.Model):
     telefone_dois = models.CharField(max_length=15, blank=True)
     telefone_tres = models.CharField(max_length=15, blank=True)
     email_institucional_prefeito = models.EmailField()
-    termo_posse_prefeito = models.FileField(upload_to='termo_posse')
-    rg_copia_prefeito = models.FileField(upload_to='rg_copia')
-    cpf_copia_prefeito = models.FileField(upload_to='cpf_copia')
+    termo_posse_prefeito = models.FileField(
+        upload_to='termo_posse',
+        max_length=255,
+        blank=True,
+        null=True)
+    rg_copia_prefeito = models.FileField(
+        upload_to='rg_copia',
+        max_length=255,
+        blank=True,
+        null=True)
+    cpf_copia_prefeito = models.FileField(
+        upload_to='cpf_copia',
+        max_length=255,
+        blank=True,
+        null=True)
 
     def __str__(self):
         return self.cnpj_prefeitura

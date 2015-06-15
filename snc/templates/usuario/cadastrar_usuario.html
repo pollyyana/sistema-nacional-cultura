@@ -14,7 +14,7 @@
       <label for="{{ form.username.id_for_label }}" class="col-sm-3 control-label">CPF</label>
 
       <div class="col-sm-4">
-        {% render_field form.username class="form-control" %}
+        {% render_field form.username class="form-control cpf" %}
         {% if form.username.errors %}
           <div class="alert alert-danger">
             {{ form.username.errors }}
