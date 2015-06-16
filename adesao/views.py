@@ -3,7 +3,7 @@ from threading import Thread
 
 from django.shortcuts import render, redirect
 from django.http import Http404
-from django.views.generic.edit import CreateView, UpdateView, FormView
+from django.views.generic.edit import CreateView, UpdateView
 from django.core.urlresolvers import reverse_lazy, reverse
 from django.core.mail import send_mail
 from django.contrib.auth.decorators import login_required
@@ -25,6 +25,12 @@ def index(request):
 
 @login_required
 def home(request):
+    ente = request.user.usuario.municipio
+    secretario = request.user.usuario.secretario
+    responsavel = request.user.usuario.responsavel
+
+    if ente and secretario and responsavel:
+        request.user.usuario.estado_processo = 1
     return render(request, 'home.html')
 
 
@@ -43,11 +49,14 @@ def ativar_usuario(request, codigo):
 
     return render(request, 'confirmar_email.html')
 
+
 def sucesso_usuario(request):
     return render(request, 'usuario/mensagem_sucesso.html')
 
+
 def sucesso_responsavel(request):
     return render(request, 'responsavel/mensagem_sucesso.html')
+
 
 class CadastrarUsuario(CreateView):
     form_class = CadastrarUsuarioForm
@@ -71,12 +80,15 @@ class CadastrarUsuario(CreateView):
         ).start()
         return super(CadastrarUsuario, self).get_success_url()
 
+
 @login_required
 def selecionar_tipo_ente(request):
     return render(request, 'prefeitura/selecionar_tipo_ente.html')
 
+
 def sucesso_municipio(request):
     return render(request, 'prefeitura/mensagem_sucesso_prefeitura.html')
+
 
 class CadastrarMunicipio(CreateView):
     form_class = CadastrarMunicipioForm
@@ -140,6 +152,7 @@ class AlterarResponsavel(UpdateView):
     model = Responsavel
     template_name = 'responsavel/cadastrar_responsavel.html'
     success_url = reverse_lazy('adesao:sucesso_responsavel')
+
 
 def sucesso_secretario(request):
     return render(request, 'secretario/mensagem_sucesso_secretario.html')

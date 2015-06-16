@@ -5,7 +5,7 @@ from smart_selects.db_fields import ChainedForeignKey
 
 
 LISTA_ESTADOS_PROCESSO = (
-    ('0', 'Solicitação Expirada'),
+    ('0', 'Preenchendo formulários'),
     ('1', 'Aguardando envio da documentação'),
     ('2', 'Documentação Recebida - Aguarda Análise'),
     ('3', 'Diligência Documental'),
@@ -148,7 +148,7 @@ class Usuario(models.Model):
     estado_processo = models.CharField(
         max_length=1,
         choices=LISTA_ESTADOS_PROCESSO,
-        default='1')
+        default='0')
     data_publicacao_acordo = models.DateField(blank=True, null=True)
     codigo_ativacao = models.CharField(max_length=12, unique=True)
     data_cadastro = models.DateTimeField(auto_now_add=True)
