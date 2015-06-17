@@ -10,5 +10,3 @@ pep8==1.5.7
 psycopg2==2.6
 pyflakes==0.8.1
 python-magic==0.4.6
-
-*Observação: Todos os pacotes podem ser instalados via PIP, bastando assim digitar: pip install <nome_do_pacote>
