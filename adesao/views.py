@@ -28,8 +28,9 @@ def home(request):
     ente = request.user.usuario.municipio
     secretario = request.user.usuario.secretario
     responsavel = request.user.usuario.responsavel
+    situacao = request.user.usuario.estado_processo
 
-    if ente and secretario and responsavel:
+    if ente and secretario and responsavel and situacao < 1:
         request.user.usuario.estado_processo = 1
     return render(request, 'home.html')
 
