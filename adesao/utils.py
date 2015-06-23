@@ -1,5 +1,9 @@
 import re
 
+from threading import Thread
+
+from django.core.mail import send_mail
+
 
 def validar_cpf(cpf):
     digitos = [int(c) for c in cpf if c.isdigit()]
@@ -71,3 +75,27 @@ def validar_cnpj(cnpj):
 
 def limpar_mascara(mascara):
     return ''.join(re.findall('\d+', mascara))
+
+
+def enviar_email_conclusao(user, message):
+    Thread(target=send_mail, args=(
+        'Sistema Nacional de Cultura - Solicitação de Adesão ao SNC',
+        #user.usuario.municipio.cidade+'/'+user.usuario.municipio.estado+',\n' +
+        #'Sua Solicitação de Adesão ao Sistema Nacional de Cultura foi ' +
+        #'recebida em nosso sistema. Para efetivar seu processo de adesão ' +
+        #'é necessário o envio dos documentos listados abaixo, devidamente ' +
+        #'assinados pelo(a) Sr(a). '+user.usuario.municipio.nome_prefeito+'\n' +
+        #'\nDocumentos:\n\n' +
+        #'- 1 (uma) via do formulário de Solicitação de Integração ao SNC\n' +
+        #'- 2 (duas) vias do Acordo de Cooperação Federativa\n\n' +
+        #'Os documentos devem ser enviados à SAI/MinC pelos correios para ' +
+        #'o seguinte endereço:\n\n' +
+        #'\tSCS 09, Lote "C", Torre "B", 11º andar - ' +
+        #'Ed. Parque Cidade Corporate CEP: 70308-200 - Brasília/DF\n\n' +
+        #'Seu prazo para o envio é de até 60 dias corridos.\n\n' +
+        #'Atenciosamente,\n\nEquipe SNC',
+        message,
+        'naoresponda@cultura.gov.br',
+        [object.email],),
+        kwargs = {'fail_silently': 'False', }
+    ).start()

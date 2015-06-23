@@ -8,10 +8,12 @@ from django.core.urlresolvers import reverse_lazy, reverse
 from django.core.mail import send_mail
 from django.contrib.auth.decorators import login_required
 from django.utils import timezone
+from django.template.loader import render_to_string
 
 from adesao.models import Municipio, Responsavel, Secretario, Usuario
 from adesao.forms import CadastrarUsuarioForm, CadastrarMunicipioForm
 from adesao.forms import CadastrarResponsavelForm, CadastrarSecretarioForm
+from adesao.utils import enviar_email_conclusao
 
 from wkhtmltopdf.views import PDFTemplateView
 
@@ -25,13 +27,15 @@ def index(request):
 
 @login_required
 def home(request):
-    ente = request.user.usuario.municipio
+    ente_federado = request.user.usuario.municipio
     secretario = request.user.usuario.secretario
     responsavel = request.user.usuario.responsavel
     situacao = request.user.usuario.estado_processo
 
-    if ente and secretario and responsavel and situacao < 1:
+    if ente_federado and secretario and responsavel and situacao < 1:
         request.user.usuario.estado_processo = 1
+        message = render_to_string('conclusao_cadastro.html')
+        enviar_email_conclusao(request.user, message)
     return render(request, 'home.html')
 
 
@@ -74,7 +78,7 @@ class CadastrarUsuario(CreateView):
                 'adesao:ativar_usuario',
                 args=[self.object.usuario.codigo_ativacao]))+'\n\n' +
             'Atenciosamente,\n\n' +
-            'Equipe SAI - Ministério da Cultura',
+            'Equipe SNC\nMinistério da Cultura',
             'naoresponda@cultura.gov.br',
             [self.object.email],),
             kwargs = {'fail_silently': 'False', }
