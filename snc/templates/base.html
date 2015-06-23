@@ -50,7 +50,7 @@
     <ul class="nav nav-tabs">
 
       <li role="presentation" {% if request.path == '/adesao/home/' %} class="active" {% endif %}><a href="{% url 'adesao:home' %}">{% blocktrans %}Início{% endblocktrans %}</a></li>
-      {% if request.user.usuario.estado_processo == '0' %}
+      {% if request.user.usuario.estado_processo == '0' or request.user.usuario.estado_processo == '1' %}
       {% if request.user.usuario.municipio %}
       <li role="presentation" {% if request.path == url_municipio or request.path in url_alt_municipio %} class="active" {% endif %}><a href="{% url 'adesao:municipio' %}">{% blocktrans %}Ente Federado{% endblocktrans %}</a></li>
       {% else %}
@@ -58,6 +58,7 @@
       {% endif %}
       <li role="presentation" {% if request.path == url_secretario or request.path in url_alt_secretario %} class="active" {% endif %}><a href="{% url 'adesao:secretario' %}">{% blocktrans %}Interlocutor{% endblocktrans %}</a></li>
       <li role="presentation" {% if request.path == url_responsavel or request.path in url_alt_responsavel %} class="active" {% endif %}><a href="{% url 'adesao:responsavel' %}">{% blocktrans %}Responsável{% endblocktrans %}</a></li>
+      {% endif %}
       {% if request.user.usuario.estado_processo == '1' %}
       <li role="presentation" class="dropdown" {% if request.path == url_minuta or request.path == url_solicitacao %} class="active" {% endif %}>
         <a class="dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-expanded="false">
@@ -67,7 +68,6 @@
             <li role="presentation" {% if request.path == url_minuta %} class="active" {% endif %}><a href="{% url 'adesao:minuta' %}" target="_blank" >{% blocktrans %}Acordo de Cooperação{% endblocktrans %}</a></li>
             <li role="presentation" {% if request.path == url_solicitacao %} class="active" {% endif %}><a href="{% url 'adesao:solicitacao' %}" target="_blank" >{% blocktrans %}Termo de Solicitação{% endblocktrans %}</a></li>
         </ul>
-      {% endif %}
       {% endif %}
       {% if request.user.usuario.estado_processo == '6' %}
       <li role="presentation"><a href="{% url 'planotrabalho:planotrabalho' request.user.usuario.plano_trabalho.id %}">{% blocktrans %}Plano de Trabalho{% endblocktrans %}</a></li>
