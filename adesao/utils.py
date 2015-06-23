@@ -77,7 +77,7 @@ def limpar_mascara(mascara):
     return ''.join(re.findall('\d+', mascara))
 
 
-def enviar_email_conclusao(user, message):
+def enviar_email_conclusao(user, message_txt, message_html):
     Thread(target=send_mail, args=(
         'Sistema Nacional de Cultura - Solicitação de Adesão ao SNC',
         #user.usuario.municipio.cidade+'/'+user.usuario.municipio.estado+',\n' +
@@ -94,8 +94,8 @@ def enviar_email_conclusao(user, message):
         #'Ed. Parque Cidade Corporate CEP: 70308-200 - Brasília/DF\n\n' +
         #'Seu prazo para o envio é de até 60 dias corridos.\n\n' +
         #'Atenciosamente,\n\nEquipe SNC',
-        message,
+        message_txt,
         'naoresponda@cultura.gov.br',
         [user.email],),
-        kwargs = {'fail_silently': 'False', }
+        kwargs = {'fail_silently': 'False', 'html_message': message_html}
     ).start()
