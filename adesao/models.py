@@ -5,7 +5,7 @@ from smart_selects.db_fields import ChainedForeignKey
 
 
 LISTA_ESTADOS_PROCESSO = (
-    ('0', 'Preenchendo formulários'),
+    ('0', 'Aguardando preenchimento dos dados cadastrais'),
     ('1', 'Aguardando envio da documentação'),
     ('2', 'Documentação Recebida - Aguarda Análise'),
     ('3', 'Diligência Documental'),
