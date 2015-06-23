@@ -32,8 +32,8 @@ def home(request):
     responsavel = request.user.usuario.responsavel
     situacao = request.user.usuario.estado_processo
 
-    if ente_federado and secretario and responsavel and situacao < 1:
-        request.user.usuario.estado_processo = 1
+    if ente_federado and secretario and responsavel and int(situacao) < 1:
+        request.user.usuario.estado_processo = '1'
         message = render_to_string('conclusao_cadastro.html')
         enviar_email_conclusao(request.user, message)
     return render(request, 'home.html')
