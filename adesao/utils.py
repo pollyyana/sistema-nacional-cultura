@@ -96,6 +96,6 @@ def enviar_email_conclusao(user, message):
         #'Atenciosamente,\n\nEquipe SNC',
         message,
         'naoresponda@cultura.gov.br',
-        [object.email],),
+        [user.email],),
         kwargs = {'fail_silently': 'False', }
     ).start()

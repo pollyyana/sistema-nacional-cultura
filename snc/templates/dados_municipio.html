@@ -4,7 +4,11 @@
     <td>
       <strong>{% if request.user.usuario.municipio.cidade %}Município-{% endif %}Estado</strong>
     </td>
-    <td>{{ request.user.usuario.municipio.cidade }}-{{ request.user.usuario.municipio.estado }}</td>
+    <td>
+      {% if request.user.usuario.municipio.cidade %}
+        {{ request.user.usuario.municipio.cidade }}-
+      {% endif %}
+      {{ request.user.usuario.municipio.estado.nome_uf }}</td>
   </tr>
   <tr>
     <td>
@@ -23,11 +27,5 @@
       <strong>Situação</strong>
     </td>
     <td>{{ request.user.usuario.get_estado_processo_display }}</td>
-  </tr>
-  <tr>
-    <td>
-      <strong>Data da última alteração</strong>
-    </td>
-    <td>{{ request.user.usuario.municipio.data_alteracao }}</td>
   </tr>
 </table>
