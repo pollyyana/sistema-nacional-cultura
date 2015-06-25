@@ -10,6 +10,6 @@ def acompanhar_adesao(request):
 
 
 class AcompanharAdesao(ListView):
-    model = Usuario
+    queryset = Usuario.objects.filter(estado_processo='1')
     template_name = 'gestao/adesao/acompanhar.html'
     paginate_by = 2
