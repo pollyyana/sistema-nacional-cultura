@@ -24,6 +24,7 @@ urlpatterns = [
     url(r'^adesao/', include('adesao.urls', namespace="adesao")),
     url(r'^planotrabalho/',
         include('planotrabalho.urls', namespace="planotrabalho")),
+    url(r'^gestao/', include('gestao.urls', namespace="gestao")),
     url(r'^admin/', include(admin.site.urls)),
     url(r'^chaining/', include('smart_selects.urls')),
 
