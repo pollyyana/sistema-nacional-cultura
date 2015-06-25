@@ -14,8 +14,6 @@ As dependencias de pacotes estão no requirements.txt
 * PIP
 * python3-virtualenv
 * Postgresql
-* libmagic-dev
-* python-magic
 * wkhtmltopdf
 * postgresql-server-dev-9.4
 
@@ -37,48 +35,43 @@ O arquivo pode ser baixado de forma direta e rápida utilizando o comando wget -
     sudo apt-get install python3-virtualenv python3-venv
     ```
 
-3. Instale a biblioteca de manipulação de imagem libmagic e o python magic
-    ```
-    sudo apt-get install libmagic-dev python-magic
-    ```
-
-4. Instale o wkhtmltopdf que é o aplicativo para renderizar html em pdf 
+3. Instale o wkhtmltopdf que é o aplicativo para renderizar html em pdf 
     ```
     sudo apt-get install wkhtmltopdf
     ```
 
-5. Instale o PostgreSQL e as bibliotecas de desenvolvimento
+4. Instale o PostgreSQL e as bibliotecas de desenvolvimento
     ```
     sudo apt-get install postgresql-9.4 postgresql-server-dev-9.4
  
     ```    
-6. Crie o ambiente virtual
+5. Crie o ambiente virtual
     ```
     pyvenv /caminho/para/o/ambiente/virtual
  
     ```    
-7. Clone o repositório do projeto do github
+6. Clone o repositório do projeto do github
     ```
     git clone https://github.com/culturagovbr/sistema-nacional-cultura.git snc & cd snc
 
     ```
     
-8. Ative o ambiente virtual
+7. Ative o ambiente virtual
     ```
     source /caminho/para/o/ambiente/virtual/bin/activate
 
     ```
 
-9. Instale as dependências python do projeto
+8. Instale as dependências python do projeto
     ```
     sudo pip3 install -r requirements.txt
 
     ```
-10. Configure o arquivo settings.py
+9. Configure o arquivo settings.py
 
-11. Configure o banco de dados
+10. Configure o banco de dados
 
-12. Execute a aplicação (É preciso ter o ambiente virtual ativado)
+11. Execute a aplicação (É preciso ter o ambiente virtual ativado)
     ```
     python3 manage.py runserver
 
