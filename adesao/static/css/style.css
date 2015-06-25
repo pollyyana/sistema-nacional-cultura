@@ -87,3 +87,7 @@ body {
 .hide {
   display: none;
 }
+
+.erro input, .erro select {
+  border: 2px red solid;
+}
