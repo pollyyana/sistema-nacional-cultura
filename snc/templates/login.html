@@ -14,7 +14,7 @@
       <label for="{{ form.username.id_for_label }}" class="col-sm-3 control-label">CPF</label>
 
       <div class="col-sm-4">
-        {% render_field form.username class="form-control" %}
+        {% render_field form.username class="form-control cpf" %}
       </div>
 
     </div>
@@ -47,3 +47,16 @@
   </form>
 </div>
 {% endblock content %}
+
+{% block js %}
+{% verbatim %}
+<script type="text/javascript">
+  $(document).ready(function(){
+    $(".form-horizontal").submit(function(){
+      $(".cpf").formatter().resetPattern('{{99999999999}}');
+      console.log($(".cpf").val());
+    });
+  });
+</script>
+{% endverbatim %}
+{% endblock js %}
