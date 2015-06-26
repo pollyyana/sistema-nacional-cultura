@@ -100,9 +100,6 @@ class CadastrarUsuarioForm(UserCreationForm):
         usuario.nome_usuario = self.cleaned_data['nome_usuario']
         codigo_ativacao = get_random_string()
         usuario.codigo_ativacao = codigo_ativacao
-        plano_trabalho = PlanoTrabalho()
-        plano_trabalho.save()
-        usuario.plano_trabalho = plano_trabalho
         if commit:
             usuario.save()
 
