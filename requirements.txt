@@ -1,4 +1,8 @@
 Django==1.8.1
+
+# Configuration
+django-environ==0.3.0
+
 django-smart-selects==1.1.1
 django-validated-file==2.0.1
 django-widget-tweaks==1.3
