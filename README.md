@@ -1,4 +1,6 @@
 # Sistema Nacional de Cultura
+
+[![Join the chat at https://gitter.im/culturagovbr/sistema-nacional-cultura](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/culturagovbr/sistema-nacional-cultura?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 O Sistema Nacional de Cultura é um modelo de gestão e promoção de políticas públicas de cultura que pressupõe a ação conjunta dos entes da federação (governos federal, estadual e municipal) para democratização do setor. (http://pt.wikipedia.org/wiki/Sistema_Nacional_de_Cultura)
 
 Este aplicativo cadastra os entes federados e coordena o processo de adesao desses no SNC. Por meio deste cadastro, os estados e municípios podem gerar seus acordos de cooperação técnica para a entrada no SNC, e também manter atualizados os dados de monitoramentos das metas pactuadas no ACT.
