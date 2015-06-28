@@ -1,10 +1,12 @@
 *.pyc
 *.swp
-*settings*
 *static*
 *pycache*
-*migrations*
 *media*
 .project
 .pydevproject
 *.mo
+*.sqlite
+
+# ignore pycharm files
+.idea
