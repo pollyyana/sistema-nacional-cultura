@@ -14,7 +14,11 @@
     <label for={{ form.data_final_elaboracao_projeto_lei.id_for_label }} class="col-sm-12">
       Data final para elaboração do Projeto de Lei do Sistema de Cultura
     </label>
-    {% render_field form.data_final_elaboracao_projeto_lei class="date"%}
+    {% if form.data_final_elaboracao_projeto_lei.value %}
+      {% render_field form.data_final_elaboracao_projeto_lei readonly="true" %}
+    {% else %}
+      {% render_field form.data_final_elaboracao_projeto_lei class="date"%}
+    {% endif %}
     {{ form.data_final_elaboracao_projeto_lei.errors }}
   </div>
 
@@ -41,7 +45,11 @@
     <label for={{ form.data_final_sancao_lei.id_for_label }} class="col-sm-12">
       Data final para sanção da Lei do Sistema de Cultura pelo Governador/Prefeito
     </label>
-    {% render_field form.data_final_sancao_lei class="date"%}
+    {% if form.data_final_sancao_lei.value %}
+      {% render_field form.data_final_sancao_lei readonly="true" %}
+    {% else %}
+      {% render_field form.data_final_sancao_lei class="date"%}
+    {% endif %}
     {{ form.data_final_sancao_lei.errors }}
   </div>
 

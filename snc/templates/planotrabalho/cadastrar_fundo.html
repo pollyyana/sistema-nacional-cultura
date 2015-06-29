@@ -14,7 +14,11 @@
     <label for={{ form.data_final_instituicao_fundo_cultura.id_for_label }} class="col-sm-12">
       Data final para instituição do Fundo de Cultura
     </label>
-    {% render_field form.data_final_instituicao_fundo_cultura class="date"%}
+    {% if form.data_final_instituicao_fundo_cultura.value %}
+      {% render_field form.data_final_instituicao_fundo_cultura readonly="true" %}
+    {% else %}
+      {% render_field form.data_final_instituicao_fundo_cultura class="date"%}
+    {% endif %}
     {{ form.data_final_instituicao_fundo_cultura.errors }}
   </div>
 

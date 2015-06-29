@@ -14,7 +14,11 @@
     <label for={{ form.data_final_estabelecimento_instancias.id_for_label }} class="col-sm-12">
       Data final para estabelecimento das instâncias
     </label>
-    {% render_field form.data_final_estabelecimento_instancias class="date"%}
+    {% if form.data_final_estabelecimento_instancias.value %}
+      {% render_field form.data_final_estabelecimento_instancias readonly="true" %}
+    {% else %}
+      {% render_field form.data_final_estabelecimento_instancias class="date"%}
+    {% endif %}
     {{ form.data_final_estabelecimento_instancias.errors }}
   </div>
 
@@ -42,7 +46,11 @@
     <label for={{ form.data_final_elaboracao_plano_cultura.id_for_label }} class="col-sm-12">
       Data final para elaboração do Plano de Cultura
     </label>
-    {% render_field form.data_final_elaboracao_plano_cultura class="date"%}
+    {% if form.data_final_elaboracao_plano_cultura.value %}
+      {% render_field form.data_final_elaboracao_plano_cultura readonly="true" %}
+    {% else %}
+      {% render_field form.data_final_elaboracao_plano_cultura class="date"%}
+    {% endif %}
     {{ form.data_final_elaboracao_plano_cultura.errors }}
   </div>
 
@@ -71,7 +79,11 @@
     <label for={{ form.data_final_aprovacao_plano_cultura.id_for_label }} class="col-sm-12">
       Data final para aprovação do plano pelo Conselho de Política Cultural
     </label>
-    {% render_field form.data_final_aprovacao_plano_cultura class="date"%}
+    {% if form.data_final_aprovacao_plano_cultura.value %}
+      {% render_field form.data_final_aprovacao_plano_cultura readonly="true" %}
+    {% else %}
+      {% render_field form.data_final_aprovacao_plano_cultura class="date"%}
+    {% endif %}
     {{ form.data_final_aprovacao_plano_cultura.errors }}
   </div>
 
@@ -96,7 +108,11 @@
     <label for={{ form.data_final_tramitacao_projeto_lei.id_for_label }} class="col-sm-12">
       Data Final para tramitação do Projeto de Lei do Plano de Cultura
     </label>
-    {% render_field form.data_final_tramitacao_projeto_lei class="date"%}
+    {% if form.data_final_tramitacao_projeto_lei.value %}
+      {% render_field form.data_final_tramitacao_projeto_lei readonly="true" %}
+    {% else %}
+      {% render_field form.data_final_tramitacao_projeto_lei class="date"%}
+    {% endif %}
     {{ form.data_final_tramitacao_projeto_lei.errors }}
   </div>
 
@@ -125,7 +141,11 @@
     <label for={{ form.data_final_sancao_lei_plano_cultura.id_for_label }} class="col-sm-12">
       Data final para sanção da lei do Plano de Cultura
     </label>
-    {% render_field form.data_final_sancao_lei_plano_cultura class="date"%}
+    {% if form.data_final_sancao_lei_plano_cultura.value %}
+      {% render_field form.data_final_sancao_lei_plano_cultura readonly="true" %}
+    {% else %}
+      {% render_field form.data_final_sancao_lei_plano_cultura class="date"%}
+    {% endif %}
     {{ form.data_final_sancao_lei_plano_cultura.errors }}
   </div>
 

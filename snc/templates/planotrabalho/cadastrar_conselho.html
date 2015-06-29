@@ -14,7 +14,11 @@
     <label for={{ form.data_final_instalacao_conselho.id_for_label }} class="col-sm-12">
       Data final para instalação do Conselho de Política Cultural
     </label>
-    {% render_field form.data_final_instalacao_conselho class="date"%}
+    {% if form.data_final_instalacao_conselho.value %}
+      {% render_field form.data_final_instalacao_conselho readonly="true" %}
+    {% else %}
+      {% render_field form.data_final_instalacao_conselho class="date"%}
+    {% endif %}
     {{ form.data_final_instalacao_conselho.errors }}
   </div>
 

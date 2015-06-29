@@ -15,7 +15,11 @@
     <label for={{ form.data_final_estruturacao_secretaria.id_for_label }} class="col-sm-12">
       Data final para estruturação da Secretaria de Cultura
     </label>
-    {% render_field form.data_final_estruturacao_secretaria class="date"%}
+    {% if form.data_final_estruturacao_secretaria.value %}
+      {% render_field form.data_final_estruturacao_secretaria readonly="true" %}
+    {% else %}
+      {% render_field form.data_final_estruturacao_secretaria class="date"%}
+    {% endif %}
     {{ form.data_final_estruturacao_secretaria.errors }}
   </div>
 
