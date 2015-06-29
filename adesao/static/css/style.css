@@ -42,6 +42,8 @@ body {
   .container {
     max-width: 730px;
     background: white;
+    padding-left: 0px;
+    padding-right: 0px;
   }
 }
 .container-narrow > hr {
@@ -51,6 +53,7 @@ body {
 .jumbotron {
   text-align: center;
   border-bottom: 1px solid #e5e5e5;
+  margin-bottom: 5px;
 }
 .jumbotron .btn {
   padding: 14px 24px;
