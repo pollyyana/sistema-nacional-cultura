@@ -28,9 +28,9 @@
                 {% else %}
                   <td>{{ usuario.municipio.estado.nome_uf }}</td>
                 {% endif %}
-                  <td>{{ usuario.municipio.nome_prefeito }}</td>
-                  <td>{{ usuario.municipio.rg_prefeito }}</td>
-                  <td>{{ usuario.municipio.cpf_prefeito }}</td>
+                  <td><a href="{{ usuario.municipio.termo_posse_prefeito.url }}">{{ usuario.municipio.nome_prefeito }}</a></td>
+                  <td><a href="{{ usuario.municipio.rg_copia_prefeito.url }}">{{ usuario.municipio.rg_prefeito }}</a></td>
+                  <td><a href="{{ usuario.municipio.cpf_copia_prefeito.url }}">{{ usuario.municipio.cpf_prefeito }}</a></td>
                   <td>{{ usuario.municipio.cnpj_prefeitura }}</td>
                   <form name="form" action="{% url 'gestao:alterar_situacao' usuario.id %}" method="post">
                   <td>
