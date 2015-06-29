@@ -43,7 +43,7 @@
 {% url 'adesao:alterar_secretario' as url_alt_secretario %}
 {% url 'adesao:minuta' as url_minuta %}
 {% url 'adesao:solicitacao' as url_solicitacao %}
-
+<div class="container">
 {% if request.user.usuario %}
 
   <div style="padding:10px">
@@ -86,20 +86,9 @@
     </ul>
   </div>
 {% endif %}
-<div class="container">
 {% block content %} {% endblock content%}
 </div>
 <footer class="footer">
-    {% block footer %}
-      <div id="address">
-      <address>
-        <strong>{% blocktrans %}Ministério da Cultura{% endblocktrans %}</strong>
-        <br><strong>{% blocktrans %}Nome da secretaria{% endblocktrans %}</strong>
-        {% blocktrans %}Endereço do ministério{% endblocktrans %}
-        <br>{% blocktrans %}Continuação do endereço do ministério{% endblocktrans %}<a href="mailto:acordosnc@cultura.gov.br"> acordosnc@cultura.gov.br</a>
-      </address>
-      </div>
-    {% endblock footer %}
     <div id="footer-brasil"></div>
 </footer>
     <script type="text/javascript">

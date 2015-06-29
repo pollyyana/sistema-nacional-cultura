@@ -5,6 +5,7 @@ html {
 
 body {
   margin-bottom: 200px;
+  background: url('/static/images/background.png');
 }
 .header,
 .marketing,
@@ -33,7 +34,6 @@ body {
   position: absolute;
   bottom: 0;
   width: 100%;
-  padding-top: 10px;
   color: #777;
   border-top: 1px solid #e5e5e5;
 }
@@ -41,6 +41,7 @@ body {
 @media (min-width: 768px) {
   .container {
     max-width: 730px;
+    background: white;
   }
 }
 .container-narrow > hr {
