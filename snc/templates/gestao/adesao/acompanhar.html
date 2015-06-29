@@ -13,23 +13,43 @@
               <tr>
                 <th>Município/Estado</th>
                 <th>Prefeito/Governador</th>
+                <th>RG</th>
                 <th>CPF</th>
                 <th>CNPJ</th>
                 <th>Situação</th>
+                <th></th>
               </tr>
             </thead>
             <tbody>
               {% for usuario in object_list %}
                 <tr class="odd gradeX">
                 {% if usuario.municipio.cidade %}
-                  <td>{{ usuario.municipio.cidade }}-{{ usuario.municipio.estado }}</td>
+                  <td>{{ usuario.municipio.cidade }}/{{ usuario.municipio.estado }}</td>
                 {% else %}
                   <td>{{ usuario.municipio.estado.nome_uf }}</td>
                 {% endif %}
                   <td>{{ usuario.municipio.nome_prefeito }}</td>
-                  <td>{{ usuario.user.username }}</td>
+                  <td>{{ usuario.municipio.rg_prefeito }}</td>
+                  <td>{{ usuario.municipio.cpf_prefeito }}</td>
                   <td>{{ usuario.municipio.cnpj_prefeitura }}</td>
-                  <td>{{ usuario.get_estado_processo_display }}</td>
+                  <form name="form" action="{% url 'gestao:alterar_situacao' usuario.id %}" method="post">
+                  <td>
+                    {% csrf_token %}
+                      <select name="estado_processo" class="form-control">
+                        <option value="1" {% if usuario.estado_processo == '1' %}selected{% endif %}>Aguardando envio da documentação</option>
+                        <option value="2" {% if usuario.estado_processo == '2' %}selected{% endif %}>Documentação Recebida - Aguarda Análise</option>
+                        <option value="3" {% if usuario.estado_processo == '3' %}selected{% endif %}>Diligência Documental</option>
+                        <option value="4" {% if usuario.estado_processo == '4' %}selected{% endif %}>Encaminhado para assinatura do Secretário SAI</option>
+                        <option value="5" {% if usuario.estado_processo == '5' %}selected{% endif %}>Aguarda Publicação no DOU</option>
+                        <option value="6" {% if usuario.estado_processo == '6' %}selected{% endif %}>Publicado no DOU</option>
+                        <option value="7" {% if usuario.estado_processo == '7' %}selected{% endif %}>Responsável confirmado</option>
+                      </select>
+                      <textarea name="justificativa" class="form-control hide" rows="4" cols="20"></textarea>
+                    </td>
+                    <td>
+                      <button type="submit" class="btn btn-primary" ><i class="fa fa-cloud-upload"></i></button>
+                    </td>
+                  </form>
                 </tr>
               {% endfor %}
             </tbody>
