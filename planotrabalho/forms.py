@@ -5,8 +5,6 @@ from django.forms import ModelForm
 
 from .models import CriacaoSistema, OrgaoGestor, ConselhoCultural
 from .models import FundoCultura, PlanoCultura
-from adesao.models import Usuario
-from .utils import get_or_none
 
 
 class CriarSistemaForm(ModelForm):
