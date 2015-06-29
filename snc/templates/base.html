@@ -43,7 +43,8 @@
 {% url 'adesao:alterar_secretario' as url_alt_secretario %}
 {% url 'adesao:minuta' as url_minuta %}
 {% url 'adesao:solicitacao' as url_solicitacao %}
-<div class="container">
+<div class="container panel panel-default">
+<div class="panel-body">
 {% if request.user.usuario %}
 
   <div style="padding:10px">
@@ -87,6 +88,7 @@
   </div>
 {% endif %}
 {% block content %} {% endblock content%}
+</div>
 </div>
 <footer class="footer">
     <div id="footer-brasil"></div>

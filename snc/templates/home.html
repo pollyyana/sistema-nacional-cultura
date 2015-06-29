@@ -1,7 +1,6 @@
 {% extends "base.html" %}
 {% load i18n %}
 {% block content %}
-<div class="container" align="justify">
   <h2>{% blocktrans %}Título da tela home{% endblocktrans %}<a class="anchorjs-link" href="#auto-truncating"><span class="anchorjs-icon"></span></a></h2>
   {% if request.user.usuario.estado_processo == '0' %}
     <p>{% blocktrans %}Primeiro parágrafo da mensagem da tela home{% endblocktrans %}</p>
@@ -21,5 +20,4 @@
     {% if request.user.usuario.responsavel %}
       {% include "dados_responsavel.html" %}
     {% endif %}
-</div>
 {% endblock content %}

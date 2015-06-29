@@ -1,12 +1,10 @@
 {% extends "base.html" %}
 {% load i18n %}
 {% block content %}
-<div class="container">
-  <div align="center">
+<div align="center">
     <h3>{% blocktrans %}Cadastro de Ente Federado{% endblocktrans %}</h3>
     <p>{% blocktrans %}Escolha de ente federado{% endblocktrans %}</p>
     <a class="btn btn-primary" href="{% url 'adesao:cadastrar_municipio' tipo_ente=0 %}">{% blocktrans %}Prefeitura{% endblocktrans %}</a>
     <a class="btn btn-primary" href="{% url 'adesao:cadastrar_municipio' tipo_ente=1 %}">{% blocktrans %}Governo{% endblocktrans %}</a>
-  </div>
 </div>
 {% endblock content %}
