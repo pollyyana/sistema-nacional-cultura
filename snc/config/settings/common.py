@@ -36,8 +36,8 @@ DJANGO_APPS = (
 )
 THIRD_PARTY_APPS = (
     'wkhtmltopdf',
-    'validatedfile',
     'smart_selects',
+    'localflavor',
 )
 
 # Apps specific for this project go here.
