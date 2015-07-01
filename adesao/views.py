@@ -21,7 +21,7 @@ from wkhtmltopdf.views import PDFTemplateView
 # Create your views here.
 def index(request):
     if request.user.is_authenticated():
-        return render(request, 'home.html')
+        return redirect('adesao:home')
     return render(request, 'index.html')
 
 
