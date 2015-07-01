@@ -10,7 +10,7 @@ from django.contrib.auth.decorators import login_required
 from django.utils import timezone
 from django.template.loader import render_to_string
 
-from adesao.models import Municipio, Responsavel, Secretario, Usuario
+from adesao.models import Municipio, Responsavel, Secretario, Usuario, Historico
 from adesao.forms import CadastrarUsuarioForm, CadastrarMunicipioForm
 from adesao.forms import CadastrarResponsavelForm, CadastrarSecretarioForm
 from adesao.utils import enviar_email_conclusao
@@ -31,6 +31,8 @@ def home(request):
     secretario = request.user.usuario.secretario
     responsavel = request.user.usuario.responsavel
     situacao = request.user.usuario.estado_processo
+    historico = Historico.objects.filter(usuario=request.user.usuario)
+    historico = historico.order_by('-data_alteracao')
 
     if ente_federado and secretario and responsavel and int(situacao) < 1:
         request.user.usuario.estado_processo = '1'
@@ -40,7 +42,7 @@ def home(request):
         message_html = render_to_string('conclusao_cadastro.email',
                                         {'request': request})
         enviar_email_conclusao(request.user, message_txt, message_html)
-    return render(request, 'home.html')
+    return render(request, 'home.html', {'historico': historico})
 
 
 def ativar_usuario(request, codigo):
