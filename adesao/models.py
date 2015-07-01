@@ -159,6 +159,11 @@ class Usuario(models.Model):
 
 class Historico(models.Model):
     usuario = models.ForeignKey('Usuario')
+    situacao = models.CharField(
+        max_length=1,
+        choices=LISTA_ESTADOS_PROCESSO,
+        blank=True,
+        null=True)
     data_alteracao = models.DateTimeField(auto_now_add=True)
     arquivo = models.FileField(upload_to='historico', blank=True, null=True)
     descricao = models.TextField(blank=True, null=True)
