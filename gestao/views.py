@@ -16,8 +16,6 @@ def alterar_situacao(request, id):
             instance=Usuario.objects.get(id=id))
         if form.is_valid():
             form.save()
-        else:
-            print(form.errors)
     return redirect('gestao:acompanhar_adesao')
 
 
