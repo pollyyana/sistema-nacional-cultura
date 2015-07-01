@@ -12,15 +12,15 @@ class AlterarSituacao(ModelForm):
 
     def save(self, commit=True):
         usuario = super(AlterarSituacao, self).save(commit=False)
-        dir(usuario)
         enviar_email_alteracao_situacao(usuario)
         historico = Historico()
         historico.usuario = usuario
+        historico.situacao = self.cleaned_data['estado_processo']
 
-        if usuario.estado_processo == '3':
+        if self.cleaned_data['estado_processo'] == '3':
             historico.descricao = self.cleaned_data['justificativa']
 
-        if usuario.estado_processo == '6':
+        if self.cleaned_data['estado_processo'] == '6':
             if usuario.plano_trabalho is None:
                 plano_trabalho = PlanoTrabalho()
 
