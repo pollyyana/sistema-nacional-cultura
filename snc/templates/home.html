@@ -1,23 +1,84 @@
-{% extends "base.html" %}
-{% load i18n %}
-{% block content %}
-  <h2>{% blocktrans %}Título da tela home{% endblocktrans %}<a class="anchorjs-link" href="#auto-truncating"><span class="anchorjs-icon"></span></a></h2>
-  {% if request.user.usuario.estado_processo == '0' %}
-    <p>{% blocktrans %}Primeiro parágrafo da mensagem da tela home{% endblocktrans %}</p>
-    <p>{% blocktrans %}Segundo parágrafo da mensagem da tela home{% endblocktrans %}</p>
-  {% else %}
-    {% include "conclusao_cadastro.html" %}
-  {% endif %}
+{% extends "base.html" %} {% load i18n %} {% block content %}
+<h2>{% blocktrans %}Título da tela home{% endblocktrans %}
+  <a class="anchorjs-link" href="#auto-truncating">
+    <span class="anchorjs-icon"></span>
+  </a>
+</h2>
+{% if request.user.usuario.estado_processo == '0' %}
+<p>{% blocktrans %}Primeiro parágrafo da mensagem da tela home{% endblocktrans %}</p>
+<p>{% blocktrans %}Segundo parágrafo da mensagem da tela home{% endblocktrans %}</p>
+{% elif request.user.usuario.estado_processo == '1' %} {% include "conclusao_cadastro.html" %} {% elif request.user.usuario.estado_processo == '2' %}
+<p>
+  Informamos o recebimento da documentação física necessária para efetivar a Adesão ao SNC.
+</p>
 
-    {% if request.user.usuario.municipio %}
-      {% include "dados_municipio.html" %}
-    {% endif %}
+<p>
+  Nossa equipe realizará os procedimentos necessários à sua adesão.
+</p>
 
-    {% if request.user.usuario.secretario %}
-      {% include "dados_secretario.html" %}
-    {% endif %}
+<p>
+  Aguarde nosso contato.
+</p>
 
-    {% if request.user.usuario.responsavel %}
-      {% include "dados_responsavel.html" %}
-    {% endif %}
+<p>
+  Atenciosamente,
+  <br> Equipe SNC
+</p>
+{% elif request.user.usuario.estado_processo == '3' %}
+<p>
+  Consta em nossos registros a pendência da seguinte documentação física necessária para
+  efetivar a Adesão ao SNC:<br>
+  {{ historico.0.descricao }}
+</p>
+
+<p>
+  <font color="red">Seu prazo para o envio é de <strong>30 dias</strong> corridos.</font>
+</p>
+
+<p>
+  Atenciosamente,<br>
+  Equipe SNC
+</p>
+{% elif request.user.usuario.estado_processo == '6' %}
+<p>
+  Parabéns! Seu Acordo de Cooperação Federativa foi publicado no Diário Oficial da União (DOU).
+</p>
+
+<p>
+  Agora você já pode iniciar o seu Plano de Trabalho, <a href="{% url 'planotrabalho:planotrabalho' request.user.usuario.plano_trabalho.id %}">clicando aqui</a>
+  ou acessando a opção "Plano de Trabalho no menu acima"
+</p>
+
+<p>
+  Para visualizar a publicação do Acordo de Cooperação no Diário Oficial da União,
+  siga os seguintes passos:
+
+  <ol>
+    <li>Insira o nome do seu município em "Informe o termo"</li>
+    <li>Selecione "DOU3"</li>
+    <li>Informe a data de recebimento deste e-mail em "Data Inicial e Data Final"</li>
+  </ol>
+</p>
+
+<p>
+  <a href="http://portal.in.gov.br">Clique aqui para efetuar a pesquisa</a>
+</p>
+
+<p>
+  Atenciosamente,<br>
+  Equipe SNC
+</p>
+{% endif %}
+{% if historico %}
+  {% include "historico_mudancas.html" %}
+{% endif %}
+{% if request.user.usuario.municipio %}
+  {% include "dados_municipio.html" %}
+{% endif %}
+{% if request.user.usuario.secretario %}
+  {% include "dados_secretario.html" %}
+{% endif %}
+{% if request.user.usuario.responsavel %}
+  {% include "dados_responsavel.html" %}
+{% endif %}
 {% endblock content %}
