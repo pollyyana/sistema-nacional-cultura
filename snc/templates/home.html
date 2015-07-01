@@ -27,8 +27,8 @@
 {% elif request.user.usuario.estado_processo == '3' %}
 <p>
   Consta em nossos registros a pendência da seguinte documentação física necessária para
-  efetivar a Adesão ao SNC:<br>
-  {{ historico.0.descricao }}
+  efetivar a Adesão ao SNC:<br><br>
+  <strong>{{ historico.0.descricao }}</strong>
 </p>
 
 <p>
@@ -46,7 +46,7 @@
 
 <p>
   Agora você já pode iniciar o seu Plano de Trabalho, <a href="{% url 'planotrabalho:planotrabalho' request.user.usuario.plano_trabalho.id %}">clicando aqui</a>
-  ou acessando a opção "Plano de Trabalho no menu acima"
+  ou acessando a opção "Plano de Trabalho" no menu acima
 </p>
 
 <p>
