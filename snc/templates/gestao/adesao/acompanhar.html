@@ -35,7 +35,7 @@
                   <form name="form" action="{% url 'gestao:alterar_situacao' usuario.id %}" method="post">
                   <td>
                     {% csrf_token %}
-                      <select name="estado_processo" class="form-control">
+                      <select id="select_situacao_{{forloop.counter0}}" name="estado_processo" class="form-control">
                         <option value="1" {% if usuario.estado_processo == '1' %}selected{% endif %}>Aguardando envio da documentação</option>
                         <option value="2" {% if usuario.estado_processo == '2' %}selected{% endif %}>Documentação Recebida - Aguarda Análise</option>
                         <option value="3" {% if usuario.estado_processo == '3' %}selected{% endif %}>Diligência Documental</option>
@@ -44,7 +44,8 @@
                         <option value="6" {% if usuario.estado_processo == '6' %}selected{% endif %}>Publicado no DOU</option>
                         <option value="7" {% if usuario.estado_processo == '7' %}selected{% endif %}>Responsável confirmado</option>
                       </select>
-                      <textarea name="justificativa" class="form-control hide" rows="4" cols="20"></textarea>
+                      <textarea id="justificativa_{{forloop.counter0}}" name="justificativa" class="form-control hide" placeholder="Justificativa" rows="4" cols="20"></textarea>
+                      <input type="text" id="data_acordo_{{forloop.counter0}}" name="data_publicacao_acordo" class="form-control date hide" placeholder="Data de Publicação"></input>
                     </td>
                     <td>
                       <button type="submit" class="btn btn-primary" title="Alterar Situação" ><i class="fa fa-check"></i></button>
@@ -82,12 +83,44 @@
   </div>
   <!-- /.col-lg-12 -->
 </div>
-{% endblock content %} {% block js%}
-<!--<script>
-$(document).ready(function() {
-    $('#dataTables-example').DataTable({
-            responsive: true
+{% endblock content %}
+{% block js%}
+<script type="text/javascript">
+  $(document).ready(function(){
+    $("[id^='select_situacao']").change(function(e){
+      index = $(this).parent().parent().index();
+      console.log(index);
+      if($(this).val()==="3"){
+        if(!$("#data_acordo_"+index).hasClass('hide')){
+          $("#data_acordo_"+index).addClass('hide');
+          $("#data_acordo_"+index).fadeOut();
+        }
+        if($("#justificativa_"+index).hasClass('hide')){
+          $("#justificativa_"+index).removeClass('hide');
+          $("#justificativa_"+index).fadeIn();
+        }
+      }
+      else if($(this).val()==="6"){
+        if(!$("#justificativa_"+index).hasClass('hide')){
+          $("#justificativa_"+index).addClass('hide');
+          $("#justificativa_"+index).fadeOut();
+        }
+        if($("#data_acordo_"+index).hasClass('hide')){
+          $("#data_acordo_"+index).removeClass('hide');
+          $("#data_acordo_"+index).fadeIn();
+        }
+      }
+      else {
+        if(!$("#data_acordo_"+index).hasClass('hide')){
+          $("#data_acordo_"+index).addClass('hide');
+          $("#data_acordo_"+index).fadeOut();
+        }
+        if($("#justificativa_"+index).hasClass('hide')){
+          $("#justificativa_"+index).addClass('hide');
+          $("#justificativa_"+index).fadeOut();
+        }
+      }
     });
-});
-</script>-->
+  });
+</script>
 {% endblock js%}
