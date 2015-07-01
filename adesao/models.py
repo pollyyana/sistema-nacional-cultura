@@ -158,7 +158,7 @@ class Usuario(models.Model):
 
 
 class Historico(models.Model):
-    usuario = models.OneToOneField(User)
+    usuario = models.ForeignKey('Usuario')
     data_alteracao = models.DateTimeField(auto_now_add=True)
     arquivo = models.FileField(upload_to='historico', blank=True, null=True)
     descricao = models.TextField(blank=True, null=True)
