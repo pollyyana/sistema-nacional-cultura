@@ -70,7 +70,7 @@
             <li role="presentation" {% if request.path == url_solicitacao %} class="active" {% endif %}><a href="{% url 'adesao:solicitacao' %}" target="_blank" >{% blocktrans %}Termo de Solicitação{% endblocktrans %}</a></li>
         </ul>
       {% endif %}
-      {% if request.user.usuario.estado_processo == '6' %}
+      {% if request.user.usuario.estado_processo == '7' %}
       <li role="presentation"><a href="{% url 'planotrabalho:planotrabalho' request.user.usuario.plano_trabalho.id %}">{% blocktrans %}Plano de Trabalho{% endblocktrans %}</a></li>
       {% endif %}
       <li role="presentation" class="dropdown pull-right" >

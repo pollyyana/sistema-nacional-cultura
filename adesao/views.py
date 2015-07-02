@@ -34,6 +34,9 @@ def home(request):
     historico = Historico.objects.filter(usuario=request.user.usuario)
     historico = historico.order_by('-data_alteracao')
 
+    if request.user.is_staff:
+        return redirect('gestao:acompanhar_adesao')
+
     if ente_federado and secretario and responsavel and int(situacao) < 1:
         request.user.usuario.estado_processo = '1'
         request.user.usuario.save()
