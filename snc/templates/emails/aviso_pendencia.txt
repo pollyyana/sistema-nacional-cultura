@@ -1,5 +1,7 @@
 Consta em nossos registros a pendência da seguinte documentação física necessária para
-efetivar a Adesão ao SNC.
+efetivar a Adesão ao SNC:
+
+{{ historico.descricao }}
 
 Seu prazo para o envio é de 30 dias corridos.
 

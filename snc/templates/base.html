@@ -60,7 +60,7 @@
       <li role="presentation" {% if request.path == url_secretario or request.path in url_alt_secretario %} class="active" {% endif %}><a href="{% url 'adesao:secretario' %}">{% blocktrans %}Interlocutor{% endblocktrans %}</a></li>
       <li role="presentation" {% if request.path == url_responsavel or request.path in url_alt_responsavel %} class="active" {% endif %}><a href="{% url 'adesao:responsavel' %}">{% blocktrans %}Responsável{% endblocktrans %}</a></li>
       {% endif %}
-      {% if request.user.usuario.estado_processo == '1' %}
+      {% if request.user.usuario.estado_processo == '1' or request.user.usuario.estado_processo == '3' %}
       <li role="presentation" class="dropdown" {% if request.path == url_minuta or request.path == url_solicitacao %} class="active" {% endif %}>
         <a class="dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-expanded="false">
           {% blocktrans %}Imprimir{% endblocktrans %}<span class="caret"></span>

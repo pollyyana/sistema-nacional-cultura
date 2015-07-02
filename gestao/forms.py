@@ -12,7 +12,6 @@ class AlterarSituacao(ModelForm):
 
     def save(self, commit=True):
         usuario = super(AlterarSituacao, self).save(commit=False)
-        enviar_email_alteracao_situacao(usuario)
         historico = Historico()
         historico.usuario = usuario
         historico.situacao = self.cleaned_data['estado_processo']
@@ -33,6 +32,7 @@ class AlterarSituacao(ModelForm):
         if commit:
             usuario.save()
             historico.save()
+            enviar_email_alteracao_situacao(usuario, historico)
 
     class Meta:
         model = Usuario

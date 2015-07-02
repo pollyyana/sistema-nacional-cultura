@@ -8,12 +8,22 @@
   <div class="row">
     <hr style="background-color:black;" />
     <center>
-      <strong>Prefeitura</strong>
+      {% if request.user.usuario.municipio.cidade %}
+        <strong>Prefeitura</strong>
+      {% else %}
+        <strong>Governo</strong>
+      {% endif %}
     </center>
     <hr style="background-color:black;" />
-    <div class="col-xs-6">
-      Município: {{request.user.usuario.municipio.cidade}}
-    </div>
+    {% if request.user.usuario.municipio.cidade %}
+      <div class="col-xs-6">
+        Município: {{request.user.usuario.municipio.cidade}} - {{request.user.usuario.municipio.estado}}
+      </div>
+    {% else %}
+      <div class="col-xs-6">
+        UF: {{ request.user.usuario.municipio.estado.nome_uf }}
+      </div>
+    {% endif %}
     <div class="col-xs-6">
       CNPJ: {{request.user.usuario.municipio.cnpj_prefeitura}}
     </div>
@@ -33,7 +43,7 @@
       Bairro: {{request.user.usuario.municipio.bairro}}
     </div>
     <div class="col-xs-6">
-      Email Institucional:{{request.user.usuario.municipio.email_institucional_prefeito}}
+      Email Institucional: {{request.user.usuario.municipio.email_institucional_prefeito}}
     </div>
     <div class="col-xs-10">
       Telefone Institucional: {{request.user.usuario.municipio.telefone_um}}; {{request.user.usuario.municipio.telefone_dois}}; {{request.user.usuario.municipio.telefone_tres}}
