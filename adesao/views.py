@@ -158,6 +158,20 @@ class CadastrarResponsavel(CreateView):
         return super(CadastrarResponsavel, self).dispatch(*args, **kwargs)
 
 
+@login_required
+def confirmar_responsavel(request):
+    request.user.usuario.estado_processo = '7'
+    request.user.usuario.save()
+    return render(request, 'home.html')
+
+
+class AlterarCadastrador(UpdateView):
+    form_class = CadastrarResponsavelForm
+    model = Responsavel
+    template_name = 'responsavel/cadastrar_responsavel.html'
+    success_url = reverse_lazy('adesao:alteracao')
+
+
 class AlterarResponsavel(UpdateView):
     form_class = CadastrarResponsavelForm
     model = Responsavel
@@ -223,6 +237,18 @@ class TermoSolicitacao(PDFTemplateView):
 
     def get_context_data(self, **kwargs):
         context = super(TermoSolicitacao, self).get_context_data(**kwargs)
+        context['request'] = self.request
+        context['static'] = self.request.get_host()
+        return context
+
+
+class OficioAlteracao(PDFTemplateView):
+    filename = 'alterar_responsavel.pdf'
+    template_name = 'termos/alterar_responsavel.html'
+    show_content_in_browser = True
+
+    def get_context_data(self, **kwargs):
+        context = super(OficioAlteracao, self).get_context_data(**kwargs)
         context['request'] = self.request
         context['static'] = self.request.get_host()
         return context

@@ -41,32 +41,27 @@
 </p>
 {% elif request.user.usuario.estado_processo == '6' %}
 <p>
-  Parabéns! Seu Acordo de Cooperação Federativa foi publicado no Diário Oficial da União (DOU).
+  Prezado usuário,
 </p>
 
 <p>
-  Agora você já pode iniciar o seu Plano de Trabalho, <a href="{% url 'planotrabalho:planotrabalho' request.user.usuario.plano_trabalho.id %}">clicando aqui</a>
-  ou acessando a opção "Plano de Trabalho" no menu acima
+  O Acordo de Cooperação Federativa encontra-se publicado no Diário Oficial da União.
 </p>
 
 <p>
-  Para visualizar a publicação do Acordo de Cooperação no Diário Oficial da União,
-  siga os seguintes passos:
-
-  <ol>
-    <li>Insira o nome do seu município em "Informe o termo"</li>
-    <li>Selecione "DOU3"</li>
-    <li>Informe a data de recebimento deste e-mail em "Data Inicial e Data Final"</li>
-  </ol>
+  Para dar andamento ao processo de integração ao SNC, confirme o Responsável pelo desenvolvimento do seu sistema de cultura.
+  Caso o responsável tenha mudado, <a href="{% url 'adesao:alterar_cadastrador' request.user.usuario.responsavel.id %}">clique aqui</a> para solicitar a alteração.
 </p>
 
 <p>
-  <a href="http://portal.in.gov.br">Clique aqui para efetuar a pesquisa</a>
+  A partir de agora, o responsável pelo sistema de cultura deve se programar para executar os compromissos pactuados no acordo,
+  quais sejam, institucionalizar o seu Sistema de Cultura, estruturar os componentes (Órgão Gestor(se não houver),
+  Fundo de Cultura e Conselho de Política Cultural), prever a realização de Conferências e elaborar o Plano de Cultura.
 </p>
 
 <p>
-  Atenciosamente,<br>
-  Equipe SNC
+  <a class="btn btn-primary" href="{% url 'adesao:confirmar_responsavel' %}">Confirmar Responsável</a>
+  <a class="btn btn-warning" href="{% url 'adesao:alterar_cadastrador' request.user.usuario.responsavel.id %}">Alterar Responsável</a>
 </p>
 {% endif %}
 {% if historico %}

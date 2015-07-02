@@ -51,7 +51,7 @@
     <ul class="nav nav-tabs">
 
       <li role="presentation" {% if request.path == '/adesao/home/' %} class="active" {% endif %}><a href="{% url 'adesao:home' %}">{% blocktrans %}Início{% endblocktrans %}</a></li>
-      {% if request.user.usuario.estado_processo == '0' or request.user.usuario.estado_processo == '1' %}
+      {% if request.user.usuario.estado_processo == '0' or request.user.usuario.estado_processo == '1' or request.user.usuario.estado_processo == '7' %}
       {% if request.user.usuario.municipio %}
       <li role="presentation" {% if request.path == url_municipio or request.path in url_alt_municipio %} class="active" {% endif %}><a href="{% url 'adesao:municipio' %}">{% blocktrans %}Ente Federado{% endblocktrans %}</a></li>
       {% else %}
