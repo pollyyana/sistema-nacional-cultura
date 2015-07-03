@@ -7,6 +7,16 @@
       </div>
       <!-- /.panel-heading -->
       <div class="panel-body">
+        <form method="get" action="">
+          <div class="input-group custom-search-form col-lg-3">
+              <input type="text" name="municipio" class="form-control" placeholder="Município...">
+              <span class="input-group-btn">
+                  <button class="btn btn-default" type="submit">
+                      <i class="fa fa-search"></i>
+                  </button>
+              </span>
+          </div>
+        </form>
         <div class="dataTable_wrapper">
           <table class="table table-striped table-bordered table-hover" id="dataTables-example">
             <thead>
@@ -42,7 +52,6 @@
                         <option value="4" {% if usuario.estado_processo == '4' %}selected{% endif %}>Encaminhado para assinatura do Secretário SAI</option>
                         <option value="5" {% if usuario.estado_processo == '5' %}selected{% endif %}>Aguarda Publicação no DOU</option>
                         <option value="6" {% if usuario.estado_processo == '6' %}selected{% endif %}>Publicado no DOU</option>
-                        <option value="7" {% if usuario.estado_processo == '7' %}selected{% endif %}>Responsável confirmado</option>
                       </select>
                       <textarea id="justificativa_{{forloop.counter0}}" name="justificativa" class="form-control hide" placeholder="Justificativa" rows="4" cols="20"></textarea>
                       <input type="text" id="data_acordo_{{forloop.counter0}}" name="data_publicacao_acordo" class="form-control date hide" placeholder="Data de Publicação"></input>
