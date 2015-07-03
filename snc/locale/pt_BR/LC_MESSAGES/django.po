@@ -159,7 +159,7 @@ msgstr "Modificar"
 #: templates/planotrabalho/plano_trabalho.html:66
 #: templates/planotrabalho/plano_trabalho.html:82
 msgid "Preencher"
-msgstr "Preecher"
+msgstr "Preencher"
 
 #: templates/planotrabalho/plano_trabalho.html:36
 msgid "Título do segundo passo do plano de trabalho"
