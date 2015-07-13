@@ -74,7 +74,7 @@
 
             <div class="navbar-default sidebar" role="navigation">
                 <div class="sidebar-nav navbar-collapse">
-                    <ul class="nav" id="side-menu">
+                    <ul class="nav in" id="side-menu">
                         <li class="sidebar-search">
                             <div class="input-group custom-search-form">
                                 <input type="text" class="form-control" placeholder="Search...">
@@ -87,7 +87,41 @@
                             <!-- /input-group -->
                         </li>
                         <li>
-                            <a href="{% url 'gestao:acompanhar_adesao' %}"><i class="fa fa-dashboard fa-fw"></i> Acompanhar Adesão</a>
+                          <a href="#"><i class="fa fa-dashboard fa-fw"></i>  Dashboard</a>
+                        </li>
+                        <li>
+                            <a href="{% url 'gestao:acompanhar_adesao' %}"><i class="fa fa-table fa-fw"></i>  Acompanhar Adesão<span class="fa arrow"></span></a>
+
+                            <ul class="nav nav-second-level collapse int" aria-expanded="true">
+                              <li>
+                                <a href="{% url 'gestao:acompanhar_adesao' %}?situacao=1">
+                                  Aguardando envio da documentação
+                                </a>
+                              </li>
+
+                              <li>
+                                <a href="{% url 'gestao:acompanhar_adesao' %}?situacao=2">
+                                  Documentação Recebida - Aguarda Análise
+                                </a>
+                              </li>
+
+                              <li>
+                                <a href="{% url 'gestao:acompanhar_adesao' %}?situacao=3">
+                                  Diligência Documental
+                                </a>
+                              </li>
+
+                              <li>
+                                <a href="{% url 'gestao:acompanhar_adesao' %}?situacao=4">
+                                  Encaminhado para assinatura do Secretário SAI
+                                </a>
+                              </li>
+
+                              <li>
+                                <a href="{% url 'gestao:acompanhar_adesao' %}?situacao=5">
+                                  Aguarda Publicação no DOU
+                                </a>
+                              </li>
                         </li>
                     </ul>
                 </div>
