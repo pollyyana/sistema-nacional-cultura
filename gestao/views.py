@@ -31,7 +31,11 @@ class AcompanharAdesao(ListView):
             return Usuario.objects.filter(estado_processo=situacao)
 
         if ente_federado:
-            return Usuario.objects.filter(
+            municipio = Usuario.objects.filter(
                 municipio__cidade__nome_municipio=ente_federado)
+            estado = Usuario.objects.filter(
+                municipio__estado__sigla=ente_federado)
+
+            return municipio if municipio else estado
 
         return Usuario.objects.filter(estado_processo__range=('1', '5'))
