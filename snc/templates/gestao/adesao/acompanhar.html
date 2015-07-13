@@ -1,4 +1,4 @@
-{% extends "gestao/base_gestao.html" %} {% block content %}
+{% extends "gestao/base_gestao.html" %} {% load gestao_tags %} {% block content %}
 <div class="row">
   <div class="col-lg-12">
     <div class="panel panel-default">
@@ -38,9 +38,23 @@
                 {% else %}
                   <td>{{ usuario.municipio.estado.nome_uf }}</td>
                 {% endif %}
+                  {% if usuario.municipio.termo_posse_prefeito %}
                   <td><a href="{{ usuario.municipio.termo_posse_prefeito.url }}">{{ usuario.municipio.nome_prefeito }}</a></td>
+                  {% else %}
+                  <td><a href="#">{{ usuario.municipio.nome_prefeito }}</a></td>
+                  {% endif %}
+
+                  {% if usuario.municipio.rg_copia_prefeito %}
                   <td><a href="{{ usuario.municipio.rg_copia_prefeito.url }}">{{ usuario.municipio.rg_prefeito }}</a></td>
+                  {% else %}
+                  <td><a href="#">{{ usuario.municipio.rg_prefeito }}</a></td>
+                  {% endif %}
+
+                  {% if usuario.municipio.cpf_copia_prefeito %}
                   <td><a href="{{ usuario.municipio.cpf_copia_prefeito.url }}">{{ usuario.municipio.cpf_prefeito }}</a></td>
+                  {% else %}
+                  <td><a href="#">{{ usuario.municipio.cpf_prefeito }}</a></td>
+                  {% endif %}
                   <td>{{ usuario.municipio.cnpj_prefeitura }}</td>
                   <form name="form" action="{% url 'gestao:alterar_situacao' usuario.id %}" method="post">
                   <td>
@@ -69,7 +83,7 @@
             <ul class="pagination">
               {% if page_obj.has_previous %}
               <li>
-                <a class="paginate_button previous" href="?page={{ page_obj.previous_page_number }}">Anterior</a>
+                <a class="paginate_button previous" href="?{% url_replace 'page' page_obj.previous_page_number %}">Anterior</a>
               </li>
               {% endif %}
               <li>
@@ -77,7 +91,7 @@
               </li>
               {% if page_obj.has_next %}
               <li>
-                <a class="paginate_button next" href="?page={{ page_obj.next_page_number }}">Próximo</a>
+                <a class="paginate_button next" href="?{% url_replace 'page' page_obj.next_page_number %}">Próximo</a>
               </li>
               {% endif %}
             </ul>
