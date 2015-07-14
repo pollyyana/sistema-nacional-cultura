@@ -80,12 +80,12 @@ class CadastrarUsuario(CreateView):
     def get_success_url(self):
         Thread(target=send_mail, args=(
             'MINISTÉRIO DA CULTURA - SNC - CREDENCIAIS DE ACESSO',
-            'Prezado '+self.object.usuario.nome_usuario+',\n' +
+            'Prezado ' + self.object.usuario.nome_usuario + ',\n' +
             'Recebemos o seu cadastro no Sistema Nacional de Cultura. ' +
             'Por favor confirme seu e-mail clicando no endereço abaixo:\n\n' +
             self.request.build_absolute_uri(reverse(
                 'adesao:ativar_usuario',
-                args=[self.object.usuario.codigo_ativacao]))+'\n\n' +
+                args=[self.object.usuario.codigo_ativacao])) + '\n\n' +
             'Atenciosamente,\n\n' +
             'Equipe SNC\nMinistério da Cultura',
             'naoresponda@cultura.gov.br',
@@ -162,10 +162,23 @@ class CadastrarResponsavel(CreateView):
 
 
 @login_required
-def confirmar_responsavel(request):
-    request.user.usuario.estado_processo = '7'
-    request.user.usuario.save()
-    return render(request, 'home.html')
+def importar_secretario(request):
+    responsavel = request.user.usuario.responsavel
+    secretario = request.user.usuario.secretario
+    # TODO: Refatorar essa importação depois que a migração for realizada
+    responsavel.cpf_responsavel = secretario.cpf_secretario
+    responsavel.rg_responsavel = secretario.rg_secretario
+    responsavel.orgao_expeditor_rg = secretario.orgao_expeditor_rg
+    responsavel.estado_expeditor = secretario.estado_expeditor
+    responsavel.nome_responsavel = secretario.nome_secretario
+    responsavel.cargo_responsavel = secretario.cargo_secretario
+    responsavel.instituicao_responsavel = secretario.instituicao_secretario
+    responsavel.telefone_um = secretario.telefone_um
+    responsavel.telefone_dois = secretario.telefone_dois
+    responsavel.telefone_tres = secretario.telefone_tres
+    responsavel.emails_institucional_responsavel = secretario.email_institucional_secretario
+    responsavel.save()
+    return redirect('adesao:responsavel')
 
 
 class AlterarCadastrador(UpdateView):

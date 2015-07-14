@@ -6,7 +6,9 @@ from . import views
 
 urlpatterns = [
     url(r'^$', views.index, name='index'),
-    url(r'^sucesso-cadastro-usuario/$', views.sucesso_usuario, name='sucesso_usuario'),
+    url(r'^sucesso-cadastro-usuario/$',
+        views.sucesso_usuario,
+        name='sucesso_usuario'),
     url(r'^login/$', 'django.contrib.auth.views.login',
         {'template_name': 'login.html'}, name='login'),
     url(r'^sair/$', 'django.contrib.auth.views.logout',
@@ -42,9 +44,9 @@ urlpatterns = [
     url(r'^responsavel/(?P<pk>[0-9]+)/$',
         login_required(views.AlterarResponsavel.as_view()),
         name='alterar_responsavel'),
-    url(r'^confirmar/responsavel/$',
-        views.confirmar_responsavel,
-        name='confirmar_responsavel'),
+    url(r'^importar/secretario/$',
+        views.importar_secretario,
+        name='importar_secretario'),
     url(r'^alterar/responsavel/(?P<pk>[0-9]+)/$',
         login_required(views.AlterarCadastrador.as_view()),
         name='alterar_cadastrador'),
