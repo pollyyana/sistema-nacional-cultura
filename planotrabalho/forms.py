@@ -14,15 +14,18 @@ class CriarSistemaForm(ModelForm):
 
     def clean_data_final_elaboracao_projeto_lei(self):
         data_limite = self.usuario.data_publicacao_acordo + timedelta(days=2*365)
-        if self.cleaned_data['data_final_elaboracao_projeto_lei']  > (data_limite):
-            raise forms.ValidationError('A data deve ser anterior a ' +str(data_limite))
+        if self.cleaned_data['data_final_elaboracao_projeto_lei'] > data_limite:
+            raise forms.ValidationError('A data deve ser anterior a ' +
+                                        str(data_limite))
 
         return self.cleaned_data['data_final_elaboracao_projeto_lei']
 
     def clean_data_final_sancao_lei(self):
         data_limite = self.usuario.data_publicacao_acordo + timedelta(days=2*365)
         if self.cleaned_data['data_final_sancao_lei'] > (data_limite):
-            raise forms.ValidationError('A data deve ser anterior a '+str(data_limite))
+            raise forms.ValidationError('A data deve ser anterior a ' +
+                                        str(data_limite))
+
         return self.cleaned_data['data_final_sancao_lei']
 
     class Meta:
@@ -37,8 +40,9 @@ class OrgaoGestorForm(ModelForm):
 
     def clean_data_final_estruturacao_secretaria(self):
         data_limite = self.usuario.data_publicacao_acordo + timedelta(days=2*365)
-        if self.cleaned_data['data_final_estruturacao_secretaria']  > (data_limite):
-            raise forms.ValidationError('A data deve ser anterior a ' +str(data_limite))
+        if self.cleaned_data['data_final_estruturacao_secretaria'] > data_limite:
+            raise forms.ValidationError('A data deve ser anterior a ' +
+                                        str(data_limite))
 
         return self.cleaned_data['data_final_estruturacao_secretaria']
 
@@ -54,8 +58,9 @@ class ConselhoCulturalForm(ModelForm):
 
     def clean_data_final_instalacao_conselho(self):
         data_limite = self.usuario.data_publicacao_acordo + timedelta(days=2*365)
-        if self.cleaned_data['data_final_instalacao_conselho']  > (data_limite):
-            raise forms.ValidationError('A data deve ser anterior a ' +str(data_limite))
+        if self.cleaned_data['data_final_instalacao_conselho'] > data_limite:
+            raise forms.ValidationError('A data deve ser anterior a ' +
+                                        str(data_limite))
 
         return self.cleaned_data['data_final_instalacao_conselho']
 
@@ -71,8 +76,9 @@ class FundoCulturaForm(ModelForm):
 
     def clean_data_final_instituicao_fundo_cultura(self):
         data_limite = self.usuario.data_publicacao_acordo + timedelta(days=2*365)
-        if self.cleaned_data['data_final_instituicao_fundo_cultura']  > (data_limite):
-            raise forms.ValidationError('A data deve ser anterior a ' +str(data_limite))
+        if self.cleaned_data['data_final_instituicao_fundo_cultura']  > data_limite:
+            raise forms.ValidationError('A data deve ser anterior a ' +
+                                        str(data_limite))
 
         return self.cleaned_data['data_final_instituicao_fundo_cultura']
 
@@ -88,36 +94,41 @@ class PlanoCulturaForm(ModelForm):
 
     def clean_data_final_estabelecimento_instancias(self):
         data_limite = self.usuario.data_publicacao_acordo + timedelta(days=2*365)
-        if self.cleaned_data['data_final_estabelecimento_instancias']  > (data_limite):
-            raise forms.ValidationError('A data deve ser anterior a ' +str(data_limite))
+        if self.cleaned_data['data_final_estabelecimento_instancias'] > data_limite:
+            raise forms.ValidationError('A data deve ser anterior a ' +
+                                        str(data_limite))
 
         return self.cleaned_data['data_final_estabelecimento_instancias']
 
     def clean_data_final_elaboracao_plano_cultura(self):
         data_limite = self.usuario.data_publicacao_acordo + timedelta(days=2*365)
-        if self.cleaned_data['data_final_elaboracao_plano_cultura']  > (data_limite):
-            raise forms.ValidationError('A data deve ser anterior a ' +str(data_limite))
+        if self.cleaned_data['data_final_elaboracao_plano_cultura'] > data_limite:
+            raise forms.ValidationError('A data deve ser anterior a ' +
+                                        str(data_limite))
 
         return self.cleaned_data['data_final_elaboracao_plano_cultura']
 
     def clean_data_final_aprovacao_plano_cultura(self):
         data_limite = self.usuario.data_publicacao_acordo + timedelta(days=2*365)
-        if self.cleaned_data['data_final_aprovacao_plano_cultura']  > (data_limite):
-            raise forms.ValidationError('A data deve ser anterior a ' +str(data_limite))
+        if self.cleaned_data['data_final_aprovacao_plano_cultura'] > data_limite:
+            raise forms.ValidationError('A data deve ser anterior a ' +
+                                        str(data_limite))
 
         return self.cleaned_data['data_final_aprovacao_plano_cultura']
 
     def clean_data_final_tramitacao_projeto_lei(self):
         data_limite = self.usuario.data_publicacao_acordo + timedelta(days=2*365)
-        if self.cleaned_data['data_final_tramitacao_projeto_lei']  > (data_limite):
-            raise forms.ValidationError('A data deve ser anterior a ' +str(data_limite))
+        if self.cleaned_data['data_final_tramitacao_projeto_lei'] > data_limite:
+            raise forms.ValidationError('A data deve ser anterior a ' +
+                                        str(data_limite))
 
         return self.cleaned_data['data_final_tramitacao_projeto_lei']
 
     def clean_data_final_sancao_lei_plano_cultura(self):
         data_limite = self.usuario.data_publicacao_acordo + timedelta(days=2*365)
         if self.cleaned_data['data_final_sancao_lei_plano_cultura'] > data_limite:
-            raise forms.ValidationError('A data deve ser anterior a ' +str(data_limite))
+            raise forms.ValidationError('A data deve ser anterior a ' +
+                                        str(data_limite))
 
         return self.cleaned_data['data_final_sancao_lei_plano_cultura']
 
