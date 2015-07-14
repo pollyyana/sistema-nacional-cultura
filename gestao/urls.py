@@ -8,6 +8,6 @@ urlpatterns = [
         views.AcompanharAdesao.as_view(),
         login_url='adesao:login'), name='acompanhar_adesao'),
     url(r'alterar/situacao/(?P<id>[\w]+)$',
-        views.alterar_situacao,
+        staff_member_required(views.alterar_situacao, login_url='adesao:login'),
         name='alterar_situacao'),
 ]

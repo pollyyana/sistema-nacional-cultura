@@ -1,6 +1,5 @@
 from django.shortcuts import redirect
 from django.views.generic import ListView
-from django.contrib.auth.decorators import permission_required
 
 from adesao.models import Usuario
 
@@ -8,7 +7,6 @@ from .forms import AlterarSituacao
 
 
 # Create your views here.
-@permission_required('user.is_staff')
 def alterar_situacao(request, id):
     if request.method == "POST":
         form = AlterarSituacao(
