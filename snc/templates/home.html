@@ -39,30 +39,6 @@
   Atenciosamente,<br>
   Equipe SNC
 </p>
-{% elif request.user.usuario.estado_processo == '6' %}
-<p>
-  Prezado usuário,
-</p>
-
-<p>
-  O Acordo de Cooperação Federativa encontra-se publicado no Diário Oficial da União.
-</p>
-
-<p>
-  Para dar andamento ao processo de integração ao SNC, confirme o Responsável pelo desenvolvimento do seu sistema de cultura.
-  Caso o responsável tenha mudado, <a href="{% url 'adesao:alterar_cadastrador' request.user.usuario.responsavel.id %}">clique aqui</a> para solicitar a alteração.
-</p>
-
-<p>
-  A partir de agora, o responsável pelo sistema de cultura deve se programar para executar os compromissos pactuados no acordo,
-  quais sejam, institucionalizar o seu Sistema de Cultura, estruturar os componentes (Órgão Gestor(se não houver),
-  Fundo de Cultura e Conselho de Política Cultural), prever a realização de Conferências e elaborar o Plano de Cultura.
-</p>
-
-<p>
-  <a class="btn btn-primary" href="{% url 'adesao:confirmar_responsavel' %}">Confirmar Responsável</a>
-  <a class="btn btn-warning" href="{% url 'adesao:alterar_cadastrador' request.user.usuario.responsavel.id %}">Alterar Responsável</a>
-</p>
 {% endif %}
 {% if historico %}
   {% include "historico_mudancas.html" %}
