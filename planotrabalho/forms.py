@@ -30,7 +30,7 @@ class CriarSistemaForm(ModelForm):
 
     class Meta:
         model = CriacaoSistema
-        fields = '__all__'
+        exclude = ['situacao_minuta', 'situacao_lei_sistema']
 
 
 class OrgaoGestorForm(ModelForm):
@@ -48,7 +48,7 @@ class OrgaoGestorForm(ModelForm):
 
     class Meta:
         model = OrgaoGestor
-        fields = '__all__'
+        exclude = ['situacao_relatorio_secretaria']
 
 
 class ConselhoCulturalForm(ModelForm):
@@ -66,7 +66,7 @@ class ConselhoCulturalForm(ModelForm):
 
     class Meta:
         model = ConselhoCultural
-        fields = '__all__'
+        exclude = ['situacao_ata']
 
 
 class FundoCulturaForm(ModelForm):
@@ -84,7 +84,7 @@ class FundoCulturaForm(ModelForm):
 
     class Meta:
         model = FundoCultura
-        fields = '__all__'
+        exclude = ['situacao_lei_plano']
 
 
 class PlanoCulturaForm(ModelForm):
@@ -134,4 +134,9 @@ class PlanoCulturaForm(ModelForm):
 
     class Meta:
         model = PlanoCultura
-        fields = '__all__'
+        exclude = [
+            'situacao_relatorio_diretrizes',
+            'situacao_minuta',
+            'situacao_ata',
+            'situacao_ata_votacao',
+            'situacao_lei_plano']

@@ -90,7 +90,8 @@ class FundoCultura(models.Model):
         unique=True,
         verbose_name='CNPJ',
         blank=True,
-        null=True)
+        null=True,
+        default=None)
     lei_fundo_cultura = models.FileField(
         upload_to='lei_fundo_cultura',
         max_length=255,
