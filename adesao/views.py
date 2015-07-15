@@ -163,7 +163,7 @@ class CadastrarResponsavel(CreateView):
 
 @login_required
 def importar_secretario(request):
-    responsavel = request.user.usuario.responsavel
+    responsavel = Responsavel()
     secretario = request.user.usuario.secretario
     # TODO: Refatorar essa importação depois que a migração for realizada
     responsavel.cpf_responsavel = secretario.cpf_secretario
@@ -176,8 +176,10 @@ def importar_secretario(request):
     responsavel.telefone_um = secretario.telefone_um
     responsavel.telefone_dois = secretario.telefone_dois
     responsavel.telefone_tres = secretario.telefone_tres
-    responsavel.emails_institucional_responsavel = secretario.email_institucional_secretario
+    responsavel.email_institucional_responsavel = secretario.email_institucional_secretario
     responsavel.save()
+    request.user.usuario.responsavel = responsavel
+    request.user.usuario.save()
     return redirect('adesao:responsavel')
 
 
