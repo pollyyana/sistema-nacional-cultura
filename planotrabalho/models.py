@@ -1,6 +1,11 @@
 from django.db import models
 
 # Create your models here.
+SITUACAO_ENVIO = (
+    (0, 'Em preenchimento'),
+    (1, 'Avaliando anexo'),
+    (2, 'Concluída')
+)
 
 
 class PlanoTrabalho(models.Model):
@@ -36,12 +41,20 @@ class CriacaoSistema(models.Model):
         max_length=255,
         blank=True,
         null=True)
+    situacao_minuta = models.CharField(
+        max_length=1,
+        choices=SITUACAO_ENVIO,
+        default=0)
     data_final_sancao_lei = models.DateField()
     lei_sistema_cultura = models.FileField(
         upload_to='leis_sistema_cultura',
         max_length=255,
         blank=True,
         null=True)
+    situacao_lei_sistema = models.CharField(
+        max_length=1,
+        choices=SITUACAO_ENVIO,
+        default=0)
 
 
 class OrgaoGestor(models.Model):
@@ -51,6 +64,10 @@ class OrgaoGestor(models.Model):
         max_length=255,
         blank=True,
         null=True)
+    situacao_relatorio_secretaria = models.CharField(
+        max_length=1,
+        choices=SITUACAO_ENVIO,
+        default=0)
 
 
 class ConselhoCultural(models.Model):
@@ -60,6 +77,10 @@ class ConselhoCultural(models.Model):
         max_length=255,
         blank=True,
         null=True)
+    situacao_ata = models.CharField(
+        max_length=1,
+        choices=SITUACAO_ENVIO,
+        default=0)
 
 
 class FundoCultura(models.Model):
@@ -75,6 +96,10 @@ class FundoCultura(models.Model):
         max_length=255,
         blank=True,
         null=True)
+    situacao_lei_plano = models.CharField(
+        max_length=1,
+        choices=SITUACAO_ENVIO,
+        default=0)
 
 
 class PlanoCultura(models.Model):
@@ -84,27 +109,47 @@ class PlanoCultura(models.Model):
         max_length=255,
         blank=True,
         null=True)
+    situacao_relatorio_diretrizes = models.CharField(
+        max_length=1,
+        choices=SITUACAO_ENVIO,
+        default=0)
     data_final_elaboracao_plano_cultura = models.DateField()
     minuta_preparada = models.FileField(
         upload_to='minuta_preparada',
         max_length=255,
         blank=True,
         null=True)
+    situacao_minuta = models.CharField(
+        max_length=1,
+        choices=SITUACAO_ENVIO,
+        default=0)
     data_final_aprovacao_plano_cultura = models.DateField()
     ata_reuniao_aprovacao_plano = models.FileField(
         upload_to='ata_aprovacao_plano',
         max_length=255,
         blank=True,
         null=True)
+    situacao_ata = models.CharField(
+        max_length=1,
+        choices=SITUACAO_ENVIO,
+        default=0)
     data_final_tramitacao_projeto_lei = models.DateField()
     ata_votacao_projeto_lei = models.FileField(
         upload_to='ata_votacao_lei',
         max_length=255,
         blank=True,
         null=True)
+    situacao_ata_votacao = models.CharField(
+        max_length=1,
+        choices=SITUACAO_ENVIO,
+        default=0)
     data_final_sancao_lei_plano_cultura = models.DateField()
     lei_plano_cultura = models.FileField(
         upload_to='lei_plano_cultura',
         max_length=255,
         blank=True,
         null=True)
+    situacao_lei_plano = models.CharField(
+        max_length=1,
+        choices=SITUACAO_ENVIO,
+        default=0)
