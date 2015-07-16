@@ -9,4 +9,7 @@
 *.sqlite
 
 # ignore pycharm files
-.idea
+*.idea
+
+# ignore visual studio
+*.pyproj
