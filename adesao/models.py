@@ -1,4 +1,4 @@
-from django.db import models
+﻿from django.db import models
 from django.contrib.auth.models import User
 
 from smart_selects.db_fields import ChainedForeignKey
@@ -44,17 +44,15 @@ class Cidade(models.Model):
 class Municipio(models.Model):
     cpf_prefeito = models.CharField(
         max_length=14,
-        unique=True,
         verbose_name='CPF')
     nome_prefeito = models.CharField(max_length=100)
     cnpj_prefeitura = models.CharField(
         max_length=18,
-        unique=True,
         verbose_name='CNPJ')
-    rg_prefeito = models.CharField(max_length=15, verbose_name='RG')
+    rg_prefeito = models.CharField(max_length=50, verbose_name='RG')
     orgao_expeditor_rg = models.CharField(max_length=50)
     estado_expeditor = models.ForeignKey('Uf', related_name='estado_expeditor')
-    endereco = models.CharField(max_length=100)
+    endereco = models.CharField(max_length=255)
     complemento = models.CharField(max_length=100)
     cep = models.CharField(max_length=10)
     bairro = models.CharField(max_length=50)
