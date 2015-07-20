@@ -43,6 +43,17 @@
                   <td>{{ usuario.municipio.cnpj_prefeitura }}</td>
                   <td>
                     {% if request.GET.anexo == 'relatorio_diretrizes_aprovadas' %}
+                    <a href="{{ usuario.plano_trabalho.plano_cultura.relatorio_diretrizes_aprovadas }}"></a>
+                    {% elif request.GET.anexo == 'minuta_preparada' %}
+                    <a href="{{ usuario.plano_trabalho.plano_cultura.minuta_preparada }}"></a>
+                    {% elif request.GET.anexo == 'ata_reuniao_aprovacao_plano' %}
+                    <a href="{{ usuario.plano_trabalho.plano_cultura.ata_reuniao_aprovacao_plano }}"></a>
+                    {% elif request.GET.anexo == 'lei_plano_cultura' %}
+                    <a href="{{ usuario.plano_trabalho.plano_cultura.lei_plano_cultura }}"></a>
+                    {% endif %}
+                  </td>
+                  <td>
+                    {% if request.GET.anexo == 'relatorio_diretrizes_aprovadas' %}
                     <form name="form" action="{% url 'gestao:diligência_documental' plano situacao_relatorio_diretrizes usuario.id %}" method="post">
                     {% elif request.GET.anexo == 'minuta_preparada' %}
                     <form name="form" action="{% url 'gestao:diligência_documental' plano situacao_minuta usuario.id %}" method="post">

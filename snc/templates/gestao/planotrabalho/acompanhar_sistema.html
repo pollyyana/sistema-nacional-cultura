@@ -43,6 +43,13 @@
                   <td>{{ usuario.municipio.cnpj_prefeitura }}</td>
                   <td>
                     {% if request.GET.anexo == 'minuta_projeto_lei' %}
+                    <a href="{{ usuario.plano_trabalho.criacao_sistema.minuta_projeto_lei }}"></a>
+                    {% else %}
+                    <a href="{{ usuario.plano_trabalho.criacao_sistema.lei_sistema_cultura }}"></a>
+                    {% endif %}
+                  </td>
+                  <td>
+                    {% if request.GET.anexo == 'minuta_projeto_lei' %}
                     <form name="form" action="{% url 'gestao:diligência_documental' sistema situacao_minuta usuario.id %}" method="post">
                     {% else %}
                     <form name="form" action="{% url 'gestao:diligência_documental' sistema situacao_lei_sistema usuario.id %}" method="post">
