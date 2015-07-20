@@ -60,7 +60,8 @@ class AcompanharOrgao(ListView):
     def get_queryset(self):
         usuarios = Usuario.objects.filter(estado_processo='6')
         usuarios = usuarios.exclude(plano_trabalho__orgao_gestor=None)
-        usuarios = usuarios.filter(plano_trabalho__orgao_gestor__situacao_relatorio_secretaria=1)
+        usuarios = usuarios.filter(
+            plano_trabalho__orgao_gestor__situacao_relatorio_secretaria=1)
         return usuarios
 
 
