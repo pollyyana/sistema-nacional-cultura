@@ -38,6 +38,9 @@ THIRD_PARTY_APPS = (
     'wkhtmltopdf',
     'smart_selects',
     'localflavor',
+    'django_extensions',
+    'ckeditor',
+    'widget_tweaks',
 )
 
 # Apps specific for this project go here.
@@ -45,6 +48,7 @@ LOCAL_APPS = (
     'adesao',
     'gestao',
     'planotrabalho',
+    'snc',
 )
 
 # See: https://docs.djangoproject.com/en/dev/ref/settings/#installed-apps
