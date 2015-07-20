@@ -124,32 +124,51 @@
                           <ul class="nav nav-second-level">
                             <li>
                               <a href="#">
-                                Sistema de Cultura
+                                Sistema de Cultura<span class="fa arrow"></span>
                               </a>
+                              <ul class="nav nav-third-level">
+                                <li><a href="{% url 'gestao:acompanhar_sistema' %}?anexo=minuta_projeto_lei">Minuta</a></li>
+                                <li><a href="{% url 'gestao:acompanhar_sistema' %}?anexo=lei_sistema_cultura">Lei</a></li>
+                              </ul>
                             </li>
 
                             <li>
                               <a href="#">
-                                Órgão Gestor
+                                Órgão Gestor<span class="fa arrow"></span>
                               </a>
+                              <ul class="nav nav-third-level">
+                                <li><a href="{% url 'gestao:acompanhar_orgao' %}">Relatório</a></li>
+                              </ul>
                             </li>
 
                             <li>
                               <a href="#">
-                                Conselho Cultural
+                                Conselho Cultural<span class="fa arrow"></span>
                               </a>
+                              <ul class="nav nav-third-level">
+                                <li><a href="{% url 'gestao:acompanhar_conselho' %}">Ata</a></li>
+                              </ul>
                             </li>
 
                             <li>
                               <a href="#">
-                                Fundo de Cultura
+                                Fundo de Cultura<span class="fa arrow"></span>
                               </a>
+                              <ul class="nav nav-third-level">
+                                <li><a href="{% url 'gestao:acompanhar_fundo' %}">Lei</a></li>
+                              </ul>
                             </li>
 
                             <li>
                               <a href="#">
-                                Plano de Cultura
+                                Plano de Cultura<span class="fa arrow"></span>
                               </a>
+                              <ul class="nav nav-third-level">
+                                <li><a href="{% url 'gestao:acompanhar_plano' %}?anexo=relatorio_diretrizes_aprovadas">Relatório</a></li>
+                                <li><a href="{% url 'gestao:acompanhar_plano' %}?anexo=minuta_preparada">Minuta</a></li>
+                                <li><a href="{% url 'gestao:acompanhar_plano' %}?anexo=ata_reuniao_aprovacao_plano">Ata</a></li>
+                                <li><a href="{% url 'gestao:acompanhar_plano' %}?anexo=lei_plano_cultura">Lei</a></li>
+                              </ul>
                             </li>
                           </ul>
                         </li>
