@@ -7,7 +7,7 @@ from adesao.models import Usuario
 from .forms import AlterarSituacao
 
 
-# Create your views here.
+# Acompanhamento das adesões
 def alterar_situacao(request, id):
     if request.method == "POST":
         form = AlterarSituacao(
@@ -38,6 +38,15 @@ class AcompanharAdesao(ListView):
             return municipio if municipio else estado
 
         return Usuario.objects.filter(estado_processo__range=('1', '5'))
+
+
+# Acompanhamento dos planos de trabalho
+def diligencia_documental(request):
+    pass
+
+
+def concluir_etapa(request):
+    pass
 
 
 class AcompanharSistema(ListView):

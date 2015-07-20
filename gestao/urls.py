@@ -32,4 +32,15 @@ urlpatterns = [
     url(r'^acompanhar/plano$', staff_member_required(
         views.AcompanharPlano.as_view(),
         login_url='adesao:login'), name='acompanhar_plano'),
+
+    # Diligência no anexo
+    url(r'^diligencia/(?P<etapa>[\w]+)/(?P<st>[\w]+)/(?P<id>[\w]+)$',
+        staff_member_required(
+            views.diligencia_documental,
+            login_url='adesao:login'), name='diligência_documental'),
+    # Conclusão da etapa
+    url(r'^concluir/(?P<etapa>[\w]+)/(?P<st>[\w]+)/(?P<id>[\w]+)$',
+        staff_member_required(
+            views.concluir_etapa,
+            login_url='adesao:login'), name='concluir_etapa'),
 ]
