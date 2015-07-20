@@ -42,12 +42,20 @@
                   <td>{{ usuario.municipio.cpf_prefeito }}</td>
                   <td>{{ usuario.municipio.cnpj_prefeitura }}</td>
                   <td>
-                    <form name="form" action="{% url 'gestao:diligência_documental' usuario.id %}" method="post">
+                    {% if request.GET.anexo == 'minuta_projeto_lei' %}
+                    <form name="form" action="{% url 'gestao:diligência_documental' sistema situacao_minuta usuario.id %}" method="post">
+                    {% else %}
+                    <form name="form" action="{% url 'gestao:diligência_documental' sistema situacao_lei_sistema usuario.id %}" method="post">
+                    {% endif %}
                       <button type="submit" class="btn btn-error" title="Diligência" ><i class="fa fa-thumbs-down"></i></button>
                     </form>
                   </td>
                   <td>
-                    <form name="form" action="{% url 'gestao:concluir_etapa' usuario.id %}" method="post">
+                    {% if request.GET.anexo == 'minuta_projeto_lei' %}
+                    <form name="form" action="{% url 'gestao:concluir_etapa' sistema situacao_minuta usuario.id %}" method="post">
+                    {% else %}
+                    <form name="form" action="{% url 'gestao:concluir_etapa' sistema situacao_lei_sistema usuario.id %}" method="post">
+                    {% endif %}
                       {% csrf_token %}
                       <button type="submit" class="btn btn-success" title="Concluído" ><i class="fa fa-thumbs-up"></i></button>
                     </form>

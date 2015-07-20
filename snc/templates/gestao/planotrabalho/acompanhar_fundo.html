@@ -42,12 +42,12 @@
                   <td>{{ usuario.municipio.cpf_prefeito }}</td>
                   <td>{{ usuario.municipio.cnpj_prefeitura }}</td>
                   <td>
-                    <form name="form" action="{% url 'gestao:diligência_documental' usuario.id %}" method="post">
+                    <form name="form" action="{% url 'gestao:diligência_documental' fundo situacao_lei_plano usuario.id %}" method="post">
                       <button type="submit" class="btn btn-error" title="Diligência" ><i class="fa fa-thumbs-down"></i></button>
                     </form>
                   </td>
                   <td>
-                    <form name="form" action="{% url 'gestao:concluir_etapa' usuario.id %}" method="post">
+                    <form name="form" action="{% url 'gestao:concluir_etapa' fundo situacao_lei_plano usuario.id %}" method="post">
                       {% csrf_token %}
                       <button type="submit" class="btn btn-success" title="Concluído" ><i class="fa fa-thumbs-up"></i></button>
                     </form>
