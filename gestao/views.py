@@ -1,10 +1,10 @@
-from django.shortcuts import redirect
+from django.shortcuts import redirect, render_to_response
 from django.http import Http404
 from django.views.generic import ListView
 
 from adesao.models import Usuario
 
-from .forms import AlterarSituacao
+from .forms import AlterarSituacao, DiligenciaForm
 
 
 # Acompanhamento das adesões
@@ -41,12 +41,22 @@ class AcompanharAdesao(ListView):
 
 
 # Acompanhamento dos planos de trabalho
-def diligencia_documental(request):
-    pass
+def diligencia_documental(request, etapa, st, id):
+    usuario = Usuario.objects.get(id=id)
+    setattr(getattr(usuario.plano_trabalho, etapa), st, 0)
+    form = DiligenciaForm()
+    if request.method == 'POST':
+        form = DiligenciaForm(request.POST)
+        return redirect('gestao:acompanhar_sistema')
+    return render_to_response(
+        'gestao/planotrabalho/diligencia.html',
+        {'form': form, 'etapa': etapa, 'st': st, 'id': id})
 
 
-def concluir_etapa(request):
-    pass
+def concluir_etapa(request, etapa, st, id):
+    usuario = Usuario.objects.get(id=id)
+    setattr(getattr(usuario.plano_trabalho, etapa), st, 2)
+    return redirect('gestao:acompanhar_sistema')
 
 
 class AcompanharSistema(ListView):

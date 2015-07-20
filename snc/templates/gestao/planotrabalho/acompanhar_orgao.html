@@ -45,7 +45,7 @@
                     <a href="{{ usuario.plano_trabalho.orgao_gestor.situacao_relatorio_secretaria }}"></a>
                   </td>
                   <td>
-                    <form name="form" action="{% url 'gestao:diligência_documental' orgao situacao_relatorio_secretaria usuario.id %}" method="post">
+                    <form name="form" action="{% url 'gestao:diligência_documental' orgao_gestor situacao_relatorio_secretaria usuario.id %}" method="post">
                       <button type="submit" class="btn btn-error" title="Diligência" ><i class="fa fa-thumbs-down"></i></button>
                     </form>
                   </td>

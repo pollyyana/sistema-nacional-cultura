@@ -6,6 +6,8 @@ from planotrabalho.models import PlanoTrabalho
 
 from .utils import enviar_email_alteracao_situacao
 
+from ckeditor.widgets import CKEditorWidget
+
 
 class AlterarSituacao(ModelForm):
     justificativa = forms.CharField(max_length="255", required=False)
@@ -37,3 +39,7 @@ class AlterarSituacao(ModelForm):
     class Meta:
         model = Usuario
         fields = ('estado_processo', 'data_publicacao_acordo')
+
+
+class DiligenciaForm(forms.Form):
+    diligencia = forms.CharField(widget=CKEditorWidget())

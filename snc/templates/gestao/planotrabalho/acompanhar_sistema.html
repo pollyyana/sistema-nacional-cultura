@@ -50,9 +50,9 @@
                   </td>
                   <td>
                     {% if request.GET.anexo == 'minuta_projeto_lei' %}
-                    <form name="form" action="{% url 'gestao:diligência_documental' sistema situacao_minuta usuario.id %}" method="post">
+                    <form name="form" action="{% url 'gestao:diligência_documental' criacao_sistema situacao_minuta usuario.id %}" method="post">
                     {% else %}
-                    <form name="form" action="{% url 'gestao:diligência_documental' sistema situacao_lei_sistema usuario.id %}" method="post">
+                    <form name="form" action="{% url 'gestao:diligência_documental' criacao_sistema situacao_lei_sistema usuario.id %}" method="post">
                     {% endif %}
                       <button type="submit" class="btn btn-error" title="Diligência" ><i class="fa fa-thumbs-down"></i></button>
                     </form>

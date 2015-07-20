@@ -45,7 +45,7 @@
                     <a href="{{ usuario.plano_trabalho.conselho_cultural.ata_regimento_aprovado }}"></a>
                   </td>
                   <td>
-                    <form name="form" action="{% url 'gestao:diligência_documental' conselho situacao_ata usuario.id %}" method="post">
+                    <form name="form" action="{% url 'gestao:diligência_documental' conselho_cultural situacao_ata usuario.id %}" method="post">
                       <button type="submit" class="btn btn-error" title="Diligência" ><i class="fa fa-thumbs-down"></i></button>
                     </form>
                   </td>

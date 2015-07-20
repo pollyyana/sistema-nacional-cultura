@@ -54,13 +54,13 @@
                   </td>
                   <td>
                     {% if request.GET.anexo == 'relatorio_diretrizes_aprovadas' %}
-                    <form name="form" action="{% url 'gestao:diligência_documental' plano situacao_relatorio_diretrizes usuario.id %}" method="post">
+                    <form name="form" action="{% url 'gestao:diligência_documental' plano_cultura situacao_relatorio_diretrizes usuario.id %}" method="post">
                     {% elif request.GET.anexo == 'minuta_preparada' %}
-                    <form name="form" action="{% url 'gestao:diligência_documental' plano situacao_minuta usuario.id %}" method="post">
+                    <form name="form" action="{% url 'gestao:diligência_documental' plano_cultura situacao_minuta usuario.id %}" method="post">
                     {% elif request.GET.anexo == 'ata_reuniao_aprovacao_plano' %}
-                    <form name="form" action="{% url 'gestao:diligência_documental' plano situacao_ata usuario.id %}" method="post">
+                    <form name="form" action="{% url 'gestao:diligência_documental' plano_cultura situacao_ata usuario.id %}" method="post">
                     {% elif request.GET.anexo == 'lei_plano_cultura' %}
-                    <form name="form" action="{% url 'gestao:diligência_documental' plano situacao_lei_plano usuario.id %}" method="post">
+                    <form name="form" action="{% url 'gestao:diligência_documental' plano_cultura situacao_lei_plano usuario.id %}" method="post">
                     {% endif %}
                       <button type="submit" class="btn btn-error" title="Diligência" ><i class="fa fa-thumbs-down"></i></button>
                     </form>
