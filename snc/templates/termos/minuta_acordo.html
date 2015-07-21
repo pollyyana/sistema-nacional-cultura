@@ -13,7 +13,13 @@
       <div class="col-xs-6">
         <p>
           <strong>
-            ACORDO DE COOPERAÇÃO FEDERATIVA QUE ENTRE SI FIRMAM A UNIÃO, POR INTERMÉDIO DO MINISTÉRIO DA CULTURA - MINC E O MUNICÍPIO DE ITAPARICA/BA, VISANDO AO DESENVOLVIMENTO DO SISTEMA NACIONAL DE CULTURA.
+            ACORDO DE COOPERAÇÃO FEDERATIVA QUE ENTRE SI FIRMAM A UNIÃO, POR INTERMÉDIO DO MINISTÉRIO DA CULTURA - MINC E O
+            {% if request.user.usuario.cidade %}
+            MUNICÍPIO DE {{request.user.usuario.municipio.cidade|upper}}/{{request.user.usuario.municipio.estado}},
+            {% else %}
+            GOVERNO DO {{request.user.usuario.municipio.estado.nome_uf|upper}},
+            {% endif %}
+            VISANDO AO DESENVOLVIMENTO DO SISTEMA NACIONAL DE CULTURA.
           </strong>
         </p>
       </div>
