@@ -43,29 +43,24 @@
                   <td>{{ usuario.municipio.cnpj_prefeitura }}</td>
                   <td>
                     {% if request.GET.anexo == 'minuta_projeto_lei' %}
-                    <a href="{{ usuario.plano_trabalho.criacao_sistema.minuta_projeto_lei }}"></a>
+                    <a href="{{ usuario.plano_trabalho.criacao_sistema.minuta_projeto_lei }}">Download</a>
                     {% else %}
-                    <a href="{{ usuario.plano_trabalho.criacao_sistema.lei_sistema_cultura }}"></a>
+                    <a href="{{ usuario.plano_trabalho.criacao_sistema.lei_sistema_cultura }}">Download</a>
                     {% endif %}
                   </td>
                   <td>
                     {% if request.GET.anexo == 'minuta_projeto_lei' %}
-                    <form name="form" action="{% url 'gestao:diligência_documental' criacao_sistema situacao_minuta usuario.id %}" method="post">
+                    <a href="{% url 'gestao:diligencia_documental' 'criacao_sistema' 'situacao_minuta' usuario.id %}"><i class="fa fa-thumbs-down"></i></a>
                     {% else %}
-                    <form name="form" action="{% url 'gestao:diligência_documental' criacao_sistema situacao_lei_sistema usuario.id %}" method="post">
+                    <a href="{% url 'gestao:diligencia_documental' 'criacao_sistema' 'situacao_lei_sistema' usuario.id %}"><i class="fa fa-thumbs-down"></i></a>
                     {% endif %}
-                      <button type="submit" class="btn btn-error" title="Diligência" ><i class="fa fa-thumbs-down"></i></button>
-                    </form>
                   </td>
                   <td>
                     {% if request.GET.anexo == 'minuta_projeto_lei' %}
-                    <form name="form" action="{% url 'gestao:concluir_etapa' sistema situacao_minuta usuario.id %}" method="post">
+                    <a href="{% url 'gestao:concluir_etapa' 'sistema' 'situacao_minuta' usuario.id %}"><i class="fa fa-thumbs-up"></i></a>
                     {% else %}
-                    <form name="form" action="{% url 'gestao:concluir_etapa' sistema situacao_lei_sistema usuario.id %}" method="post">
+                    <a href="{% url 'gestao:concluir_etapa' 'sistema' 'situacao_lei_sistema' usuario.id %}"><i class="fa fa-thumbs-up"></i></a>
                     {% endif %}
-                      {% csrf_token %}
-                      <button type="submit" class="btn btn-success" title="Concluído" ><i class="fa fa-thumbs-up"></i></button>
-                    </form>
                   </td>
                 </tr>
               {% endfor %}

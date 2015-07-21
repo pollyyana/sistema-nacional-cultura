@@ -54,22 +54,29 @@
                   </td>
                   <td>
                     {% if request.GET.anexo == 'relatorio_diretrizes_aprovadas' %}
-                    <form name="form" action="{% url 'gestao:diligência_documental' plano_cultura situacao_relatorio_diretrizes usuario.id %}" method="post">
+                    <a href="{% url 'gestao:diligencia_documental' 'plano_cultura' 'situacao_relatorio_diretrizes' usuario.id %}">
                     {% elif request.GET.anexo == 'minuta_preparada' %}
-                    <form name="form" action="{% url 'gestao:diligência_documental' plano_cultura situacao_minuta usuario.id %}" method="post">
+                    <a href="{% url 'gestao:diligencia_documental' 'plano_cultura' 'situacao_minuta' usuario.id %}">
                     {% elif request.GET.anexo == 'ata_reuniao_aprovacao_plano' %}
-                    <form name="form" action="{% url 'gestao:diligência_documental' plano_cultura situacao_ata usuario.id %}" method="post">
+                    <a href="{% url 'gestao:diligencia_documental' 'plano_cultura' 'situacao_ata' usuario.id %}">
                     {% elif request.GET.anexo == 'lei_plano_cultura' %}
-                    <form name="form" action="{% url 'gestao:diligência_documental' plano_cultura situacao_lei_plano usuario.id %}" method="post">
+                    <a href="{% url 'gestao:diligencia_documental' 'plano_cultura' 'situacao_lei_plano' usuario.id %}">
                     {% endif %}
-                      <button type="submit" class="btn btn-error" title="Diligência" ><i class="fa fa-thumbs-down"></i></button>
-                    </form>
+                      <i class="fa fa-thumbs-down"></i>
+                    </a>
                   </td>
                   <td>
-                    <form name="form" action="{% url 'gestao:concluir_etapa' usuario.id %}" method="post">
-                      {% csrf_token %}
-                      <button type="submit" class="btn btn-success" title="Concluído" ><i class="fa fa-thumbs-up"></i></button>
-                    </form>
+                    {% if request.GET.anexo == 'relatorio_diretrizes_aprovadas' %}
+                    <a href="{% url 'gestao:concluir_etapa' 'plano_cultura' 'situacao_relatorio_diretrizes' usuario.id %}">
+                    {% elif request.GET.anexo == 'minuta_preparada' %}
+                    <a href="{% url 'gestao:concluir_etapa' 'plano_cultura' 'situacao_minuta' usuario.id %}">
+                    {% elif request.GET.anexo == 'ata_reuniao_aprovacao_plano' %}
+                    <a href="{% url 'gestao:concluir_etapa' 'plano_cultura' 'situacao_ata' usuario.id %}">
+                    {% elif request.GET.anexo == 'lei_plano_cultura' %}
+                    <a href="{% url 'gestao:concluir_etapa' 'plano_cultura' 'situacao_lei_plano' usuario.id %}">
+                    {% endif %}
+                      <i class="fa fa-thumbs-up"></i>
+                    </a>
                   </td>
                 </tr>
               {% endfor %}

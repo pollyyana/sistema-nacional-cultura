@@ -1,5 +1,9 @@
+{% extends "gestao/base_gestao.html" %} {% load gestao_tags %} {% block content %}
+<p>Elabore o e-mail que será enviado ao usuário com a diligência</p>
 <form method="post">
-  {{ myform.media }}
-  {{ myform.as_p }}
+  {% csrf_token %}
+  {{ form.media }}
+  {{ form.as_p }}
   <input type="submit" value="Enviar"/>
 </form>
+{% endblock content %}

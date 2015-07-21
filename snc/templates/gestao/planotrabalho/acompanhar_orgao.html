@@ -42,18 +42,13 @@
                   <td>{{ usuario.municipio.cpf_prefeito }}</td>
                   <td>{{ usuario.municipio.cnpj_prefeitura }}</td>
                   <td>
-                    <a href="{{ usuario.plano_trabalho.orgao_gestor.situacao_relatorio_secretaria }}"></a>
+                    <a href="{{ usuario.plano_trabalho.orgao_gestor.situacao_relatorio_secretaria }}">Download</a>
                   </td>
                   <td>
-                    <form name="form" action="{% url 'gestao:diligência_documental' orgao_gestor situacao_relatorio_secretaria usuario.id %}" method="post">
-                      <button type="submit" class="btn btn-error" title="Diligência" ><i class="fa fa-thumbs-down"></i></button>
-                    </form>
+                    <a href="{% url 'gestao:diligência_documental' 'orgao_gestor' 'situacao_relatorio_secretaria' usuario.id %}"><i class="fa fa-thumbs-down"></i></a>
                   </td>
                   <td>
-                    <form name="form" action="{% url 'gestao:concluir_etapa' orgao situacao_relatorio_secretaria usuario.id %}" method="post">
-                      {% csrf_token %}
-                      <button type="submit" class="btn btn-success" title="Concluído" ><i class="fa fa-thumbs-up"></i></button>
-                    </form>
+                    <a href="{% url 'gestao:concluir_etapa' 'orgao_gestor' 'situacao_relatorio_secretaria' usuario.id %}"><i class="fa fa-thumbs-up"></i></a>
                   </td>
                 </tr>
               {% endfor %}

@@ -1,4 +1,4 @@
-from django.shortcuts import redirect, render_to_response
+from django.shortcuts import redirect, render
 from django.http import Http404
 from django.views.generic import ListView
 
@@ -46,9 +46,12 @@ def diligencia_documental(request, etapa, st, id):
     setattr(getattr(usuario.plano_trabalho, etapa), st, 0)
     form = DiligenciaForm()
     if request.method == 'POST':
-        form = DiligenciaForm(request.POST)
-        return redirect('gestao:acompanhar_sistema')
-    return render_to_response(
+        form = DiligenciaForm(request.POST, usuario=usuario)
+        if form.is_valid():
+            form.save()
+        return redirect('gestao:acompanhar_adesao')
+    return render(
+        request,
         'gestao/planotrabalho/diligencia.html',
         {'form': form, 'etapa': etapa, 'st': st, 'id': id})
 
@@ -69,6 +72,15 @@ class AcompanharSistema(ListView):
             raise Http404()
         usuarios = Usuario.objects.filter(estado_processo='6')
         usuarios = usuarios.exclude(plano_trabalho__criacao_sistema=None)
+
+        if anexo == 'minuta_projeto_lei':
+            usuarios = usuarios.filter(
+                plano_trabalho__criacao_sistema__situacao_minuta=1)
+        elif anexo == 'lei_sistema_cultura':
+            usuarios = usuarios.filter(
+                plano_trabalho__criacao_sistema__situacao_lei_sistema=1)
+        else:
+            raise Http404()
         return usuarios
 
 
@@ -105,6 +117,8 @@ class AcompanharFundo(ListView):
             raise Http404()
         usuarios = Usuario.objects.filter(estado_processo='6')
         usuarios = usuarios.exclude(plano_trabalho__fundo_cultura=None)
+        usuarios = usuarios.filter(
+            plano_trabalho__fundo_cultura__situacao_lei_plano=1)
         return usuarios
 
 
@@ -118,4 +132,19 @@ class AcompanharPlano(ListView):
             raise Http404()
         usuarios = Usuario.objects.filter(estado_processo='6')
         usuarios = usuarios.exclude(plano_trabalho__plano_cultura=None)
+
+        if anexo == 'relatorio_diretrizes_aprovadas':
+            usuarios = usuarios.filter(
+                plano_trabalho__plano_cultura__relatorio_diretrizes_aprovadas=1)
+        elif anexo == 'minuta_preparada':
+            usuarios = usuarios.filter(
+                plano_trabalho__plano_cultura__minuta_preparada=1)
+        elif anexo == 'ata_reuniao_aprovacao_plano':
+            usuarios = usuarios.filter(
+                plano_trabalho__plano_cultura__ata_reuniao_aprovacao_plano=1)
+        elif anexo == 'lei_plano_cultura':
+            usuarios = usuarios.filter(
+                plano_trabalho__plano_cultura__lei_plano_cultura=1)
+        else:
+            raise Http404()
         return usuarios

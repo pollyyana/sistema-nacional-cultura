@@ -37,7 +37,7 @@ urlpatterns = [
     url(r'^diligencia/(?P<etapa>[\w]+)/(?P<st>[\w]+)/(?P<id>[\w]+)$',
         staff_member_required(
             views.diligencia_documental,
-            login_url='adesao:login'), name='diligência_documental'),
+            login_url='adesao:login'), name='diligencia_documental'),
     # Conclusão da etapa
     url(r'^concluir/(?P<etapa>[\w]+)/(?P<st>[\w]+)/(?P<id>[\w]+)$',
         staff_member_required(

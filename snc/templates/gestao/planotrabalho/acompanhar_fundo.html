@@ -45,15 +45,10 @@
                     <a href="{{ usuario.plano_trabalho.fundo_cultura.lei_fundo_cultura }}"></a>
                   </td>
                   <td>
-                    <form name="form" action="{% url 'gestao:diligência_documental' fundo_cultura situacao_lei_plano usuario.id %}" method="post">
-                      <button type="submit" class="btn btn-error" title="Diligência" ><i class="fa fa-thumbs-down"></i></button>
-                    </form>
+                    <a href="{% url 'gestao:diligência_documental' 'fundo_cultura' 'situacao_lei_plano' usuario.id %}"><i class="fa fa-thumbs-down"></i></a>
                   </td>
                   <td>
-                    <form name="form" action="{% url 'gestao:concluir_etapa' fundo situacao_lei_plano usuario.id %}" method="post">
-                      {% csrf_token %}
-                      <button type="submit" class="btn btn-success" title="Concluído" ><i class="fa fa-thumbs-up"></i></button>
-                    </form>
+                    <a href="{% url 'gestao:concluir_etapa' 'fundo_cultura' 'situacao_lei_plano' usuario.id %}" method="post"><i class="fa fa-thumbs-up"></i></a>
                   </td>
                 </tr>
               {% endfor %}
