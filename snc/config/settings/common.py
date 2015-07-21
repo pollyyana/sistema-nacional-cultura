@@ -103,8 +103,8 @@ DATABASES = {
     # Raises ImproperlyConfigured exception if DATABASE_URL not in os.environ
     # FIXME: Recomendo fortemente usar o postgres no ambiente de desenvolvimento, mas
     # coloquei o sqllite aqui pra não quebrar o ambiente de dev da galera.
-    # 'default': env.db("DATABASE_URL", default="postgres:///sistema-nacional-cultura"),
-    'default': env.db("DATABASE_URL", default="sqlite:////" + str(ROOT_DIR) + "snc.sqlite"),
+    'default': env.db("DATABASE_URL", default="postgres://postgres:1234@localhost/snc"),
+    # 'default': env.db("DATABASE_URL", default="sqlite:////" + str(ROOT_DIR) + "snc.sqlite"),
 
 }
 DATABASES['default']['ATOMIC_REQUESTS'] = True
@@ -220,8 +220,9 @@ AUTHENTICATION_BACKENDS = (
 # Custom user app defaults
 # Select the correct user model
 # AUTH_USER_MODEL = 'users.User'
-# LOGIN_REDIRECT_URL = 'users:redirect'
-# LOGIN_URL = 'account_login'
+LOGIN_REDIRECT_URL = 'adesao:home'
+LOGIN_URL = 'adesao:login'
+LOGOUT_URL = 'adesao:logout'
 
 # LOGGING CONFIGURATION
 # ------------------------------------------------------------------------------
@@ -256,3 +257,20 @@ LOGGING = {
 }
 
 # Your common stuff: Below this line define 3rd party library settings
+USE_DJANGO_JQUERY = False
+JQUERY_URL = STATIC_URL + 'jquery-1.11.3.min.js'
+
+CKEDITOR_JQUERY_URL = JQUERY_URL
+CKEDITOR_UPLOAD_PATH = 'uploads/'
+CKEDITOR_CONFIGS = {
+    'default': {
+        'toolbar': 'Custom',
+        'toolbar_custom': [
+            ['Bold', 'Italic', 'Underline'],
+            ['NumberedList', 'BulletedList', '-', 'Outdent', 'Indent', '-',
+            'JustifyLeft', 'JustifyCenter', 'JustifyRight', 'JustifyBlock'],
+            ['Link', 'Unlink'],
+            ['RemoveFormat', 'Source']
+        ]
+    }
+}
