@@ -258,7 +258,7 @@ LOGGING = {
 
 # Your common stuff: Below this line define 3rd party library settings
 USE_DJANGO_JQUERY = False
-JQUERY_URL = STATIC_URL + 'jquery-1.11.3.min.js'
+JQUERY_URL = STATIC_URL + 'js/jquery-1.11.3.min.js'
 
 CKEDITOR_JQUERY_URL = JQUERY_URL
 CKEDITOR_UPLOAD_PATH = 'uploads/'
