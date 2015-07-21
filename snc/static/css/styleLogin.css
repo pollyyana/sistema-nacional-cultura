@@ -1,74 +1,23 @@
-/*
- *
- * CSS com estilos específicos do tema verde
- *
- * @Autores
- *
- * - Simples Consultoria - www.simplesconsultoria.com.br
- * - DESERTO Digital - www.desertodigital.com.br
- *
- * @Referencias
- *
- * Lista de padrões, convenções e boas praticas CSS que devem ser seguidas.
- * https: //github.com/necolas/idiomatic-css/tree/master/translations/pt-BR
- *
- * Plugins para ordenar os atributos de CSS.
- * http://csscomb.com/
- *
- * Validador de CSS do W3C.
- * http://jigsaw.w3.org/css-validator/
- */
-
-
 /* ==========================================================================
    Cabeçalho do portal
    ========================================================================== */
 
 #header {
     padding: 14px 0 0 0;
-    background-color: #19882c;
-    /* Old browsers */
-    background-color: #0A5517;
-    background-image: -moz-radial-gradient(center, ellipse cover, #19882c 1%, #025310 100%);
-    /* FF3.6+ */
-    background-image: -webkit-gradient(radial, center center, 0px, center center, 100%, color-stop(1%,#19882c), color-stop(100%, #025310));
-    /* Chrome,Safari4+ */
-    background-image: -webkit-radial-gradient(center, ellipse cover, #19882c 1%, #025310 100%);
-    /* Chrome10+,Safari5.1+ */
-    background-image: -o-radial-gradient(center, ellipse cover, #19882c 1%, #025310 100%);
-    /* Opera 12+ */
-    background-image: -ms-radial-gradient(center, ellipse cover, #19882c 1%, #025310 100%);
-    /* IE10+ */
-    background-image: radial-gradient(ellipse at center, #19882c 1%, #025310 100%);
+    background-color: #1659bf;
     color: #fff;
-    /* IE6-9 fallback on horizontal gradient */
-    filter:progid: DXImageTransform.Microsoft.gradient( startColorstr="#19882c", endColorstr="#025310",GradientType=1);
 }
 
 /* Menu de Acessibilidade
    ========================================================================== */
-.logo {
-  position:relative;
-  margin-top:-60px;
-}
-
-#apDiv1 {
-	position: absolute;
-	left: 517px;
-	top: 1px;
-	width: 442px;
-	height: 244px;
-	z-index: 1;
-}
-
 
 #accessibility a {
-    color: #fff;
+    color: #dcecff;
 }
 
 #accessibility span {
     background: url("../img/bg-acess-key.gif") center center no-repeat;
-    color: #006600;
+    color: #0a1857;
 }
 
 /* Titulo do portal
@@ -81,27 +30,26 @@
    ========================================================================== */
 
 #portal-siteactions,
-#portal-language { border-bottom: 1px dotted #9bc2a3; }
+#portal-language { border-bottom: 1px dotted #6893cb; }
 
 #portal-siteactions a,
 #portal-siteactions a:hover,
 #portal-language a,
-#portal-language a:hover { color: #fff !important; }
+#portal-language a:hover { color: #dcecff !important; }
 
 /* Menu sobre o portal
    ========================================================================== */
 
-#sobre { background: #00420c; }
+#sobre { background: #0f4098; }
 
 #sobre a { color: #fff; }
 
-#sobre .portalservicos-item a { border-right: 1px solid #6c9072; }
+#sobre .portalservicos-item a { border-right: 1px solid #87a0cc; }
 
 /* Formulário de busca
    ========================================================================== */
 
 #portal-searchbox { border: 1px solid #CCCCCC; }
-
 
 /* ==========================================================================
    Sprinte Icons
@@ -128,6 +76,20 @@
 }
 
 
+#apDiv1 {
+	position: absolute;
+	left: 617px;
+	top: 15px;
+	width: 342px;
+	height: 213px;
+	z-index: 1;
+}
+
+
+#accessibility a {
+    color: #fff;
+}
+
 /* ==========================================================================
    Portles
    ========================================================================== */
@@ -137,7 +99,7 @@
 
 #portal-column-one > .nav-menu-de-relevancia .first-item-nav a,
 #portal-column-one > .nav-menu-de-relevancia .first-item-nav a span {
-    color: #2c67cd !important;
+    color: #2c66ce !important;
 }
 
 .portlet-static-contents-central .portletHeader,
@@ -145,16 +107,16 @@
 .portlet-static-centrales-del-contenido .portletHeader,
 .portlet-static-centrais-de-conteudos .portletHeader,
 .portletNavigationTree .portletHeader {
-    border-top: 4px solid #00510f;
-    color: #00510f;
+    border-top: 4px solid #1659bf;
+    color: #1659bf;
 }
 
-.portletNavigationTree .portletHeader a { color: #00510f !important; }
+.portletNavigationTree .portletHeader a { color: #1659bf !important; }
 
 .navTreeLevel0 > li.navTreeItemInPath,
 .navTreeLevel0 > li.navTreeCurrentNode {
-    border-top: 2px solid #64946e !important;
-    border-bottom: 2px solid #64946e !important;
+    border-top: 2px solid #1659bf !important;
+    border-bottom: 2px solid #1659bf !important;
 }
 
 
@@ -169,14 +131,14 @@
 
 #tile_banner_rotativo li .button-nav,
 .orderTiles .button-nav {
-    border-right: 1px solid #446b5d;
-    background-color: #0e561f;
+    border-right: 1px solid #254e8c;
+    background-color: #1659bf;
 }
 
 #tile_banner_rotativo .activeSlide .button-nav,
 #tile_banner_rotativo li .button-nav:hover,
 #tile_banner_rotativo li .button-nav:focus {
-    background-color: #ffb400;
+    background-color: #edeff1;
 }
 
 /* ícone do botão */
@@ -197,22 +159,22 @@
    ========================================================================== */
 
 #footer {
-    background: #034811;
+    background: #1659bf;
     color: #fff;
 }
 
 #footer a { color: #fff; }
 
-#wrapper #footer .footer-logos { background: #00420c; }
+#wrapper #footer .footer-logos { background: #0042b1; }
 
 /* Doormat
    ========================================================================== */
 
-#doormat-container { background: #034811; }
+#doormat-container { background: #1659bf; }
 
-#doormat-container dl { border-left: 1px dotted #7dc48a; }
+#doormat-container dl { border-left: 1px dotted #fff; }
 
-#doormat-container dt { color: #7dc48a; }
+#doormat-container dt { color: #fff; }
 
 
 /* ==========================================================================
@@ -225,7 +187,7 @@
 @media only screen and (min-width : 320px) and (max-width : 768px) {
 
     .menuTrigger {
-        background: #065116 url("../img/bg-menu-mobile.png") top right no-repeat;
+        background: #0e4097 url("../img/bg-menu-mobile.png") top right no-repeat;
     }
 
     .portlet-static-contents-central .portletHeader,
@@ -242,12 +204,12 @@
 
 }
 
-
 @media only screen and (min-width : 320px) and (max-width : 480px) {
   #header #portal-searchbox .searchButton {
     background: url("../img/search-button-30px.png") no-repeat;
   }
 }
+
 
 
 /* ==========================================================================
@@ -598,24 +560,28 @@ ul.input-list li {
 
 .button {
   display: block;
-  width: 115px;
-  height: 25px;
+  width: 100px;
+  height: 15px;
   background: #67AB54;
   padding: 10px;
   text-align: center;
   border-radius: 5px;
   color: white;
-  font-weight: bold;
+  font-weight: normal;
+  
+  
 }
 
 .button_usuario {
   display: block;
-  width: 115px;
-  height: 25px;
-  background: #DFDA7B;
+  width: 100px;
+  height: 15px;
+  background: #58B8B4;
   padding: 10px;
   text-align: center;
   border-radius: 5px;
-  color: white;
-  font-weight: bold;
+  color: #FFF;
+  font-weight: normal;
 }
+
+
