@@ -10,7 +10,7 @@ urlpatterns = [
         views.sucesso_usuario,
         name='sucesso_usuario'),
     url(r'^login/$', 'django.contrib.auth.views.login',
-        {'template_name': 'index.html'}, name='login'),
+        {'template_name': 'login.html'}, name='login'),
     url(r'^sair/$', 'django.contrib.auth.views.logout',
         {'template_name': 'index.html'}, name='logout'),
     url(r'^ativar/usuario/(?P<codigo>[\w]+)/$',
