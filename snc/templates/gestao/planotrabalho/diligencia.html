@@ -1,5 +1,5 @@
 {% extends "gestao/base_gestao.html" %} {% load gestao_tags %} {% block content %}
-<p>Elabore o e-mail que será enviado ao usuário com a diligência</p>
+<p>Elabore o e-mail que será enviado ao usuário.</p>
 <form method="post">
   {% csrf_token %}
   {{ form.media }}
