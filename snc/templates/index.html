@@ -257,8 +257,8 @@
         });
 
         $(".button").click(function(){
-          $(".cpf").formatter().resetPattern('{{99999999999}}');
-          $("#login-form").submit();
+          $(".cpf").formatter().resetPattern('{{99999999999}}').then(
+            $("#login-form").submit());
         });
       });
     </script>
