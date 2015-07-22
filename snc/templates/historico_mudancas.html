@@ -1,5 +1,6 @@
+<br />
 <table>
-  <caption>Histórico de Adesão</caption>
+  <caption><h3>Histórico de Adesão</h3></caption>
   {% for historico in historico %}
   <tr>
     <td>Situação alterada para <strong>"{{ historico.get_situacao_display }}"</strong> em
@@ -7,3 +8,4 @@
   </tr>
   {% endfor %}
 </table>
+<br />
