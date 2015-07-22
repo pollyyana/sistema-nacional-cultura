@@ -24,9 +24,9 @@
       </p>
       {% if request.user.usuario.plano_trabalho.criacao_sistema %}
       <strong>{% blocktrans %}Data final lei de cultura{% endblocktrans %}</strong> {{request.user.usuario.plano_trabalho.criacao_sistema.data_final_sancao_lei}}<br>
-      <a class="btn btn-success" href="{% url 'planotrabalho:sistema' %}">{% blocktrans %}Modificar{% endblocktrans %}</a>
+      <a class="btn btn-success" href="{% url 'planotrabalho:sistema' %}">Modificar</a>
       {% else %}
-      <a class ="btn btn-warning" href="{% url 'planotrabalho:sistema' %}" >{% blocktrans %}Preencher{% endblocktrans %}</a>
+      <a class ="btn btn-warning" href="{% url 'planotrabalho:sistema' %}" >Preencher</a>
       {% endif %}
     </li>
 
@@ -40,9 +40,9 @@
         </p>
         {% if request.user.usuario.plano_trabalho.orgao_gestor %}
         <strong>{% blocktrans %}Data final para estruturação da Secretaria de Cultura:{% endblocktrans %}</strong> {{request.user.usuario.plano_trabalho.orgao_gestor.data_final_estruturacao_secretaria}} <br>
-        <a class="btn btn-success" href="{% url 'planotrabalho:gestor' %}" />{% blocktrans %}Modificar{% endblocktrans %}</a>
+        <a class="btn btn-success" href="{% url 'planotrabalho:gestor' %}" />Modificar</a>
         {% else %}
-        <a class="btn btn-warning" href="{% url 'planotrabalho:gestor' %}" />{% blocktrans %}Preencher{% endblocktrans %}</a>
+        <a class="btn btn-warning" href="{% url 'planotrabalho:gestor' %}" />Preencher</a>
         {% endif %}
 
         <p>
@@ -50,9 +50,9 @@
         </p>
         {% if request.user.usuario.plano_trabalho.conselho_cultural %}
         <strong>{% blocktrans %}Data final para instalação do Conselho de Política Cultural:{% endblocktrans %}</strong> {{request.user.usuario.plano_trabalho.conselho_cultural.data_final_instalacao_conselho}} <br>
-        <a class="btn btn-success" href="{% url 'planotrabalho:conselho' %}" >{% blocktrans %}Modificar{% endblocktrans %}</a>
+        <a class="btn btn-success" href="{% url 'planotrabalho:conselho' %}" >Modificar</a>
         {% else %}
-        <a class="btn btn-warning" href="{% url 'planotrabalho:conselho' %}" >{% blocktrans %}Preencher{% endblocktrans %}</a>
+        <a class="btn btn-warning" href="{% url 'planotrabalho:conselho' %}" >Preencher</a>
         {% endif %}
 
         <p>
@@ -60,9 +60,9 @@
         </p>
         {% if request.user.usuario.plano_trabalho.fundo_cultura %}
         <strong>{% blocktrans %}Data final para instituição do Fundo de Cultura:{% endblocktrans %}</strong> {{request.user.usuario.plano_trabalho.fundo_cultura.data_final_instituicao_fundo_cultura}} <br>
-        <a class="btn btn-success" href="{% url 'planotrabalho:fundo' %}" >{% blocktrans %}Modificar{% endblocktrans %}</a>
+        <a class="btn btn-success" href="{% url 'planotrabalho:fundo' %}" >Modificar</a>
         {% else %}
-        <a class="btn btn-warning" href="{% url 'planotrabalho:fundo' %}" >{% blocktrans %}Preencher{% endblocktrans %}</a>
+        <a class="btn btn-warning" href="{% url 'planotrabalho:fundo' %}" >Preencher</a>
         {% endif %}
 
     </li>
@@ -76,9 +76,9 @@
         </p>
         {% if request.user.usuario.plano_trabalho.plano_cultura %}
         <strong>{% blocktrans %}Data final para sanção da Lei do Plano de Cultura:{% endblocktrans %}</strong> {{request.user.usuario.plano_trabalho.plano_cultura.data_final_sancao_lei_plano_cultura}} <br>
-        <a class="btn btn-success" href="{% url 'planotrabalho:plano' %}" >{% blocktrans %}Modificar{% endblocktrans %}</a>
+        <a class="btn btn-success" href="{% url 'planotrabalho:plano' %}" >Modificar</a>
         {% else %}
-        <a class="btn btn-warning" href="{% url 'planotrabalho:plano' %}" >{% blocktrans %}Preencher{% endblocktrans %}</a>
+        <a class="btn btn-warning" href="{% url 'planotrabalho:plano' %}" >Preencher</a>
         {% endif %}
     </li>
 

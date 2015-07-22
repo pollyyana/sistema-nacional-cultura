@@ -1,17 +1,9 @@
-<table class="table table-striped table-bordered">
+<table>
   <caption>Histórico de Adesão</caption>
-  <tr>
-    <th>
-      <strong>Situação</strong>
-    </th>
-    <th>
-      <strong>Data de Alteração</strong>
-    </th>
-  </tr>
   {% for historico in historico %}
   <tr>
-    <td>Situação alterada para "{{ historico.get_situacao_display }}"</td>
-    <td>{{ historico.data_alteracao }}</td>
+    <td>Situação alterada para <strong>"{{ historico.get_situacao_display }}"</strong> em
+    {{ historico.data_alteracao }}</td>
   </tr>
   {% endfor %}
 </table>
