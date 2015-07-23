@@ -103,7 +103,7 @@ class AcompanharConselho(ListView):
     def get_queryset(self):
         usuarios = Usuario.objects.filter(estado_processo='6')
         usuarios = usuarios.exclude(plano_trabalho__conselho_cultural=None)
-        usuarios = usuarios.filter(plano_trabalho__orgao_gestor__situacao_ata=1)
+        usuarios = usuarios.filter(plano_trabalho__conselho_cultural__situacao_ata=1)
         return usuarios
 
 
