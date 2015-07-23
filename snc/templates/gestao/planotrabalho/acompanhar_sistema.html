@@ -43,9 +43,9 @@
                   <td>{{ usuario.municipio.cnpj_prefeitura }}</td>
                   <td>
                     {% if request.GET.anexo == 'minuta_projeto_lei' %}
-                    <a href="{{ usuario.plano_trabalho.criacao_sistema.minuta_projeto_lei }}">Download</a>
+                    <a href="{{ usuario.plano_trabalho.criacao_sistema.minuta_projeto_lei.url }}">Download</a>
                     {% else %}
-                    <a href="{{ usuario.plano_trabalho.criacao_sistema.lei_sistema_cultura }}">Download</a>
+                    <a href="{{ usuario.plano_trabalho.criacao_sistema.lei_sistema_cultura.url }}">Download</a>
                     {% endif %}
                   </td>
                   <td>
@@ -57,9 +57,9 @@
                   </td>
                   <td>
                     {% if request.GET.anexo == 'minuta_projeto_lei' %}
-                    <a href="{% url 'gestao:concluir_etapa' 'sistema' 'situacao_minuta' usuario.id %}"><i class="fa fa-thumbs-up"></i></a>
+                    <a href="{% url 'gestao:concluir_etapa' 'criacao_sistema' 'situacao_minuta' usuario.id %}"><i class="fa fa-thumbs-up"></i></a>
                     {% else %}
-                    <a href="{% url 'gestao:concluir_etapa' 'sistema' 'situacao_lei_sistema' usuario.id %}"><i class="fa fa-thumbs-up"></i></a>
+                    <a href="{% url 'gestao:concluir_etapa' 'criacao_sistema' 'situacao_lei_sistema' usuario.id %}"><i class="fa fa-thumbs-up"></i></a>
                     {% endif %}
                   </td>
                 </tr>

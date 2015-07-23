@@ -13,8 +13,7 @@ class CriarSistemaForm(ModelForm):
         super(CriarSistemaForm, self).__init__(*args, **kwargs)
 
     def clean_data_final_elaboracao_projeto_lei(self):
-        limite = self.usuario.data_publicacao_acordo
-        +timedelta(days=2 * 365)
+        limite = self.usuario.data_publicacao_acordo+timedelta(days=2 * 365)
 
         if self.cleaned_data['data_final_elaboracao_projeto_lei'] > limite:
             raise forms.ValidationError('A data deve ser anterior a ' +
@@ -23,8 +22,7 @@ class CriarSistemaForm(ModelForm):
         return self.cleaned_data['data_final_elaboracao_projeto_lei']
 
     def clean_data_final_sancao_lei(self):
-        limite = self.usuario.data_publicacao_acordo
-        +timedelta(days=2 * 365)
+        limite = self.usuario.data_publicacao_acordo+timedelta(days=2 * 365)
 
         if self.cleaned_data['data_final_sancao_lei'] > (limite):
             raise forms.ValidationError('A data deve ser anterior a ' +
@@ -55,8 +53,7 @@ class OrgaoGestorForm(ModelForm):
         super(OrgaoGestorForm, self).__init__(*args, **kwargs)
 
     def clean_data_final_estruturacao_secretaria(self):
-        limite = self.usuario.data_publicacao_acordo
-        +timedelta(days=2 * 365)
+        limite = self.usuario.data_publicacao_acordo+timedelta(days=2 * 365)
 
         if self.cleaned_data['data_final_estruturacao_secretaria'] > limite:
             raise forms.ValidationError('A data deve ser anterior a ' +
@@ -84,8 +81,7 @@ class ConselhoCulturalForm(ModelForm):
         super(ConselhoCulturalForm, self).__init__(*args, **kwargs)
 
     def clean_data_final_instalacao_conselho(self):
-        limite = self.usuario.data_publicacao_acordo
-        +timedelta(days=2 * 365)
+        limite = self.usuario.data_publicacao_acordo+timedelta(days=2 * 365)
 
         if self.cleaned_data['data_final_instalacao_conselho'] > limite:
             raise forms.ValidationError('A data deve ser anterior a ' +
@@ -113,8 +109,7 @@ class FundoCulturaForm(ModelForm):
         super(FundoCulturaForm, self).__init__(*args, **kwargs)
 
     def clean_data_final_instituicao_fundo_cultura(self):
-        limite = self.usuario.data_publicacao_acordo
-        +timedelta(days=2 * 365)
+        limite = self.usuario.data_publicacao_acordo+timedelta(days=2 * 365)
 
         if self.cleaned_data['data_final_instituicao_fundo_cultura'] > limite:
             raise forms.ValidationError('A data deve ser anterior a ' +
@@ -142,8 +137,7 @@ class PlanoCulturaForm(ModelForm):
         super(PlanoCulturaForm, self).__init__(*args, **kwargs)
 
     def clean_data_final_estabelecimento_instancias(self):
-        limite = self.usuario.data_publicacao_acordo
-        +timedelta(days=2 * 365)
+        limite = self.usuario.data_publicacao_acordo+timedelta(days=2 * 365)
 
         if self.cleaned_data['data_final_estabelecimento_instancias'] > limite:
             raise forms.ValidationError('A data deve ser anterior a ' +
@@ -152,8 +146,7 @@ class PlanoCulturaForm(ModelForm):
         return self.cleaned_data['data_final_estabelecimento_instancias']
 
     def clean_data_final_elaboracao_plano_cultura(self):
-        limite = self.usuario.data_publicacao_acordo
-        +timedelta(days=2 * 365)
+        limite = self.usuario.data_publicacao_acordo+timedelta(days=2 * 365)
 
         if self.cleaned_data['data_final_elaboracao_plano_cultura'] > limite:
             raise forms.ValidationError('A data deve ser anterior a ' +
@@ -162,8 +155,7 @@ class PlanoCulturaForm(ModelForm):
         return self.cleaned_data['data_final_elaboracao_plano_cultura']
 
     def clean_data_final_aprovacao_plano_cultura(self):
-        limite = self.usuario.data_publicacao_acordo
-        +timedelta(days=2 * 365)
+        limite = self.usuario.data_publicacao_acordo+timedelta(days=2 * 365)
 
         if self.cleaned_data['data_final_aprovacao_plano_cultura'] > limite:
             raise forms.ValidationError('A data deve ser anterior a ' +
@@ -172,8 +164,7 @@ class PlanoCulturaForm(ModelForm):
         return self.cleaned_data['data_final_aprovacao_plano_cultura']
 
     def clean_data_final_tramitacao_projeto_lei(self):
-        limite = self.usuario.data_publicacao_acordo
-        +timedelta(days=2 * 365)
+        limite = self.usuario.data_publicacao_acordo+timedelta(days=2 * 365)
 
         if self.cleaned_data['data_final_tramitacao_projeto_lei'] > limite:
             raise forms.ValidationError('A data deve ser anterior a ' +
@@ -182,8 +173,7 @@ class PlanoCulturaForm(ModelForm):
         return self.cleaned_data['data_final_tramitacao_projeto_lei']
 
     def clean_data_final_sancao_lei_plano_cultura(self):
-        limite = self.usuario.data_publicacao_acordo
-        +timedelta(days=2 * 365)
+        limite = self.usuario.data_publicacao_acordo+timedelta(days=2 * 365)
 
         if self.cleaned_data['data_final_sancao_lei_plano_cultura'] > limite:
             raise forms.ValidationError('A data deve ser anterior a ' +

@@ -14,6 +14,7 @@
   <link media="all" href="{% static 'css/main.css' %}" type="text/css" rel="stylesheet" id="main-css">
   <link media="all" href="{% static 'css/style.css' %}" type="text/css" rel="stylesheet">
   <link href="{% static 'css/font-awesome.min.css' %}" rel="stylesheet" type="text/css">
+  <link href="{% static 'css/jquery-ui-min.css' %}" rel="stylesheet" type="text/css" />
   <script src="{% static 'js/jquery.min.js' %}"></script>
 </head>
 
@@ -181,7 +182,7 @@
                           <span>Início</span>
                         </a>
                       </li>
-                      {% if request.user.usuario.estado_processo in "0167" %}
+                      {% if request.user.usuario.estado_processo in "01367" %}
                       <li class="navTreeItem visualNoMarker navTreeFolderish section-assunto-b">
                         {% if request.user.usuario.municipio %}
                         <a href="{% url 'adesao:municipio' %}" title="" class="state-published navTreeFolderish contenttype-folder">
