@@ -80,7 +80,7 @@ class CadastrarUsuario(CreateView):
     def get_success_url(self):
         Thread(target=send_mail, args=(
             'MINISTÉRIO DA CULTURA - SNC - CREDENCIAIS DE ACESSO',
-            'Prezado ' + self.object.usuario.nome_usuario + ',\n' +
+            'Prezad@ ' + self.object.usuario.nome_usuario + ',\n' +
             'Recebemos o seu cadastro no Sistema Nacional de Cultura. ' +
             'Por favor confirme seu e-mail clicando no endereço abaixo:\n\n' +
             self.request.build_absolute_uri(reverse(
