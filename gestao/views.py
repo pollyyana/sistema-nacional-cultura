@@ -59,7 +59,8 @@ def diligencia_documental(request, etapa, st, id):
 def concluir_etapa(request, etapa, st, id):
     usuario = Usuario.objects.get(id=id)
     setattr(getattr(usuario.plano_trabalho, etapa), st, 2)
-    return redirect('gestao:acompanhar_sistema')
+    getattr(usuario.plano_trabalho, etapa).save()
+    return redirect('gestao:acompanhar_adesao')
 
 
 class AcompanharSistema(ListView):
@@ -133,16 +134,16 @@ class AcompanharPlano(ListView):
 
         if anexo == 'relatorio_diretrizes_aprovadas':
             usuarios = usuarios.filter(
-                plano_trabalho__plano_cultura__relatorio_diretrizes_aprovadas=1)
+                plano_trabalho__plano_cultura__situacao_relatorio_diretrizes=1)
         elif anexo == 'minuta_preparada':
             usuarios = usuarios.filter(
-                plano_trabalho__plano_cultura__minuta_preparada=1)
+                plano_trabalho__plano_cultura__situacao_minuta=1)
         elif anexo == 'ata_reuniao_aprovacao_plano':
             usuarios = usuarios.filter(
-                plano_trabalho__plano_cultura__ata_reuniao_aprovacao_plano=1)
+                plano_trabalho__plano_cultura__situacao_ata=1)
         elif anexo == 'lei_plano_cultura':
             usuarios = usuarios.filter(
-                plano_trabalho__plano_cultura__lei_plano_cultura=1)
+                plano_trabalho__plano_cultura__situacao_lei_plano=1)
         else:
             raise Http404()
         return usuarios
