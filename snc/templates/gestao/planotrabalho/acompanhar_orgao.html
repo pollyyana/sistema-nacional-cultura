@@ -45,7 +45,7 @@
                     <a href="{{ usuario.plano_trabalho.orgao_gestor.situacao_relatorio_secretaria }}">Download</a>
                   </td>
                   <td>
-                    <a href="{% url 'gestao:diligência_documental' 'orgao_gestor' 'situacao_relatorio_secretaria' usuario.id %}"><i class="fa fa-thumbs-down"></i></a>
+                    <a href="{% url 'gestao:diligencia_documental' 'orgao_gestor' 'situacao_relatorio_secretaria' usuario.id %}"><i class="fa fa-thumbs-down"></i></a>
                   </td>
                   <td>
                     <a href="{% url 'gestao:concluir_etapa' 'orgao_gestor' 'situacao_relatorio_secretaria' usuario.id %}"><i class="fa fa-thumbs-up"></i></a>
