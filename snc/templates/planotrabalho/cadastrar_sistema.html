@@ -14,20 +14,27 @@
     <label for={{ form.data_final_elaboracao_projeto_lei.id_for_label }} class="col-sm-12">
       Data final para elaboração do Projeto de Lei do Sistema de Cultura
     </label>
-    {% if form.data_final_elaboracao_projeto_lei.value %}
+    {% if request.user.usuario.plano_trabalho.criacao_sistema %}
       {% render_field form.data_final_elaboracao_projeto_lei readonly="true" %}
     {% else %}
       {% render_field form.data_final_elaboracao_projeto_lei class="date"%}
     {% endif %}
     {{ form.data_final_elaboracao_projeto_lei.errors }}
   </div>
-
+  {% if request.user.usuario.plano_trabalho.criacao_sistema %}
   <div class="form-group">
-    <label for="{{ form.lei_sistema_cultura.id_for_label }}">Minuta do Projeto de Lei</label>
-    {% render_field form.minuta_projeto_lei %}
+    <label for="{{ form.minuta_projeto_lei.id_for_label }}">Minuta do Projeto de Lei</label>
+    {% if form.minuta_projeto_lei.value %}
+    <p><a href="{{form.minuta_projeto_lei.value.url}}">Baixar arquivo atual</a></p>
+    {% if request.user.usuario.plano_trabalho.criacao_sistema.situacao_minuta != 2 %}
+    <p>Modificar: {% render_field form.minuta_projeto_lei %}</p>
+    {% endif %}
+    {% else %}
+    <p>{% render_field form.minuta_projeto_lei %}</p>
+    {% endif %}
     {{ form.lei_sistema_cultura.errors }}
   </div>
-
+  {% endif %}
   <div class="alert alert-info" role="alert">
     <strong>Para execução, sugerimos as seguintes atividades:</strong><br>
     - Elaborar minuta;<br>
@@ -45,28 +52,34 @@
     <label for={{ form.data_final_sancao_lei.id_for_label }} class="col-sm-12">
       Data final para sanção da Lei do Sistema de Cultura pelo Governador/Prefeito
     </label>
-    {% if form.data_final_sancao_lei.value %}
+    {% if request.user.usuario.plano_trabalho.criacao_sistema %}
       {% render_field form.data_final_sancao_lei readonly="true" %}
     {% else %}
       {% render_field form.data_final_sancao_lei class="date"%}
     {% endif %}
     {{ form.data_final_sancao_lei.errors }}
   </div>
-
+  {% if request.user.usuario.plano_trabalho.criacao_sistema %}
   <div class="form-group">
     <label for="{{ form.lei_sistema_cultura.id_for_label }}">Lei do Sistema de Cultura</label>
-    {% render_field form.lei_sistema_cultura %}
+    {% if form.lei_sistema_cultura.value %}
+    <p><a href="{{form.lei_sistema_cultura.value.url}}">Baixar arquivo atual</a></p>
+    {% if request.user.usuario.plano_trabalho.criacao_sistema.situacao_lei != 2 %}
+    <p>Modificar: {% render_field form.lei_sistema_cultura %}</p>
+    {% endif %}
+    {% else %}
+    <p>{% render_field form.lei_sistema_cultura %}</p>
+    {% endif %}
     {{ form.lei_sistema_cultura.errors }}
-
   </div>
-
+  {% endif %}
   <div class="alert alert-info" role="alert">
-    Para execução, sugerimos as seguintes atividades:<br>
+    <strong>Para execução, sugerimos as seguintes atividades:</strong><br>
     - Encaminhar para assinatura do governador/prefeito;<br>
     - Publicar no Diário Oficial.
   </div>
 
-  <input type="submit" class="btn btn-success" value="Próximo" />
+  <input type="submit" class="btn btn-success" value="Salvar" />
 </form>
 </div>
 {% endblock content %}
