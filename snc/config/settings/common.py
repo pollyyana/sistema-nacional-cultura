@@ -45,6 +45,7 @@ LOCAL_APPS = (
     'adesao',
     'gestao',
     'planotrabalho',
+    'snc',
 )
 
 # See: https://docs.djangoproject.com/en/dev/ref/settings/#installed-apps
@@ -99,8 +100,8 @@ DATABASES = {
     # Raises ImproperlyConfigured exception if DATABASE_URL not in os.environ
     # FIXME: Recomendo fortemente usar o postgres no ambiente de desenvolvimento, mas
     # coloquei o sqllite aqui pra não quebrar o ambiente de dev da galera.
-    # 'default': env.db("DATABASE_URL", default="postgres:///sistema-nacional-cultura"),
-    'default': env.db("DATABASE_URL", default="sqlite:////" + str(ROOT_DIR) + "snc.sqlite"),
+    'default': env.db("DATABASE_URL", default="postgres://postgres:1234@localhost/dbsnc"),
+    # 'default': env.db("DATABASE_URL", default="sqlite:////" + str(ROOT_DIR) + "snc.sqlite"),
 
 }
 DATABASES['default']['ATOMIC_REQUESTS'] = True
@@ -252,3 +253,5 @@ LOGGING = {
 }
 
 # Your common stuff: Below this line define 3rd party library settings
+USE_DJANGO_JQUERY = False
+JQUERY_URL = STATIC_URL + 'js/jquery-1.11.3.min.js'

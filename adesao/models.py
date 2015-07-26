@@ -45,7 +45,7 @@ class Municipio(models.Model):
     cpf_prefeito = models.CharField(
         max_length=14,
         verbose_name='CPF')
-    nome_prefeito = models.CharField(max_length=100)
+    nome_prefeito = models.CharField(max_length=255)
     cnpj_prefeitura = models.CharField(
         max_length=18,
         verbose_name='CNPJ')
@@ -53,7 +53,7 @@ class Municipio(models.Model):
     orgao_expeditor_rg = models.CharField(max_length=50)
     estado_expeditor = models.ForeignKey('Uf', related_name='estado_expeditor')
     endereco = models.CharField(max_length=255)
-    complemento = models.CharField(max_length=100)
+    complemento = models.CharField(max_length=255)
     cep = models.CharField(max_length=10)
     bairro = models.CharField(max_length=50)
     estado = models.ForeignKey('Uf')
