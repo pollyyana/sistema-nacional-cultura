@@ -1,10 +1,14 @@
+from threading import Thread
 from django import forms
+from django.core.mail import send_mail
 from django.forms import ModelForm
 
 from adesao.models import Usuario, Historico
 from planotrabalho.models import PlanoTrabalho
 
 from .utils import enviar_email_alteracao_situacao
+
+from ckeditor.widgets import CKEditorWidget
 
 
 class AlterarSituacao(ModelForm):
@@ -37,3 +41,24 @@ class AlterarSituacao(ModelForm):
     class Meta:
         model = Usuario
         fields = ('estado_processo', 'data_publicacao_acordo')
+
+
+class DiligenciaForm(forms.Form):
+    diligencia = forms.CharField(widget=CKEditorWidget())
+
+    def __init__(self, *args, **kwargs):
+        self.usuario = kwargs.pop('usuario', None)
+        super(DiligenciaForm, self).__init__(*args, **kwargs)
+
+    def save(self, commit=True):
+        print(self.usuario.user)
+        subject = '[Sistema Nacional de Cultura] Diligência em anexo'
+        Thread(target=send_mail, args=(
+            subject,
+            self.cleaned_data['diligencia'],
+            'naoresponda@cultura.gov.br',
+            [self.usuario.user.email],),
+            kwargs = {
+                'fail_silently': 'False',
+                'html_message': self.cleaned_data['diligencia']}
+        ).start()

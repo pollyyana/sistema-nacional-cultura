@@ -54,5 +54,7 @@ urlpatterns = [
     url(r'^mudar_senha_sucesso/$',
         'django.contrib.auth.views.password_change_done',
         {'template_name': 'registration/mudar_senha_concluido.html'},
-        name='password_change_done')
+        name='password_change_done'),
+
+    url(r'^ckeditor/', include('ckeditor.urls')),
 ] + static.static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

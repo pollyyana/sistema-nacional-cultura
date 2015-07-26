@@ -87,7 +87,6 @@ class FundoCultura(models.Model):
     data_final_instituicao_fundo_cultura = models.DateField()
     cnpj_fundo_cultura = models.CharField(
         max_length=18,
-        unique=True,
         verbose_name='CNPJ',
         blank=True,
         null=True,
@@ -134,7 +133,7 @@ class PlanoCultura(models.Model):
         max_length=1,
         choices=SITUACAO_ENVIO,
         default=0)
-    data_final_tramitacao_projeto_lei = models.DateField()
+    data_final_tramitacao_projeto_lei = models.DateField(blank=True, null=True)
     ata_votacao_projeto_lei = models.FileField(
         upload_to='ata_votacao_lei',
         max_length=255,

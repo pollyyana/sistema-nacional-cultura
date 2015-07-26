@@ -14,22 +14,29 @@
     <label for={{ form.data_final_estabelecimento_instancias.id_for_label }} class="col-sm-12">
       Data final para estabelecimento das instâncias
     </label>
-    {% if form.data_final_estabelecimento_instancias.value %}
+    {% if request.user.usuario.plano_trabalho.plano_cultura %}
       {% render_field form.data_final_estabelecimento_instancias readonly="true" %}
     {% else %}
       {% render_field form.data_final_estabelecimento_instancias class="date"%}
     {% endif %}
     {{ form.data_final_estabelecimento_instancias.errors }}
   </div>
-
+  {% if request.user.usuario.plano_trabalho.plano_cultura %}
   <div class="form-group">
     <label for="{{ form.relatorio_diretrizes_aprovadas.id_for_label }}">
       Relatório da conferência com as diretrizes aprovadas
     </label>
+    {% if form.relatorio_diretrizes_aprovadas.value %}
+    <p><a href="{{ form.relatorio_diretrizes_aprovadas.value.url }}">Baixar arquivo atual</a></p>
+    {% if request.user.usuario.plano_trabalho.plano_cultura.situacao_relatorio_diretrizes != 2 %}
+    <p>Modificar: {% render_field form.relatorio_diretrizes_aprovadas %}</p>
+    {% endif %}
+    {% else %}
     {% render_field form.relatorio_diretrizes_aprovadas %}
+    {% endif %}
     {{ form.relatorio_diretrizes_aprovadas.errors }}
   </div>
-
+  {% endif %}
   <div class="alert alert-info" role="alert">
     <strong>Para execução, sugerimos as seguintes atividades:</strong><br>
     - Sensibilização e mobilização dos atores sociais chaves para participar do processo de elaboração de um plano de cultura;<br>
@@ -46,22 +53,29 @@
     <label for={{ form.data_final_elaboracao_plano_cultura.id_for_label }} class="col-sm-12">
       Data final para elaboração do Plano de Cultura
     </label>
-    {% if form.data_final_elaboracao_plano_cultura.value %}
+    {% if request.user.usuario.plano_trabalho.plano_cultura %}
       {% render_field form.data_final_elaboracao_plano_cultura readonly="true" %}
     {% else %}
       {% render_field form.data_final_elaboracao_plano_cultura class="date"%}
     {% endif %}
     {{ form.data_final_elaboracao_plano_cultura.errors }}
   </div>
-
+  {% if request.user.usuario.plano_trabalho.plano_cultura %}
   <div class="form-group">
     <label for="{{ form.minuta_preparada.id_for_label }}">
       Minuta preparada
     </label>
+    {% if form.minuta_preparada.value %}
+    <p><a href="{{ form.minuta_preparada.value.url }}">Baixar arquivo atual</a></p>
+    {% if request.user.usuario.plano_trabalho.plano_cultura.situacao_minuta %}
+    <p>Modificar: {% render_field form.minuta_preparada %}</p>
+    {% endif %}
+    {% else %}
     {% render_field form.minuta_preparada %}
+    {% endif %}
     {{ form.minuta_preparada.errors }}
   </div>
-
+  {% endif %}
   <div class="alert alert-info" role="alert">
     <strong>Para execução, sugerimos as seguintes atividades:</strong><br>
     - Elaboração do Plano de Cultura;<br>
@@ -79,22 +93,29 @@
     <label for={{ form.data_final_aprovacao_plano_cultura.id_for_label }} class="col-sm-12">
       Data final para aprovação do plano pelo Conselho de Política Cultural
     </label>
-    {% if form.data_final_aprovacao_plano_cultura.value %}
+    {% if request.user.usuario.plano_trabalho.plano_cultura %}
       {% render_field form.data_final_aprovacao_plano_cultura readonly="true" %}
     {% else %}
       {% render_field form.data_final_aprovacao_plano_cultura class="date"%}
     {% endif %}
     {{ form.data_final_aprovacao_plano_cultura.errors }}
   </div>
-
+  {% if request.user.usuario.plano_trabalho.plano_cultura %}
   <div class="form-group">
     <label for="{{ form.ata_reuniao_aprovacao_plano.id_for_label }}">
       Ata de Reunião do Conselho
     </label>
+    {% if form.ata_reuniao_aprovacao_plano.value %}
+    <p><a href="{{ form.ata_reuniao_aprovacao_plano.value.url }}">Baixar arquivo atual</a></p>
+    {% if request.user.usuario.plano_trabalho.plano_cultura.situacao_ata != 2 %}
+    <p>Modificar: {% render_field form.ata_reuniao_aprovacao_plano %}</p>
+    {% endif %}
+    {% else %}
     {% render_field form.ata_reuniao_aprovacao_plano %}
+    {% endif %}
     {{ form.ata_reuniao_aprovacao_plano.errors }}
   </div>
-
+  {% endif %}
   <div class="alert alert-info" role="alert">
     <strong>Para execução, sugerimos as seguintes atividades:</strong><br>
     - Submeter ao Conselho de Política Cultural a minuta do Plano de Cultura para apreciação e debate.
@@ -102,68 +123,42 @@
 
   <hr />
   <h5>
-    <strong>3.4 Encaminhamento e tramitação do Projeto de Lei do Plano de Cultura no Poder Legislativo</strong>
-  </h5>
-  <div class="form-group">
-    <label for={{ form.data_final_tramitacao_projeto_lei.id_for_label }} class="col-sm-12">
-      Data Final para tramitação do Projeto de Lei do Plano de Cultura
-    </label>
-    {% if form.data_final_tramitacao_projeto_lei.value %}
-      {% render_field form.data_final_tramitacao_projeto_lei readonly="true" %}
-    {% else %}
-      {% render_field form.data_final_tramitacao_projeto_lei class="date"%}
-    {% endif %}
-    {{ form.data_final_tramitacao_projeto_lei.errors }}
-  </div>
-
-  <div class="form-group">
-    <label for="{{ form.ata_votacao_projeto_lei.id_for_label }}">
-      Ata/pauta da votação do Projeto de Lei
-    </label>
-    {% render_field form.ata_votacao_projeto_lei %}
-    {{ form.ata_votacao_projeto_lei.errors }}
-  </div>
-
-  <div class="alert alert-info" role="alert">
-    <strong>Para execução, sugerimos as seguintes atividades:</strong><br>
-    - Encaminhar à procuradoria jurídica do estado/município para análise e parecer;<br>
-    - Encaminhar minuta ao governador/prefeito para aprovação e envio de Projeto de Lei ao Poder Legislativo;<br>
-    - Acompanhar as atividades legislativas;<br>
-    - Participar de audiências e consultas públicas;<br>
-    - Realizar articulação política junto aos parlamentares.
-  </div>
-
-  <hr />
-  <h5>
-    <strong>3.5 Sanção da Lei do Plano de Cultura pelo Governador/Prefeito</strong>
+    <strong>3.4 Sanção da Lei do Plano de Cultura pelo Governador/Prefeito</strong>
   </h5>
   <div class="form-group">
     <label for={{ form.data_final_sancao_lei_plano_cultura.id_for_label }} class="col-sm-12">
       Data final para sanção da lei do Plano de Cultura
     </label>
-    {% if form.data_final_sancao_lei_plano_cultura.value %}
+    {% if request.user.usuario.plano_trabalho.plano_cultura %}
       {% render_field form.data_final_sancao_lei_plano_cultura readonly="true" %}
     {% else %}
       {% render_field form.data_final_sancao_lei_plano_cultura class="date"%}
     {% endif %}
     {{ form.data_final_sancao_lei_plano_cultura.errors }}
   </div>
-
+  {% if request.user.usuario.plano_trabalho.plano_cultura %}
   <div class="form-group">
     <label for="{{ form.lei_plano_cultura.id_for_label }}">
       Publicação da Lei no Diário Oficial
     </label>
+    {% if form.lei_plano_cultura.value %}
+    <p><a href="{{ form.lei_plano_cultura.value.url }}">Baixar arquivo atual</a></p>
+    {% if request.user.usuario.plano_trabalho.plano_cultura.situacao_lei_plano != 2 %}
+    <p>Modificar: {% render_field form.lei_plano_cultura %}</p>
+    {% endif %}
+    {% else %}
     {% render_field form.lei_plano_cultura %}
+    {% endif %}
     {{ form.lei_plano_cultura.errors }}
   </div>
-
+  {% endif %}
   <div class="alert alert-info" role="alert">
     <strong>Para execução, sugerimos as seguintes atividades:</strong><br>
     - Encaminhar para assinatura do governador/prefeito;<br>
     - Publicar no Diário Oficial.
   </div>
 
-  <input type="submit" class="btn btn-success" value="Próximo" />
+  <input type="submit" class="btn btn-success" value="Salvar" />
 </form>
 </div>
 {% endblock content %}

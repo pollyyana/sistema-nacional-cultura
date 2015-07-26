@@ -13,7 +13,13 @@
       <div class="col-xs-6">
         <p>
           <strong>
-            ACORDO DE COOPERAÇÃO FEDERATIVA QUE ENTRE SI FIRMAM A UNIÃO, POR INTERMÉDIO DO MINISTÉRIO DA CULTURA - MINC E O MUNICÍPIO DE ITAPARICA/BA, VISANDO AO DESENVOLVIMENTO DO SISTEMA NACIONAL DE CULTURA.
+            ACORDO DE COOPERAÇÃO FEDERATIVA QUE ENTRE SI FIRMAM A UNIÃO, POR INTERMÉDIO DO MINISTÉRIO DA CULTURA - MINC E O
+            {% if request.user.usuario.municipio.cidade %}
+            MUNICÍPIO DE {{request.user.usuario.municipio.cidade|upper}}/{{request.user.usuario.municipio.estado}},
+            {% else %}
+            GOVERNO DO {{request.user.usuario.municipio.estado.nome_uf|upper}},
+            {% endif %}
+            VISANDO AO DESENVOLVIMENTO DO SISTEMA NACIONAL DE CULTURA.
           </strong>
         </p>
       </div>
@@ -27,9 +33,9 @@
           <strong>Vinicius Gomes Wu, residente em Brasília, de identidade nº 5122720468 SSP/RS e CPF/MF no 087.164.607-23, nomeado pela Portaria no 156, de 26 de janeiro de 2015,</strong> e conforme delegação de competência da Portaria Nº 47, de 17 de julho de
           2009 e o
           {% if request.user.usuario.municipio.cidade %}
-          Município de {{request.user.usuario.municipio.cidade}}/{{request.user.usuario.municipio.estado}}
+          Município de <strong>{{request.user.usuario.municipio.cidade|upper}}/{{request.user.usuario.municipio.estado}}</strong>
           {% else %}
-          Governo do {{ request.user.usuario.municipio.estado.nome_uf }}
+          Governo do <strong>{{ request.user.usuario.municipio.estado.nome_uf|upper }}</strong>
           {% endif %}
           , CNPJ/MF sob o nº {{request.user.usuario.municipio.cnpj_prefeitura}}, representado por {{request.user.usuario.municipio.nome_prefeito}},
           {% if request.user.usuario.municipio.cidade %}

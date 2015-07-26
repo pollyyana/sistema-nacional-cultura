@@ -1,169 +1,268 @@
-<!DOCTYPE html>
-<!--[if lt IE 7 ]><html class="ie ie6" lang="en"> <![endif]-->
-<!--[if IE 7 ]><html class="ie ie7" lang="en"> <![endif]-->
-<!--[if IE 8 ]><html class="ie ie8" lang="en"> <![endif]-->
-<!--[if (gte IE 9)|!(IE)]><!--><html class="not-ie" lang="en"> <!--<![endif]-->
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="pt-br" dir="ltr">
+
 <head>
-
-	<!-- Basic Meta Tags -->
-  <meta charset="utf-8">
-  <title>SNC - Sistema Nacional de Cultura</title>
-	<meta name="description" content="MINETT - Responsive HTML Template by entiri">
-	<meta name="keywords" content="minett, entiri, theme, template, corporate, clean, modern, bootstrap, creative, design">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <!--[if (gte IE 9)|!(IE)]>
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta http-equiv="Content-Type" content="text/html;charset=utf-8">
-  <![endif]-->
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+  <title>Sistema Nacional de Cultura</title>
   {% load staticfiles %}
-  <!-- Favicon -->
-  <link href="{% static 'img/favicon.png' %}" rel="icon" type="image/png">
+  <link rel="shortcut icon" href="{% static 'img/favicon.ico' %}" type="image/x-icon" />
+  <link rel="apple-touch-icon" href="{% static 'img/touch_icon.png' %}">
 
-  <!-- Styles -->
-  <link href="{% static 'css/styles.css' %}" rel="stylesheet">
-  <link href="{% static 'css/bootstrap-override.css' %}" rel="stylesheet">
+  <!-- Plone CSS - only for preview, will be removed in rules.xml -->
+  <link media="screen" href="{% static 'css/plone.css' %}" type="text/css" rel="stylesheet" id="plone-css">
 
-  <!-- Estilos Font Avesome -->
-  <link href="{% static 'css/font-awesome/font-awesome.css' %}" rel="stylesheet">
-	<!--[if IE 7]>
-		<link href="{% static 'css/font-awesome/font-awesome-ie7.min.css' %}" rel="stylesheet">
-	<![endif]-->
-
-  <!-- FlexSlider Style -->
-  <link rel="stylesheet" href="{% static 'css/flexslider.css' %}" type="text/css" media="screen">
-
-  <!-- Web Fonts -->
-  <link href='http://fonts.googleapis.com/css?family=Source+Sans+Pro:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
-  <link href="http://fonts.googleapis.com/css?family=Titillium+Web:200,300,400,600,700" rel="stylesheet" type="text/css">
-
-	<!-- Internet Explorer condition - HTML5 shim, for IE6-8 support of HTML5 elements -->
-	<!--[if lt IE 9]>
-		<script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
-	<![endif]-->
+  <!-- Theme CSS - only for preview, will be removed in rules and added in CSS registry -->
+  <link media="all" href="{% static 'css/mainLogin.css' %}" type="text/css" rel="stylesheet" id="main-css">
+  <link media="all" href="{% static 'css/styleLogin.css' %}" type="text/css" rel="stylesheet">
 
 </head>
-<!-- Barra do GOVERNO -->
-<div id="barra-brasil" style="background:#7F7F7F; height: 20px; padding:0 0 0 10px;display:block;">
-	<ul id="menu-barra-temp" style="list-style:none;">
-		<li style="display:inline; float:left;padding-right:10px; margin-right:10px; border-right:1px solid #EDEDED"><a href="http://brasil.gov.br" style="font-family:sans,sans-serif; text-decoration:none; color:white;">Portal do Governo Brasileiro</a></li>
-		<li><a style="font-family:sans,sans-serif; text-decoration:none; color:white;" href="http://epwg.governoeletronico.gov.br/barra/atualize.html">Atualize sua Barra de Governo</a></li>
-	</ul>
-</div>
 
 <body>
-  <!-- Header -->
-  <header id="header">
+  <!-- BARRA DO GOVERNO FEDERAL -->
+  <div id="barra-brasil" style="background:#7F7F7F; height: 20px; padding:0 0 0 10px;display:block;">
+    <ul id="menu-barra-temp" style="list-style:none;">
+      <li style="display:inline; float:left;padding-right:10px; margin-right:10px; border-right:1px solid #EDEDED"><a href="http://brasil.gov.br" style="font-family:sans,sans-serif; text-decoration:none; color:white;">Portal do Governo Brasileiro</a></li>
+      <li><a style="font-family:sans,sans-serif; text-decoration:none; color:white;" href="http://epwg.governoeletronico.gov.br/barra/atualize.html">Atualize sua Barra de Governo</a></li>
+    </ul>
+  </div>
 
 
-    <div class="container">
-      <div class="row t-container">
-        <div class="texture">
-          <img src="img/background.png" alt="">
+  <div id="wrapper">
+
+    <!-- HEADER -->
+
+    <div id="header" role="banner">
+
+      <div>
+
+        <ul id="accessibility">
+          <li>
+            <a accesskey="1" href="#acontent" id="link-conteudo">
+                            Ir para o conteúdo
+                            <span>1</span>
+                        </a>
+          </li>
+          <li>
+            <a accesskey="2" href="#anavigation" id="link-navegacao">
+                            Ir para o menu
+                            <span>2</span>
+                        </a>
+          </li>
+          <li>
+            <a accesskey="3" href="#SearchableText" id="link-buscar">
+                            Ir para a busca
+                            <span>3</span>
+                        </a>
+          </li>
+          <li>
+            <a accesskey="4" href="#afooter" id="link-rodape">
+                            Ir para o rodapé
+                            <span>4</span>
+                        </a>
+          </li>
+        </ul>
+
+        <ul id="language" class="hidden">
+          <li class="language-es">
+            <a href="#">Español</a>
+          </li>
+          <li class="language-en">
+            <a href="#">English</a>
+          </li>
+        </ul>
+
+        <ul id="portal-siteactions">
+          <li>
+            <a href="#">Acessibilidade</a>
+          </li>
+          <li>
+            <a href="#">Alto Contraste</a>
+          </li>
+          <li>
+            <a href="#">Mapa do Site</a>
+          </li>
+        </ul>
+
+        <div id="logo">
+          <a href="#" title="#">
+            <span id="portal-title">Sistema Nacional de Cultura</span>
+            <span id="portal-description" style="color:#FC0">Ministério da Cultura</span>
+          </a>
+
         </div>
-        <!-- Logo -->
-        <div class="span3">
-          <div class="logo">
-            <a href="login.php"><img src="img/logo-header.png" alt=""></a>
+
+
+        <br />
+        <br />
+        <br />
+        <br />
+
+
+        <div id="social-icons">
+          <ul>
+            <li id="portalredes-facebook" class="portalredes-item">
+              <a href="#" title="Facebook">
+              </a>
+            </li>
+            <li id="portalredes-twitter" class="portalredes-item">
+              <a href="#" title="Twitter">
+              </a>
+            </li>
+            <li id="portalredes-youtube" class="portalredes-item">
+              <a href="#" title="Youtube">
+              </a>
+            </li>
+            <li id="portalredes-github" class="portalredes-item">
+              <a href="#" title="Flickr">
+              </a>
+            </li>
+          </ul>
+        </div>
+
+      </div>
+      <div id="sobre">
+        <ul>
+          <li id="link-sobre">
+            <a href="#">Sobre o SNC</a>
+          </li>
+          |
+          <li id="link-sobre">
+            <a href="#">Perguntas frequentes</a>
+          </li>
+          |
+          <li id="link-central">
+            <a href="#">Fale conosco</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- content -->
+
+    <div id="main" role="main">
+      <div id="plone-content">
+
+        <!-- Demo Plone Content -->
+
+        <div id="portal-columns" class="row">
+
+          <div id="viewlet-above-content">
+
+
+
           </div>
-          <br><br><br><br><br><br><br><br><br><br><br><br><br><br>
-        </div>
 
-        <div class="span9">
-          <div class="row space90"></div>
-          <nav class="navbar">
-            <!-- Menu Caso houver -->
+          <!-- Column 1 -->
+          <div id="navigation">
+            <a name="anavigation" id="anavigation"></a>
+            <span class="menuTrigger">Menu</span>
 
-          </nav>
-          <div class="row space15 hidden-phone"></div>
-        </div>
-
-        <div class="span8">
-          <div class="row">
-            <form action="{% url 'adesao:login' %}" method="post"> {% csrf_token %}
-            <div class="span6 offset2">
-              <h1>Acesse o <strong>Sistema</strong></h1>
-              <div class="head-info">
-                <div class="error_msg">
-
-		  </div>
-                <!--Caixa de Login-->
-               <table  width="95%" border="0" cellspacing="0" cellpadding="0">
-            <tr>
-              <td style="font-weight: bold;" valign="middle"  width="13%" align="right">
-              	<div style="margin-bottom:15px" >CPF:</div>
-              	<div>SENHA:</div>
-              </td>
-              <td valign="middle" width="51%">
-              	<input style="margin-bottom:10px"  type="text" name="username" value="" class="login_input" onblur="javascript: validarCPF(this.value);" onkeypress="javascript: mascara(this, cpf_mask);"  maxlength="14" /> <br />
-              	<input type="password" name="password" class="login_input" autocomplete="off" size="20" onkeypress="return controlar_foco_senha( event );" />
-              </td>
-              <td valign="middle" width="36%">
-              	<input type="submit" class="btn" value="ACESSAR"/><br />
-              	<a href="#" class="btn" style="background-color:#F0AD4E">NOVO USUÁRIO</a>
-              </td>
-            </tr>
-            <tr>
-              <td colspan="3" align="left" class="txt_laranja" ><a href="{% url 'password_reset'%}">Esqueceu a senha?</a></td>
-            </tr>
-          </table>
-
-               </div>
+            <div id="portal-column-one" class="cell width-1:4 position-0">
             </div>
+          </div>
+          <div class="logo">
+            <a href="{% url 'adesao:index' %}">
+              <img src="{% static 'img/logo-header.png' %}" alt="Sistema Nacional de Cultura" />
+            </a>
+          </div>
+
+          <div id="apDiv1" class="portletCollectionlogin" align="center">
+            {% if form.errors %}
+              <p>Senha ou CPF incorretos, por favor tente novamente.</p>
+            {% endif %}
+            <h1 style="color:#FFF">Acessar</h1>
+            <form id="login-form" action="{% url 'adesao:login' %}" method="post">{% csrf_token %}
+              <table width="90%" border="0" align="center" cellpadding="0" cellspacing="0">
+                <tr>
+                  <td align="right">CPF: </td>
+                  <td>
+                    <input type="text" name="username" class="cpf" maxlength="14"/>
+                  </td>
+                </tr>
+                <tr>
+                  <td align="right">Senha: </td>
+                  <td>
+                    <input type="password" name="password"/>
+                  </td>
+                </tr>
+                <tr>
+                  <td></td>
+                </tr>
+                <tr>
+                  <td><td><a href="{% url 'password_reset' %}"><small>Esqueceu sua senha?</small></a></td></td>
+                </tr>
+                <tr>
+                  <td align="right"><a href="javascript:void()" class="button" style="color:#FFF"/>Acessar</a></td>
+                  <td align="right"> <a href="{% url 'adesao:usuario' %}" class="button_usuario" style="color:#FFF">Novo Usuário</a></td>
+                </tr>
+              </table>
+            </form>
 
           </div>
-        </form>
-        </div>
-      </div>
 
-      <div class="space60"></div>
 
-      <div class="row">
-        <div class="span12">
-
-        </div>
-      </div>
-  </div>
-  </header>
-  <!-- Fim do Header  -->
-
-  <div class="row space80"></div>
-
-  <!-- Conteúdo -->
-  <div id="content">
-    <div class="container">
-      <div class="space50"></div>
-
-    </div>
-  </div>
-  <!-- Fim do conteúdo  -->
-
-  <!-- Footer -->
-  <footer id="footer">
-    <div class="container">
-      <div class="row">
-        <div class="span12 pos-r">
-          <div id="footer-brasil" class="footer-logos"><div id="wrapper-footer-brasil"><a href="http://www.acessoainformacao.gov.br/"><span class="logo-acesso-footer"></span></a><a href="http://www.brasil.gov.br/"><span class="logo-brasil-footer"></span></a></div></div>
-          <div class="texture-footer">
+          <!-- Conteudo -->
+          <div id="portal-column-content" class="cell width-1:2 position-1:4">
+            <a name="acontent" id="acontent"></a>
+            <div id="viewlet-below-content"></div>
 
           </div>
+          <br />
+          <br />
+          <br />
+          <br />
+          <br />
+          <br />
+          <br />
+          <!-- Column 2-->
         </div>
+
+        <!-- /Demo Plone Content -->
+
       </div>
 
-      <div class="row"></div>
+      <div class="clear"></div>
+      <div id="voltar-topo">
+        <a href="#wrapper">Voltar para o topo</a>
+      </div>
 
     </div>
-</footer>
-  <!-- Footer End -->
 
-  <!-- JavaScripts -->
-	<script type="text/javascript" src="{% static 'js/jquery-1.8.3.min.js' %}"></script>
-	<script type="text/javascript" src="{% static 'js/bootstrap.min.js' %}"></script>
-	<script type="text/javascript" src="{% static 'js/functions.js' %}"></script>
-	<script type="text/javascript" src="{% static 'js/jquery.isotope.min.js' %}"></script>
-	<script type="text/javascript" defer src="{% static 'js/jquery.flexslider.js' %}"></script>
-  <script type="text/javascript" src="{% static 'js/validaCPF.js' %}"></script>
-  <!-- Script da Barra do Governo -->
-	<script defer src="http://barra.brasil.gov.br/barra.js" type="text/javascript"></script>
+    <!-- Footer -->
+    <div id="footer" role="contentinfo">
+      <a name="afooter" id="afooter"></a>
+      <div id="footer-brasil">
+      </div>
+    </div>
+    <div id="extra-footer">
+      <p>
+        Ministério da Cultura -
+        <a href="#">MinC - 2015</a>
+      </p>
+    </div>
 
+    <!-- /Footer-->
+    <script src="{% static 'js/jquery.min.js' %}"></script>
+    <script src="{% static 'js/jquery.formatter.min.js' %}"></script>
+    <script src="{% static 'js/jquery-ui.min.js' %}"></script>
+    <script src="{% static 'js/validaCPF.js' %}"></script>
+    {% verbatim %}
+    <script type="text/javascript">
+      $(document).ready(function(){
+        $(".cpf").formatter({
+          'pattern': '{{999}}.{{999}}.{{999}}-{{99}}',
+          'persistent': false,
+        });
+
+        $(".button").click(function(){
+          $(".cpf").formatter().resetPattern('{{99999999999}}').then(
+            $("#login-form").submit());
+        });
+      });
+    </script>
+    {% endverbatim %}
+    <!-- Script da Barra do Governo -->
+    <script defer src="http://barra.brasil.gov.br/barra.js" type="text/javascript"></script>
 </body>
+
 </html>

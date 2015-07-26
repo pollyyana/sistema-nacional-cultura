@@ -15,21 +15,29 @@
     <label for={{ form.data_final_estruturacao_secretaria.id_for_label }} class="col-sm-12">
       Data final para estruturação da Secretaria de Cultura
     </label>
-    {% if form.data_final_estruturacao_secretaria.value %}
+    {% if request.user.usuario.plano_trabalho.orgao_gestor %}
       {% render_field form.data_final_estruturacao_secretaria readonly="true" %}
     {% else %}
       {% render_field form.data_final_estruturacao_secretaria class="date"%}
     {% endif %}
     {{ form.data_final_estruturacao_secretaria.errors }}
   </div>
-
+  {% if request.user.usuario.plano_trabalho.orgao_gestor %}
   <div class="form-group">
     <label for="{{ form.relatorio_atividade_secretaria.id_for_label }}">
-      Relatórios de documentos de atividades/gestão da Secretaria (Clique na caixa ao lado para anexar o arquivo referente à comprovação de realização desta tarefa.)
+      Relatórios de documentos de atividades/gestão da Secretaria
     </label>
-    {% render_field form.relatorio_atividade_secretaria %}
+    {% if form.relatorio_atividade_secretaria.value %}
+    <p><a href="{{ form.relatorio_atividade_secretaria.value.url }}">Baixar arquivo atual</a></p>
+    {% if request.user.usuario.plano_trabalho.orgao_gestor.situacao_relatorio_secretaria != 2 %}
+    <p>Modificar: {% render_field form.relatorio_atividade_secretaria %}</p>
+    {% endif %}
+    {% else %}
+    <p>{% render_field form.relatorio_atividade_secretaria %}</p>
+    {% endif %}
     {{ form.relatorio_atividade_secretaria.errors }}
   </div>
+  {% endif %}
 
   <div class="alert alert-info" role="alert">
     <strong>Para execução, sugerimos as seguintes atividades!</strong><br>
@@ -40,7 +48,7 @@
     - Encaminhar ao Poder Legislativo.
   </div>
 
-  <input type="submit" class="btn btn-success" value="Próximo" />
+  <input type="submit" class="btn btn-success" value="Salvar" />
 </form>
 </div>
 {% endblock content %}

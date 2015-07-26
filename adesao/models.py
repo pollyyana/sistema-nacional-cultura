@@ -66,9 +66,9 @@ class Municipio(models.Model):
         blank=True,
         null=True
     )
-    telefone_um = models.CharField(max_length=15)
-    telefone_dois = models.CharField(max_length=15, blank=True)
-    telefone_tres = models.CharField(max_length=15, blank=True)
+    telefone_um = models.CharField(max_length=100)
+    telefone_dois = models.CharField(max_length=25, blank=True)
+    telefone_tres = models.CharField(max_length=25, blank=True)
     email_institucional_prefeito = models.EmailField()
     termo_posse_prefeito = models.FileField(
         upload_to='termo_posse',
@@ -98,15 +98,15 @@ class Responsavel(models.Model):
         max_length=14,
         unique=True,
         verbose_name='CPF')
-    rg_responsavel = models.CharField(max_length=15, verbose_name='RG')
+    rg_responsavel = models.CharField(max_length=25, verbose_name='RG')
     orgao_expeditor_rg = models.CharField(max_length=50)
     estado_expeditor = models.ForeignKey('Uf')
     nome_responsavel = models.CharField(max_length=100)
     cargo_responsavel = models.CharField(max_length=100)
     instituicao_responsavel = models.CharField(max_length=100)
-    telefone_um = models.CharField(max_length=15)
-    telefone_dois = models.CharField(max_length=15, blank=True)
-    telefone_tres = models.CharField(max_length=15, blank=True)
+    telefone_um = models.CharField(max_length=25)
+    telefone_dois = models.CharField(max_length=25, blank=True)
+    telefone_tres = models.CharField(max_length=25, blank=True)
     email_institucional_responsavel = models.EmailField()
 
     def __str__(self):
@@ -118,15 +118,15 @@ class Secretario(models.Model):
         max_length=14,
         unique=True,
         verbose_name='CPF')
-    rg_secretario = models.CharField(max_length=15, verbose_name='RG')
+    rg_secretario = models.CharField(max_length=25, verbose_name='RG')
     orgao_expeditor_rg = models.CharField(max_length=50)
     estado_expeditor = models.ForeignKey('Uf')
     nome_secretario = models.CharField(max_length=100)
     cargo_secretario = models.CharField(max_length=100)
     instituicao_secretario = models.CharField(max_length=100)
-    telefone_um = models.CharField(max_length=15)
-    telefone_dois = models.CharField(max_length=15, blank=True)
-    telefone_tres = models.CharField(max_length=15, blank=True)
+    telefone_um = models.CharField(max_length=25)
+    telefone_dois = models.CharField(max_length=25, blank=True)
+    telefone_tres = models.CharField(max_length=25, blank=True)
     email_institucional_secretario = models.EmailField()
 
     def __str__(self):

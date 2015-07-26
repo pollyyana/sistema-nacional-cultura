@@ -1,31 +1,28 @@
-<table class="table table-striped table-bordered">
-  <caption>Dados do {% if request.user.usuario.municipio.cidade %}Município{% else %}Governo{% endif %}</caption>
-  <tr>
-    <td>
-      <strong>{% if request.user.usuario.municipio.cidade %}Município-{% endif %}Estado</strong>
-    </td>
-    <td>
-      {% if request.user.usuario.municipio.cidade %}
-        {{ request.user.usuario.municipio.cidade }}-
-      {% endif %}
-      {{ request.user.usuario.municipio.estado.nome_uf }}</td>
-  </tr>
-  <tr>
-    <td>
-      <strong>CNPJ</strong>
-    </td>
-    <td>{{ request.user.usuario.municipio.cnpj_prefeitura }}</td>
-  </tr>
-  <tr>
-    <td>
-      <strong>Governador/Prefeito</strong>
-    </td>
-    <td>{{ request.user.usuario.municipio.nome_prefeito }}</td>
-  </tr>
-  <tr>
-    <td>
-      <strong>Situação</strong>
-    </td>
-    <td>{{ request.user.usuario.get_estado_processo_display }}</td>
-  </tr>
-</table>
+<h3>Dados do {% if request.user.usuario.municipio.cidade %}Município{% else %}Governo{% endif %}</h3>
+
+<ul>
+    <li>
+      {% if request.user.usuario.municipio.cidade %}Município-{% endif %}Estado:
+        <a class="link-plain" href="#">{% if request.user.usuario.municipio.cidade %}
+          {{ request.user.usuario.municipio.cidade }}-
+        {% endif %}
+        {{ request.user.usuario.municipio.estado.nome_uf }}</a>
+
+    </li>
+    <li>
+        CNPJ:
+        <a class="link-plain" href="#">{{ request.user.usuario.municipio.cnpj_prefeitura }}</a>
+
+    </li>
+    <li>
+        Governador/Prefeito:
+        <a class="link-plain" href="#">{{ request.user.usuario.municipio.nome_prefeito }}</a>
+
+    </li>
+    <li>
+        Situação:
+        <a class="link-plain" href="#">{{ request.user.usuario.get_estado_processo_display }}</a>
+
+    </li>
+</ul>
+<br />
