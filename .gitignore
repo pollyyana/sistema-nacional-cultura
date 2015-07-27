@@ -1,6 +1,7 @@
 *.pyc
 *.swp
 #*static*
+*staticfiles*
 *pycache*
 *media*
 .project
