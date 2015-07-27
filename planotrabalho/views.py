@@ -1,4 +1,5 @@
 from django.shortcuts import redirect
+from django.http import Http404
 from django.views.generic.edit import CreateView, UpdateView
 from django.views.generic.detail import DetailView
 from django.core.urlresolvers import reverse_lazy
@@ -25,6 +26,13 @@ class PlanoTrabalho(DetailView):
             plano.plano_cultura]
         context['datas_preenchidas'] = all(datas_list)
         return context
+
+    def dispatch(self, *args, **kwargs):
+        plano = self.request.user.usuario.plano_trabalho.id
+        if str(plano) != self.kwargs['pk']:
+            raise Http404()
+
+        return super(PlanoTrabalho, self).dispatch(*args, **kwargs)
 
 
 class CadastrarSistema(CreateView):
