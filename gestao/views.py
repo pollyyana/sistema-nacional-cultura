@@ -48,6 +48,7 @@ def diligencia_documental(request, etapa, st, id):
     if request.method == 'POST':
         form = DiligenciaForm(request.POST, usuario=usuario)
         if form.is_valid():
+            getattr(usuario.plano_trabalho, etapa).save()
             form.save()
         return redirect('gestao:acompanhar_adesao')
     return render(

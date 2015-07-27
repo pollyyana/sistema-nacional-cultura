@@ -44,14 +44,13 @@ class AlterarSituacao(ModelForm):
 
 
 class DiligenciaForm(forms.Form):
-    diligencia = forms.CharField(widget=CKEditorWidget())
+    diligencia = forms.CharField(required=False, widget=CKEditorWidget())
 
     def __init__(self, *args, **kwargs):
         self.usuario = kwargs.pop('usuario', None)
         super(DiligenciaForm, self).__init__(*args, **kwargs)
 
     def save(self, commit=True):
-        print(self.usuario.user)
         subject = '[Sistema Nacional de Cultura] Diligência em anexo'
         Thread(target=send_mail, args=(
             subject,
