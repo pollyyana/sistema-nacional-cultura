@@ -6,7 +6,6 @@ from django.forms import ModelForm
 from django.template.defaultfilters import filesizeformat
 
 from .models import Usuario, Municipio, Responsavel, Secretario
-from planotrabalho.models import PlanoTrabalho
 from .utils import validar_cpf, validar_cnpj, limpar_mascara
 import re
 

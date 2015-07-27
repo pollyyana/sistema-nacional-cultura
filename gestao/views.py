@@ -31,9 +31,9 @@ class AcompanharAdesao(ListView):
 
         if ente_federado:
             municipio = Usuario.objects.filter(
-                municipio__cidade__nome_municipio=ente_federado)
+                municipio__cidade__nome_municipio__icontains=ente_federado)
             estado = Usuario.objects.filter(
-                municipio__estado__sigla=ente_federado)
+                municipio__estado__sigla__icontains=ente_federado)
 
             return municipio if municipio else estado
 
@@ -48,6 +48,7 @@ def diligencia_documental(request, etapa, st, id):
     if request.method == 'POST':
         form = DiligenciaForm(request.POST, usuario=usuario)
         if form.is_valid():
+            getattr(usuario.plano_trabalho, etapa).save()
             form.save()
         return redirect('gestao:acompanhar_adesao')
     return render(

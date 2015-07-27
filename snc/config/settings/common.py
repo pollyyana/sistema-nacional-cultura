@@ -104,7 +104,7 @@ DATABASES = {
     # Raises ImproperlyConfigured exception if DATABASE_URL not in os.environ
     # FIXME: Recomendo fortemente usar o postgres no ambiente de desenvolvimento, mas
     # coloquei o sqllite aqui pra não quebrar o ambiente de dev da galera.
-    'default': env.db("DATABASE_URL", default="postgres://postgres:1234@localhost/snc"),
+    'default': env.db("DATABASE_URL", default="postgres://postgres:1234@localhost/dbsnc"),
     # 'default': env.db("DATABASE_URL", default="sqlite:////" + str(ROOT_DIR) + "snc.sqlite"),
 
 }

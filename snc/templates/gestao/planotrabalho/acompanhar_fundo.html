@@ -22,9 +22,9 @@
             <thead>
               <tr>
                 <th>Município/Estado</th>
-                <th>Prefeito/Governador</th>
-                <th>CPF</th>
                 <th>CNPJ</th>
+                <th>CNPJ do Fundo</th>
+                <th>Data</th>
                 <th>Anexo</th>
                 <th></th>
                 <th></th>
@@ -41,6 +41,8 @@
                   <td>{{ usuario.municipio.nome_prefeito }}</td>
                   <td>{{ usuario.municipio.cpf_prefeito }}</td>
                   <td>{{ usuario.municipio.cnpj_prefeitura }}</td>
+                  <td>{{ usuario.plano_trabalho.fundo_cultura.cnpj_fundo_cultura }}</td>
+                  <td>{{ usuario.plano_trabalho.fundo_cultura.data_final_instituicao_fundo_cultura }}</td>
                   <td>
                     <a href="{{ usuario.plano_trabalho.fundo_cultura.lei_fundo_cultura }}"></a>
                   </td>

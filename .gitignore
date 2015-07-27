@@ -15,3 +15,5 @@
 # ignore visual studio
 *.pyproj
 *.suo
+*.user
+snc.sln
