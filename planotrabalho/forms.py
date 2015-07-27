@@ -159,7 +159,7 @@ class FundoCulturaForm(ModelForm):
 
     def save(self, commit=True, *args, **kwargs):
         fundo = super(FundoCulturaForm, self).save(commit=False)
-        if 'lei_fundo_cultura' in self.changed_data:
+        if 'lei_fundo_cultura' in self.changed_data and self.is_valid:
             fundo.situacao_lei_plano = 1
 
         if commit:
