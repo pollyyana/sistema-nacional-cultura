@@ -162,7 +162,7 @@
             </div>
           </div>
 
-          <section class="main">
+	 <section class="main">
             <form class="form-2" action="{% url 'adesao:login' %}" method="post">{% csrf_token %}
               {% if form.errors %}
                 <p>Senha ou CPF incorretos.</p>
