@@ -181,7 +181,7 @@
               </p>
               <p class="clearfix">
                 <a href="{% url 'adesao:usuario' %}" class="log-twitter">Novo Usuário</a>
-                <input type="submit" name="submit" value="Acessar" />
+                <input id="submit" type="submit" name="submit" value="Acessar" />
               </p>
             </form>
           </section>
@@ -247,9 +247,8 @@
           'persistent': false,
         });
 
-        $(".button").click(function(){
-          $(".cpf").formatter().resetPattern('{{99999999999}}').then(
-            $("#login-form").submit());
+        $(".form-2").submit(function(){
+          $(".cpf").formatter().resetPattern('{{99999999999}}')
         });
       });
     </script>
