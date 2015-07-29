@@ -1,0 +1,122 @@
+{% extends "gestao/base_gestao.html" %} {% load gestao_tags %} {% block content %}
+<div class="panel panel-info">
+  <div class="panel-heading">
+    Dados do Ente Federado
+  </div>
+  <div class="panel-body">
+    <p><strong>Município:</strong> {{ object.municipio.cidade }}-{{ object.municipio.estado }}</p>
+    <p><strong>CNPJ:</strong> {{ object.municipio.cnpj_prefeitura }}</p>
+    <p><strong>Prefeito:</strong> {{ object.municipio.nome_prefeito }}</p>
+    <p><strong>CPF:</strong> {{ object.municipio.cpf_prefeito }}</p>
+    <p><strong>RG:</strong> {{ object.municipio.rg_prefeito }}</p>
+    <p><strong>E-mail:</strong> {{ object.municipio.email_institucional_prefeito }}</p>
+    <p><strong>Telefone:</strong> {{ object.municipio.telefone_um }}</p>
+    <p><strong>Endereço:</strong> {{ object.municipio.endereco }}</p>
+    <p><strong>Complemento:</strong> {{ object.municipio.complemento }}</p>
+    <p><strong>Bairro:</strong> {{ object.municipio.bairro }}</p>
+    <p></p>
+  </div>
+</div>
+
+<div class="panel panel-info">
+  <div class="panel-heading">
+    Dados do Interlocutor
+  </div>
+  <div class="panel-body">
+    <p><strong>Nome:</strong> {{ object.secretario.nome_secretario }}</p>
+    <p><strong>CPF:</strong> {{ object.secretario.cpf_secretario }}</p>
+    <p><strong>RG:</strong> {{ object.secretario.rg_secretario }}</p>
+    <p><strong>Cargo:</strong> {{ object.secretario.cargo_secretario }}</p>
+    <p><strong>Instituição:</strong> {{ object.secretario.instituicao_secretario }}</p>
+    <p><strong>E-mail:</strong> {{ object.secretario.email_institucional_secretario }}</p>
+    <p><strong>Telefone:</strong> {{ object.secretario.telefone_um }}</p>
+  </div>
+</div>
+
+<div class="panel panel-info">
+  <div class="panel-heading">
+    Dados do Responsável Indicado
+  </div>
+  <div class="panel-body">
+    <p><strong>Nome:</strong> {{ object.responsavel.nome_responsavel }}</p>
+    <p><strong>CPF:</strong> {{ object.responsavel.cpf_responsavel }}</p>
+    <p><strong>RG:</strong> {{ object.responsavel.rg_responsavel }}</p>
+    <p><strong>Cargo:</strong> {{ object.responsavel.cargo_responsavel }}</p>
+    <p><strong>Instituição:</strong> {{ object.responsavel.instituicao_responsavel }}</p>
+    <p><strong>E-mail:</strong> {{ object.responsavel.email_institucional_responsavel }}</p>
+    <p><strong>Telefone:</strong> {{ object.responsavel.telefone_um }}</p>
+  </div>
+</div>
+
+<div class="panel panel-info">
+  <div class="panel-heading">
+    Dados do Cadastrador
+  </div>
+  <div class="panel-body">
+    <p><strong>CPF:</strong> {{ object.user.username }}</p>
+    <p><strong>Nome:</strong> {{ object.nome_usuario }}</p>
+    <p><strong>E-mail:</strong> {{ object.user.email }}</p>
+    <p><strong>Data de cadastro:</strong> {{ object.data_cadastro }}</p>
+  </div>
+</div>
+
+<div class="panel panel-info">
+  <div class="panel-heading">
+    Dados do Plano de Trabalho
+  </div>
+  <div class="panel-body">
+    <div class="list-group">
+      <a href="#" class="list-group-item disabled">
+        Criação do Sistema
+      </a>
+      <a href="{{ object.plano_trabalho.criacao_sistema.minuta_projeto_lei.url }}" class="list-group-item">
+        Minuta
+      </a>
+      <a href="{{ object.plano_trabalho.criacao_sistema.lei_sistema_cultura }}" class="list-group-item">
+        Lei
+      </a>
+    </div>
+    <div class="list-group">
+      <a href="#" class="list-group-item disabled">
+        Órgão Gestor
+      </a>
+      <a href="{{ object.plano_trabalho.orgao_gestor.relatorio_atividade_secretaria.url }}" class="list-group-item">
+        Relatório
+      </a>
+    </div>
+    <div class="list-group">
+      <a href="#" class="list-group-item disabled">
+        Conselho Cultural
+      </a>
+      <a href="{{ object.plano_trabalho.conselho_cultural.ata_regimento_aprovado.url }}" class="list-group-item">
+        Ata
+      </a>
+    </div>
+    <div class="list-group">
+      <a href="#" class="list-group-item disabled">
+        Fundo de Cultura - CNPJ: {{ object.plano_trabalho.fundo_cultura.cnpj_fundo_cultura }}
+      </a>
+      <a href="{{ object.plano_trabalho.fundo_cultura.lei_fundo_cultura.url }}" class="list-group-item">
+        Lei
+      </a>
+    </div>
+    <div class="list-group">
+      <a href="#" class="list-group-item disabled">
+        Plano de Cultura
+      </a>
+      <a href="{{ object.plano_trabalho.plano_cultura.relatorio_diretrizes_aprovadas.url }}" class="list-group-item">
+        Relatório
+      </a>
+      <a href="{{ object.plano_trabalho.plano_cultura.minuta_preparada.url }}" class="list-group-item">
+        Minuta
+      </a>
+      <a href="{{ object.plano_trabalho.plano_cultura.ata_reuniao_aprovacao_plano.url }}" class="list-group-item">
+        Ata
+      </a>
+      <a href="{{ object.plano_trabalho.plano_cultura.lei_plano_cultura.url }}" class="list-group-item">
+        Lei
+      </a>
+    </div>
+  </div>
+</div>
+{% endblock content %}
