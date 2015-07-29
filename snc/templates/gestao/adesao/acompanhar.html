@@ -21,6 +21,7 @@
           <table class="table table-striped table-bordered table-hover dt-responsive" id="dataTables-example">
             <thead>
               <tr>
+                <th>Detalhar</th>
                 <th>Município/Estado</th>
                 <th>Prefeito/Governador</th>
                 <th>RG</th>
@@ -33,6 +34,7 @@
             <tbody>
               {% for usuario in object_list %}
                 <tr class="odd gradeX">
+                  <td><center><a href="{% url 'gestao:detalhar' usuario.id %}"><i class="fa fa-file"></i></a></center></td>
                 {% if usuario.municipio.cidade %}
                   <td>{{ usuario.municipio.cidade }}/{{ usuario.municipio.estado }}</td>
                 {% else %}

@@ -70,18 +70,20 @@
                     <ul class="nav" id="side-menu">
                         <li class="sidebar-search">
                             <div class="input-group custom-search-form">
-                                <input type="text" class="form-control" placeholder="Search...">
+                              <form action="{% url 'gestao:acompanhar_adesao' %}" method="get">
+                                <input type="text" name="municipio" class="form-control" placeholder="Buscar...">
                                 <span class="input-group-btn">
-                                    <button class="btn btn-default" type="button">
+                                    <button class="btn btn-default" type="submit">
                                         <i class="fa fa-search"></i>
                                     </button>
                                 </span>
+                              </form>
                             </div>
                             <!-- /input-group -->
                         </li>
-                        <li>
+                        <!--<li>
                           <a href="#"><i class="fa fa-dashboard fa-fw"></i>  Dashboard</a>
-                        </li>
+                        </li>-->
                         <li>
                             <a href="#"><i class="fa fa-table fa-fw"></i>  Acompanhar Adesão<span class="fa arrow"></span></a>
 
