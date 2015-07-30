@@ -103,7 +103,7 @@
     </div>
     <div class="list-group">
       <a href="#" class="list-group-item disabled">
-        Fundo de Cultura - CNPJ: {{ object.plano_trabalho.fundo_cultura.cnpj_fundo_cultura }}
+        Fundo de Cultura - CNPJ: {{ object.plano_trabalho.fundo_cultura.cnpj_fundo_cultura|default_if_none:"" }}
       </a>
       {% if object.plano_trabalho.fundo_cultura.lei_fundo_cultura %}
       <a href="{{ object.plano_trabalho.fundo_cultura.lei_fundo_cultura.url }}" class="list-group-item">
