@@ -70,10 +70,10 @@
       <a href="#" class="list-group-item disabled">
         Criação do Sistema
       </a>
-      <a href="{{ object.plano_trabalho.criacao_sistema.minuta_projeto_lei.url|default_if_none:"#" }}" class="list-group-item">
+      <a href="{% if object.plano_trabalho.criacao_sistema.minuta_projeto_lei %}{{ object.plano_trabalho.criacao_sistema.minuta_projeto_lei.url }}{% endif %}" class="list-group-item">
         Minuta
       </a>
-      <a href="{{ object.plano_trabalho.criacao_sistema.lei_sistema_cultura|default_if_none:"#" }}" class="list-group-item">
+      <a href="{% if object.plano_trabalho.criacao_sistema.lei_sistema_cultura %}{{ object.plano_trabalho.criacao_sistema.lei_sistema_cultura.url }}{% endif %}" class="list-group-item">
         Lei
       </a>
     </div>
@@ -81,7 +81,7 @@
       <a href="#" class="list-group-item disabled">
         Órgão Gestor
       </a>
-      <a href="{{ object.plano_trabalho.orgao_gestor.relatorio_atividade_secretaria.url|default_if_none:"#" }}" class="list-group-item">
+      <a href="{% if object.plano_trabalho.orgao_gestor.relatorio_atividade_secretaria %}{{ object.plano_trabalho.orgao_gestor.relatorio_atividade_secretaria.url }}{% endif %}" class="list-group-item">
         Relatório
       </a>
     </div>
@@ -89,15 +89,15 @@
       <a href="#" class="list-group-item disabled">
         Conselho Cultural
       </a>
-      <a href="{{ object.plano_trabalho.conselho_cultural.ata_regimento_aprovado.url|default_if_none:"#" }}" class="list-group-item">
+      <a href="{% if object.plano_trabalho.conselho_cultural.ata_regimento_aprovado %}{{ object.plano_trabalho.conselho_cultural.ata_regimento_aprovado.url }}{% endif %}" class="list-group-item">
         Ata
       </a>
     </div>
     <div class="list-group">
       <a href="#" class="list-group-item disabled">
-        Fundo de Cultura - CNPJ: {{ object.plano_trabalho.fundo_cultura.cnpj_fundo_cultura|default_if_none:"" }}
+        Fundo de Cultura - CNPJ: {{ object.plano_trabalho.fundo_cultura.cnpj_fundo_cultura }}
       </a>
-      <a href="{{ object.plano_trabalho.fundo_cultura.lei_fundo_cultura.url|default_if_none:"#" }}" class="list-group-item">
+      <a href="{% if object.plano_trabalho.fundo_cultura.lei_fundo_cultura %}{{ object.plano_trabalho.fundo_cultura.lei_fundo_cultura.url }}{% endif %}" class="list-group-item">
         Lei
       </a>
     </div>
@@ -105,16 +105,16 @@
       <a href="#" class="list-group-item disabled">
         Plano de Cultura
       </a>
-      <a href="{{ object.plano_trabalho.plano_cultura.relatorio_diretrizes_aprovadas.url|default_if_none:"#" }}" class="list-group-item">
+      <a href="{% if object.plano_trabalho.plano_cultura.relatorio_diretrizes_aprovadas %}{{ object.plano_trabalho.plano_cultura.relatorio_diretrizes_aprovadas.url }}{% endif %}" class="list-group-item">
         Relatório
       </a>
-      <a href="{{ object.plano_trabalho.plano_cultura.minuta_preparada.url|default_if_none:"#" }}" class="list-group-item">
+      <a href="{% if object.plano_trabalho.plano_cultura.minuta_preparada %}{{ object.plano_trabalho.plano_cultura.minuta_preparada.url }}{% endif %}" class="list-group-item">
         Minuta
       </a>
-      <a href="{{ object.plano_trabalho.plano_cultura.ata_reuniao_aprovacao_plano.url|default_if_none:"#" }}" class="list-group-item">
+      <a href="{% if object.plano_trabalho.plano_cultura.ata_reuniao_aprovacao_plano %}{{ object.plano_trabalho.plano_cultura.ata_reuniao_aprovacao_plano.url }}{% endif %}" class="list-group-item">
         Ata
       </a>
-      <a href="{{ object.plano_trabalho.plano_cultura.lei_plano_cultura.url|default_if_none:"#" }}" class="list-group-item">
+      <a href="{% if object.plano_trabalho.plano_cultura.lei_plano_cultura %}{{ object.plano_trabalho.plano_cultura.lei_plano_cultura.url }}{% endif %}" class="list-group-item">
         Lei
       </a>
     </div>
