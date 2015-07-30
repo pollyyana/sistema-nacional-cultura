@@ -70,53 +70,71 @@
       <a href="#" class="list-group-item disabled">
         Criação do Sistema
       </a>
-      <a href="{% if object.plano_trabalho.criacao_sistema.minuta_projeto_lei %}{{ object.plano_trabalho.criacao_sistema.minuta_projeto_lei.url }}{% endif %}" class="list-group-item">
+      {% if object.plano_trabalho.criacao_sistema.minuta_projeto_lei %}
+      <a href="{{ object.plano_trabalho.criacao_sistema.minuta_projeto_lei.url }}" class="list-group-item">
         Minuta
       </a>
-      <a href="{% if object.plano_trabalho.criacao_sistema.lei_sistema_cultura %}{{ object.plano_trabalho.criacao_sistema.lei_sistema_cultura.url }}{% endif %}" class="list-group-item">
+      {% endif %}
+      {% if object.plano_trabalho.criacao_sistema.lei_sistema_cultura %}
+      <a href="{{ object.plano_trabalho.criacao_sistema.lei_sistema_cultura.url }}" class="list-group-item">
         Lei
       </a>
+      {% endif %}
     </div>
     <div class="list-group">
       <a href="#" class="list-group-item disabled">
         Órgão Gestor
       </a>
-      <a href="{% if object.plano_trabalho.orgao_gestor.relatorio_atividade_secretaria %}{{ object.plano_trabalho.orgao_gestor.relatorio_atividade_secretaria.url }}{% endif %}" class="list-group-item">
+      {% if object.plano_trabalho.orgao_gestor.relatorio_atividade_secretaria %}
+      <a href="{{ object.plano_trabalho.orgao_gestor.relatorio_atividade_secretaria.url }}" class="list-group-item">
         Relatório
       </a>
+      {% endif %}
     </div>
     <div class="list-group">
       <a href="#" class="list-group-item disabled">
         Conselho Cultural
       </a>
-      <a href="{% if object.plano_trabalho.conselho_cultural.ata_regimento_aprovado %}{{ object.plano_trabalho.conselho_cultural.ata_regimento_aprovado.url }}{% endif %}" class="list-group-item">
+      {% if object.plano_trabalho.conselho_cultural.ata_regimento_aprovado %}
+      <a href="{{ object.plano_trabalho.conselho_cultural.ata_regimento_aprovado.url }}" class="list-group-item">
         Ata
       </a>
+      {% endif %}
     </div>
     <div class="list-group">
       <a href="#" class="list-group-item disabled">
         Fundo de Cultura - CNPJ: {{ object.plano_trabalho.fundo_cultura.cnpj_fundo_cultura }}
       </a>
-      <a href="{% if object.plano_trabalho.fundo_cultura.lei_fundo_cultura %}{{ object.plano_trabalho.fundo_cultura.lei_fundo_cultura.url }}{% endif %}" class="list-group-item">
+      {% if object.plano_trabalho.fundo_cultura.lei_fundo_cultura %}
+      <a href="{{ object.plano_trabalho.fundo_cultura.lei_fundo_cultura.url }}" class="list-group-item">
         Lei
       </a>
+      {% endif %}
     </div>
     <div class="list-group">
       <a href="#" class="list-group-item disabled">
         Plano de Cultura
       </a>
-      <a href="{% if object.plano_trabalho.plano_cultura.relatorio_diretrizes_aprovadas %}{{ object.plano_trabalho.plano_cultura.relatorio_diretrizes_aprovadas.url }}{% endif %}" class="list-group-item">
+      {% if object.plano_trabalho.plano_cultura.relatorio_diretrizes_aprovadas %}
+      <a href="{{ object.plano_trabalho.plano_cultura.relatorio_diretrizes_aprovadas.url }}" class="list-group-item">
         Relatório
       </a>
-      <a href="{% if object.plano_trabalho.plano_cultura.minuta_preparada %}{{ object.plano_trabalho.plano_cultura.minuta_preparada.url }}{% endif %}" class="list-group-item">
+      {% endif %}
+      {% if object.plano_trabalho.plano_cultura.minuta_preparada %}
+      <a href="{{ object.plano_trabalho.plano_cultura.minuta_preparada.url }}" class="list-group-item">
         Minuta
       </a>
-      <a href="{% if object.plano_trabalho.plano_cultura.ata_reuniao_aprovacao_plano %}{{ object.plano_trabalho.plano_cultura.ata_reuniao_aprovacao_plano.url }}{% endif %}" class="list-group-item">
+      {% endif %}
+      {% if object.plano_trabalho.plano_cultura.ata_reuniao_aprovacao_plano %}
+      <a href="{{ object.plano_trabalho.plano_cultura.ata_reuniao_aprovacao_plano.url }}" class="list-group-item">
         Ata
       </a>
-      <a href="{% if object.plano_trabalho.plano_cultura.lei_plano_cultura %}{{ object.plano_trabalho.plano_cultura.lei_plano_cultura.url }}{% endif %}" class="list-group-item">
+      {% endif %}
+      {% if object.plano_trabalho.plano_cultura.lei_plano_cultura %}
+      <a href="{{ object.plano_trabalho.plano_cultura.lei_plano_cultura.url }}" class="list-group-item">
         Lei
       </a>
+      {% endif %}
     </div>
   </div>
 </div>
