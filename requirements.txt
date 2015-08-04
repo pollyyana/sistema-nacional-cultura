@@ -13,3 +13,4 @@ pep8==1.5.7
 psycopg2==2.6
 pyflakes==0.8.1
 six==1.9.0
+django-environ==0.3.0
