@@ -18,6 +18,8 @@ class CriarSistemaForm(ModelForm):
         super(CriarSistemaForm, self).__init__(*args, **kwargs)
 
     def clean_data_final_elaboracao_projeto_lei(self):
+        if not self.usuario.data_publicacao_acordo:
+            return self.cleaned_data['data_final_elaboracao_projeto_lei']
         if not self.cleaned_data['data_final_elaboracao_projeto_lei']:
             return self.cleaned_data['data_final_elaboracao_projeto_lei']
 
@@ -30,6 +32,8 @@ class CriarSistemaForm(ModelForm):
         return self.cleaned_data['data_final_elaboracao_projeto_lei']
 
     def clean_data_final_sancao_lei(self):
+        if not self.usuario.data_publicacao_acordo:
+            return self.cleaned_data['data_final_sancao_lei']
         if not self.cleaned_data['data_final_sancao_lei']:
             return self.cleaned_data['data_final_sancao_lei']
 
@@ -67,6 +71,8 @@ class OrgaoGestorForm(ModelForm):
         super(OrgaoGestorForm, self).__init__(*args, **kwargs)
 
     def clean_data_final_estruturacao_secretaria(self):
+        if not self.usuario.data_publicacao_acordo:
+            return self.cleaned_data['data_final_estruturacao_secretaria']
         if not self.cleaned_data['data_final_estruturacao_secretaria']:
             return self.cleaned_data['data_final_estruturacao_secretaria']
 
@@ -100,6 +106,8 @@ class ConselhoCulturalForm(ModelForm):
         super(ConselhoCulturalForm, self).__init__(*args, **kwargs)
 
     def clean_data_final_instalacao_conselho(self):
+        if not self.usuario.data_publicacao_acordo:
+            return self.cleaned_data['data_final_instalacao_conselho']
         if not self.cleaned_data['data_final_instalacao_conselho']:
             return self.cleaned_data['data_final_instalacao_conselho']
 
@@ -133,6 +141,8 @@ class FundoCulturaForm(ModelForm):
         super(FundoCulturaForm, self).__init__(*args, **kwargs)
 
     def clean_data_final_instituicao_fundo_cultura(self):
+        if not self.usuario.data_publicacao_acordo:
+            return self.cleaned_data['data_final_instituicao_fundo_cultura']
         if not self.cleaned_data['data_final_instituicao_fundo_cultura']:
             return self.cleaned_data['data_final_instituicao_fundo_cultura']
 
@@ -184,6 +194,8 @@ class PlanoCulturaForm(ModelForm):
         super(PlanoCulturaForm, self).__init__(*args, **kwargs)
 
     def clean_data_final_estabelecimento_instancias(self):
+        if not self.usuario.data_publicacao_acordo:
+            return self.cleaned_data['data_final_estabelecimento_instancias']
         if not self.cleaned_data['data_final_estabelecimento_instancias']:
             return self.cleaned_data['data_final_estabelecimento_instancias']
 
@@ -196,6 +208,8 @@ class PlanoCulturaForm(ModelForm):
         return self.cleaned_data['data_final_estabelecimento_instancias']
 
     def clean_data_final_elaboracao_plano_cultura(self):
+        if not self.usuario.data_publicacao_acordo:
+            return self.cleaned_data['data_final_elaboracao_plano_cultura']
         if not self.cleaned_data['data_final_elaboracao_plano_cultura']:
             return self.cleaned_data['data_final_elaboracao_plano_cultura']
 
@@ -208,6 +222,8 @@ class PlanoCulturaForm(ModelForm):
         return self.cleaned_data['data_final_elaboracao_plano_cultura']
 
     def clean_data_final_aprovacao_plano_cultura(self):
+        if not self.usuario.data_publicacao_acordo:
+            return self.cleaned_data['data_final_aprovacao_plano_cultura']
         if not self.cleaned_data['data_final_aprovacao_plano_cultura']:
             return self.cleaned_data['data_final_aprovacao_plano_cultura']
 
@@ -220,6 +236,8 @@ class PlanoCulturaForm(ModelForm):
         return self.cleaned_data['data_final_aprovacao_plano_cultura']
 
     def clean_data_final_sancao_lei_plano_cultura(self):
+        if not self.usuario.data_publicacao_acordo:
+            return self.cleaned_data['data_final_sancao_lei_plano_cultura']
         if not self.cleaned_data['data_final_sancao_lei_plano_cultura']:
             return self.cleaned_data['data_final_sancao_lei_plano_cultura']
 
