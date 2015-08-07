@@ -1,6 +1,6 @@
 from django.shortcuts import redirect, render
 from django.http import Http404
-from django.views.generic import ListView
+from django.views.generic import ListView, DetailView
 
 from adesao.models import Usuario
 
@@ -148,3 +148,8 @@ class AcompanharPlano(ListView):
         else:
             raise Http404()
         return usuarios
+
+
+class DetalharUsuario(DetailView):
+    model = Usuario
+    template_name = 'gestao/detalhe_municipio.html'

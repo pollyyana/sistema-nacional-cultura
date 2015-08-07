@@ -43,4 +43,9 @@ urlpatterns = [
         staff_member_required(
             views.concluir_etapa,
             login_url='adesao:login'), name='concluir_etapa'),
+
+    # Detalhar usuário
+    url(r'^detalhar/municipio/(?P<pk>[0-9]+)$',
+        views.DetalharUsuario.as_view(),
+        name='detalhar'),
 ]
