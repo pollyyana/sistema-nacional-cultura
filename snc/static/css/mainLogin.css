@@ -91,7 +91,8 @@ body {
 	-webkit-font-smoothing: subpixel-antialiased;
 	-webkit-text-size-adjust: 100%;	
 	cursor:default;
-    background-image:url(../img/fundo2.fw.png)
+    background-image:url(../img/fundo2.fw.png);
+	background-repeat: no-repeat;
 }
 
 h1, h2, h3, h4, h5, h6 {
