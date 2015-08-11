@@ -3,7 +3,7 @@
 
 <head>
   <meta content="width=device-width, initial-scale=1.0" name="viewport">
-  <title>Sistema Nacional de Cultura</title> {% load staticfiles %}
+  <title>{% block title %}Sistema Nacional de Cultura{% endblock title %}</title> {% load staticfiles %}
   <link rel="shortcut icon" href="{% static 'img/favicon.ico' %}" type="image/x-icon" />
   <link rel="apple-touch-icon" href="{% static 'img/touch_icon.png' %}">
 
