@@ -25,6 +25,10 @@ def index(request):
     return render(request, 'index.html')
 
 
+def fale_conosco(request):
+    return render(request, 'fale_conosco.html')
+
+
 @login_required
 def home(request):
     ente_federado = request.user.usuario.municipio
