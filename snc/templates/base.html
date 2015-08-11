@@ -85,7 +85,7 @@
         </ul>
 
         <div id="logo">
-          <a href="#" title="#">
+          <a href="{% url 'adesao:index' %}" title="#">
             <span id="portal-title">Sistema Nacional de Cultura</span>
             <span id="portal-description" style="color:#FC0">Ministério da Cultura</span>
           </a>
@@ -155,6 +155,7 @@
           </div>
 
           <!-- Column 1 -->
+          {% if request.user.is_authenticated %}
           <div id="navigation">
             <a name="anavigation" id="anavigation"></a>
             <span class="menuTrigger">Menu</span>
@@ -247,6 +248,7 @@
               </div>
             </div>
           </div>
+          {% endif %}
 
           <!-- Conteudo -->
           <div id="portal-column-content" class="cell width-1:2 position-1:4">
