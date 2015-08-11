@@ -170,20 +170,21 @@ def importar_secretario(request):
     responsavel = Responsavel()
     secretario = request.user.usuario.secretario
     # TODO: Refatorar essa importação depois que a migração for realizada
-    responsavel.cpf_responsavel = secretario.cpf_secretario
-    responsavel.rg_responsavel = secretario.rg_secretario
-    responsavel.orgao_expeditor_rg = secretario.orgao_expeditor_rg
-    responsavel.estado_expeditor = secretario.estado_expeditor
-    responsavel.nome_responsavel = secretario.nome_secretario
-    responsavel.cargo_responsavel = secretario.cargo_secretario
-    responsavel.instituicao_responsavel = secretario.instituicao_secretario
-    responsavel.telefone_um = secretario.telefone_um
-    responsavel.telefone_dois = secretario.telefone_dois
-    responsavel.telefone_tres = secretario.telefone_tres
-    responsavel.email_institucional_responsavel = secretario.email_institucional_secretario
-    responsavel.save()
-    request.user.usuario.responsavel = responsavel
-    request.user.usuario.save()
+    if secretario:
+        responsavel.cpf_responsavel = secretario.cpf_secretario
+        responsavel.rg_responsavel = secretario.rg_secretario
+        responsavel.orgao_expeditor_rg = secretario.orgao_expeditor_rg
+        responsavel.estado_expeditor = secretario.estado_expeditor
+        responsavel.nome_responsavel = secretario.nome_secretario
+        responsavel.cargo_responsavel = secretario.cargo_secretario
+        responsavel.instituicao_responsavel = secretario.instituicao_secretario
+        responsavel.telefone_um = secretario.telefone_um
+        responsavel.telefone_dois = secretario.telefone_dois
+        responsavel.telefone_tres = secretario.telefone_tres
+        responsavel.email_institucional_responsavel = secretario.email_institucional_secretario
+        responsavel.save()
+        request.user.usuario.responsavel = responsavel
+        request.user.usuario.save()
     return redirect('adesao:responsavel')
 
 
