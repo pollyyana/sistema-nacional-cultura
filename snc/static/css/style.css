@@ -645,3 +645,30 @@ element.style {
 user agent stylesheetdiv {
   display: block;
 }
+
+/* botao parecer */
+
+/* CORES */
+ 
+.but-primary {
+color: #fff;
+background-color: #0068B4;
+}
+ 
+.but-success {
+color: #fff;
+background-color: #009835;
+}
+ 
+.but-error {
+color: #fff;
+background-color: #CC0000;
+}
+ 
+.but-warning {
+color: #fff;
+background-color: #F28E00;
+}
+
+
+
