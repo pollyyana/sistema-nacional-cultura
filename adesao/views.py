@@ -9,6 +9,7 @@ from django.core.mail import send_mail
 from django.contrib.auth.decorators import login_required
 from django.utils import timezone
 from django.template.loader import render_to_string
+from django.core.exceptions import ValidationError
 
 from adesao.models import Municipio, Responsavel, Secretario, Usuario, Historico
 from adesao.forms import CadastrarUsuarioForm, CadastrarMunicipioForm
@@ -167,9 +168,9 @@ class CadastrarResponsavel(CreateView):
 
 @login_required
 def importar_secretario(request):
-    responsavel = Responsavel()
     secretario = request.user.usuario.secretario
     # TODO: Refatorar essa importação depois que a migração for realizada
+    responsavel = Responsavel()
     if secretario:
         responsavel.cpf_responsavel = secretario.cpf_secretario
         responsavel.rg_responsavel = secretario.rg_secretario
@@ -182,7 +183,11 @@ def importar_secretario(request):
         responsavel.telefone_dois = secretario.telefone_dois
         responsavel.telefone_tres = secretario.telefone_tres
         responsavel.email_institucional_responsavel = secretario.email_institucional_secretario
-        responsavel.save()
+        try:
+            responsavel.full_clean()
+            responsavel.save()
+        except ValidationError:
+            return redirect('adesao:responsavel')
         request.user.usuario.responsavel = responsavel
         request.user.usuario.save()
     return redirect('adesao:responsavel')
