@@ -195,8 +195,7 @@
                           <span>Responsável</span>
                         </a>
                       </li>
-                      {% endif %}
-                      {% if request.user.usuario.estado_processo in "13" %}
+                      {% endif %} {% if request.user.usuario.estado_processo in "13" %}
                       <li class="navTreeItem visualNoMarker navTreeFolderish section-assunto-d">
                         <a href="{% url 'adesao:minuta' %}" title="" class="state-published navTreeFolderish contenttype-folder" target="_blank">
                           <span>Acordo de Cooperação</span>
@@ -207,8 +206,7 @@
                           <span>Termo de Solicitação</span>
                         </a>
                       </li>
-                      {% endif %}
-                      {% if request.user.usuario.estado_processo == '6' %}
+                      {% endif %} {% if request.user.usuario.estado_processo == '6' %}
                       <li class="navTreeItem visualNoMarker navTreeFolderish section-assunto-d">
                         <a href="{% url 'planotrabalho:planotrabalho' request.user.usuario.plano_trabalho.id %}" title="" class="state-published navTreeFolderish contenttype-folder but-warning">
                           <span>Plano de Trabalho</span>
@@ -260,107 +258,111 @@
             </div>
           </div>
 
-            <!-- Column 2 -->
-            {% if request.user.usuario.estado_processo == '1' %}
-            <div id="portal-column-two" class="cell width-1:4 position-3:4">
+          <!-- Column 2 -->
+          {% if request.user.usuario.estado_processo == '1' %}
+          <div id="portal-column-two" class="cell width-1:4 position-3:4">
 
-                <div id="" class="portletWrapper kssattr-portlethash">
-                    <dl class="portlet portletNews">
-                        <dt class="portletHeader">
-                            <span class="portletTopLeft">
-                            <a href="#" class="tile">Aviso Importante</a> </span>
-                            <span class="portletTopRight"></span>
-                        </dt>
-
-
+            <div id="" class="portletWrapper kssattr-portlethash">
+              <dl class="portlet portletNews">
+                <dt class="portletHeader">
+                  <span class="portletTopLeft">
+                    <a href="#" class="tile">Aviso Importante</a> </span>
+                  <span class="portletTopRight"></span>
+                </dt>
 
 
 
-                        <dd class="portletFooter">
-                            <span class="portletBottomLeft"></span>
-                            <a href="#">Seu prazo para o envio é de até 60 dias corridos.</a>
-                            <span class="portletBottomRight"></span>
-                        </dd>
-                    </dl>
-                </div>
 
+
+                <dd class="portletFooter">
+                  <span class="portletBottomLeft"></span>
+                  <a href="#">Seu prazo para o envio é de até 60 dias corridos.</a>
+                  <span class="portletBottomRight"></span>
+                </dd>
+              </dl>
             </div>
-            {% endif %}
+
+          </div>
+          {% endif %}
 
         </div>
 
         <!-- /Demo Plone Content -->
 
-        </div>
-
-        <div class="clear"></div>
-        <div id="voltar-topo">
-          <a href="#wrapper">Voltar para o topo</a>
-        </div>
-
       </div>
 
-      <!-- Footer -->
-      <div id="footer" role="contentinfo">
-        <a name="afooter" id="afooter"></a>
-        <div class="clear"></div>
-        <div id="footer-brasil">
-        </div>
-      </div>
-      <div id="extra-footer">
-        <p>
-          Ministério da Cultura -
-          <a href="#">MinC - 2015</a>
-        </p>
+      <div class="clear"></div>
+      <div id="voltar-topo">
+        <a href="#wrapper">Voltar para o topo</a>
       </div>
 
-      <!-- /Footer-->
-      <!-- Script da Barra do Governo -->
-      <script src="{% static 'js/jquery.formatter.min.js' %}"></script>
-      <script src="{% static 'js/jquery-ui.min.js' %}"></script>
-      <script src="{% static 'js/datepicker-pt-BR.js' %}"></script>
-      <script type="text/javascript">
-            $(document).ready(function() {
-              $(".add").click(function() {
-                $(".telefone2").fadeIn();
-              });
+    </div>
 
-              $(".add2").click(function() {
-                $(".telefone3").fadeIn();
-              });
+    <!-- Footer -->
+    <div id="footer" role="contentinfo">
+      <a name="afooter" id="afooter"></a>
+      <div class="clear"></div>
+      <div id="footer-brasil">
+      </div>
+    </div>
+    <div id="extra-footer">
+      <p>
+        Ministério da Cultura -
+        <a href="#">MinC - 2015</a>
+      </p>
+    </div>
 
-              $(".date").datepicker({
-                showButtonPanel: true,
-                regional: "pt-BR"
-              });
+    <!-- /Footer-->
+    <!-- Script da Barra do Governo -->
+    <script src="{% static 'js/jquery.formatter.min.js' %}"></script>
+    <script src="{% static 'js/jquery-ui.min.js' %}"></script>
+    <script src="{% static 'js/datepicker-pt-BR.js' %}"></script>
+    <script type="text/javascript">
+      $(document).ready(function() {
+        $("body").prepend('<div id="overlay" style="height: 100%; width: 100%; opacity: 0.3; z-index: 100; position: fixed; background: url({% static "img/spinner.gif"%}) no-repeat center center; background-color: gray; display: none;"></div>');
 
-              $('#id_confirmar_email').bind("cut copy paste",function(e) {
-                e.preventDefault();
-              });
+        $(".add").click(function() {
+          $(".telefone2").fadeIn();
+        });
 
-              {% verbatim %}
-              $(".cnpj").formatter({
-                'pattern': '{{99}}.{{999}}.{{999}}/{{9999}}-{{99}}',
-                'persistent': false,
-              });
-              $(".cpf").formatter({
-                'pattern': '{{999}}.{{999}}.{{999}}-{{99}}',
-                'persistent': false,
-              });
-              $(".cep").formatter({
-                'pattern': '{{99}}.{{999}}-{{999}}',
-                'persistent': false,
-              });
-              $(".telefone").formatter({
-                'pattern': '({{99}}){{99999}}-{{9999}}',
-                'persistent' : false,
-              });
-              {% endverbatim %}
-            });
-      </script>
-      {% block js %}
-      {% endblock js %}
-      <script defer src="http://barra.brasil.gov.br/barra.js" type="text/javascript"></script>
+        $(".add2").click(function() {
+          $(".telefone3").fadeIn();
+        });
+
+        $(".date").datepicker({
+          showButtonPanel: true,
+          regional: "pt-BR"
+        });
+
+        $('#id_confirmar_email').bind("cut copy paste", function(e) {
+          e.preventDefault();
+        });
+
+        {% verbatim %}
+        $(".cnpj").formatter({
+          'pattern': '{{99}}.{{999}}.{{999}}/{{9999}}-{{99}}',
+          'persistent': false,
+        });
+        $(".cpf").formatter({
+          'pattern': '{{999}}.{{999}}.{{999}}-{{99}}',
+          'persistent': false,
+        });
+        $(".cep").formatter({
+          'pattern': '{{99}}.{{999}}-{{999}}',
+          'persistent': false,
+        });
+        $(".telefone").formatter({
+          'pattern': '({{99}}){{99999}}-{{9999}}',
+          'persistent': false,
+        }); {% endverbatim %}
+      });
+      $("form").submit(function() {
+        $('#overlay').show();
+        return true;
+      });
+    </script>
+    {% block js %} {% endblock js %}
+    <script defer src="http://barra.brasil.gov.br/barra.js" type="text/javascript"></script>
 </body>
 
 </html>
