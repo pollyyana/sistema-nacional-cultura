@@ -39,6 +39,34 @@
   Atenciosamente,<br>
   Equipe SNC
 </p>
+{% elif request.user.usuario.estado_processo == '4' %}
+<p>
+  Prezad@ {{ request.user.usuario.nome_usuario }},
+</p>
+<p>
+  O acordo de cooperação foi enviado para assinatura do Secretário de Articulação Institucional, representante do ministério na assinatura do acordo. Em seguida, providenciaremos a publicação no Diário Oficial da União.
+</p>
+<p>
+  Aguarde nosso contato.
+</p>
+<p>
+  Atenciosamente,<br>
+  Equipe SNC
+</p>
+{% elif request.user.usuario.estado_processo == '5' %}
+<p>
+  Prezad@ {{ request.user.usuario.nome_usuario }}
+</p>
+<p>
+  Sua solicitação foi confirmada pela nossa equipe. Estamos providenciando a publicação do seu acordo no Diário Oficial da União.
+</p>
+<p>
+  Aguarde nosso contato.
+</p>
+<p>
+  Atenciosamente,<br>
+  Equipe SNC
+</p>
 {% elif request.user.usuario.estado_processo == '6' %}
   <p>
     Parabéns! Seu Acordo de Cooperação Federativa foi publicado no Diário Oficial da União (DOU).
