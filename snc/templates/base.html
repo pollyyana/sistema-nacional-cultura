@@ -195,7 +195,8 @@
                           <span>Responsável</span>
                         </a>
                       </li>
-                      {% endif %} {% if request.user.usuario.estado_processo in "13" %}
+                      {% endif %}
+                      {% if request.user.usuario.estado_processo in "13" %}
                       <li class="navTreeItem visualNoMarker navTreeFolderish section-assunto-d">
                         <a href="{% url 'adesao:minuta' %}" title="" class="state-published navTreeFolderish contenttype-folder" target="_blank">
                           <span>Acordo de Cooperação</span>
@@ -206,7 +207,8 @@
                           <span>Termo de Solicitação</span>
                         </a>
                       </li>
-                      {% endif %} {% if request.user.usuario.estado_processo == '6' %}
+                      {% endif %}
+                      {% if request.user.usuario.estado_processo == '6' %}
                       <li class="navTreeItem visualNoMarker navTreeFolderish section-assunto-d">
                         <a href="{% url 'planotrabalho:planotrabalho' request.user.usuario.plano_trabalho.id %}" title="" class="state-published navTreeFolderish contenttype-folder but-warning">
                           <span>Plano de Trabalho</span>
@@ -258,59 +260,59 @@
             </div>
           </div>
 
-          <!-- Column 2 -->
-          {% if request.user.usuario.estado_processo == '1' %}
-          <div id="portal-column-two" class="cell width-1:4 position-3:4">
+            <!-- Column 2 -->
+            {% if request.user.usuario.estado_processo == '1' %}
+            <div id="portal-column-two" class="cell width-1:4 position-3:4">
 
-            <div id="" class="portletWrapper kssattr-portlethash">
-              <dl class="portlet portletNews">
-                <dt class="portletHeader">
-                  <span class="portletTopLeft">
-                    <a href="#" class="tile">Aviso Importante</a> </span>
-                  <span class="portletTopRight"></span>
-                </dt>
-
-
+                <div id="" class="portletWrapper kssattr-portlethash">
+                    <dl class="portlet portletNews">
+                        <dt class="portletHeader">
+                            <span class="portletTopLeft">
+                            <a href="#" class="tile">Aviso Importante</a> </span>
+                            <span class="portletTopRight"></span>
+                        </dt>
 
 
 
-                <dd class="portletFooter">
-                  <span class="portletBottomLeft"></span>
-                  <a href="#">Seu prazo para o envio é de até 60 dias corridos.</a>
-                  <span class="portletBottomRight"></span>
-                </dd>
-              </dl>
+
+
+                        <dd class="portletFooter">
+                            <span class="portletBottomLeft"></span>
+                            <a href="#">Seu prazo para o envio é de até 60 dias corridos.</a>
+                            <span class="portletBottomRight"></span>
+                        </dd>
+                    </dl>
+                </div>
+
             </div>
-
-          </div>
-          {% endif %}
+            {% endif %}
 
         </div>
 
         <!-- /Demo Plone Content -->
 
+        </div>
+
+        <div class="clear"></div>
+        <div id="voltar-topo">
+          <a href="#wrapper">Voltar para o topo</a>
+        </div>
+
       </div>
 
-      <div class="clear"></div>
-      <div id="voltar-topo">
-        <a href="#wrapper">Voltar para o topo</a>
+      <!-- Footer -->
+      <div id="footer" role="contentinfo">
+        <a name="afooter" id="afooter"></a>
+        <div class="clear"></div>
+        <div id="footer-brasil">
+        </div>
       </div>
-
-    </div>
-
-    <!-- Footer -->
-    <div id="footer" role="contentinfo">
-      <a name="afooter" id="afooter"></a>
-      <div class="clear"></div>
-      <div id="footer-brasil">
+      <div id="extra-footer">
+        <p>
+          Ministério da Cultura -
+          <a href="#">MinC - 2015</a>
+        </p>
       </div>
-    </div>
-    <div id="extra-footer">
-      <p>
-        Ministério da Cultura -
-        <a href="#">MinC - 2015</a>
-      </p>
-    </div>
 
     <!-- /Footer-->
     <!-- Script da Barra do Governo -->
@@ -363,7 +365,6 @@
       {% tracking_code %}
     </script>
     {% block js %} {% endblock js %}
-    <script defer src="http://barra.brasil.gov.br/barra.js" type="text/javascript"></script>
 </body>
 
 </html>
