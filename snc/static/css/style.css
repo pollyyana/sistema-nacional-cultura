@@ -509,6 +509,12 @@ button, html input[type=button], input[type=reset], input[type=submit] {
   border-color: #eea236;
 }
 
+.btn-info {
+  color: #fff;
+  background-color: #34a5cf;
+  border-color: #2b8bc7;
+}
+
 button, input, select, textarea {
   font-family: inherit;
   font-size: inherit;
@@ -583,7 +589,7 @@ user agent stylesheetinput, textarea, keygen, select, button {
 user agent stylesheetinput, textarea, keygen, select, button, meter, progress {
   -webkit-writing-mode: horizontal-tb;
 }
-Inherited from 
+Inherited from
 body {
   font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
   font-size: 14px;
@@ -591,7 +597,7 @@ body {
   color: #333;
   background-color: #fff;
 }
-Inherited from 
+Inherited from
 html {
   font-size: 10px;
   -webkit-tap-highlight-color: rgba(0,0,0,0);
@@ -649,26 +655,23 @@ user agent stylesheetdiv {
 /* botao parecer */
 
 /* CORES */
- 
+
 .but-primary {
 color: #fff;
 background-color: #0068B4;
 }
- 
+
 .but-success {
 color: #fff;
 background-color: #009835;
 }
- 
+
 .but-error {
 color: #fff;
 background-color: #CC0000;
 }
- 
+
 .but-warning {
 color: #fff;
 background-color: #F28E00;
 }
-
-
-
