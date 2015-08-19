@@ -72,4 +72,8 @@ urlpatterns = [
     url(r'^oficio/alteracao/$',
         login_required(views.OficioAlteracao.as_view()),
         name='alteracao'),
+
+    # Consulta
+    url(r'^consultar/$', views.Consultar.as_view(), name='consultar'),
+    url(r'^detalhar/(?P<pk>[0-9]+)$', views.Detalhar.as_view(), name='detalhar'),
 ]

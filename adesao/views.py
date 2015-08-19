@@ -4,6 +4,7 @@ from threading import Thread
 from django.shortcuts import render, redirect
 from django.http import Http404
 from django.views.generic.edit import CreateView, UpdateView
+from django.views.generic import ListView, DetailView
 from django.core.urlresolvers import reverse_lazy, reverse
 from django.core.mail import send_mail
 from django.contrib.auth.decorators import login_required
@@ -280,3 +281,20 @@ class OficioAlteracao(PDFTemplateView):
         context['request'] = self.request
         context['static'] = self.request.get_host()
         return context
+
+
+class Consultar(ListView):
+    template_name = 'consultar/consultar.html'
+    paginate_by = '10'
+
+    def get_queryset(self):
+        ente_federado = self.request.GET.get('municipio', None)
+
+        if ente_federado:
+            return Usuario.objects.filter(municipio__cidade__nome_municipio__icontains=ente_federado)
+        return Usuario.objects.filter(estado_processo='6').order_by('municipio__cidade__nome_municipio')
+
+
+class Detalhar(DetailView):
+    model = Usuario
+    template_name = 'consultar/detalhar.html'

@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>Dados de {{ object.municipio.cidade.nome_municipio }} - {{ object.municipio.estado.nome_uf }}</h2>
+
+<h4>Prefeitura</h4>
+<ul>
+  <li>CNPJ: <strong>{{ object.municipio.cnpj_prefeitura }}</strong></li>
+  <li>Endereço: <strong>{{ object.municipio.endereco }}</strong></li>
+  <li>Bairro: <strong>{{ object.municipio.bairro }}</strong></li>
+  <li>CEP: <strong>{{ object.municipio.cep }}</strong></li>
+  <li>Telefone: <strong>{{ object.municipio.telefone_um }}</strong></li>
+</ul>
+
+<h4>Prefeito</h4>
+<ul>
+  <li>Nome: <strong>{{ object.municipio.nome_prefeito }}</strong></li>
+  <li>E-mail: <strong>{{ object.municipio.email_institucional_prefeito }}</strong></li>
+  <li>Telefone: <strong>{{ object.municipio.telefone_um }}</strong></li>
+</ul>
+
+<h4>Interlocutor</h4>
+<ul>
+  <li>Nome: <strong>{{ object.secretario.nome_secretario }}</strong></li>
+  <li>Cargo: <strong>{{ object.secretario.cargo_secretario }}</strong></li>
+  <li>E-mail: <strong>{{ object.secretario.email_institucional_secretario }}</strong></li>
+  <li>Telefone: <strong>{{ object.secretario.telefone_um }}</strong></li>
+</ul>
+
+<h4>Responsável</h4>
+<ul>
+  <li>Nome: <strong>{{ object.responsavel.nome_responsavel }}</strong></li>
+  <li>Cargo: <strong>{{ object.responsavel.cargo_responsavel }}</strong></li>
+  <li>E-mail: <strong>{{ object.responsavel.email_institucional_responsavel }}</strong></li>
+  <li>Telefone: <strong>{{ object.responsavel.telefone_um }}</strong></li>
+</ul>
+
+<h4>Plano de Trabalho</h4>
+<ul>
+  {% if object.plano_trabalho.criacao_sistema.lei_sistema_cultura %}
+    <li><a href="{{ object.plano_trabalho.criacao_sistema.lei_sistema_cultura.url }}">Lei do Sistema de Cultura</a></li>
+  {% endif %}
+  {% if object.plano_trabalho.orgao_gestor.relatorio_atividade_secretaria %}
+    <li><a href="{{ object.plano_trabalho.orgao_gestor.relatorio_atividade_secretaria.url }}">Relatório de Atividades do Órgão Gestor</a></li>
+  {% endif %}
+  {% if object.plano_trabalho.conselho_cultural.ata_regimento_aprovado %}
+    <li><a href="{{ object.plano_trabalho.conselho_cultural.ata_regimento_aprovado.url }}">Ata de Reunião de Criação do Conselho de Políticas Culturais</a></li>
+  {% endif %}
+  {% if object.plano_trabalho.fundo_cultura.lei_fundo_cultura %}
+    <li><a href="{{ object.plano_trabalho.fundo_cultura.lei_fundo_cultura.url }}">Lei do Fundo de Cultura</a></li>
+  {% endif %}
+  {% if object.plano_trabalho.plano_cultura.lei_plano_cultura %}
+    <li><a href="{{ object.plano_trabalho.plano_cultura.lei_plano_cultura.url }}">Lei do Plano de Cultura</a></li>
+  {% endif %}
+</ul>
+{% endblock content %}

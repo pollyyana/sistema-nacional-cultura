@@ -1,0 +1,31 @@
+{% extends "base.html" %} {% load gestao_tags %}
+{% block content %}
+<form class="form-horizontal" method="get">
+  <button type="submit" class="btn btn-info" style="float:right;">Buscar</button>
+  <div style="overflow: hidden;">
+    <input name="municipio" type="search" class="form-control" placeholder="Município" />
+  </div>
+</form>
+
+<h1>Municípios</h1>
+<ul>
+  {% for municipio in object_list %}
+  <li>
+    <a href="{% url 'adesao:detalhar' municipio.id %}">{{ municipio.municipio.cidade.nome_municipio }} - {{ municipio.municipio.estado.nome_uf }}</a>
+  </li>
+  {% empty %}
+  <li>
+    Nenhum município encontrado.
+  </li>
+  {% endfor %}
+</ul>
+<div style="float:right;">
+  {% if page_obj.has_previous %}
+    <a class="paginate_button previous" href="?{% url_replace 'page' page_obj.previous_page_number %}">Anterior</a>
+  {% endif %}
+    <a>Página {{ page_obj.number }} de {{ page_obj.paginator.num_pages }}</a>
+  {% if page_obj.has_next %}
+    <a class="paginate_button next" href="?{% url_replace 'page' page_obj.next_page_number %}">Próximo</a>
+  {% endif %}
+</div>
+{% endblock content %}
