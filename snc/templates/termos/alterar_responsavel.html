@@ -6,30 +6,23 @@
   <body style="margin:0; padding:0;" align="justify">
     <div class="content">
       <p>
-        Eu, {{ request.user.usuario.municipio.nome_prefeito }},
-        {% if request.user.usuario.municipio.cidade %}
-        prefeito do município de {{ request.user.usuario.municipio.cidade }},
-        {% else %}
-        governador {{ request.user.usuario.municipio.estado.nome_uf }},
-        {% endif %}
-        designo {{ request.user.usuario.responsavel.nome_responsavel }},
-        cargo {{ request.user.usuario.responsavel.cargo_responsavel }}, CPF nº {{ request.user.usuario.responsavel.cpf_responsavel }},
-        telefone institucional {{ request.user.usuario.responsavel.telefone_um }},
-        e-mail institucional {{ request.user.usuario.responsavel.email_institucional_responsavel }},
+        Eu,_____________________________________________,
+         prefeito do município de ______________________ , UF ____,
+         designo <strong>{{ request.user.usuario.nome_usuario }}</strong> ,
+         cargo ____________________________________, CPF nº <strong>{{ request.user.username }}</strong>,
+         telefone institucional _________________,
+        e-mail institucional <strong>{{ request.user.email }}</strong>,
         para ser o responsável pelo acompanhamento do Sistema de Cultura,
         conforme Cláusula décima primeira do acordo de cooperação federativa.
         Tenho ciência de que o servidor designado terá a incumbência de dar cumprimento às obrigações pactuadas,
         já ou futuramente detalhadas em metas descritas no Plano de Trabalho e encaminhamento dos assuntos pertinentes.
       </p>
       <p>
-        Local e data.<br>
-        ___________________________<br>
-        {{ request.user.usuario.municipio.nome_prefeito }}<br>
-        {% if request.user.usuario.municipio.cidade %}
-        Prefeito do Município de {{ request.user.usuario.municipio.cidade }}
-        {% else %}
-        Governador {{ request.user.usuario.municipio.estado.nome_uf }}
-        {% endif %}
+        ______________________, {% now "d \d\e F \d\e Y"%}<br><br>
+        _____________________________________________<br>
+        Assinatura do Prefeito
+        <br><br>
+        Prefeito do Município de ____________________/____
       </p>
     </div>
   </body>

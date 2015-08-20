@@ -5,6 +5,13 @@
   </a>
 </h2>
 {% if request.user.usuario.estado_processo == '0' %}
+<div class="alert alert-info" role="alert">
+  <strong>Caso o seu município já esteja cadastrado, e não possui acesso ao sistema:</strong><br><br>
+  <a href="{% url 'adesao:alterar_cadastrador' %}" target="_blank">- Imprima o modelo de ofício, que pode ser encontrado clicando aqui</a><br>
+  - Preencha com os dados do novo responsável e do prefeito.<br>
+  - Encaminhe para assinatura do prefeito. <br>
+  - Digitalize e envie para nosso email: acordosnc@cultura.gov.br
+</div>
 <p>{% blocktrans %}Primeiro parágrafo da mensagem da tela home{% endblocktrans %}</p>
 <p>{% blocktrans %}Segundo parágrafo da mensagem da tela home{% endblocktrans %}</p>
 {% elif request.user.usuario.estado_processo == '1' %} {% include "conclusao_cadastro.html" %} {% elif request.user.usuario.estado_processo == '2' %}

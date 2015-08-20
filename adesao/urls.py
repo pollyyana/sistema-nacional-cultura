@@ -48,9 +48,6 @@ urlpatterns = [
     url(r'^importar/secretario/$',
         views.importar_secretario,
         name='importar_secretario'),
-    url(r'^alterar/responsavel/(?P<pk>[0-9]+)/$',
-        login_required(views.AlterarCadastrador.as_view()),
-        name='alterar_cadastrador'),
 
     # Cadastro e alteração de secretário
     url(r'^secretario/$', login_required(views.CadastrarSecretario.as_view()),
@@ -61,6 +58,11 @@ urlpatterns = [
     url(r'^secretario/(?P<pk>[0-9]+)/$',
         login_required(views.AlterarSecretario.as_view()),
         name='alterar_secretario'),
+
+    # Cadastro e alteração de cadastrador
+    url(r'^alterar/cadastrador/$',
+        login_required(views.OficioAlteracao.as_view()),
+        name='alterar_cadastrador'),
 
     # Minuta de acordo e termo de solicitação
     url(r'^termo/minuta/$',

@@ -194,13 +194,6 @@ def importar_secretario(request):
     return redirect('adesao:responsavel')
 
 
-class AlterarCadastrador(UpdateView):
-    form_class = CadastrarResponsavelForm
-    model = Responsavel
-    template_name = 'responsavel/cadastrar_responsavel.html'
-    success_url = reverse_lazy('adesao:alteracao')
-
-
 class AlterarResponsavel(UpdateView):
     form_class = CadastrarResponsavelForm
     model = Responsavel
