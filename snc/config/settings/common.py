@@ -41,6 +41,7 @@ THIRD_PARTY_APPS = (
     'django_extensions',
     'ckeditor',
     'widget_tweaks',
+    'piwik'
 )
 
 # Apps specific for this project go here.
@@ -275,3 +276,6 @@ CKEDITOR_CONFIGS = {
         ]
     },
 }
+
+PIWIK_SITE_ID = 1
+PIWIK_URL = ''
