@@ -9,7 +9,7 @@
 
     <title>Sistema Nacional de Cultura</title>
 
-    {% load staticfiles %}
+    {% load staticfiles clever_selects_extras %}
 
     <!-- Bootstrap Core CSS -->
     <link href="{% static 'css/bootstrap.min.css' %}" rel="stylesheet">
@@ -27,6 +27,9 @@
 
     <!-- Custom Fonts -->
     <link href="{% static 'css/font-awesome.min.css' %}" rel="stylesheet" type="text/css">
+
+    <!-- jQuery -->
+    <script src="{% static 'js/jquery.min.js'%}"></script>
 
 </head>
 
@@ -120,6 +123,12 @@
                                   Aguarda Publicação no DOU
                                 </a>
                               </li>
+
+                              <li>
+                                <a href="{% url 'gestao:alterar_cadastrador' %}">
+                                  Alterar Cadastrador
+                                </a>
+                              </li>
                             </ul>
                         </li>
                         <!-- Acompanhamento da execução do Plano de Trabalho -->
@@ -204,9 +213,6 @@
     </div>
     <!-- /#wrapper -->
 
-    <!-- jQuery -->
-    <script src="{% static 'js/jquery.min.js'%}"></script>
-
     <!-- Bootstrap JavaScript -->
     <script src="{% static 'js/bootstrap.min.js' %}"></script>
 
@@ -221,6 +227,8 @@
     <script src="{% static 'js/dashboard.js' %}"></script>
     <script src="{% static 'js/jquery-ui.min.js' %}"></script>
     <script src="{% static 'js/datepicker-pt-BR.js' %}"></script>
+
+    {% clever_selects_js_import %}
 
     <script type="text/javascript">
       $(document).ready(function(){

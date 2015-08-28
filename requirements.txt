@@ -1,6 +1,7 @@
 Django==1.8.1
 django-ckeditor==4.5.0
 django-extensions==1.5.5
+django-clever-selects==0.6.9
 django-localflavor==1.1
 django-piwik==0.1
 django-smart-selects==1.1.1

@@ -1,0 +1,51 @@
+{% extends "gestao/base_gestao.html" %} {% load widget_tweaks %} {% block content %}
+<div class="panel panel-default">
+  <div class="panel-heading">
+    Alteração de cadastrador
+  </div>
+  <div class="panel-body">
+    <form action="{% url 'gestao:alterar_cadastrador' %}" class="form-horizontal" method="post">{% csrf_token %}
+      <div class="form-group">
+        <label for="{{ form.cpf_usuario.id_for_label }}" class="col-sm-3 control-label">CPF do Novo Cadastrador</label>
+
+        <div class="col-sm-4">
+          {% render_field form.cpf_usuario class="form-control cpf" %} {{ form.cpf_usuario.errors }}
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="{{ form.uf.id_for_label }}" class="col-sm-3 control-label">UF</label>
+
+        <div class="col-sm-1">
+          {% render_field form.uf class="form-control" %}
+        </div>
+        <div class="col-sm-offset-3 col-sm-9">
+          {{ form.uf.errors }}
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="{{ form.municipio.id_for_label }}" class="col-sm-3 control-label">Município</label>
+
+        <div class="col-sm-4">
+          {% render_field form.municipio class="form-control" %} {{ form.municipio.errors }}
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="{{ form.data_publicacao_acordo.id_for_label }}" class="col-sm-3 control-label">Data de publicação do Acordo</label>
+
+        <div class="col-sm-4">
+          {% render_field form.data_publicacao_acordo class="form-control date" %} {{ form.data_publicacao_acordo.errors }}
+        </div>
+      </div>
+      <div class="form-group">
+        <div class="col-sm-offset-3 col-sm-10">
+          <a class="btn btn-default" href="{% url 'adesao:home' %}">Cancelar</a>
+          <input type="submit" class="btn btn-primary" value="Salvar" />
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+{% endblock content %}

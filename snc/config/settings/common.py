@@ -42,6 +42,7 @@ THIRD_PARTY_APPS = (
     'ckeditor',
     'widget_tweaks',
     'piwik',
+    'clever_selects',
 )
 
 # Apps specific for this project go here.
