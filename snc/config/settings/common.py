@@ -41,7 +41,8 @@ THIRD_PARTY_APPS = (
     'django_extensions',
     'ckeditor',
     'widget_tweaks',
-    'piwik'
+    'piwik',
+    'clever_selects',
 )
 
 # Apps specific for this project go here.
