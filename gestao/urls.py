@@ -11,6 +11,8 @@ urlpatterns = [
     url(r'^alterar/situacao/(?P<id>[\w]+)$',
         staff_member_required(views.alterar_situacao, login_url='adesao:login'),
         name='alterar_situacao'),
+    url(r'^alterar/cadastrador/',
+        staff_member_required(views.AlterarCadastrador.as_view()), name='alterar_cadastrador'),
 
     # Acompanhar criação do sistema de cultura
     url(r'^acompanhar/sistema$', staff_member_required(
@@ -48,4 +50,7 @@ urlpatterns = [
     url(r'^detalhar/municipio/(?P<pk>[0-9]+)$',
         views.DetalharUsuario.as_view(),
         name='detalhar'),
+
+    # UF e Município aninhados
+    url(r'^chain/municipio$', staff_member_required(views.MunicipioChain.as_view()), name='municipio_chain'),
 ]

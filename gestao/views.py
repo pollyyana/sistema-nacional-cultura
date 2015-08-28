@@ -1,13 +1,36 @@
+from django.core import serializers
 from django.shortcuts import redirect, render
 from django.http import Http404
 from django.views.generic import ListView, DetailView
+from django.views.generic.edit import FormView
 
-from adesao.models import Usuario
+from adesao.models import Usuario, Cidade
 
-from .forms import AlterarSituacao, DiligenciaForm
+from .forms import AlterarSituacao, DiligenciaForm, AlterarCadastradorForm
+
+from clever_selects.views import ChainedSelectChoicesView
 
 
 # Acompanhamento das adesões
+class AlterarCadastrador(FormView):
+    template_name = 'gestao/alterar_cadastrador.html'
+    form_class = AlterarCadastradorForm
+    success_url = 'gestao/alterar_cadastrador.html'
+
+    def form_valid(self, form):
+        form.save()
+        return super(AlterarCadastrador, self).form_valid(form)
+
+
+class MunicipioChain(ChainedSelectChoicesView):
+    def get_choices(self):
+        data = Cidade.objects.filter(uf=self.parent_value)
+        choices = []
+        for cidade in data:
+            choices.append((str(cidade.id), cidade.nome_municipio))
+        return choices
+
+
 def alterar_situacao(request, id):
     if request.method == "POST":
         form = AlterarSituacao(
