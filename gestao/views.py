@@ -1,5 +1,6 @@
 from django.shortcuts import redirect, render
 from django.http import Http404
+from django.core.urlresolvers import reverse_lazy
 from django.views.generic import ListView, DetailView
 from django.views.generic.edit import FormView
 
@@ -14,7 +15,7 @@ from clever_selects.views import ChainedSelectChoicesView
 class AlterarCadastrador(FormView):
     template_name = 'gestao/alterar_cadastrador.html'
     form_class = AlterarCadastradorForm
-    success_url = 'gestao/alterar_cadastrador.html'
+    success_url = reverse_lazy('gestao:acompanhar_adesao')
 
     def form_valid(self, form):
         form.save()
