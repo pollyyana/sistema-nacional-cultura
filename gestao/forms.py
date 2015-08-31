@@ -105,7 +105,9 @@ class AlterarCadastradorForm(ChainedChoicesForm):
                 raise forms.ValidationError(
                     'Não foi encontrada a data de publicação do acordo deste município, por favor informe a data')
         except Usuario.DoesNotExist:
-            raise forms.ValidationError('Usuário não encontrado')
+            if not self.cleaned_data.get('data_publicacao_acordo', None):
+                raise forms.ValidationError(
+                    'Não foi encontrada a data de publicação do acordo deste município, por favor informe a data')
 
     def save(self, commit=True):
         cpf_usuario = self.cleaned_data['cpf_usuario']
