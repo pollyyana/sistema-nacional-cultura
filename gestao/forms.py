@@ -70,7 +70,7 @@ class DiligenciaForm(forms.Form):
 class AlterarCadastradorForm(ChainedChoicesForm):
     cpf_usuario = forms.CharField(max_length=11)
     uf = forms.ModelChoiceField(queryset=Uf.objects.all())
-    municipio = ChainedChoiceField(parent_field='uf', ajax_url='/gestao/chain/municipio', empty_label='Selecione um município')
+    municipio = ChainedChoiceField(parent_field='uf', ajax_url='/gestao/chain/municipio', empty_label='-- Município --')
     data_publicacao_acordo = forms.DateField(required=False)
 
     def clean_cpf_usuario(self):
