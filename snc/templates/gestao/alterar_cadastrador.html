@@ -9,7 +9,7 @@
         <label for="{{ form.cpf_usuario.id_for_label }}" class="col-sm-3 control-label">CPF do Novo Cadastrador</label>
 
         <div class="col-sm-4">
-          {% render_field form.cpf_usuario class="form-control cpf" %} {{ form.cpf_usuario.errors }}
+          {% render_field form.cpf_usuario class="form-control cpf" %} {{ form.cpf_usuario.errors }} {{ form.non_field_errors }}
         </div>
       </div>
 
