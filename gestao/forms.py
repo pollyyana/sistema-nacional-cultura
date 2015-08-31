@@ -119,6 +119,9 @@ class AlterarCadastradorForm(ChainedChoicesForm):
             user_novo.secretario = user_antigo.secretario
             user_antigo.secretario = None
 
+            user_novo.plano_trabalho = user_antigo.plano_trabalho
+            user_antigo.plano_trabalho = None
+
             user_antigo.user.is_active = False
             user_novo.estado_processo = '6'
 
@@ -128,10 +131,13 @@ class AlterarCadastradorForm(ChainedChoicesForm):
                 user_novo.data_publicacao_acordo = user_antigo.data_publicacao_acordo
         except Usuario.DoesNotExist:
             user_antigo = Municipio.objects.get(cidade=municipio, estado=uf)
+            planotrabalho = PlanoTrabalho()
+            planotrabalho.save()
 
             user_novo.municipio = user_antigo
             user_novo.data_publicacao_acordo = data_publicacao_acordo
             user_novo.estado_processo = '6'
+            user_novo.plano_trabalho = planotrabalho
 
         if commit:
             user_antigo.save()
