@@ -104,7 +104,7 @@ class AlterarCadastradorForm(ChainedChoicesForm):
         municipio = self.cleaned_data['municipio']
         uf = self.cleaned_data['uf']
         data_publicacao_acordo = self.cleaned_data['data_publicacao_acordo']
-        user_novo = Usuario.objects.get(user__username__exact=cpf_usuario)
+        user_novo = Usuario.objects.get(user__username__iexact=cpf_usuario)
         try:
             user_antigo = Usuario.objects.get(municipio__cidade=municipio, municipio__estado=uf)
 
