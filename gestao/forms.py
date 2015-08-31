@@ -68,7 +68,7 @@ class DiligenciaForm(forms.Form):
 
 
 class AlterarCadastradorForm(ChainedChoicesForm):
-    cpf_usuario = forms.CharField(max_length="11")
+    cpf_usuario = forms.CharField(max_length=11)
     uf = forms.ModelChoiceField(queryset=Uf.objects.all())
     municipio = ChainedChoiceField(parent_field='uf', ajax_url='/gestao/chain/municipio', empty_label='Selecione um município')
     data_publicacao_acordo = forms.DateField(required=False)
@@ -78,6 +78,8 @@ class AlterarCadastradorForm(ChainedChoicesForm):
 
         if not Usuario.objects.filter(user__username__iexact=cpf_usuario):
             raise forms.ValidationError('Cadastrador não encontrado, o usuário efetuou cadastro?')
+
+        return cpf_usuario
 
     def clean_municipio(self):
         municipio = self.cleaned_data['municipio']
@@ -109,13 +111,13 @@ class AlterarCadastradorForm(ChainedChoicesForm):
             user_antigo = Usuario.objects.get(municipio__cidade=municipio, municipio__estado=uf)
 
             user_novo.municipio = user_antigo.municipio
-            user_antigo.municipio = ''
+            user_antigo.municipio = None
 
             user_novo.responsavel = user_antigo.responsavel
-            user_antigo.responsavel = ''
+            user_antigo.responsavel = None
 
             user_novo.secretario = user_antigo.secretario
-            user_antigo.secretario = ''
+            user_antigo.secretario = None
 
             user_antigo.user.is_active = False
             user_novo.estado_processo = '6'

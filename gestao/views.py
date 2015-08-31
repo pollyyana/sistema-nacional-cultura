@@ -1,4 +1,3 @@
-from django.core import serializers
 from django.shortcuts import redirect, render
 from django.http import Http404
 from django.views.generic import ListView, DetailView
