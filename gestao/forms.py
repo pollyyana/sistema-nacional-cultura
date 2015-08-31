@@ -131,6 +131,7 @@ class AlterarCadastradorForm(ChainedChoicesForm):
             user_antigo.plano_trabalho = None
 
             user_antigo.user.is_active = False
+            user_antigo.estado_processo = '0'
             user_novo.estado_processo = '6'
 
             if data_publicacao_acordo:
