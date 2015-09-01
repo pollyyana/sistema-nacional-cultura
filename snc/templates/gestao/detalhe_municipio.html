@@ -67,9 +67,9 @@
   </div>
   <div class="panel-body">
     <div class="list-group">
-      <a href="#" class="list-group-item disabled">
+      <p class="list-group-item">
         Criação do Sistema
-      </a>
+      </p>
       {% if object.plano_trabalho.criacao_sistema.minuta_projeto_lei %}
       <a href="{{ object.plano_trabalho.criacao_sistema.minuta_projeto_lei.url }}" class="list-group-item">
         Minuta
@@ -82,9 +82,9 @@
       {% endif %}
     </div>
     <div class="list-group">
-      <a href="#" class="list-group-item disabled">
+      <p class="list-group-item">
         Órgão Gestor
-      </a>
+      </p>
       {% if object.plano_trabalho.orgao_gestor.relatorio_atividade_secretaria %}
       <a href="{{ object.plano_trabalho.orgao_gestor.relatorio_atividade_secretaria.url }}" class="list-group-item">
         Relatório
@@ -92,9 +92,9 @@
       {% endif %}
     </div>
     <div class="list-group">
-      <a href="#" class="list-group-item disabled">
+      <p href="#" class="list-group-item">
         Conselho Cultural
-      </a>
+      </p>
       {% if object.plano_trabalho.conselho_cultural.ata_regimento_aprovado %}
       <a href="{{ object.plano_trabalho.conselho_cultural.ata_regimento_aprovado.url }}" class="list-group-item">
         Ata
@@ -102,9 +102,9 @@
       {% endif %}
     </div>
     <div class="list-group">
-      <a href="#" class="list-group-item disabled">
+      <p class="list-group-item">
         Fundo de Cultura - CNPJ: {{ object.plano_trabalho.fundo_cultura.cnpj_fundo_cultura|default_if_none:"" }}
-      </a>
+      </p>
       {% if object.plano_trabalho.fundo_cultura.lei_fundo_cultura %}
       <a href="{{ object.plano_trabalho.fundo_cultura.lei_fundo_cultura.url }}" class="list-group-item">
         Lei
@@ -112,9 +112,9 @@
       {% endif %}
     </div>
     <div class="list-group">
-      <a href="#" class="list-group-item disabled">
+      <p class="list-group-item">
         Plano de Cultura
-      </a>
+      </p>
       {% if object.plano_trabalho.plano_cultura.relatorio_diretrizes_aprovadas %}
       <a href="{{ object.plano_trabalho.plano_cultura.relatorio_diretrizes_aprovadas.url }}" class="list-group-item">
         Relatório
