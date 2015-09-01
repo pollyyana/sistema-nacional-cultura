@@ -1,4 +1,26 @@
 {% extends "base.html" %} {% load gestao_tags %}
+{% block menu %}
+<div class="portletWrapper" id="portletwrapper-706c6f6e652e6c656674636f6c756d6e0a636f6e746578740a2f706f7274616c0a736f627265" data-portlethash="706c6f6e652e6c656674636f6c756d6e0a636f6e746578740a2f706f7274616c0a736f627265">
+  <dl class="portlet portletNavigationTree">
+    <dt class="portletHeader">
+      <span class="portletTopLeft"></span>
+      <a href="#" class="tile ui-droppable">Exportar Dados</a>
+      <span class="portletTopRight"></span>
+    </dt>
+    <dd class="portletItem lastItem">
+      <ul class="navTree navTreeLevel0">
+        <li class="navTreeItem visualNoMarker navTreeFolderish section-sobre-a">
+          <a href="{% url 'adesao:exportar_csv' %}" title="" class="state-published navTreeFolderish contenttype-folder">
+            <span>CSV</span>
+          </a>
+        </li>
+      </ul>
+      <span class="portletBottomLeft"></span>
+      <span class="portletBottomRight"></span>
+    </dd>
+  </dl>
+</div>
+{% endblock menu %}
 {% block content %}
 <form class="form-horizontal" method="get">
   <button type="submit" class="btn btn-info" style="float:right;">Buscar</button>

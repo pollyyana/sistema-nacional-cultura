@@ -159,12 +159,11 @@
           </div>
 
           <!-- Column 1 -->
-          {% if request.user.is_authenticated %}
           <div id="navigation">
             <a name="anavigation" id="anavigation"></a>
             <span class="menuTrigger">Menu</span>
             <div id="portal-column-one" class="cell width-1:4 position-0">
-
+              {% if request.user.is_authenticated %}
               <div class="portletWrapper" id="" data-portlethash="">
                 <dl class="portlet portletNavigationTree">
                   <dt class="portletHeader">
@@ -250,9 +249,11 @@
                   </dd>
                 </dl>
               </div>
+              {% endif %}
+              {% block menu %}
+              {% endblock menu %}
             </div>
           </div>
-          {% endif %}
 
           <!-- Conteudo -->
           <div id="portal-column-content" class="cell width-1:2 position-1:4">

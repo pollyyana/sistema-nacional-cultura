@@ -1,8 +1,9 @@
+import csv
 from datetime import timedelta
 from threading import Thread
 
 from django.shortcuts import render, redirect
-from django.http import Http404
+from django.http import Http404, HttpResponse
 from django.views.generic.edit import CreateView, UpdateView
 from django.views.generic import ListView, DetailView
 from django.core.urlresolvers import reverse_lazy, reverse
@@ -10,7 +11,7 @@ from django.core.mail import send_mail
 from django.contrib.auth.decorators import login_required
 from django.utils import timezone
 from django.template.loader import render_to_string
-from django.core.exceptions import ValidationError
+from django.core.exceptions import ValidationError, ObjectDoesNotExist
 
 from adesao.models import Municipio, Responsavel, Secretario, Usuario, Historico
 from adesao.forms import CadastrarUsuarioForm, CadastrarMunicipioForm
@@ -76,6 +77,36 @@ def sucesso_usuario(request):
 
 def sucesso_responsavel(request):
     return render(request, 'responsavel/mensagem_sucesso.html')
+
+
+def exportar_csv(request):
+    response = HttpResponse(content_type='text/csv')
+    response['Content-Disposition'] = 'attachment; filename="adesao.csv"'
+
+    writer = csv.writer(response)
+    writer.writerow(['UF', 'Município', 'Cod.IBGE', 'Situação', 'Endereço', 'Bairro', 'CEP', 'Telefone', 'Localização'])
+
+    for municipio in Municipio.objects.all():
+        uf = municipio.estado.sigla
+        if municipio.cidade:
+            cidade = municipio.cidade.nome_municipio
+            cod_ibge = municipio.cidade.codigo_ibge
+        else:
+            cidade = ''
+            cod_ibge = ''
+        try:
+            estado_processo = municipio.usuario.get_estado_processo_display()
+        except ObjectDoesNotExist:
+            estado_processo = 'Publicado no DOU'
+        endereco = municipio.endereco
+        bairro = municipio.bairro
+        cep = municipio.cep
+        telefone = municipio.telefone_um
+        local = ''
+
+        writer.writerow([uf, cidade, cod_ibge, estado_processo, endereco, bairro, cep, telefone, local])
+
+    return response
 
 
 class CadastrarUsuario(CreateView):
