@@ -82,6 +82,7 @@ def sucesso_responsavel(request):
 def exportar_csv(request):
     response = HttpResponse(content_type='text/csv;charset=UTF-8')
     response['Content-Disposition'] = 'attachment; filename="adesao.csv"'
+    response.write('\uFEFF')
 
     writer = csv.writer(response)
     writer.writerow(['UF', 'Município', 'Cod.IBGE', 'Situação', 'Endereço', 'Bairro', 'CEP', 'Telefone', 'Localização do processo'])
