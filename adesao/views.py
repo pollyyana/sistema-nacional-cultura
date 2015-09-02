@@ -102,7 +102,7 @@ def exportar_csv(request):
         bairro = municipio.bairro
         cep = municipio.cep
         telefone = municipio.telefone_um
-        local = ''
+        local = municipio.localizacao
 
         writer.writerow([uf, cidade, cod_ibge, estado_processo, endereco, bairro, cep, telefone, local])
 
