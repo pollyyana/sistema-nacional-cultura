@@ -84,7 +84,7 @@ def exportar_csv(request):
     response['Content-Disposition'] = 'attachment; filename="adesao.csv"'
 
     writer = csv.writer(response)
-    writer.writerow(['UF', 'Município', 'Cod.IBGE', 'Situação', 'Endereço', 'Bairro', 'CEP', 'Telefone', 'Localização'])
+    writer.writerow(['UF', 'Município', 'Cod.IBGE', 'Situação', 'Endereço', 'Bairro', 'CEP', 'Telefone', 'Localização do processo'])
 
     for municipio in Municipio.objects.all():
         uf = municipio.estado.sigla
