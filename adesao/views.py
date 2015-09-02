@@ -80,7 +80,7 @@ def sucesso_responsavel(request):
 
 
 def exportar_csv(request):
-    response = HttpResponse(content_type='text/csv')
+    response = HttpResponse(content_type='text/csv;charset=UTF-8')
     response['Content-Disposition'] = 'attachment; filename="adesao.csv"'
 
     writer = csv.writer(response)
