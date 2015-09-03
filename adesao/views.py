@@ -122,7 +122,7 @@ def exportar_xls(request):
     planilha.write(0, 5, 'Bairro')
     planilha.write(0, 6, 'CEP')
     planilha.write(0, 7, 'Telefone')
-    planilha.write(0, 8, 'Local')
+    planilha.write(0, 8, 'Localização do processo')
 
     for i, municipio in enumerate(Municipio.objects.all(), start=1):
         uf = municipio.estado.sigla
