@@ -1,4 +1,4 @@
-import csv
+import csv, xlwt
 from datetime import timedelta
 from threading import Thread
 
@@ -80,12 +80,12 @@ def sucesso_responsavel(request):
 
 
 def exportar_csv(request):
-    response = HttpResponse(content_type='text/csv;charset=UTF-8')
+    response = HttpResponse(content_type='text/csv')
     response['Content-Disposition'] = 'attachment; filename="adesao.csv"'
     response.write('\uFEFF')
 
     writer = csv.writer(response)
-    writer.writerow(['UF', 'Município', 'Cod.IBGE', 'Situação', 'Endereço', 'Bairro', 'CEP', 'Telefone', 'Localização do processo'])
+    writer.writerow(['UF', 'Município', 'Cod.IBGE', 'Situação', 'Endereço', 'Bairro', 'CEP', 'Telefone'])
 
     for municipio in Municipio.objects.all():
         uf = municipio.estado.sigla
@@ -93,7 +93,44 @@ def exportar_csv(request):
             cidade = municipio.cidade.nome_municipio
             cod_ibge = municipio.cidade.codigo_ibge
         else:
-            cidade = ''
+            cidade = municipio.estado.nome_uf
+            cod_ibge = ''
+        try:
+            estado_processo = municipio.usuario.get_estado_processo_display()
+        except ObjectDoesNotExist:
+            estado_processo = 'Publicado no DOU'
+        endereco = municipio.endereco
+        bairro = municipio.bairro
+        cep = municipio.cep
+        telefone = municipio.telefone_um
+        writer.writerow([uf, cidade, cod_ibge, estado_processo, endereco, bairro, cep, telefone])
+
+    return response
+
+
+def exportar_xls(request):
+    response = HttpResponse(content_type='application/vnd.ms-excel')
+    response['Content-Disposition'] = 'attachment; filename="snc.xls"'
+
+    workbook = xlwt.Workbook()
+    planilha = workbook.add_sheet('SNC')
+    planilha.write(0, 0, 'UF')
+    planilha.write(0, 1, 'Município')
+    planilha.write(0, 2, 'Cod.IBGE')
+    planilha.write(0, 3, 'Situação')
+    planilha.write(0, 4, 'Endereço')
+    planilha.write(0, 5, 'Bairro')
+    planilha.write(0, 6, 'CEP')
+    planilha.write(0, 7, 'Telefone')
+    planilha.write(0, 8, 'Local')
+
+    for i, municipio in enumerate(Municipio.objects.all(), start=1):
+        uf = municipio.estado.sigla
+        if municipio.cidade:
+            cidade = municipio.cidade.nome_municipio
+            cod_ibge = municipio.cidade.codigo_ibge
+        else:
+            cidade = municipio.estado.nome_uf
             cod_ibge = ''
         try:
             estado_processo = municipio.usuario.get_estado_processo_display()
@@ -105,7 +142,17 @@ def exportar_csv(request):
         telefone = municipio.telefone_um
         local = municipio.localizacao
 
-        writer.writerow([uf, cidade, cod_ibge, estado_processo, endereco, bairro, cep, telefone, local])
+        planilha.write(i, 0, uf)
+        planilha.write(i, 1, cidade)
+        planilha.write(i, 2, cod_ibge)
+        planilha.write(i, 3, estado_processo)
+        planilha.write(i, 4, endereco)
+        planilha.write(i, 5, bairro)
+        planilha.write(i, 6, cep)
+        planilha.write(i, 7, telefone)
+        planilha.write(i, 8, local)
+
+    workbook.save(response)
 
     return response
 
