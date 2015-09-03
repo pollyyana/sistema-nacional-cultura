@@ -81,7 +81,7 @@ def sucesso_responsavel(request):
 
 def exportar_csv(request):
     response = HttpResponse(content_type='text/csv')
-    response['Content-Disposition'] = 'attachment; filename="adesao.csv"'
+    response['Content-Disposition'] = 'attachment; filename="dados-municipios-cadastrados-snc.csv"'
     response.write('\uFEFF')
 
     writer = csv.writer(response)
@@ -110,7 +110,7 @@ def exportar_csv(request):
 
 def exportar_xls(request):
     response = HttpResponse(content_type='application/vnd.ms-excel')
-    response['Content-Disposition'] = 'attachment; filename="snc.xls"'
+    response['Content-Disposition'] = 'attachment; filename="dados-municipios-cadastrados-snc.xls"'
 
     workbook = xlwt.Workbook()
     planilha = workbook.add_sheet('SNC')
