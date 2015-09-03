@@ -357,7 +357,7 @@ class OficioAlteracao(PDFTemplateView):
 
 class Consultar(ListView):
     template_name = 'consultar/consultar.html'
-    paginate_by = '10'
+    paginate_by = '25'
 
     def get_queryset(self):
         ente_federado = self.request.GET.get('municipio', None)
