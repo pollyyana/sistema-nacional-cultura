@@ -81,7 +81,7 @@ def sucesso_responsavel(request):
 
 def exportar_csv(request):
     response = HttpResponse(content_type='text/csv')
-    response['Content-Disposition'] = 'attachment; filename="adesao.csv"'
+    response['Content-Disposition'] = 'attachment; filename="dados-municipios-cadastrados-snc.csv"'
     response.write('\uFEFF')
 
     writer = csv.writer(response)
@@ -110,7 +110,7 @@ def exportar_csv(request):
 
 def exportar_xls(request):
     response = HttpResponse(content_type='application/vnd.ms-excel')
-    response['Content-Disposition'] = 'attachment; filename="snc.xls"'
+    response['Content-Disposition'] = 'attachment; filename="dados-municipios-cadastrados-snc.xls"'
 
     workbook = xlwt.Workbook()
     planilha = workbook.add_sheet('SNC')
@@ -122,7 +122,7 @@ def exportar_xls(request):
     planilha.write(0, 5, 'Bairro')
     planilha.write(0, 6, 'CEP')
     planilha.write(0, 7, 'Telefone')
-    planilha.write(0, 8, 'Local')
+    planilha.write(0, 8, 'Localização do processo')
 
     for i, municipio in enumerate(Municipio.objects.all(), start=1):
         uf = municipio.estado.sigla
@@ -357,7 +357,7 @@ class OficioAlteracao(PDFTemplateView):
 
 class Consultar(ListView):
     template_name = 'consultar/consultar.html'
-    paginate_by = '10'
+    paginate_by = '25'
 
     def get_queryset(self):
         ente_federado = self.request.GET.get('municipio', None)

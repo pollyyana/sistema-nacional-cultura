@@ -57,6 +57,6 @@ urlpatterns = [
         name='password_change_done'),
 
     url(r'^ckeditor/', include('ckeditor.urls')),
-    url(r'^exportar/csv', views.exportar_csv, name='exportar_csv'),
-    url(r'^exportar/xls', views.exportar_xls, name='exportar_xls'),
+    url(r'^exportar/dados.csv', views.exportar_csv, name='exportar_csv'),
+    url(r'^exportar/dados.xls', views.exportar_xls, name='exportar_xls'),
     ] + static.static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
