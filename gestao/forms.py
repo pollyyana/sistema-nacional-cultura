@@ -70,7 +70,11 @@ class DiligenciaForm(forms.Form):
 class AlterarCadastradorForm(ChainedChoicesForm):
     cpf_usuario = forms.CharField(max_length=11)
     uf = forms.ModelChoiceField(queryset=Uf.objects.all())
-    municipio = ChainedChoiceField(parent_field='uf', ajax_url='/gestao/chain/municipio', empty_label='-- Município --')
+    municipio = ChainedChoiceField(
+        parent_field='uf',
+        ajax_url='/gestao/chain/municipio',
+        empty_label='-- Município --',
+        required=False)
     data_publicacao_acordo = forms.DateField(required=False)
 
     def clean_cpf_usuario(self):
@@ -83,7 +87,8 @@ class AlterarCadastradorForm(ChainedChoicesForm):
 
     def clean_municipio(self):
         municipio = self.cleaned_data['municipio']
-        print(municipio)
+        if not municipio:
+            municipio = None
         uf = self.cleaned_data['uf']
         if not Municipio.objects.filter(cidade=municipio, estado=uf):
             raise forms.ValidationError('Município não cadastrado')
