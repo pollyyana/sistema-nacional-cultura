@@ -159,7 +159,10 @@ class FundoCulturaForm(ModelForm):
         if 'lei_fundo_cultura' in self.changed_data and not cnpj:
             raise forms.ValidationError('CNPJ é obrigatório')
         if cnpj:
-            if not validar_cnpj(cnpj):
+            if FundoCultura.objects.filter(cnpj_fundo_cultura=cnpj) and 'cnpj_fundo_cultura' in self.changed_data:
+                raise forms.ValidationError(
+                    'Já existe um Fundo de Cultura com este CNPJ cadastrado')
+            elif not validar_cnpj(cnpj):
                 raise forms.ValidationError('CNPJ inválido')
 
         return self.cleaned_data['cnpj_fundo_cultura']
