@@ -123,6 +123,7 @@ def exportar_xls(request):
     planilha.write(0, 6, 'CEP')
     planilha.write(0, 7, 'Telefone')
     planilha.write(0, 8, 'Localização do processo')
+    planilha.write(0, 9, 'Possui Lei do Sistema de Cultura')
 
     for i, municipio in enumerate(Municipio.objects.all(), start=1):
         uf = municipio.estado.sigla
@@ -141,6 +142,11 @@ def exportar_xls(request):
         cep = municipio.cep
         telefone = municipio.telefone_um
         local = municipio.localizacao
+        try:
+            lei_sistema = municipio.usuario.plano_trabalho.criacao_sistema.lei_sistema_cultura
+            lei_sistema = 'Sim'
+        except AttributeError:
+            lei_sistema = 'Não'
 
         planilha.write(i, 0, uf)
         planilha.write(i, 1, cidade)
@@ -151,6 +157,7 @@ def exportar_xls(request):
         planilha.write(i, 6, cep)
         planilha.write(i, 7, telefone)
         planilha.write(i, 8, local)
+        planilha.write(i, 9, lei_sistema)
 
     workbook.save(response)
 
