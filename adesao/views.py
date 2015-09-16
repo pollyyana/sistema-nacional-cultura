@@ -85,7 +85,7 @@ def exportar_csv(request):
     response.write('\uFEFF')
 
     writer = csv.writer(response)
-    writer.writerow(['UF', 'Município', 'Cod.IBGE', 'Situação', 'Endereço', 'Bairro', 'CEP', 'Telefone'])
+    writer.writerow(['UF', 'Município', 'Cod.IBGE', 'Situação', 'Endereço', 'Bairro', 'CEP', 'Telefone', 'Email'])
 
     for municipio in Municipio.objects.all():
         uf = municipio.estado.sigla
@@ -103,7 +103,8 @@ def exportar_csv(request):
         bairro = municipio.bairro
         cep = municipio.cep
         telefone = municipio.telefone_um
-        writer.writerow([uf, cidade, cod_ibge, estado_processo, endereco, bairro, cep, telefone])
+        email = municipio.email_institucional_prefeito
+        writer.writerow([uf, cidade, cod_ibge, estado_processo, endereco, bairro, cep, telefone, email])
 
     return response
 
@@ -122,8 +123,9 @@ def exportar_xls(request):
     planilha.write(0, 5, 'Bairro')
     planilha.write(0, 6, 'CEP')
     planilha.write(0, 7, 'Telefone')
-    planilha.write(0, 8, 'Localização do processo')
-    planilha.write(0, 9, 'Possui Lei do Sistema de Cultura')
+    planilha.write(0, 8, 'Email')
+    planilha.write(0, 9, 'Localização do processo')
+    planilha.write(0, 10, 'Possui Lei do Sistema de Cultura')
 
     for i, municipio in enumerate(Municipio.objects.all(), start=1):
         uf = municipio.estado.sigla
@@ -141,6 +143,7 @@ def exportar_xls(request):
         bairro = municipio.bairro
         cep = municipio.cep
         telefone = municipio.telefone_um
+        email = municipio.email_institucional_prefeito
         local = municipio.localizacao
         try:
             lei_sistema = municipio.usuario.plano_trabalho.criacao_sistema.lei_sistema_cultura
@@ -156,8 +159,9 @@ def exportar_xls(request):
         planilha.write(i, 5, bairro)
         planilha.write(i, 6, cep)
         planilha.write(i, 7, telefone)
-        planilha.write(i, 8, local)
-        planilha.write(i, 9, lei_sistema)
+        planilha.write(i, 8, email)
+        planilha.write(i, 9, local)
+        planilha.write(i, 10, lei_sistema)
 
     workbook.save(response)
 
