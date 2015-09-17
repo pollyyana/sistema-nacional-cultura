@@ -71,6 +71,8 @@
                       </select>
                       <textarea id="justificativa_{{forloop.counter0}}" name="justificativa" class="form-control hide" placeholder="Justificativa" rows="4" cols="20"></textarea>
                       <input type="text" id="data_acordo_{{forloop.counter0}}" name="data_publicacao_acordo" class="form-control date hide" placeholder="Data de Publicação"></input>
+                      <input type="text" id="localizacao_{{forloop.counter0}}" name="localizacao" class="form-control hide", placeholder="Localização"></input>
+                      <input type="text" id="num_processo_{{forloop.counter0}}" name="num_processo" class="form-control hide" placeholder="Número do Processo"></input>
                     </td>
                     <td>
                       <button type="submit" class="btn btn-primary" title="Alterar Situação" ><i class="fa fa-check"></i></button>
@@ -114,36 +116,61 @@
   $(document).ready(function(){
     $("[id^='select_situacao']").change(function(e){
       index = $(this).parent().parent().index();
-      console.log(index);
-      if($(this).val()==="3"){
-        if(!$("#data_acordo_"+index).hasClass('hide')){
-          $("#data_acordo_"+index).addClass('hide');
-          $("#data_acordo_"+index).fadeOut();
+      if($(this).val()==="2"){
+        $("input[id$='_"+index+"'], textarea[id$='_"+index+"']").each(function(){
+          if(!$(this).hasClass('hide')){
+            $(this).addClass('hide');
+            $(this).fadeIn();
+          }
+        });
+        if($("#localizacao_"+index).hasClass('hide')){
+          $("#localizacao_"+index).removeClass('hide');
+          $("#localizacao_"+index).fadeIn();
         }
+      }
+      else if($(this).val()==="3"){
+        $("input[id$='_"+index+"'], textarea[id$='_"+index+"']").each(function(){
+          if(!$(this).hasClass('hide')){
+            $(this).addClass('hide');
+            $(this).fadeIn();
+          }
+        });
         if($("#justificativa_"+index).hasClass('hide')){
           $("#justificativa_"+index).removeClass('hide');
           $("#justificativa_"+index).fadeIn();
         }
       }
-      else if($(this).val()==="6"){
-        if(!$("#justificativa_"+index).hasClass('hide')){
-          $("#justificativa_"+index).addClass('hide');
-          $("#justificativa_"+index).fadeOut();
+      else if($(this).val()==="4"){
+        $("input[id$='_"+index+"'], textarea[id$='_"+index+"']").each(function(){
+          if(!$(this).hasClass('hide')){
+            $(this).addClass('hide');
+            $(this).fadeIn();
+          }
+        });
+        if($("#num_processo_"+index).hasClass('hide')){
+          $("#num_processo_"+index).removeClass('hide');
+          $("#num_processo_"+index).fadeIn();
         }
+      }
+      else if($(this).val()==="6"){
+        $("input[id$='_"+index+"'], textarea[id$='_"+index+"']").each(function(){
+          if(!$(this).hasClass('hide')){
+            $(this).addClass('hide');
+            $(this).fadeIn();
+          }
+        });
         if($("#data_acordo_"+index).hasClass('hide')){
           $("#data_acordo_"+index).removeClass('hide');
           $("#data_acordo_"+index).fadeIn();
         }
       }
       else {
-        if(!$("#data_acordo_"+index).hasClass('hide')){
-          $("#data_acordo_"+index).addClass('hide');
-          $("#data_acordo_"+index).fadeOut();
-        }
-        if(!$("#justificativa_"+index).hasClass('hide')){
-          $("#justificativa_"+index).addClass('hide');
-          $("#justificativa_"+index).fadeOut();
-        }
+        $("input[id$='_"+index+"'], textarea[id$='_"+index+"']").each(function(){
+          if(!$(this).hasClass('hide')){
+            $(this).addClass('hide');
+            $(this).fadeIn();
+          }
+        });
       }
     });
   });

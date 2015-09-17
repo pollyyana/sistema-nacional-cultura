@@ -17,6 +17,8 @@ from clever_selects.forms import ChainedChoicesForm
 
 class AlterarSituacao(ModelForm):
     justificativa = forms.CharField(max_length="255", required=False)
+    localizacao = forms.CharField(max_length="10", required=False)
+    num_processo = forms.CharField(max_length="50", required=False)
 
     def save(self, commit=True):
         usuario = super(AlterarSituacao, self).save(commit=False)
@@ -24,10 +26,13 @@ class AlterarSituacao(ModelForm):
         historico.usuario = usuario
         historico.situacao = self.cleaned_data['estado_processo']
 
-        if self.cleaned_data['estado_processo'] == '3':
+        if self.cleaned_data['estado_processo'] == '2':
+            usuario.municipio.localizacao = self.cleaned_data['localizacao']
+        elif self.cleaned_data['estado_processo'] == '3':
             historico.descricao = self.cleaned_data['justificativa']
-
-        if self.cleaned_data['estado_processo'] == '6':
+        elif self.cleaned_data['estado_processo'] == '4':
+            usuario.municipio.numero_processo = self.cleaned_data['num_processo']
+        elif self.cleaned_data['estado_processo'] == '6':
             if usuario.plano_trabalho is None:
                 plano_trabalho = PlanoTrabalho()
 
@@ -38,6 +43,7 @@ class AlterarSituacao(ModelForm):
                 print(usuario.plano_trabalho)
 
         if commit:
+            usuario.municipio.save()
             usuario.save()
             historico.save()
             enviar_email_alteracao_situacao(usuario, historico)

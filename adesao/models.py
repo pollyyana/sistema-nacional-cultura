@@ -43,6 +43,7 @@ class Cidade(models.Model):
 
 class Municipio(models.Model):
     localizacao = models.CharField(max_length=50, blank=True)
+    numero_processo = models.CharField(max_length=50, blank=True)
     cpf_prefeito = models.CharField(
         max_length=14,
         verbose_name='CPF')
