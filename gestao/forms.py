@@ -16,7 +16,7 @@ from clever_selects.forms import ChainedChoicesForm
 
 
 class AlterarSituacao(ModelForm):
-    justificativa = forms.CharField(max_length="255", required=False)
+    justificativa = forms.CharField(required=False)
     localizacao = forms.CharField(max_length="10", required=False)
     num_processo = forms.CharField(max_length="50", required=False)
 
