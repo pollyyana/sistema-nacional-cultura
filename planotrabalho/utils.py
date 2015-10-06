@@ -1,4 +1,5 @@
 import re
+from datetime import date
 
 
 def get_or_none(model, **kwargs):
@@ -6,6 +7,7 @@ def get_or_none(model, **kwargs):
         return model.objects.get(**kwargs)
     except model.DoesNotExist:
         return None
+
 
 def validar_cnpj(cnpj):
     cnpj = ''.join(re.findall('\d', str(cnpj)))
@@ -29,3 +31,10 @@ def validar_cnpj(cnpj):
     if novo == inteiros:
         return cnpj
     return False
+
+
+def add_anos(data, anos):
+    try:
+        return data.replace(year=data.year + anos)
+    except ValueError:
+        return data + (date(data.year + anos, 1, 1) - date(data.year, 1, 1))
