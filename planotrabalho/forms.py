@@ -23,7 +23,7 @@ class CriarSistemaForm(ModelForm):
         if not self.cleaned_data['data_final_elaboracao_projeto_lei']:
             return self.cleaned_data['data_final_elaboracao_projeto_lei']
 
-        limite = add_anos(self.usuario.data_publicacao_acordo, 2)
+        limite = add_anos(self.usuario.data_publicacao_acordo, self.usuario.prazo)
 
         if self.cleaned_data['data_final_elaboracao_projeto_lei'] > limite:
             raise forms.ValidationError('A data deve ser anterior a ' +
@@ -37,7 +37,7 @@ class CriarSistemaForm(ModelForm):
         if not self.cleaned_data['data_final_sancao_lei']:
             return self.cleaned_data['data_final_sancao_lei']
 
-        limite = add_anos(self.usuario.data_publicacao_acordo, 2)
+        limite = add_anos(self.usuario.data_publicacao_acordo, self.usuario.prazo)
 
         if self.cleaned_data['data_final_sancao_lei'] > (limite):
             raise forms.ValidationError('A data deve ser anterior a ' +
@@ -76,7 +76,7 @@ class OrgaoGestorForm(ModelForm):
         if not self.cleaned_data['data_final_estruturacao_secretaria']:
             return self.cleaned_data['data_final_estruturacao_secretaria']
 
-        limite = add_anos(self.usuario.data_publicacao_acordo, 2)
+        limite = add_anos(self.usuario.data_publicacao_acordo, self.usuario.prazo)
 
         if self.cleaned_data['data_final_estruturacao_secretaria'] > limite:
             raise forms.ValidationError('A data deve ser anterior a ' +
@@ -111,7 +111,7 @@ class ConselhoCulturalForm(ModelForm):
         if not self.cleaned_data['data_final_instalacao_conselho']:
             return self.cleaned_data['data_final_instalacao_conselho']
 
-        limite = add_anos(self.usuario.data_publicacao_acordo, 2)
+        limite = add_anos(self.usuario.data_publicacao_acordo, self.usuario.prazo)
 
         if self.cleaned_data['data_final_instalacao_conselho'] > limite:
             raise forms.ValidationError('A data deve ser anterior a ' +
@@ -146,7 +146,7 @@ class FundoCulturaForm(ModelForm):
         if not self.cleaned_data['data_final_instituicao_fundo_cultura']:
             return self.cleaned_data['data_final_instituicao_fundo_cultura']
 
-        limite = add_anos(self.usuario.data_publicacao_acordo, 2)
+        limite = add_anos(self.usuario.data_publicacao_acordo, self.usuario.prazo)
 
         if self.cleaned_data['data_final_instituicao_fundo_cultura'] > limite:
             raise forms.ValidationError('A data deve ser anterior a ' +
@@ -199,7 +199,7 @@ class PlanoCulturaForm(ModelForm):
         if not self.cleaned_data['data_final_estabelecimento_instancias']:
             return self.cleaned_data['data_final_estabelecimento_instancias']
 
-        limite = add_anos(self.usuario.data_publicacao_acordo, 2)
+        limite = add_anos(self.usuario.data_publicacao_acordo, self.usuario.prazo)
 
         if self.cleaned_data['data_final_estabelecimento_instancias'] > limite:
             raise forms.ValidationError('A data deve ser anterior a ' +
@@ -213,7 +213,7 @@ class PlanoCulturaForm(ModelForm):
         if not self.cleaned_data['data_final_elaboracao_plano_cultura']:
             return self.cleaned_data['data_final_elaboracao_plano_cultura']
 
-        limite = add_anos(self.usuario.data_publicacao_acordo, 2)
+        limite = add_anos(self.usuario.data_publicacao_acordo, self.usuario.prazo)
 
         if self.cleaned_data['data_final_elaboracao_plano_cultura'] > limite:
             raise forms.ValidationError('A data deve ser anterior a ' +
@@ -227,7 +227,7 @@ class PlanoCulturaForm(ModelForm):
         if not self.cleaned_data['data_final_aprovacao_plano_cultura']:
             return self.cleaned_data['data_final_aprovacao_plano_cultura']
 
-        limite = add_anos(self.usuario.data_publicacao_acordo, 2)
+        limite = add_anos(self.usuario.data_publicacao_acordo, self.usuario.prazo)
 
         if self.cleaned_data['data_final_aprovacao_plano_cultura'] > limite:
             raise forms.ValidationError('A data deve ser anterior a ' +
@@ -241,7 +241,7 @@ class PlanoCulturaForm(ModelForm):
         if not self.cleaned_data['data_final_sancao_lei_plano_cultura']:
             return self.cleaned_data['data_final_sancao_lei_plano_cultura']
 
-        limite = add_anos(self.usuario.data_publicacao_acordo, 2)
+        limite = add_anos(self.usuario.data_publicacao_acordo, self.usuario.prazo)
 
         if self.cleaned_data['data_final_sancao_lei_plano_cultura'] > limite:
             raise forms.ValidationError('A data deve ser anterior a ' +
