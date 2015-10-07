@@ -13,6 +13,11 @@ urlpatterns = [
         name='alterar_situacao'),
     url(r'^alterar/cadastrador/',
         staff_member_required(views.AlterarCadastrador.as_view()), name='alterar_cadastrador'),
+    # Acompanhar e aditivar prazos dos municípios
+    url(r'^acompanhar/prazo/',
+        staff_member_required(views.AcompanharPrazo.as_view()), name='acompanhar_prazo'),
+    url(r'^aditivar/prazo/(?P<id>[\w]+)$',
+        staff_member_required(views.aditivar_prazo, login_url='adesao:login'), name='aditivar_prazo'),
 
     # Acompanhar criação do sistema de cultura
     url(r'^acompanhar/sistema$', staff_member_required(

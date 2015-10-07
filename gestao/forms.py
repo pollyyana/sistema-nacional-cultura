@@ -145,6 +145,8 @@ class AlterarCadastradorForm(ChainedChoicesForm):
             user_antigo.estado_processo = '0'
             user_novo.estado_processo = '6'
 
+            user_novo.prazo = user_antigo.prazo
+
             if data_publicacao_acordo:
                 user_novo.data_publicacao_acordo = data_publicacao_acordo
             else:

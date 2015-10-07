@@ -41,6 +41,31 @@ def alterar_situacao(request, id):
     return redirect('gestao:acompanhar_adesao')
 
 
+class AcompanharPrazo(ListView):
+    template_name = 'gestao/acompanhar_prazo.html'
+    paginate_by = 10
+
+    def get_queryset(self):
+        ente_federado = self.request.GET.get('municipio', None)
+        if ente_federado:
+            municipio = Usuario.objects.filter(
+                municipio__cidade__nome_municipio__icontains=ente_federado)
+            estado = Usuario.objects.filter(
+                municipio__cidade__isnull=True,
+                municipio__estado__nome_uf__icontains=ente_federado)
+
+            return municipio | estado
+        return Usuario.objects.filter(prazo=2, estado_processo='6', data_publicacao_acordo__isnull=False)
+
+
+def aditivar_prazo(request, id):
+    if request.method == "POST":
+        user = Usuario.objects.get(id=id)
+        user.prazo = 4
+        user.save()
+    return redirect('gestao:acompanhar_prazo')
+
+
 class AcompanharAdesao(ListView):
     template_name = 'gestao/adesao/acompanhar.html'
     paginate_by = 10

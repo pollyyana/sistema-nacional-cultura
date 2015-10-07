@@ -152,6 +152,7 @@ class Usuario(models.Model):
     data_publicacao_acordo = models.DateField(blank=True, null=True)
     codigo_ativacao = models.CharField(max_length=12, unique=True)
     data_cadastro = models.DateTimeField(auto_now_add=True)
+    prazo = models.IntegerField(default=2)
 
     def __str__(self):
         return self.user.username
