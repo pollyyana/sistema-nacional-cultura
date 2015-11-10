@@ -15,7 +15,6 @@
 <ul>
   <li>Nome: <strong>{{ object.municipio.nome_prefeito }}</strong></li>
   <li>E-mail: <strong>{{ object.municipio.email_institucional_prefeito }}</strong></li>
-  <li>Telefone: <strong>{{ object.municipio.telefone_um }}</strong></li>
 </ul>
 
 <h4>Interlocutor</h4>
@@ -34,22 +33,40 @@
   <li>Telefone: <strong>{{ object.responsavel.telefone_um }}</strong></li>
 </ul>
 
+<h4>Situação do Acordo</h4>
+<ul>
+  <li><strong>{{ object.get_estado_processo_display }}</strong></li>
+  {% if object.estado_processo == '6' %}
+    <li>Data de publicação: <strong>{{ object.data_publicacao_acordo }}</strong></li>
+  {% endif %}
+</ul>
+
 <h4>Plano de Trabalho</h4>
 <ul>
   {% if object.plano_trabalho.criacao_sistema.lei_sistema_cultura %}
     <li><a href="{{ object.plano_trabalho.criacao_sistema.lei_sistema_cultura.url }}">Lei do Sistema de Cultura</a></li>
+  {% else %}
+    <li>Lei do Sistema de Cultura não informada</li>
   {% endif %}
   {% if object.plano_trabalho.orgao_gestor.relatorio_atividade_secretaria %}
     <li><a href="{{ object.plano_trabalho.orgao_gestor.relatorio_atividade_secretaria.url }}">Relatório de Atividades do Órgão Gestor</a></li>
+  {% else %}
+    <li>Relatório de Atividades do Órgão Gestor não informado</li>
   {% endif %}
   {% if object.plano_trabalho.conselho_cultural.ata_regimento_aprovado %}
     <li><a href="{{ object.plano_trabalho.conselho_cultural.ata_regimento_aprovado.url }}">Ata de Reunião de Criação do Conselho de Políticas Culturais</a></li>
+  {% else %}
+    <li>Ata de Reunião de Criação do Conselho de Políticas Culturais não informada</li>
   {% endif %}
   {% if object.plano_trabalho.fundo_cultura.lei_fundo_cultura %}
     <li><a href="{{ object.plano_trabalho.fundo_cultura.lei_fundo_cultura.url }}">Lei do Fundo de Cultura</a></li>
+  {% else %}
+    <li>Lei do Fundo de Cultura não informada</li>
   {% endif %}
   {% if object.plano_trabalho.plano_cultura.lei_plano_cultura %}
     <li><a href="{{ object.plano_trabalho.plano_cultura.lei_plano_cultura.url }}">Lei do Plano de Cultura</a></li>
+  {% else %}
+    <li>Lei do Plano de Cultura não informada</li>
   {% endif %}
 </ul>
 {% endblock content %}
