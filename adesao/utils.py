@@ -60,7 +60,7 @@ def validar_cnpj(cnpj):
 
     prod = [5, 4, 3, 2, 9, 8, 7, 6, 5, 4, 3, 2]
     while len(novo) < 14:
-        r = sum([x*y for (x, y) in zip(novo, prod)]) % 11
+        r = sum([x * y for (x, y) in zip(novo, prod)]) % 11
         if r > 1:
             f = 11 - r
         else:
@@ -84,4 +84,13 @@ def enviar_email_conclusao(user, message_txt, message_html):
         'naoresponda@cultura.gov.br',
         [user.email],),
         kwargs = {'fail_silently': 'False', 'html_message': message_html}
-    ).start()
+        ).start()
+
+
+def verificar_anexo(municipio, etapa, nome_anexo):
+    try:
+        etapa = getattr(municipio.usuario.plano_trabalho, etapa)
+        getattr(etapa, nome_anexo)
+        return 'Sim'
+    except AttributeError:
+        return 'Não'

@@ -16,7 +16,7 @@ from django.core.exceptions import ValidationError, ObjectDoesNotExist
 from adesao.models import Municipio, Responsavel, Secretario, Usuario, Historico
 from adesao.forms import CadastrarUsuarioForm, CadastrarMunicipioForm
 from adesao.forms import CadastrarResponsavelForm, CadastrarSecretarioForm
-from adesao.utils import enviar_email_conclusao
+from adesao.utils import enviar_email_conclusao, verificar_anexo
 
 from wkhtmltopdf.views import PDFTemplateView
 
@@ -126,6 +126,10 @@ def exportar_xls(request):
     planilha.write(0, 8, 'Email')
     planilha.write(0, 9, 'Localização do processo')
     planilha.write(0, 10, 'Possui Lei do Sistema de Cultura')
+    planilha.write(0, 11, 'Possui Órgão Gestor')
+    planilha.write(0, 12, 'Possui Conselho de Política Cultural')
+    planilha.write(0, 13, 'Possui Fundo de Cultura')
+    planilha.write(0, 14, 'Possui Plano de Cultura')
 
     for i, municipio in enumerate(Municipio.objects.all(), start=1):
         uf = municipio.estado.sigla
@@ -145,11 +149,6 @@ def exportar_xls(request):
         telefone = municipio.telefone_um
         email = municipio.email_institucional_prefeito
         local = municipio.localizacao
-        try:
-            lei_sistema = municipio.usuario.plano_trabalho.criacao_sistema.lei_sistema_cultura
-            lei_sistema = 'Sim'
-        except AttributeError:
-            lei_sistema = 'Não'
 
         planilha.write(i, 0, uf)
         planilha.write(i, 1, cidade)
@@ -161,7 +160,11 @@ def exportar_xls(request):
         planilha.write(i, 7, telefone)
         planilha.write(i, 8, email)
         planilha.write(i, 9, local)
-        planilha.write(i, 10, lei_sistema)
+        planilha.write(i, 10, verificar_anexo(municipio, 'criacao_sistema', 'lei_sistema_cultura'))
+        planilha.write(i, 11, verificar_anexo(municipio, 'orgao_gestor', 'relatorio_atividade_secretaria'))
+        planilha.write(i, 12, verificar_anexo(municipio, 'conselho_cultural', 'ata_regimento_aprovado'))
+        planilha.write(i, 13, verificar_anexo(municipio, 'fundo_cultura', 'lei_fundo_cultura'))
+        planilha.write(i, 14, verificar_anexo(municipio, 'plano_cultura', 'lei_plano_cultura'))
 
     workbook.save(response)
 
