@@ -1,6 +1,5 @@
 {% extends "base.html" %} {% load gestao_tags %}
 {% block menu %}
-{% if not request.user.is_authenticated %}
 <div class="portletWrapper" id="portletwrapper-706c6f6e652e6c656674636f6c756d6e0a636f6e746578740a2f706f7274616c0a736f627265" data-portlethash="706c6f6e652e6c656674636f6c756d6e0a636f6e746578740a2f706f7274616c0a736f627265">
   <dl class="portlet portletNavigationTree">
     <dt class="portletHeader">
@@ -51,21 +50,20 @@
     </dd>
   </dl>
 </div>
-{% endif %}
 {% endblock menu %}
 {% block content %}
 <form class="form-horizontal" method="get">
   <button type="submit" class="btn btn-info" style="float:right;">Buscar</button>
   <div style="overflow: hidden;">
-    <input name="municipio" type="search" class="form-control" placeholder="Município" />
+    <input name="estado" type="search" class="form-control" placeholder="Nome ou sigla da UF" />
   </div>
 </form>
 
-<h1>Municípios</h1>
+<h1>Estados</h1>
 <ul>
   {% for municipio in object_list %}
   <li>
-    <a href="{% url 'adesao:detalhar' municipio.id %}">{{ municipio.municipio.cidade.nome_municipio }} - {{ municipio.municipio.estado.nome_uf }}</a>
+    <a href="{% url 'adesao:detalhar' municipio.id %}">{{ municipio.municipio.estado.nome_uf }}</a>
   </li>
   {% empty %}
   <li>

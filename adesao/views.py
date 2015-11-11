@@ -1,4 +1,5 @@
-import csv, xlwt
+import csv
+import xlwt
 from datetime import timedelta
 from threading import Thread
 
@@ -12,6 +13,7 @@ from django.contrib.auth.decorators import login_required
 from django.utils import timezone
 from django.template.loader import render_to_string
 from django.core.exceptions import ValidationError, ObjectDoesNotExist
+from django.db.models import Q
 
 from adesao.models import Municipio, Responsavel, Secretario, Usuario, Historico
 from adesao.forms import CadastrarUsuarioForm, CadastrarMunicipioForm
@@ -116,7 +118,7 @@ def exportar_xls(request):
     workbook = xlwt.Workbook()
     planilha = workbook.add_sheet('SNC')
     planilha.write(0, 0, 'UF')
-    planilha.write(0, 1, 'Município')
+    planilha.write(0, 1, 'Ente Federado')
     planilha.write(0, 2, 'Cod.IBGE')
     planilha.write(0, 3, 'Situação')
     planilha.write(0, 4, 'Endereço')
@@ -190,7 +192,7 @@ class CadastrarUsuario(CreateView):
             'naoresponda@cultura.gov.br',
             [self.object.email],),
             kwargs = {'fail_silently': 'False', }
-        ).start()
+            ).start()
         return super(CadastrarUsuario, self).get_success_url()
 
 
@@ -331,7 +333,7 @@ class MinutaAcordo(PDFTemplateView):
     cmd_options = {
         'margin-top': 60,
         'header-spacing': 5,
-    }
+        }
 
     def get_context_data(self, **kwargs):
         context = super(MinutaAcordo, self).get_context_data(**kwargs)
@@ -348,7 +350,7 @@ class TermoSolicitacao(PDFTemplateView):
     cmd_options = {
         'margin-top': 40,
         'header-spacing': 5,
-    }
+        }
 
     def get_context_data(self, **kwargs):
         context = super(TermoSolicitacao, self).get_context_data(**kwargs)
@@ -369,7 +371,7 @@ class OficioAlteracao(PDFTemplateView):
         return context
 
 
-class Consultar(ListView):
+class ConsultarMunicipios(ListView):
     template_name = 'consultar/consultar.html'
     paginate_by = '25'
 
@@ -379,6 +381,22 @@ class Consultar(ListView):
         if ente_federado:
             return Usuario.objects.filter(municipio__cidade__nome_municipio__icontains=ente_federado)
         return Usuario.objects.filter(estado_processo='6').order_by('municipio__cidade__nome_municipio')
+
+
+class ConsultarEstados(ListView):
+    template_name = 'consultar/consultar_estados.html'
+    paginate_by = '27'
+
+    def get_queryset(self):
+        ente_federado = self.request.GET.get('estado', None)
+
+        if ente_federado:
+            return Usuario.objects.filter(
+                Q(municipio__cidade__isnull=True),
+                Q(municipio__estado__nome_uf__icontains=ente_federado) |
+                Q(municipio__estado__sigla__iexact=ente_federado))
+
+        return Usuario.objects.filter(municipio__estado__isnull=False, municipio__cidade__isnull=True)
 
 
 class Detalhar(DetailView):

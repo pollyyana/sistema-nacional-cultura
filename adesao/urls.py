@@ -76,6 +76,7 @@ urlpatterns = [
         name='alteracao'),
 
     # Consulta
-    url(r'^consultar/$', views.Consultar.as_view(), name='consultar'),
+    url(r'^consultar/$', views.ConsultarMunicipios.as_view(), name='consultar'),
+    url(r'^consultar/estados/$', views.ConsultarEstados.as_view(), name='consultar_estados'),
     url(r'^detalhar/(?P<pk>[0-9]+)$', views.Detalhar.as_view(), name='detalhar'),
     ]

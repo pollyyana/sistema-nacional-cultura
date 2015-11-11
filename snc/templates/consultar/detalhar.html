@@ -1,8 +1,12 @@
 {% extends "base.html" %}
 {% block content %}
-<h2>Dados de {{ object.municipio.cidade.nome_municipio }} - {{ object.municipio.estado.nome_uf }}</h2>
+<h2>Dados: {{ object.municipio.cidade.nome_municipio }} - {{ object.municipio.estado.nome_uf }}</h2>
 
+{% if object.municipio.cidade %}
 <h4>Prefeitura</h4>
+{% else %}
+<h4>Governo</h4>
+{% endif %}
 <ul>
   <li>CNPJ: <strong>{{ object.municipio.cnpj_prefeitura }}</strong></li>
   <li>Endereço: <strong>{{ object.municipio.endereco }}</strong></li>
@@ -11,7 +15,11 @@
   <li>Telefone: <strong>{{ object.municipio.telefone_um }}</strong></li>
 </ul>
 
+{% if object.municipio.cidade %}
 <h4>Prefeito</h4>
+{% else %}
+<h4>Governador</h4>
+{% endif %}
 <ul>
   <li>Nome: <strong>{{ object.municipio.nome_prefeito }}</strong></li>
   <li>E-mail: <strong>{{ object.municipio.email_institucional_prefeito }}</strong></li>
