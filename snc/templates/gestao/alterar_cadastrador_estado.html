@@ -1,7 +1,7 @@
 {% extends "gestao/base_gestao.html" %} {% load widget_tweaks %} {% block content %}
 <div class="panel panel-default">
   <div class="panel-heading">
-    Alteração de cadastrador para Municípios
+    Alteração de cadastrador para Estados
   </div>
   <div class="panel-body">
     <form action="{% url 'gestao:alterar_cadastrador' %}" class="form-horizontal" method="post">{% csrf_token %}
@@ -21,14 +21,7 @@
         </div>
         <div class="col-sm-offset-3 col-sm-9">
           {{ form.uf.errors }}
-        </div>
-      </div>
-
-      <div class="form-group">
-        <label for="{{ form.municipio.id_for_label }}" class="col-sm-3 control-label">Município</label>
-
-        <div class="col-sm-4">
-          {% render_field form.municipio class="form-control" %} {{ form.municipio.errors }}
+          {{ form.municipio.errors }}
         </div>
       </div>
 

@@ -94,6 +94,21 @@
                           <a href="{% url 'exportar_xls' %}">Exportar Planilha</a>
                         </li>
                         <li>
+                          <a href="#"><i class="fa fa-exchange fa-fw"></i>  Alterar Cadastradores<span class="fa arrow"></span></a>
+                          <ul class="nav nav-second-level">
+                            <li>
+                              <a href="{% url 'gestao:alterar_cadastrador' %}">
+                                Município
+                              </a>
+                            </li>
+                            <li>
+                              <a href="{% url 'gestao:alterar_cadastrador_estado' %}">
+                                Estado
+                              </a>
+                            </li>
+                          </ul>
+                        </li>
+                        <li>
                             <a href="#"><i class="fa fa-table fa-fw"></i>  Acompanhar Processos<span class="fa arrow"></span></a>
 
                             <ul class="nav nav-second-level">
@@ -124,12 +139,6 @@
                               <li>
                                 <a href="{% url 'gestao:acompanhar_adesao' %}?situacao=5">
                                   Aguarda Publicação no DOU
-                                </a>
-                              </li>
-
-                              <li>
-                                <a href="{% url 'gestao:alterar_cadastrador' %}">
-                                  Alterar Cadastrador
                                 </a>
                               </li>
 

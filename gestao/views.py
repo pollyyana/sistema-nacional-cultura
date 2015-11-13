@@ -22,6 +22,16 @@ class AlterarCadastrador(FormView):
         return super(AlterarCadastrador, self).form_valid(form)
 
 
+class AlterarCadastradorEstado(FormView):
+    template_name = 'gestao/alterar_cadastrador_estado.html'
+    form_class = AlterarCadastradorForm
+    success_url = reverse_lazy('gestao:acompanhar_adesao')
+
+    def form_valid(self, form):
+        form.save()
+        return super(AlterarCadastrador, self).form_valid(form)
+
+
 class MunicipioChain(ChainedSelectChoicesView):
     def get_choices(self):
         data = Cidade.objects.filter(uf=self.parent_value)

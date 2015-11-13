@@ -127,7 +127,10 @@ class AlterarCadastradorForm(ChainedChoicesForm):
         data_publicacao_acordo = self.cleaned_data['data_publicacao_acordo']
         user_novo = Usuario.objects.get(user__username__iexact=cpf_usuario)
         try:
-            user_antigo = Usuario.objects.get(municipio__cidade=municipio, municipio__estado=uf)
+            if municipio:
+                user_antigo = Usuario.objects.get(municipio__cidade=municipio, municipio__estado=uf)
+            else:
+                user_antigo = Usuario.objects.get(municipio__cidade__isnull=True, municipio__estado=uf)
 
             user_novo.municipio = user_antigo.municipio
             user_antigo.municipio = None
@@ -152,7 +155,10 @@ class AlterarCadastradorForm(ChainedChoicesForm):
             else:
                 user_novo.data_publicacao_acordo = user_antigo.data_publicacao_acordo
         except Usuario.DoesNotExist:
-            user_antigo = Municipio.objects.get(cidade=municipio, estado=uf)
+            if municipio:
+                user_antigo = Municipio.objects.get(cidade=municipio, estado=uf)
+            else:
+                user_antigo = Municipio.objects.get(cidade__isnull=True, estado=uf)
             planotrabalho = PlanoTrabalho()
             planotrabalho.save()
 
