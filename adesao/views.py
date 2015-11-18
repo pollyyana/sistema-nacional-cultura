@@ -133,7 +133,7 @@ def exportar_xls(request):
     planilha.write(0, 13, 'Possui Fundo de Cultura')
     planilha.write(0, 14, 'Possui Plano de Cultura')
 
-    for i, municipio in enumerate(Municipio.objects.all(), start=1):
+    for i, municipio in enumerate(Municipio.objects.all().order_by('-cidade'), start=1):
         uf = municipio.estado.sigla
         if municipio.cidade:
             cidade = municipio.cidade.nome_municipio

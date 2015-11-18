@@ -4,7 +4,7 @@
     Alteração de cadastrador para Estados
   </div>
   <div class="panel-body">
-    <form action="{% url 'gestao:alterar_cadastrador' %}" class="form-horizontal" method="post">{% csrf_token %}
+    <form action="{% url 'gestao:alterar_cadastrador_estado' %}" class="form-horizontal" method="post">{% csrf_token %}
       <div class="form-group">
         <label for="{{ form.cpf_usuario.id_for_label }}" class="col-sm-3 control-label">CPF do Novo Cadastrador</label>
 

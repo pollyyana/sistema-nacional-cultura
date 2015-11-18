@@ -122,7 +122,7 @@ class AlterarCadastradorForm(ChainedChoicesForm):
 
     def save(self, commit=True):
         cpf_usuario = self.cleaned_data['cpf_usuario']
-        municipio = self.cleaned_data['municipio']
+        municipio = self.cleaned_data.get('municipio', None)
         uf = self.cleaned_data['uf']
         data_publicacao_acordo = self.cleaned_data['data_publicacao_acordo']
         user_novo = Usuario.objects.get(user__username__iexact=cpf_usuario)
