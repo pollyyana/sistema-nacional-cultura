@@ -166,7 +166,7 @@ def get_conselheiros(request):
         pk = request.GET.get('id')
         conselheiros = Conselheiro.objects.filter(conselho__pk=pk)
         response = {}
-        response['conselheiros'] = list(conselheiros.values_list('nome', 'cpf', 'email'))
+        response['conselheiros'] = list(conselheiros.values_list('nome', 'email', 'segmento'))
         return HttpResponse(
             json.dumps(response),
             content_type="application/json")

@@ -6,6 +6,29 @@ from .models import CriacaoSistema, OrgaoGestor, ConselhoCultural
 from .models import FundoCultura, PlanoCultura, Conselheiro
 from .utils import validar_cnpj, add_anos
 
+SETORIAIS = (
+    (1, 'Arquitetura e Urbanismo'),
+    (2, 'Arquivos'),
+    (3, 'Arte Digital'),
+    (4, 'Artes Visuais'),
+    (5, 'Artesanato'),
+    (6, 'Audiovisual'),
+    (7, 'Circo'),
+    (8, 'Culturas Afro-brasileiras'),
+    (9, 'Culturas dos Povos Indígenas'),
+    (10, 'Culturas Populares'),
+    (11, 'Dança'),
+    (12, 'Design'),
+    (13, 'Literatura, Livro e Leitura'),
+    (14, 'Moda'),
+    (15, 'Museus'),
+    (16, 'Música Erudita'),
+    (17, 'Música Popular'),
+    (18, 'Patrimônio Imaterial'),
+    (19, 'Patrimônio Material'),
+    (20, 'Teatro')
+    )
+
 
 class CriarSistemaForm(ModelForm):
     minuta_projeto_lei = forms.FileField(required=False, widget=FileInput)
@@ -125,14 +148,16 @@ class ConselhoCulturalForm(ModelForm):
         if commit:
             conselho.save()
             nomes = self.data.getlist('conselheiro')
-            cpfs = self.data.getlist('cpf')
             emails = self.data.getlist('email')
-            for nome, cpf, email in zip(nomes, cpfs, emails):
-                if nome and cpf and email:
-                    Conselheiro.objects.get_or_create(nome=nome, cpf=cpf, email=email, conselho=conselho)
+            segmentos = self.data.getlist('segmento')
+            outros_segmentos = self.data.getlist('outros_segmento')
+            for nome, email, segmento, outros_segmento in zip(nomes, emails, segmentos, outros_segmentos):
+                if nome and email and segmento:
+                    segmento = dict(SETORIAIS)[int(segmento)] if segmento != '21' else outros_segmento
+                    Conselheiro.objects.get_or_create(nome=nome, email=email, segmento=segmento, conselho=conselho)
                 else:
-                    Conselheiro.objects.filter(nome=nome, cpf=cpf, email=email, conselho=conselho).delete()
-            Conselheiro.objects.filter(conselho=conselho).exclude(cpf__in=cpfs).delete()
+                    Conselheiro.objects.filter(nome=nome, email=email, conselho=conselho).delete()
+            Conselheiro.objects.filter(conselho=conselho).exclude(email__in=emails).delete()
         return conselho
 
     class Meta:

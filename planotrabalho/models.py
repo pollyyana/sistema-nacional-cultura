@@ -157,6 +157,6 @@ class PlanoCultura(models.Model):
 
 class Conselheiro(models.Model):
     nome = models.CharField(max_length=100)
-    cpf = models.CharField(max_length=11, unique=True)
-    email = models.EmailField()
+    segmento = models.CharField(max_length=45)
+    email = models.EmailField(unique=True)
     conselho = models.ForeignKey('ConselhoCultural')
