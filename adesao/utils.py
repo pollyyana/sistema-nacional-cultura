@@ -92,5 +92,7 @@ def verificar_anexo(municipio, etapa, nome_anexo):
         etapa = getattr(municipio.usuario.plano_trabalho, etapa)
         if getattr(etapa, nome_anexo):
             return 'Sim'
+        else:
+            return 'Não'
     except AttributeError:
         return 'Não'
