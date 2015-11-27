@@ -36,6 +36,20 @@
     {% endif %}
     {{ form.ata_regimento_aprovado.errors }}
   </div>
+  <div class="form-group">
+    <label>Conselheiros (clique no + para adicionar mais conselheiros)</label><br/>
+    <div class="actions">
+      <input type="text" name="conselheiro" placeholder="Nome Completo" class="form-control"/>
+      <input type="text" name="cpf" placeholder="CPF" class="form-control cpf"/>
+      <input type="email" name="email" placeholder="Email" class="form-control"/><br/>
+    </div>
+    <button type="button" class="btn btn-success add">
+      <i class="fa fa-plus"></i>
+    </button>
+    <button type="button" class="btn btn-warning del">
+      <i class="fa fa-minus"></i>
+    </button>
+  </div>
   {% endif %}
 
   <div class="alert alert-info" role="alert">
@@ -50,4 +64,46 @@
   <input type="submit" class="btn btn-success" value="Salvar" />
 </form>
 </div>
+<script type="text/javascript">
+  input = $('.actions:first').clone();
+  $('.add').click(function() {
+        input.clone().attr('id', 'conselheiro_' + $('.actions').length)
+        .insertAfter($('.actions:last'));
+        {% verbatim %}
+        $(".cpf").formatter({
+          'pattern': '{{999}}.{{999}}.{{999}}-{{99}}',
+          'persistent': false,
+        });
+        {% endverbatim %}
+  });
+  $('.del').click(function() {
+    if($('.actions').length > 1)
+      $('.actions:last').remove();
+  });
+
+  $.ajax({
+    type: "GET",
+    url: "/planotrabalho/conselheiros",
+    cache: false,
+    data: {
+      'id': {{object.id}},
+    },
+    success: function(data){
+      data['conselheiros'].forEach(function(val, index, array){
+        input
+        .clone()
+        .attr('id', 'conselheiro_' + $('.actions').length)
+        .insertAfter($('.actions:last'))
+        .children('[name=conselheiro]')
+        .attr('value', val[0])
+        .parent()
+        .children('[name=cpf]')
+        .attr('value', val[1])
+        .parent()
+        .children('[name=email]')
+        .attr('value', val[2]);
+      });
+    },
+  });
+</script>
 {% endblock content %}

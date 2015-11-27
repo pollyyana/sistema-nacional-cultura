@@ -32,6 +32,9 @@ urlpatterns = [
     url(r'^conselho/(?P<pk>[0-9]+)/$',
         login_required(views.AlterarConselho.as_view()),
         name='alterar_conselho'),
+    url(r'^conselheiros/$',
+        login_required(views.get_conselheiros),
+        name='get_conselheiros'),
 
     # Quarta etapa - Criação do Fundo de Cultura
     url(r'^fundo/$',

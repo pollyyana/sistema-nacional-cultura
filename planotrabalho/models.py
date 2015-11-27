@@ -5,7 +5,7 @@ SITUACAO_ENVIO = (
     (0, 'Em preenchimento'),
     (1, 'Avaliando anexo'),
     (2, 'Concluída')
-)
+    )
 
 
 class PlanoTrabalho(models.Model):
@@ -153,3 +153,10 @@ class PlanoCultura(models.Model):
         max_length=1,
         choices=SITUACAO_ENVIO,
         default=0)
+
+
+class Conselheiro(models.Model):
+    nome = models.CharField(max_length=100)
+    cpf = models.CharField(max_length=11, unique=True)
+    email = models.EmailField()
+    conselho = models.ForeignKey('ConselhoCultural')

@@ -1,11 +1,9 @@
-from datetime import timedelta
-
 from django import forms
 from django.forms import ModelForm
 from django.forms.widgets import FileInput
 
 from .models import CriacaoSistema, OrgaoGestor, ConselhoCultural
-from .models import FundoCultura, PlanoCultura
+from .models import FundoCultura, PlanoCultura, Conselheiro
 from .utils import validar_cnpj, add_anos
 
 
@@ -126,6 +124,15 @@ class ConselhoCulturalForm(ModelForm):
 
         if commit:
             conselho.save()
+            nomes = self.data.getlist('conselheiro')
+            cpfs = self.data.getlist('cpf')
+            emails = self.data.getlist('email')
+            for nome, cpf, email in zip(nomes, cpfs, emails):
+                if nome and cpf and email:
+                    Conselheiro.objects.get_or_create(nome=nome, cpf=cpf, email=email, conselho=conselho)
+                else:
+                    Conselheiro.objects.filter(nome=nome, cpf=cpf, email=email, conselho=conselho).delete()
+            Conselheiro.objects.filter(conselho=conselho).exclude(cpf__in=cpfs).delete()
         return conselho
 
     class Meta:

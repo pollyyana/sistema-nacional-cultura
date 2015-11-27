@@ -1,10 +1,13 @@
+import json
+
+from django.core import serializers
 from django.shortcuts import redirect
-from django.http import Http404
+from django.http import Http404, HttpResponse
 from django.views.generic.edit import CreateView, UpdateView
 from django.views.generic.detail import DetailView
 from django.core.urlresolvers import reverse_lazy
 
-from planotrabalho.models import PlanoTrabalho, CriacaoSistema, OrgaoGestor
+from planotrabalho.models import PlanoTrabalho, CriacaoSistema, OrgaoGestor, Conselheiro
 from planotrabalho.models import ConselhoCultural, FundoCultura, PlanoCultura
 from .forms import CriarSistemaForm, OrgaoGestorForm, ConselhoCulturalForm
 from .forms import FundoCulturaForm, PlanoCulturaForm
@@ -156,6 +159,19 @@ class AlterarConselho(UpdateView):
     def get_success_url(self):
         trabalho = self.request.user.usuario.plano_trabalho.id
         return reverse_lazy('planotrabalho:planotrabalho', args=[trabalho])
+
+
+def get_conselheiros(request):
+    if request.is_ajax() and request.GET.get('id', None):
+        pk = request.GET.get('id')
+        conselheiros = Conselheiro.objects.filter(conselho__pk=pk)
+        response = {}
+        response['conselheiros'] = list(conselheiros.values_list('nome', 'cpf', 'email'))
+        return HttpResponse(
+            json.dumps(response),
+            content_type="application/json")
+    else:
+        return Http404()
 
 
 class CadastrarFundo(CreateView):
