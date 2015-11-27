@@ -90,7 +90,7 @@ def enviar_email_conclusao(user, message_txt, message_html):
 def verificar_anexo(municipio, etapa, nome_anexo):
     try:
         etapa = getattr(municipio.usuario.plano_trabalho, etapa)
-        getattr(etapa, nome_anexo)
-        return 'Sim'
+        if getattr(etapa, nome_anexo):
+            return 'Sim'
     except AttributeError:
         return 'Não'
