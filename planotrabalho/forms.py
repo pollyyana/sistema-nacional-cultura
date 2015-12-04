@@ -153,8 +153,13 @@ class ConselhoCulturalForm(ModelForm):
             outros_segmentos = self.data.getlist('outros_segmento')
             for nome, email, segmento, outros_segmento in zip(nomes, emails, segmentos, outros_segmentos):
                 if nome and email and segmento:
-                    segmento = dict(SETORIAIS)[int(segmento)] if segmento != '21' else outros_segmento
-                    Conselheiro.objects.get_or_create(nome=nome, email=email, segmento=segmento, conselho=conselho)
+                    try:
+                        conselheiro = Conselheiro.objects.get(email=email, conselho=conselho)
+                        conselheiro.nome, conselheiro.email, conselheiro.conselho = nome, email, conselho
+                        conselheiro.segmento = segmento if segmento != 'Outros' else outros_segmento
+                        conselheiro.save()
+                    except Conselheiro.DoesNotExist:
+                        Conselheiro.objects.get_or_create(nome=nome, email=email, segmento=segmento, conselho=conselho)
                 else:
                     Conselheiro.objects.filter(nome=nome, email=email, conselho=conselho).delete()
             Conselheiro.objects.filter(conselho=conselho).exclude(email__in=emails).delete()

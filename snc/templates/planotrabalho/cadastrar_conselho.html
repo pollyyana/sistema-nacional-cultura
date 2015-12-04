@@ -43,27 +43,27 @@
       <input type="email" name="email" placeholder="Email" class="form-control"/>
       <select name="segmento" class="form-control segmento">
         <option value="0" selected>-- Selecione um Segmento --</option>
-        <option value="1">Arquitetura e Urbanismo</option>
-        <option value="2">Arquivos</option>
-        <option value="3">Arte Digital</option>
-        <option value="4">Artes Visuais</option>
-        <option value="5">Artesanato</option>
-        <option value="6">Audiovisual</option>
-        <option value="7">Circo</option>
-        <option value="8">Culturas Afro-brasileiras</option>
-        <option value="9">Culturas dos Povos Indígenas</option>
-        <option value="10">Culturas Populares</option>
-        <option value="11">Dança</option>
-        <option value="12">Design</option>
-        <option value="13">Literatura, Livro e Leitura</option>
-        <option value="14">Moda</option>
-        <option value="15">Museus</option>
-        <option value="16">Música Erudita</option>
-        <option value="17">Música Popular</option>
-        <option value="18">Patrimônio Imaterial</option>
-        <option value="19">Patrimônio Material</option>
-        <option value="20">Teatro</option>
-        <option value="21">Outros</option>
+        <option value="Arquitetura e Urbanismo">Arquitetura e Urbanismo</option>
+        <option value="Arquivos">Arquivos</option>
+        <option value="Arte Digital">Arte Digital</option>
+        <option value="Artes Visuais">Artes Visuais</option>
+        <option value="Artesanato">Artesanato</option>
+        <option value="Audiovisual">Audiovisual</option>
+        <option value="Circo">Circo</option>
+        <option value="Culturas Afro-brasileiras">Culturas Afro-brasileiras</option>
+        <option value="Culturas dos Povos Indígenas">Culturas dos Povos Indígenas</option>
+        <option value="Culturas Populares">Culturas Populares</option>
+        <option value="Dança">Dança</option>
+        <option value="Design">Design</option>
+        <option value="Literatura, Livro e Leitura">Literatura, Livro e Leitura</option>
+        <option value="Moda">Moda</option>
+        <option value="Museus">Museus</option>
+        <option value="Música Erudita">Música Erudita</option>
+        <option value="Música Popular">Música Popular</option>
+        <option value="Patrimônio Imaterial">Patrimônio Imaterial</option>
+        <option value="Patrimônio Material">Patrimônio Material</option>
+        <option value="Teatro">Teatro</option>
+        <option value="Outros">Outros</option>
       </select>
       <input type="text" name="outros_segmento" placeholder="Digite aqui seu segmento" class="form-control" style="display: none;"/><br/>
     </div>
@@ -107,7 +107,7 @@
         });
         {% endverbatim %}
         $(".segmento").change(function(){
-          if ($(this).val() === '21'){
+          if ($(this).val() === 'Outros'){
             $(this).parent().children('[name=outros_segmento]').fadeIn();
           }else {
             $(this).parent().children('[name=outros_segmento]').fadeOut();
@@ -138,12 +138,18 @@
         .children('[name=email]')
         .attr('value', val[1])
         .parent()
-        .children('[name=segmento]')
-        .find("option[text='"+ val[2] +"']")
-        .attr("selected", true);
+        .children('[name=segmento]');
+        options = $('#conselheiro_'+(index+1))
+        .children('[name=segmento]');
+        if (options.find('option[value="'+val[2]+'"]').length){
+          options.val(val[2]).attr("selected", true);
+        }else {
+          options.val("Outros").attr("selected", true);
+          options.parent().children('[name=outros_segmento]').val(val[2]).fadeIn();
+        }
       });
       $(".segmento").off('change').change(function(){
-        if ($(this).val() === '21'){
+        if ($(this).val() === 'Outros'){
           $(this).parent().children('[name=outros_segmento]').fadeIn();
         }else {
           $(this).parent().children('[name=outros_segmento]').fadeOut();
