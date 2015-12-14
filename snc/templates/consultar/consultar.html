@@ -36,12 +36,12 @@
     <dd class="portletItem lastItem">
       <ul class="navTree navTreeLevel0">
         <li class="navTreeItem visualNoMarker navTreeFolderish section-sobre-a">
-          <a href="{% url 'exportar_csv' %}" title="" class="state-published navTreeFolderish contenttype-folder">
+          <a href="{% url 'exportar_csv' %}" id="csv" title="" class="state-published navTreeFolderish contenttype-folder">
             <span>em CSV</span>
           </a>
         </li>
         <li class="navTreeItem visualNoMarker navTreeFolderish section-sobre-a">
-          <a href="{% url 'exportar_xls' %}" title="" class="state-published navTreeFolderish contenttype-folder">
+          <a href="{% url 'exportar_xls' %}" id="xls" title="" class="state-published navTreeFolderish contenttype-folder">
             <span>em XLS</span>
           </a>
         </li>
@@ -82,4 +82,14 @@
     <a class="paginate_button next" href="?{% url_replace 'page' page_obj.next_page_number %}">Próximo</a>
   {% endif %}
 </div>
+<script type="text/javascript">
+$(document).ready(function() {
+  $("#csv").click(function() {
+    $('#overlay').show();
+  });
+  $("#xls").click(function() {
+    $('#overlay').show();
+  });
+});
+</script>
 {% endblock content %}
