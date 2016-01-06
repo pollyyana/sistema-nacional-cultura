@@ -140,7 +140,7 @@ def exportar_xls(request):
             cod_ibge = municipio.cidade.codigo_ibge
         else:
             cidade = municipio.estado.nome_uf
-            cod_ibge = ''
+            cod_ibge = municipio.estado.codigo_ibge
         try:
             estado_processo = municipio.usuario.get_estado_processo_display()
         except ObjectDoesNotExist:
