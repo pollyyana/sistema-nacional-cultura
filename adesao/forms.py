@@ -18,6 +18,9 @@ content_types = [
     'application/vnd.oasis.opendocument.text',
     'application/vnd.openxmlformats-officedocument.' +
     'wordprocessingml.document',
+    'application/x-rar-compressed',
+    'application/zip',
+    'application/octet-stream',
     'text/plain']
 
 

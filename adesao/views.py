@@ -99,6 +99,8 @@ def exportar_csv(request):
             cod_ibge = ''
         try:
             estado_processo = municipio.usuario.get_estado_processo_display()
+            if estado_processo != 'Publicado no DOU':
+                continue
         except ObjectDoesNotExist:
             estado_processo = 'Publicado no DOU'
         endereco = municipio.endereco
@@ -143,6 +145,8 @@ def exportar_xls(request):
             cod_ibge = municipio.estado.codigo_ibge
         try:
             estado_processo = municipio.usuario.get_estado_processo_display()
+            if estado_processo != 'Publicado no DOU':
+                continue
         except ObjectDoesNotExist:
             estado_processo = 'Publicado no DOU'
         endereco = municipio.endereco
