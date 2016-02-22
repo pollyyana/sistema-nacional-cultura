@@ -1,5 +1,3 @@
-[![Gitter](https://badges.gitter.im/Fale%20conosco.svg)](https://gitter.im/culturagovbr?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge)
-
 # Sistema Nacional de Cultura
 O Sistema Nacional de Cultura é um modelo de gestão e promoção de políticas públicas de cultura que pressupõe a ação conjunta dos entes da federação (governos federal, estadual e municipal) para democratização do setor. (http://pt.wikipedia.org/wiki/Sistema_Nacional_de_Cultura)
 
