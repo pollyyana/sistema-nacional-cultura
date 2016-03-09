@@ -1,6 +1,5 @@
 {% extends "base.html" %} {% load gestao_tags %}
 {% block menu %}
-{% if not request.user.is_authenticated %}
 <div class="portletWrapper" id="portletwrapper-706c6f6e652e6c656674636f6c756d6e0a636f6e746578740a2f706f7274616c0a736f627265" data-portlethash="706c6f6e652e6c656674636f6c756d6e0a636f6e746578740a2f706f7274616c0a736f627265">
   <dl class="portlet portletNavigationTree">
     <dt class="portletHeader">
@@ -51,7 +50,6 @@
     </dd>
   </dl>
 </div>
-{% endif %}
 {% endblock menu %}
 {% block content %}
 <form class="form-horizontal" method="get">
