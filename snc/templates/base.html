@@ -123,7 +123,7 @@
           </li>
           |
           <li>
-            <a href="{% url 'adesao:consultar' %}">Consultar Dados</a>
+            <a href="{% url 'adesao:consultar' %}">Dados Culturais</a>
           </li>
           |
           <li id="link-sobre">
@@ -224,6 +224,10 @@
                   </dd>
                 </dl>
               </div>
+              {% endif %}
+              {% block menu %}
+              {% endblock menu %}
+              {% if request.user.is_authenticated %}
               <div class="portletWrapper" id="portletwrapper-706c6f6e652e6c656674636f6c756d6e0a636f6e746578740a2f706f7274616c0a736f627265" data-portlethash="706c6f6e652e6c656674636f6c756d6e0a636f6e746578740a2f706f7274616c0a736f627265">
                 <dl class="portlet portletNavigationTree">
                   <dt class="portletHeader">
@@ -250,8 +254,6 @@
                 </dl>
               </div>
               {% endif %}
-              {% block menu %}
-              {% endblock menu %}
             </div>
           </div>
 
@@ -264,6 +266,8 @@
               <div id="content">{% block content %}{% endblock content %}</div>
             </div>
           </div>
+
+          {% block content2 %}{% endblock content2 %}
 
             <!-- Column 2 -->
             {% if request.user.usuario.estado_processo == '1' %}
