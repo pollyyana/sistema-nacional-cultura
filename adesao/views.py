@@ -381,14 +381,125 @@ class ConsultarMunicipios(ListView):
 
     def get_queryset(self):
         ente_federado = self.request.GET.get('municipio', None)
+        sistema = self.request.GET.get('sistema', None)
+        orgao = self.request.GET.get('orgao', None)
+        conselho = self.request.GET.get('conselho', None)
+        fundo = self.request.GET.get('fundo', None)
+        plano = self.request.GET.get('plano', None)
+
+        usuarios = Usuario.objects.all()
+
+        if sistema:
+            usuarios = usuarios.filter(
+                plano_trabalho__criacao_sistema__lei_sistema_cultura__isnull=False).exclude(
+                plano_trabalho__criacao_sistema__lei_sistema_cultura=''
+                )
+
+        if orgao:
+            usuarios = usuarios.filter(
+                plano_trabalho__orgao_gestor__relatorio_atividade_secretaria__isnull=False).exclude(
+                plano_trabalho__orgao_gestor__relatorio_atividade_secretaria=''
+                )
+
+        if conselho:
+            usuarios = usuarios.filter(
+                plano_trabalho__conselho_cultural__ata_regimento_aprovado__isnull=False).exclude(
+                plano_trabalho__conselho_cultural__ata_regimento_aprovado=''
+                )
+
+        if fundo:
+            usuarios = usuarios.filter(
+                plano_trabalho__fundo_cultura__lei_fundo_cultura__isnull=False).exclude(
+                plano_trabalho__fundo_cultura__lei_fundo_cultura=''
+                )
+
+        if plano:
+            usuarios = usuarios.filter(
+                plano_trabalho__plano_cultura__lei_plano_cultura__isnull=False).exclude(
+                plano_trabalho__plano_cultura__lei_plano_cultura=''
+                )
 
         if ente_federado:
-            return Usuario.objects.filter(municipio__cidade__nome_municipio__icontains=ente_federado)
-        return Usuario.objects.filter(estado_processo='6').order_by('municipio__cidade__nome_municipio')
+            return usuarios.filter(municipio__cidade__nome_municipio__icontains=ente_federado)
+
+        return usuarios.filter(estado_processo='6').order_by('municipio__cidade__nome_municipio')
 
 
 class ConsultarEstados(ListView):
     template_name = 'consultar/consultar_estados.html'
+    paginate_by = '27'
+
+    def get_queryset(self):
+        ente_federado = self.request.GET.get('estado', None)
+        sistema = self.request.GET.get('sistema', None)
+        orgao = self.request.GET.get('orgao', None)
+        conselho = self.request.GET.get('conselho', None)
+        fundo = self.request.GET.get('fundo', None)
+        plano = self.request.GET.get('plano', None)
+
+        usuarios = Usuario.objects.all()
+
+        if sistema:
+            usuarios = usuarios.filter(
+                plano_trabalho__criacao_sistema__lei_sistema_cultura__isnull=False).exclude(
+                plano_trabalho__criacao_sistema__lei_sistema_cultura=''
+                )
+
+        if orgao:
+            usuarios = usuarios.filter(
+                plano_trabalho__orgao_gestor__relatorio_atividade_secretaria__isnull=False).exclude(
+                plano_trabalho__orgao_gestor__relatorio_atividade_secretaria=''
+                )
+
+        if conselho:
+            usuarios = usuarios.filter(
+                plano_trabalho__conselho_cultural__ata_regimento_aprovado__isnull=False).exclude(
+                plano_trabalho__conselho_cultural__ata_regimento_aprovado=''
+                )
+
+        if fundo:
+            usuarios = usuarios.filter(
+                plano_trabalho__fundo_cultura__lei_fundo_cultura__isnull=False).exclude(
+                plano_trabalho__fundo_cultura__lei_fundo_cultura=''
+                )
+
+        if plano:
+            usuarios = usuarios.filter(
+                plano_trabalho__plano_cultura__lei_plano_cultura__isnull=False).exclude(
+                plano_trabalho__plano_cultura__lei_plano_cultura=''
+                )
+
+        if ente_federado:
+            usuarios = usuarios.filter(
+                Q(municipio__cidade__isnull=True),
+                Q(municipio__estado__nome_uf__icontains=ente_federado) |
+                Q(municipio__estado__sigla__iexact=ente_federado))
+
+        return usuarios.filter(municipio__estado__isnull=False, municipio__cidade__isnull=True)
+
+
+class Detalhar(DetailView):
+    model = Usuario
+    template_name = 'consultar/detalhar.html'
+
+
+class ConsultarPlanoTrabalhoMunicipio(ListView):
+    template_name = 'consultar/consultar.html'
+    paginate_by = '25'
+
+    def get_queryset(self):
+        ente_federado = self.request.GET.get('municipio', None)
+
+        if ente_federado:
+            return Usuario.objects.filter(
+                municipio__cidade__nome_municipio__icontains=ente_federado,
+                estado_processo='6')
+
+        return Usuario.objects.filter(estado_processo='6').order_by('municipio__cidade__nome_municipio')
+
+
+class ConsultarPlanoTrabalhoEstado(ListView):
+    template_name = 'consultar/consultar.html'
     paginate_by = '27'
 
     def get_queryset(self):
@@ -401,8 +512,3 @@ class ConsultarEstados(ListView):
                 Q(municipio__estado__sigla__iexact=ente_federado))
 
         return Usuario.objects.filter(municipio__estado__isnull=False, municipio__cidade__isnull=True)
-
-
-class Detalhar(DetailView):
-    model = Usuario
-    template_name = 'consultar/detalhar.html'

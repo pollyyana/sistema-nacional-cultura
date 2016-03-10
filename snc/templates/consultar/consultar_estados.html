@@ -52,11 +52,20 @@
 </div>
 {% endblock menu %}
 {% block content %}
-<form class="form-horizontal" method="get">
-  <button type="submit" class="btn btn-info" style="float:right;">Buscar</button>
-  <div style="overflow: hidden;">
-    <input name="estado" type="search" class="form-control" placeholder="Nome ou sigla da UF" />
+<form class="form-inline" method="get">
+  <div class="form-group">
+      <input name="estado" type="search" class="form-control" placeholder="Nome ou sigla da UF" />
   </div>
+  <div class="form-group">
+      <div class="checkbox">
+        <label><input type="checkbox" name="sistema">Sistema</label>
+        <label><input type="checkbox" name="orgao">Órgão Gestor</label>
+        <label><input type="checkbox" name="conselho">Conselho</label>
+        <label><input type="checkbox" name="fundo">Fundo</label>
+        <label><input type="checkbox" name="plano">Plano</label>
+      </div>
+  </div>
+  <button type="submit" class="btn btn-info">Buscar</button>
 </form>
 
 <h1>Estados</h1>
