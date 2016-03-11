@@ -1,6 +1,6 @@
 {% extends "base.html" %} {% load widget_tweaks %} {% block content %}
 <div align="center">
-  <h3>Cadastro do Responsável</h3>
+  <h3>Cadastro do Responsável/Dirigente Cultural</h3>
   <p>Preencha o formulário abaixo com os dados do responsável pela elaboração do Plano de Trabalho.</p>
   {% if not request.user.usuario.responsavel %}
   <p><a href="{% url 'adesao:importar_secretario' %}">Clique aqui caso o responsável e o interlocutor sejam a mesma pessoa</a></p>
