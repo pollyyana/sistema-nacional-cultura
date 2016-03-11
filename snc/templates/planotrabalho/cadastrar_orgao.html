@@ -25,7 +25,7 @@
   {% if request.user.usuario.plano_trabalho.orgao_gestor %}
   <div class="form-group">
     <label for="{{ form.relatorio_atividade_secretaria.id_for_label }}">
-      Relatórios de documentos de atividades/gestão da Secretaria
+      Comprovação de criação do órgão gestor
     </label>
     {% if form.relatorio_atividade_secretaria.value %}
     <p><a href="{{ form.relatorio_atividade_secretaria.value.url }}">Baixar arquivo atual</a></p>
