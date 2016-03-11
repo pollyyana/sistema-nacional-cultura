@@ -53,10 +53,14 @@
 {% endblock menu %}
 {% block content %}
 <form class="form-inline" method="get">
-  <div class="form-group">
-      <input name="estado" type="search" class="form-control" placeholder="Nome ou sigla da UF" />
+  <div>
+    <button type="submit" class="btn btn-info" style="float:right;">Buscar</button>
+    <div style="overflow: hidden;">
+        <input name="municipio" type="search" class="form-control" placeholder="Nome ou sigla da UFq" />
+    </div>
   </div>
-  <div class="form-group">
+  <a id="busca-avancada" href="#">Mais opções...</a>
+  <div class="form-group hidden" id="filtros">
       <div class="checkbox">
         <label><input type="checkbox" name="sistema">Sistema</label>
         <label><input type="checkbox" name="orgao">Órgão Gestor</label>
@@ -65,7 +69,6 @@
         <label><input type="checkbox" name="plano">Plano</label>
       </div>
   </div>
-  <button type="submit" class="btn btn-info">Buscar</button>
 </form>
 
 <h1>Estados</h1>
@@ -76,8 +79,18 @@
   </li>
   {% empty %}
   <li>
-    Nenhum município encontrado.
+    Nenhum estado encontrado.
   </li>
   {% endfor %}
 </ul>
 {% endblock content %}
+{% block js %}
+<script type="text/javascript">
+$(document).ready(function() {
+    $("#busca-avancada").click(function() {
+      $("#filtros").fadeIn();
+      $("#busca-avancada").fadeOut();
+    });
+});
+</script>
+{% endblock js %}
