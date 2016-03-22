@@ -77,4 +77,15 @@
     <li>Lei do Plano de Cultura não informada</li>
   {% endif %}
 </ul>
+
+<div style="height:400px" id="mapid"></div>
+
+{% block js %}
+<script type="text/javascript">
+var mymap = L.map('mapid').setView([51.505, -0.09], 13);
+L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
+    attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
+}).addTo(mymap);
+</script>
+{% endblock js %}
 {% endblock content %}
