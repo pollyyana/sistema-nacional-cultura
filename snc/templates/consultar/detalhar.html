@@ -1,3 +1,4 @@
+{% comment %}
 {% extends "base.html" %}
 {% block content %}
 <h2>Dados: {{ object.municipio.cidade.nome_municipio }} - {{ object.municipio.estado.nome_uf }}</h2>
@@ -89,3 +90,463 @@ L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
 </script>
 {% endblock js %}
 {% endblock content %}
+{% endcomment %}
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="pt-br" dir="ltr">
+
+<head>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>Sistema Nacional de Cultura</title>{% load staticfiles %}
+
+    <link rel="shortcut icon" href="{% static 'img/favicon.ico' %}" type="image/x-icon" />
+
+    <!-- Plone CSS - only for preview, will be removed in rules.xml -->
+    <link media="screen" href="{% static 'css/novo_plone.css' %}" type="text/css" rel="stylesheet" id="plone-css">
+
+    <!-- Theme CSS - only for preview, will be removed in rules and added in CSS registry -->
+    <link media="all" href="{% static 'css/novo_main.css' %}" type="text/css" rel="stylesheet" id="main-css">
+    <link media="all" href="{% static 'css/novo_style.css' %}" type="text/css" rel="stylesheet">
+    <link media="all" href="{% static 'css/font-awesome.min.css' %}" rel="stylesheet" type="text/css">
+    <link href="{% static 'css/jquery-ui.min.css' %}" rel="stylesheet" type="text/css" />
+    <link href="{% static 'css/leaflet.css' %}" rel="stylesheet" type="text/css" />
+    <link href="{% static 'css/MarkerCluster.css' %}" rel="stylesheet" type="text/css" />
+    <link href="{% static 'css/MarkerCluster.Default.css' %}" rel="stylesheet" type="text/css" />
+    <script src="{% static 'js/jquery.min.js' %}"></script>
+</head>
+
+<body>
+
+    <div id="wrapper">
+
+        <!-- HEADER -->
+
+        <div id="header" role="banner">
+
+            <div>
+
+                <ul id="accessibility">
+                    <li>
+                        <a accesskey="1" href="#acontent" id="link-conteudo">
+                            Ir para o conteúdo
+                            <span>1</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a accesskey="2" href="#anavigation" id="link-navegacao">
+                            Ir para o menu
+                            <span>2</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a accesskey="3" href="#SearchableText" id="link-buscar">
+                            Ir para a busca
+                            <span>3</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a accesskey="4" href="#afooter" id="link-rodape">
+                            Ir para o rodapé;
+                            <span>4</span>
+                        </a>
+                    </li>
+                </ul>
+
+            <ul id="portal-siteactions">
+                <li>
+                    <a href="#">Acessibilidade</a>
+                </li>
+                <li>
+                    <a href="#">Alto Contraste</a>
+                </li>
+                <li>
+                    <a href="#">Mapa do Site</a>
+                </li>
+            </ul>
+
+            <div id="logo">
+                <a href="{% url 'adesao:index' %}" title="#">
+                    <span id="portal-title">Sistema Nacional de Cultura</span>\
+                    <span id="portal-description" style="color: #F9CD48">MINISTÉRIO DA CULTURA</span>
+                </a>
+
+            </div>
+
+            <br />
+            <br />
+            <br />
+            <br />
+            <br />
+
+            <div id="social-icons">
+                <ul>
+                    <li id="portalredes-facebook" class="portalredes-item">
+                      <a href="https://www.facebook.com/pages/ArticulaMinc/1595363034014002" title="Facebook" target="_blank">
+                      </a>
+                    </li>
+                    <li id="portalredes-twitter" class="portalredes-item">
+                      <a href="https://twitter.com/ArticulaMINC" title="Twitter" target="_blank">
+                      </a>
+                    </li>
+                    <li id="portalredes-youtube" class="portalredes-item">
+                      <a href="https://www.youtube.com/channel/UC3cNjlfoG5jUV3sHcfhD9Vg" title="Youtube" target="_blank">
+                      </a>
+                    </li>
+                </ul>
+            </div>
+
+        </div>
+        <div id="sobre">
+            <ul>
+                <li id="link-sobre">
+                    <a href="#">Sobre o SNC | </a>
+                </li>
+
+                <li id="link-central">
+                    <a href="{% url 'adesao:consultar' %}">Consultar Informações | </a>
+                </li>
+
+                <li id="link-central">
+                    <a href="http://www.cultura.gov.br/documents/10883/1289124/microsoft-word-nova-plataforma-perguntas-frequentes-_2_.pdf/798876e0-902c-4346-96f9-cbf76c097554">Perguntas frequentes | </a>
+                </li>
+
+                <li id="link-central">
+                    <a href="{% url 'adesao:faleconosco' %}">Fale conosco</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- content -->
+
+    <div id="main" role="main">
+    <div id="plone-content">
+
+        <!-- Demo Plone Content -->
+
+        <div id="portal-columns" class="row">
+
+            <div id="viewlet-above-content">
+
+                <div id="portal-breadcrumbs">
+                    <span id="breadcrumbs-you-are-here">
+                        Você está aqui:
+                    </span>
+                    <span id="breadcrumbs-home">
+                        <a href="{% url 'adesao:index' %}">Home</a>
+                        <span class="breadcrumbSeparator">/</span>
+                    </span>
+                    <span id="breadcrumbs-1" dir="ltr">
+
+                        <span id="breadcrumbs-current">
+                            <a href="{% url 'adesao:consultar' %}">Consultar Informações</a>
+                        </span>
+
+                    </span>
+
+                </div>
+
+            </div>
+
+            <!-- Column 1 -->
+
+
+            <!-- Conteudo -->
+            <div id="portal-column-content" class="cell width-1:2 position-1:4">
+                <a name="acontent" id="acontent"></a>
+
+                <div id="main-content" class="">
+
+                    <div id="content">
+
+                        <div id="viewlet-above-content-title"></div>
+                        <!-- DADOS DA PREFEITURA -->
+                        {% if object.municipio.cidade %}
+                        <h1 id="parent-fieldname-title" class="documentFirstHeading">Dados: {{ object.municipio.cidade.nome_municipio }} - {{ object.municipio.estado.sigla }}</h1>
+                        <h3 class="portlet-topper ">Prefeitura</h3>
+                        {% else %}
+                        <h1 id="parent-fieldname-title" class="documentFirstHeading">Dados: {{ object.municipio.estado.nome_uf }}</h1>
+                        <h3 class="portlet-topper ">Governo</h3>
+                        {% endif %}
+
+                        <div id="parent-fieldname-description" class="documentDescription" style="color: #0E3F98">CNPJ: <p style="color: #6f7681">{{ object.municipio.cnpj_prefeitura }}</p></div>
+                        <div id="parent-fieldname-description" class="documentDescription" style="color: #0E3F98">Endereço: <p style="color: #6f7681">{{ object.municipio.endereco }}</p></div>
+                        <div id="parent-fieldname-description" class="documentDescription" style="color: #0E3F98">Bairro: <p style="color: #6f7681">{{ object.municipio.bairro }}</p></div>
+                        <div id="parent-fieldname-description" class="documentDescription" style="color: #0E3F98">CEP: <p style="color: #6f7681">{{ object.municipio.cep }}</p></div>
+                        <div id="parent-fieldname-description" class="documentDescription" style="color: #0E3F98">Telefone: <p style="color: #6f7681">{{ object.municipio.telefone_um }}</p></div>
+                        <p></p>
+                        <!-- FIM DADOS DA PREFEITURA -->
+
+
+                        <!-- DADOS DO PREFEITO-->
+                        {% if object.municipio.cidade %}
+                        <h3 class="portlet-topper "> Prefeito</h3>
+                        {% else %}
+                        <h3 class="portlet-topper "> Governo</h3>
+                        {% endif %}
+
+                        <!--<div><img src="img/foto.png" align="left"> </div>-->
+                        <div id="parent-fieldname-description" class="documentDescription" style="color: #0E3F98">Nome:<p style="color: #6f7681">{{ object.municipio.nome_prefeito }}</div>
+                        <div id="parent-fieldname-description" class="documentDescription" style="color: #0E3F98">E-mail:<p style="color: #6f7681">{{ object.municipio.email_institucional_prefeito }}</div>
+                        <p></p>
+                        <!-- FIM DO DADOS DO PREFEITO-->
+
+
+                        <!-- DADOS DO RESPONSAVEL-->
+                        <h3 class="portlet-topper "> Responsável / Dirigente Cultural</h3>
+
+                        <!--<div><img src="img/foto.png" align="left"> </div>-->
+                        <div id="parent-fieldname-description" class="documentDescription texto_cor" style="color: #0E3F98">Nome:<p style="color: #6f7681">{{ object.responsavel.nome_responsavel }}</div>
+                        <div id="parent-fieldname-description" class="documentDescription" style="color: #0E3F98">Cargo:<p style="color: #6f7681">{{ object.responsavel.cargo_responsavel }}</div>
+                        <div id="parent-fieldname-description" class="documentDescription" style="color: #0E3F98">E-mail:<p style="color: #6f7681">{{ object.responsavel.email_institucional_responsavel }}</div>
+                        <div id="parent-fieldname-description" class="documentDescription" style="color: #0E3F98">Telefone:<p style="color: #6f7681">{{ object.responsavel.telefone_um }}</div>
+                        <p></p>
+                        <!-- FIM DO DADOS DO RESPONSAVEL-->
+
+
+                        <!-- DADOS DO INTERLOCUTOR-->
+                        <h3 class="portlet-topper "> Interlocutor / Cadastrador</h3>
+
+                        <div id="parent-fieldname-description" class="documentDescription" style="color: #0E3F98">Nome:<p style="color: #6f7681">{{ object.secretario.nome_secretario }}</div>
+                        <div id="parent-fieldname-description" class="documentDescription" style="color: #0E3F98">E-mail:<p style="color: #6f7681">{{ object.secretario.email_institucional_secretario }}</div>
+                        <div id="parent-fieldname-description" class="documentDescription" style="color: #0E3F98">Telefone:<p style="color: #6f7681">{{ object.secretario.telefone_um }}</div>
+                        <p></p>
+                        <!-- FIM DO DADOS DO INTERLOCUTOR-->
+
+
+                        <!-- DADOS DO CONSELHEIROS-->
+                        <h3 class="portlet-topper "> Conselheiros de Política Cultural</h3>
+
+                        {% for conselheiro in object.plano_trabalho.conselho_cultural.conselheiro_set.all %}
+                        <div id="parent-fieldname-description" class="documentDescription" style="color: #0E3F98">Nome:<p style="color: #6f7681">{{ conselheiro.nome }}</div>
+                        <div id="parent-fieldname-description" class="documentDescription" style="color: #0E3F98">Setorial:<p style="color: #6f7681">{{ conselheiro.segmento }}</div>
+                        <div id="parent-fieldname-description" class="documentDescription" style="color: #0E3F98">E-mail:<p style="color: #6f7681">{{ conselheiro.email }}</div>
+                        {% empty %}
+                        <div id="parent-fieldname-description" class="documentDescription" style="color: #6f7681">Nenhum conselheiro informado</div>
+                        {% endfor %}
+                        <!-- FIM DO DADOS DO CONSELHEIROS-->
+
+
+
+                        <div id="viewlet-above-content-body"></div>
+
+                        <!--<div id="content-core">
+                            <div class="" id="parent-fieldname-text-98dbb040075f47bcb64560c3b2b7d7f6">
+                                <h3 class="portlet-topper "> Informações Culturais do Município/Estado</h3>
+
+
+                                <p><img src="img/banner.jpg" alt=""/></p>
+                                <p>
+                                    This is a simple paragraph. And
+                                    <a class="link-plain" href="#">this is a link</a>
+                                    . Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras sed cursus dui. Nam consequat tincidunt facilisis. Suspendisse libero lacus, vehicula vel consectetur eu, facilisis non leo. Etiam lobortis convallis rutrum. Sed eget nulla ut magna elementum egestas vel quis ante.
+                                </p>
+                                <h3>SubTexto do Titulo</h3>
+                                <p>
+                                    This is a simple paragraph. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras sed cursus dui. Nam consequat tincidunt facilisis. Suspendisse libero lacus, vehicula vel consectetur eu, facilisis non leo. Etiam lobortis convallis rutrum. Sed eget nulla ut magna elementum egestas vel quis ante.
+                                </p>
+                                <ul>
+                                    <li>
+                                        List item with link to&nbsp;
+                                        <a class="link-plain" href="#">Link para conteúdo</a>
+                                        .
+                                    </li>
+                                    <li>
+                                        List item with link to&nbsp;
+                                        <a class="link-plain" href="#">Link para conteúdo</a>
+                                        .
+                                    </li>
+                                    <li>
+                                        List item with link to&nbsp;
+                                        <a class="link-plain" href="#">Link para conteúdo</a>
+                                        .
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>-->
+
+                        <div id="viewlet-below-content-body">
+                            <div class="visualClear">
+                                <!-- -->
+                            </div>
+                            <div class="documentActions"></div>
+                        </div>
+
+                    </div>
+                </div>
+
+                <div id="viewlet-below-content"></div>
+
+            </div>
+
+            <!-- Column 2-->
+
+            <div id="portal-column-two" class="cell width-1:4 position-3:4">
+
+                <p><!--<img src="{% static 'img/banner_situacao.png' %}"/>-->
+                    <div class="fundo_situacao">
+                        <div class="painel_situacao">
+                            <h5 class="texto_situacao_data">{{ object.data_publicacao_acordo }}</h3>
+                            <h3 class="texto_situacao">{{ object.get_estado_processo_display }}</h1>
+                        </div>
+                    </div>
+                </p>
+
+                <p>
+                    <a href="http://mapas.cultura.gov.br/busca/##%28global:%28enabled:%28event:!t%29,filterEntity:event%29%29" target="_blank">
+                        <div class="fundo_painel_agenda">
+                            <div class="painel_agenda">
+                                <h3 class="texto_agenda_data">Eventos</h3>
+                                <h1 class="texto_agenda"> Agenda Cultural</h1>
+                            </div>
+                        </div>
+                    </a>
+                </p>
+
+                <p>
+                <div class="fundo_painel_mapa">
+                    <div class="painel_mapa">
+                        <div id="mapid" style="height:100%;"></div>
+                    </div>
+                </div>
+                </p>
+
+                <p>
+                    <div class="fundo_painel">
+                        <div class="painel">
+                                <div id="parent-fieldname-description" class="documentDescription" style="color:#ffffff">
+                                    {% if object.plano_trabalho.criacao_sistema.lei_sistema_cultura %}
+                                    <i class="fa fa-check"></i>
+                                    <a href="{{ object.plano_trabalho.criacao_sistema.lei_sistema_cultura.url }}" style="color:#ffffff">
+                                        Lei do Sistema de Cultura
+                                    </a>
+                                    {% else %}
+                                    <i class="fa fa-times"></i> Lei do Sistema de Cultura
+                                    {% endif %}
+                                </div>
+                                <div id="parent-fieldname-description" class="documentDescription" style="color:#ffffff">
+                                    {% if object.plano_trabalho.orgao_gestor.relatorio_atividade_secretaria %}
+                                    <i class="fa fa-check"></i>
+                                    <a href="{{ object.plano_trabalho.orgao_gestor.relatorio_atividade_secretaria.url }}" style="color:#ffffff">
+                                        Relatório de Atividades do Órgão Gestor
+                                    </a>
+                                    {% else %}
+                                    <i class="fa fa-times"></i> Relatório de Atividades do Órgão Gestor
+                                    {% endif %}
+                                </div>
+                                <div id="parent-fieldname-description" class="documentDescription" style="color:#ffffff">
+                                    {% if object.plano_trabalho.conselho_cultural.ata_regimento_aprovado %}
+                                    <i class="fa fa-check"></i>
+                                    <a href="{{ object.plano_trabalho.conselho_cultural.ata_regimento_aprovado.url }}" style="color:#ffffff">
+                                        Ata de Reunião de Criação do Conselho de Políticas Culturais
+                                    </a>
+                                    {% else %}
+                                    <i class="fa fa-times"></i> Ata de Reunião de Criação do Conselho de Políticas Culturais
+                                    {% endif %}
+                                </div>
+                                <div id="parent-fieldname-description" class="documentDescription" style="color:#ffffff">
+                                    {% if object.plano_trabalho.fundo_cultura.lei_fundo_cultura %}
+                                    <i class="fa fa-check"></i>
+                                    <a href="{{ object.plano_trabalho.fundo_cultura.lei_fundo_cultura.url }}" style="color:#ffffff">
+                                        Lei do Fundo de Cultura
+                                    </a>
+                                    {% else %}
+                                    <i class="fa fa-times"></i> Lei do Fundo de Cultura
+                                    {% endif %}
+                                </div>
+                                <div id="parent-fieldname-description" class="documentDescription" style="color:#ffffff">
+                                    {% if object.plano_trabalho.plano_cultura.lei_plano_cultura %}
+                                    <i class="fa fa-check"></i>
+                                    <a href="{{ object.plano_trabalho.plano_cultura.lei_plano_cultura.url }}" style="color:#ffffff">
+                                        Lei do Plano de Cultura
+                                    </a>
+                                    {% else %}
+                                    <i class="fa fa-times"></i> Lei do Plano de Cultura
+                                    {% endif %}
+                                </div>
+                        </div>
+                    </div>
+                </p>
+
+            </div>
+
+
+        </div>
+
+        <!-- /Demo Plone Content -->
+
+    </div>
+
+    <div class="clear"></div>
+    <div id="voltar-topo">
+        <a href="#wrapper">Voltar para o topo</a>
+    </div>
+
+</div>
+
+<!-- Footer -->
+<div id="footer" role="contentinfo">
+    <a name="afooter" id="afooter"></a>
+
+    <div id="doormat">
+        Menu do rodape
+    </div>
+    <div class="clear"></div>
+    <div id="footer-brasil" class="footer-logos">
+        <div>
+            <a href="http://www.acessoainformacao.gov.br/" class="logo-acesso">
+                <img src="{% static 'img/acesso-a-infornacao.png' %}" alt="Acesso a Informa&ccedil;&atilde;o" />
+            </a>
+            <a href="http://www.brasil.gov.br/" class="logo-brasil">
+                <img src="{% static 'img/brasil.png' %}" alt="Brasil - Governo Federal" />
+            </a>
+        </div>
+    </div>
+</div>
+<div id="extra-footer">
+    <p>
+        Ministério da Cultura -
+    <a href="http://www.cultura.gov.br">MinC - 2015</a>
+    </p>
+</div>
+
+<!-- /Footer-->
+<script src="{% static 'js/jquery.formatter.min.js' %}"></script>
+<script src="{% static 'js/jquery-ui.min.js' %}"></script>
+<script src="{% static 'js/datepicker-pt-BR.js' %}"></script>
+<script src="{% static 'js/leaflet.js' %}"></script>
+<script src="{% static 'js/leaflet.markercluster.js' %}"></script>
+
+<script type="text/javascript">
+$(document).ready(function(){
+    var lat = {{ object.municipio.cidade.lat|safe }};
+    var lng = {{ object.municipio.cidade.lng|safe }};
+    var markers = []
+    var mymap = L.map('mapid').setView([lat, lng], 13);
+    L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
+        attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
+    }).addTo(mymap);
+
+    $.get("http://mapas.cultura.gov.br/api/agent/find", {'@select': "id,name,location,singleUrl", '_geoLocation': 'GEONEAR('+lng+','+lat+',50000'+')'}).done(function(data){
+        var clusters = new L.markerClusterGroup();
+        data.forEach(function(agente){
+            var marker = new L.marker(
+                new L.LatLng(agente.location.latitude, agente.location.longitude),
+                {
+                    title: agente.name,
+                    riseOnHover: true
+                }
+            ).on('click', function(){
+                window.open(agente.singleUrl, '_blank');
+            });
+
+            markers.push(marker);
+
+            clusters.addLayer(marker);
+        });
+        mymap.addLayer(clusters);
+    });
+});
+</script>
+</body>
+</html>
