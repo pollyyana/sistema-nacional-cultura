@@ -33,6 +33,8 @@ class Cidade(models.Model):
     codigo_ibge = models.IntegerField(unique=True)
     uf = models.ForeignKey('Uf', to_field='codigo_ibge')
     nome_municipio = models.CharField(max_length=100)
+    lat = models.FloatField()
+    lng = models.FloatField()
 
     def __str__(self):
         return self.nome_municipio
