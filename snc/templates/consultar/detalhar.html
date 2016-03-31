@@ -225,6 +225,7 @@
                         <h3 class="portlet-topper "> Conselheiros de Política Cultural</h3>
 
                         {% for conselheiro in object.plano_trabalho.conselho_cultural.conselheiro_set.all %}
+                        <div id="parent-fieldname-description" class="documentDescription" style="color: #0E3F98">Conselheiro</div>
                         <div id="parent-fieldname-description" class="documentDescription" style="color: #0E3F98">Nome:<p style="color: #6f7681">{{ conselheiro.nome }}</div>
                         <div id="parent-fieldname-description" class="documentDescription" style="color: #0E3F98">Setorial:<p style="color: #6f7681">{{ conselheiro.segmento }}</div>
                         <div id="parent-fieldname-description" class="documentDescription" style="color: #0E3F98">E-mail:<p style="color: #6f7681">{{ conselheiro.email }}</div>
