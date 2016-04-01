@@ -146,7 +146,11 @@
                     <span id="breadcrumbs-1" dir="ltr">
 
                         <span id="breadcrumbs-current">
+                            {% if opject.municipio.cidade %}
                             <a href="{% url 'adesao:consultar' %}">Consultar Informações</a>
+                            {% else %}
+                            <a href="{% url 'adesao:consultar_estados' %}">Consultar Informações</a>
+                            {% endif %}
                         </span>
 
                     </span>
@@ -427,14 +431,14 @@
 
 <script type="text/javascript">
 $(document).ready(function(){
-    var lat = {{ object.municipio.cidade.lat|safe }};
-    var lng = {{ object.municipio.cidade.lng|safe }};
+    var lat = {{ object.municipio.cidade.lat|safe|default:"0" }};
+    var lng = {{ object.municipio.cidade.lng|safe|default:"0" }};
     var markers = []
     var mymap = L.map('mapid').setView([lat, lng], 13);
     L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
         attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
     }).addTo(mymap);
-
+    {% if object.municipio.cidade %}
     $.get("http://mapas.cultura.gov.br/api/agent/find", {'@select': "id,name,location,singleUrl", '_geoLocation': 'GEONEAR('+lng+','+lat+',50000'+')'}).done(function(data){
         var clusters = new L.markerClusterGroup();
         data.forEach(function(agente){
@@ -454,6 +458,33 @@ $(document).ready(function(){
         });
         mymap.addLayer(clusters);
     });
+    {% else %}
+    var estado = '{{ object.municipio.estado.sigla|safe }}';
+    $.get("http://mapas.cultura.gov.br/api/agent/find", {'@select': "id,name,location,singleUrl", 'En_Estado': 'EQ('+estado+')'}).done(function(data){
+        var clusters = new L.markerClusterGroup();
+        var latTotal = 0;
+        var lngTotal = 0;
+        data.forEach(function(agente){
+            latTotal += parseFloat(agente.location.latitude);
+            lngTotal += parseFloat(agente.location.longitude);
+            var marker = new L.marker(
+                new L.LatLng(agente.location.latitude, agente.location.longitude),
+                {
+                    title: agente.name,
+                    riseOnHover: true
+                }
+            ).on('click', function(){
+                window.open(agente.singleUrl, '_blank');
+            });
+
+            markers.push(marker);
+
+            clusters.addLayer(marker);
+        });
+        mymap.addLayer(clusters);
+        mymap.setView(new L.LatLng(latTotal/data.length,lngTotal/data.length), 6);
+    });
+    {% endif %}
 });
 </script>
 </body>
