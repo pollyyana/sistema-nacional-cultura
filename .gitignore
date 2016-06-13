@@ -8,6 +8,7 @@
 .pydevproject
 *.mo
 *.sqlite
+*.json
 
 # ignore pycharm files
 *.idea

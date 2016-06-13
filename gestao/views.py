@@ -2,7 +2,7 @@ from django.shortcuts import redirect, render
 from django.http import Http404
 from django.core.urlresolvers import reverse_lazy
 from django.views.generic import ListView, DetailView
-from django.views.generic.edit import FormView
+from django.views.generic.edit import FormView, UpdateView
 
 from adesao.models import Usuario, Cidade
 
@@ -212,3 +212,15 @@ class AcompanharPlano(ListView):
 class DetalharUsuario(DetailView):
     model = Usuario
     template_name = 'gestao/detalhe_municipio.html'
+
+
+class ListarUsuarios(ListView):
+    model = Usuario
+    template_name = 'gestao/listar_usuarios.html'
+    paginate_by = 10
+
+
+class AlterarUsuario(UpdateView):
+    template_name = 'gestao/alterar_usuario.html'
+    form_class = AlterarCadastradorForm
+    success_url = reverse_lazy('gestao:acompanhar_adesao')

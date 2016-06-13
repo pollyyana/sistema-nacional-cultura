@@ -57,6 +57,14 @@ urlpatterns = [
     url(r'^detalhar/municipio/(?P<pk>[0-9]+)$',
         views.DetalharUsuario.as_view(),
         name='detalhar'),
+    url(r'^usuarios/',
+        staff_member_required(
+            views.ListarUsuarios.as_view(),
+            login_url='adesao:login'), name='usuarios'),
+    url(r'^alterar/usuario/(?P<id>[\w]+)$',
+        staff_member_required(
+            views.AlterarUsuario.as_view(),
+            login_url='adesao:login'), name='alterar_usuario'),
 
     # UF e Município aninhados
     url(r'^chain/municipio$', staff_member_required(views.MunicipioChain.as_view()), name='municipio_chain'),
