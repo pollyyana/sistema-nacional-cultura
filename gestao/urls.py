@@ -61,7 +61,7 @@ urlpatterns = [
         staff_member_required(
             views.ListarUsuarios.as_view(),
             login_url='adesao:login'), name='usuarios'),
-    url(r'^alterar/usuario/(?P<id>[\w]+)$',
+    url(r'^alterar/usuario/(?P<pk>[\d]+)$',
         staff_member_required(
             views.AlterarUsuario.as_view(),
             login_url='adesao:login'), name='alterar_usuario'),

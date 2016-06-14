@@ -1,8 +1,8 @@
 from threading import Thread
 from django import forms
-from django.core.urlresolvers import reverse_lazy
 from django.core.mail import send_mail
 from django.forms import ModelForm
+from django.contrib.auth.models import User
 
 from adesao.models import Usuario, Historico, Uf, Municipio
 from planotrabalho.models import PlanoTrabalho
@@ -170,3 +170,13 @@ class AlterarCadastradorForm(ChainedChoicesForm):
         if commit:
             user_antigo.save()
             user_novo.save()
+
+
+class AlterarUsuarioForm(ModelForm):
+    is_active = forms.BooleanField()
+    is_staff = forms.BooleanField()
+    email = forms.EmailField()
+
+    class Meta:
+        model = User
+        fields = ('is_active', 'is_staff', 'email')

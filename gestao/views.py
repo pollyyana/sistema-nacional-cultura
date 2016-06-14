@@ -1,12 +1,15 @@
 from django.shortcuts import redirect, render
 from django.http import Http404
+from django.db.models import Q
+from django.contrib.auth.models import User
 from django.core.urlresolvers import reverse_lazy
 from django.views.generic import ListView, DetailView
 from django.views.generic.edit import FormView, UpdateView
 
 from adesao.models import Usuario, Cidade
 
-from .forms import AlterarSituacao, DiligenciaForm, AlterarCadastradorForm
+from .forms import AlterarSituacao, DiligenciaForm
+from .forms import AlterarCadastradorForm, AlterarUsuarioForm
 
 from clever_selects.views import ChainedSelectChoicesView
 
@@ -219,8 +222,20 @@ class ListarUsuarios(ListView):
     template_name = 'gestao/listar_usuarios.html'
     paginate_by = 10
 
+    def get_queryset(self):
+        q = self.request.GET.get('q', None)
+        usuarios = Usuario.objects.all()
+
+        if q:
+            usuarios = usuarios.filter(Q(user__username__icontains=q) | Q(user__email__icontains=q))
+
+        return usuarios
+
 
 class AlterarUsuario(UpdateView):
-    template_name = 'gestao/alterar_usuario.html'
-    form_class = AlterarCadastradorForm
-    success_url = reverse_lazy('gestao:acompanhar_adesao')
+    model = User
+    form_class = AlterarUsuarioForm
+    success_url = reverse_lazy('gestao:usuarios')
+
+    def get_success_url(self):
+        return reverse_lazy('gestao:usuarios') + "?q=" + self.object.username
