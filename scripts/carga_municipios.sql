@@ -3224,7 +3224,7 @@ INSERT INTO adesao_cidade(id, codigo_ibge, nome_municipio, uf_id) VALUES (nextva
 INSERT INTO adesao_cidade(id, codigo_ibge, nome_municipio, uf_id) VALUES (nextval('adesao_municipio_id_seq'),'330350','Nova Iguaçu',33);
 INSERT INTO adesao_cidade(id, codigo_ibge, nome_municipio, uf_id) VALUES (nextval('adesao_municipio_id_seq'),'330360','Paracambi',33);
 INSERT INTO adesao_cidade(id, codigo_ibge, nome_municipio, uf_id) VALUES (nextval('adesao_municipio_id_seq'),'330370','Paraíba do Sul',33);
-INSERT INTO adesao_cidade(id, codigo_ibge, nome_municipio, uf_id) VALUES (nextval('adesao_municipio_id_seq'),'330380','Parati',33);
+INSERT INTO adesao_cidade(id, codigo_ibge, nome_municipio, uf_id) VALUES (nextval('adesao_municipio_id_seq'),'330380','Paraty',33);
 INSERT INTO adesao_cidade(id, codigo_ibge, nome_municipio, uf_id) VALUES (nextval('adesao_municipio_id_seq'),'330385','Paty do Alferes',33);
 INSERT INTO adesao_cidade(id, codigo_ibge, nome_municipio, uf_id) VALUES (nextval('adesao_municipio_id_seq'),'330390','Petrópolis',33);
 INSERT INTO adesao_cidade(id, codigo_ibge, nome_municipio, uf_id) VALUES (nextval('adesao_municipio_id_seq'),'330395','Pinheiral',33);
