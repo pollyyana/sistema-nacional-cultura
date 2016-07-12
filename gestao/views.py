@@ -235,7 +235,8 @@ class ListarUsuarios(ListView):
 class AlterarUsuario(UpdateView):
     model = User
     form_class = AlterarUsuarioForm
+    template_name = 'gestao/listar_usuarios.html'
     success_url = reverse_lazy('gestao:usuarios')
 
     def get_success_url(self):
-        return reverse_lazy('gestao:usuarios') + "?q=" + self.object.username
+        return reverse_lazy('gestao:usuarios')

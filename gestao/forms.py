@@ -173,9 +173,9 @@ class AlterarCadastradorForm(ChainedChoicesForm):
 
 
 class AlterarUsuarioForm(ModelForm):
-    is_active = forms.BooleanField()
-    is_staff = forms.BooleanField()
-    email = forms.EmailField()
+    is_active = forms.BooleanField(required=False)
+    is_staff = forms.BooleanField(required=False)
+    email = forms.EmailField(required=False)
 
     class Meta:
         model = User

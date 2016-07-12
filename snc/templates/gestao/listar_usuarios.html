@@ -39,14 +39,14 @@
                         {% csrf_token %}
                         <td><input type="text" class="form-control" name="email" value="{{ usuario.user.email }}"></input></td>
                         {% if usuario.user.is_active %}
-                        <td><input type="checkbox" name="is_active" value="{{ usuario.user.is_active }}" checked></input></td>
+                        <td><input type="checkbox" name="is_active"checked></input></td>
                         {% else %}
-                        <td><input type="checkbox" name="is_active" value="{{ usuario.user.is_active }}"></input></td>
+                        <td><input type="checkbox" name="is_active"></input></td>
                         {% endif %}
                         {% if usuario.user.is_staff %}
-                        <td><input type="checkbox" name="is_staff" value="{{ usuario.user.is_staff }}" checked></input></td>
+                        <td><input type="checkbox" name="is_staff"checked></input></td>
                         {% else %}
-                        <td><input type="checkbox" name="is_staff" value="{{ usuario.user.is_staff }}"></input></td>
+                        <td><input type="checkbox" name="is_staff"></input></td>
                         {% endif %}
                         <td><button type="submit" class="btn btn-primary" title="Salvar Mudanças" ><i class="fa fa-check"></i></button></td>
                     </form>
