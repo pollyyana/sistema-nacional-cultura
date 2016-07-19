@@ -7,16 +7,16 @@
       </div>
       <!-- /.panel-heading -->
       <div class="panel-body">
-        <!--<form method="get" action="">
+        <form method="get" action="">
           <div class="input-group custom-search-form col-lg-3">
-              <input type="text" name="municipio" class="form-control" placeholder="Município ou Estado">
+              <input type="text" name="q" class="form-control" placeholder="Município ou Estado">
               <span class="input-group-btn">
                   <button class="btn btn-default" type="submit">
                       <i class="fa fa-search"></i>
                   </button>
               </span>
           </div>
-        </form>-->
+        </form>
         <div class="dataTable_wrapper">
           <table class="table table-striped table-bordered table-hover" id="dataTables-example">
             <thead>
@@ -42,7 +42,7 @@
                   <td>{{ usuario.plano_trabalho.fundo_cultura.cnpj_fundo_cultura }}</td>
                   <td>{{ usuario.plano_trabalho.fundo_cultura.data_final_instituicao_fundo_cultura }}</td>
                   <td>
-                    <a href="{{ usuario.plano_trabalho.fundo_cultura.lei_fundo_cultura }}"></a>
+                    <a href="{{ usuario.plano_trabalho.fundo_cultura.lei_fundo_cultura.url }}">Download</a>
                   </td>
                   <td>
                     <a href="{% url 'gestao:diligencia_documental' 'fundo_cultura' 'situacao_lei_plano' usuario.id %}"><i class="fa fa-thumbs-down"></i></a>

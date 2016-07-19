@@ -132,6 +132,7 @@ class AcompanharSistema(ListView):
 
     def get_queryset(self):
         anexo = self.request.GET.get('anexo', None)
+        q = self.request.GET.get('q', None)
         if not anexo:
             raise Http404()
         usuarios = Usuario.objects.filter(estado_processo='6')
@@ -145,6 +146,11 @@ class AcompanharSistema(ListView):
                 plano_trabalho__criacao_sistema__situacao_lei_sistema=1)
         else:
             raise Http404()
+
+        if q:
+            usuarios = usuarios.filter(
+                municipio__cidade__nome_municipio__icontains=q)
+
         return usuarios
 
 
@@ -153,10 +159,14 @@ class AcompanharOrgao(ListView):
     paginate_by = 10
 
     def get_queryset(self):
+        q = self.request.GET.get('q', None)
         usuarios = Usuario.objects.filter(estado_processo='6')
         usuarios = usuarios.exclude(plano_trabalho__orgao_gestor=None)
         usuarios = usuarios.filter(
             plano_trabalho__orgao_gestor__situacao_relatorio_secretaria=1)
+        if q:
+            usuarios = usuarios.filter(
+                municipio__cidade__nome_municipio__icontains=q)
         return usuarios
 
 
@@ -165,10 +175,14 @@ class AcompanharConselho(ListView):
     paginate_by = 10
 
     def get_queryset(self):
+        q = self.request.GET.get('q', None)
         usuarios = Usuario.objects.filter(estado_processo='6')
         usuarios = usuarios.exclude(plano_trabalho__conselho_cultural=None)
         usuarios = usuarios.filter(
             plano_trabalho__conselho_cultural__situacao_ata=1)
+        if q:
+            usuarios = usuarios.filter(
+                municipio__cidade__nome_municipio__icontains=q)
         return usuarios
 
 
@@ -177,10 +191,14 @@ class AcompanharFundo(ListView):
     paginate_by = 10
 
     def get_queryset(self):
+        q = self.request.GET.get('q', None)
         usuarios = Usuario.objects.filter(estado_processo='6')
         usuarios = usuarios.exclude(plano_trabalho__fundo_cultura=None)
         usuarios = usuarios.filter(
             plano_trabalho__fundo_cultura__situacao_lei_plano=1)
+        if q:
+            usuarios = usuarios.filter(
+                municipio__cidade__nome_municipio__icontains=q)
         return usuarios
 
 
@@ -190,6 +208,7 @@ class AcompanharPlano(ListView):
 
     def get_queryset(self):
         anexo = self.request.GET.get('anexo', None)
+        q = self.request.GET.get('q', None)
         if not anexo:
             raise Http404()
         usuarios = Usuario.objects.filter(estado_processo='6')
@@ -209,6 +228,11 @@ class AcompanharPlano(ListView):
                 plano_trabalho__plano_cultura__situacao_lei_plano=1)
         else:
             raise Http404()
+
+        if q:
+            usuarios = usuarios.filter(
+                municipio__cidade__nome_municipio__icontains=q)
+
         return usuarios
 
 
