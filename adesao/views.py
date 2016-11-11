@@ -113,9 +113,9 @@ def exportar_csv(request):
     return response
 
 
-def exportar_xls(request):
-    response = HttpResponse(content_type='application/vnd.ms-excel')
-    response['Content-Disposition'] = 'attachment; filename="dados-municipios-cadastrados-snc.xls"'
+def exportar_ods(request):
+    response = HttpResponse(content_type='application/vnd.oasis.opendocument.spreadsheet .ods')
+    response['Content-Disposition'] = 'attachment; filename="dados-municipios-cadastrados-snc.ods"'
 
     workbook = xlwt.Workbook()
     planilha = workbook.add_sheet('SNC')
