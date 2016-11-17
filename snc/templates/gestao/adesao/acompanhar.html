@@ -32,42 +32,47 @@
               </tr>
             </thead>
             <tbody>
-              {% for usuario in object_list %}
+              {% for municipio in object_list %}
                 <tr class="odd gradeX">
-                  <td><center><a href="{% url 'gestao:detalhar' usuario.id %}"><i class="fa fa-file"></i></a></center></td>
-                {% if usuario.municipio.cidade %}
-                  <td>{{ usuario.municipio.cidade }}/{{ usuario.municipio.estado }}</td>
+                {% if municipio.usuario %}
+                  <td><center><a href="{% url 'gestao:detalhar' municipio.usuario.id %}"><i class="fa fa-file"></i></a></center></td>
                 {% else %}
-                  <td>{{ usuario.municipio.estado.nome_uf }}</td>
+                <td></td>
                 {% endif %}
-                  {% if usuario.municipio.termo_posse_prefeito %}
-                  <td><a href="{{ usuario.municipio.termo_posse_prefeito.url }}">{{ usuario.municipio.nome_prefeito }}</a></td>
+                {% if municipio.cidade %}
+                  <td>{{ municipio.cidade }}/{{ municipio.estado }}</td>
+                {% else %}
+                  <td>{{ municipio.estado.nome_uf }}</td>
+                {% endif %}
+                  {% if municipio.termo_posse_prefeito %}
+                  <td><a href="{{ municipio.termo_posse_prefeito.url }}">{{ municipio.nome_prefeito }}</a></td>
                   {% else %}
-                  <td><a href="#">{{ usuario.municipio.nome_prefeito }}</a></td>
+                  <td><a href="#">{{ municipio.nome_prefeito }}</a></td>
                   {% endif %}
 
-                  {% if usuario.municipio.rg_copia_prefeito %}
-                  <td><a href="{{ usuario.municipio.rg_copia_prefeito.url }}">{{ usuario.municipio.rg_prefeito }}</a></td>
+                  {% if municipio.rg_copia_prefeito %}
+                  <td><a href="{{ municipio.rg_copia_prefeito.url }}">{{ municipio.rg_prefeito }}</a></td>
                   {% else %}
-                  <td><a href="#">{{ usuario.municipio.rg_prefeito }}</a></td>
+                  <td><a href="#">{{ municipio.rg_prefeito }}</a></td>
                   {% endif %}
 
-                  {% if usuario.municipio.cpf_copia_prefeito %}
-                  <td><a href="{{ usuario.municipio.cpf_copia_prefeito.url }}">{{ usuario.municipio.cpf_prefeito }}</a></td>
+                  {% if municipio.cpf_copia_prefeito %}
+                  <td><a href="{{ municipio.cpf_copia_prefeito.url }}">{{ municipio.cpf_prefeito }}</a></td>
                   {% else %}
-                  <td><a href="#">{{ usuario.municipio.cpf_prefeito }}</a></td>
+                  <td><a href="#">{{ municipio.cpf_prefeito }}</a></td>
                   {% endif %}
-                  <td>{{ usuario.municipio.cnpj_prefeitura }}</td>
-                  <form name="form" action="{% url 'gestao:alterar_situacao' usuario.id %}" method="post">
+                  <td>{{ municipio.cnpj_prefeitura }}</td>
+                  {% if municipio.usuario %}
+                  <form name="form" action="{% url 'gestao:alterar_situacao' municipio.usuario.id %}" method="post">
                   <td>
                     {% csrf_token %}
                       <select id="select_situacao_{{forloop.counter0}}" name="estado_processo" class="form-control">
-                        <option value="1" {% if usuario.estado_processo == '1' %}selected{% endif %}>Aguardando envio da documentação</option>
-                        <option value="2" {% if usuario.estado_processo == '2' %}selected{% endif %}>Documentação Recebida - Aguarda Análise</option>
-                        <option value="3" {% if usuario.estado_processo == '3' %}selected{% endif %}>Diligência Documental</option>
-                        <option value="4" {% if usuario.estado_processo == '4' %}selected{% endif %}>Encaminhado para assinatura do Secretário SAI</option>
-                        <option value="5" {% if usuario.estado_processo == '5' %}selected{% endif %}>Aguarda Publicação no DOU</option>
-                        <option value="6" {% if usuario.estado_processo == '6' %}selected{% endif %}>Publicado no DOU</option>
+                        <option value="1" {% if municipio.usuario.estado_processo == '1' %}selected{% endif %}>Aguardando envio da documentação</option>
+                        <option value="2" {% if municipio.usuario.estado_processo == '2' %}selected{% endif %}>Documentação Recebida - Aguarda Análise</option>
+                        <option value="3" {% if municipio.usuario.estado_processo == '3' %}selected{% endif %}>Diligência Documental</option>
+                        <option value="4" {% if municipio.usuario.estado_processo == '4' %}selected{% endif %}>Encaminhado para assinatura do Secretário SAI</option>
+                        <option value="5" {% if municipio.usuario.estado_processo == '5' %}selected{% endif %}>Aguarda Publicação no DOU</option>
+                        <option value="6" {% if municipio.usuario.estado_processo == '6' %}selected{% endif %}>Publicado no DOU</option>
                       </select>
                       <textarea id="justificativa_{{forloop.counter0}}" name="justificativa" class="form-control hide" placeholder="Justificativa" rows="4" cols="20"></textarea>
                       <input type="text" id="data_acordo_{{forloop.counter0}}" name="data_publicacao_acordo" class="form-control date hide" placeholder="Data de Publicação"></input>
@@ -78,6 +83,14 @@
                       <button type="submit" class="btn btn-primary" title="Alterar Situação" ><i class="fa fa-check"></i></button>
                     </td>
                   </form>
+                  {% else %}
+                  <td>Município sem cadastrador</td>
+                  {% if municipio.cidade %}
+                  <td><a href="{% url 'gestao:alterar_cadastrador' %}" class="btn btn-primary" title="Alterar Cadastrador"><i class="fa fa-wrench" /></button></td>
+                  {% else %}
+                  <td><a href="{% url 'gestao:alterar_cadastrador_estado' %}" class="btn btn-primary" title="Alterar Cadastrador"><i class="fa fa-wrench" /></button></td>
+                  {% endif %}
+                  {% endif %}
                 </tr>
               {% endfor %}
             </tbody>

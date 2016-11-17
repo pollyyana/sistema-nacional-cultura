@@ -6,7 +6,7 @@ from django.core.urlresolvers import reverse_lazy
 from django.views.generic import ListView, DetailView
 from django.views.generic.edit import FormView, UpdateView
 
-from adesao.models import Usuario, Cidade
+from adesao.models import Usuario, Cidade, Municipio
 
 from .forms import AlterarSituacao, DiligenciaForm
 from .forms import AlterarCadastradorForm, AlterarUsuarioForm
@@ -32,7 +32,7 @@ class AlterarCadastradorEstado(FormView):
 
     def form_valid(self, form):
         form.save()
-        return super(AlterarCadastrador, self).form_valid(form)
+        return super(AlterarCadastradorEstado, self).form_valid(form)
 
 
 class MunicipioChain(ChainedSelectChoicesView):
@@ -88,18 +88,18 @@ class AcompanharAdesao(ListView):
         ente_federado = self.request.GET.get('municipio', None)
 
         if situacao in ('1', '2', '3', '4', '5'):
-            return Usuario.objects.filter(estado_processo=situacao)
+            return Municipio.objects.filter(usuario__estado_processo=situacao)
 
         if ente_federado:
-            municipio = Usuario.objects.filter(
-                municipio__cidade__nome_municipio__icontains=ente_federado)
-            estado = Usuario.objects.filter(
-                municipio__cidade__nome_municipio__isnull=True,
-                municipio__estado__nome_uf__icontains=ente_federado)
+            municipio = Municipio.objects.filter(
+                cidade__nome_municipio__icontains=ente_federado)
+            estado = Municipio.objects.filter(
+                cidade__nome_municipio__isnull=True,
+                estado__nome_uf__icontains=ente_federado)
 
             return municipio | estado
 
-        return Usuario.objects.filter(estado_processo__range=('1', '5'))
+        return Municipio.objects.filter(usuario__estado_processo__range=('1', '5'))
 
 
 # Acompanhamento dos planos de trabalho
