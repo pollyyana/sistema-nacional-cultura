@@ -387,42 +387,42 @@ class ConsultarMunicipios(ListView):
         fundo = self.request.GET.get('fundo', None)
         plano = self.request.GET.get('plano', None)
 
-        usuarios = Usuario.objects.all()
+        usuarios = Municipio.objects.all()
 
         if sistema:
             usuarios = usuarios.filter(
-                plano_trabalho__criacao_sistema__lei_sistema_cultura__isnull=False).exclude(
-                plano_trabalho__criacao_sistema__lei_sistema_cultura=''
+                usuario__plano_trabalho__criacao_sistema__lei_sistema_cultura__isnull=False).exclude(
+                usuario__plano_trabalho__criacao_sistema__lei_sistema_cultura=''
                 )
 
         if orgao:
             usuarios = usuarios.filter(
-                plano_trabalho__orgao_gestor__relatorio_atividade_secretaria__isnull=False).exclude(
-                plano_trabalho__orgao_gestor__relatorio_atividade_secretaria=''
+                usuario__plano_trabalho__orgao_gestor__relatorio_atividade_secretaria__isnull=False).exclude(
+                usuario__plano_trabalho__orgao_gestor__relatorio_atividade_secretaria=''
                 )
 
         if conselho:
             usuarios = usuarios.filter(
-                plano_trabalho__conselho_cultural__ata_regimento_aprovado__isnull=False).exclude(
-                plano_trabalho__conselho_cultural__ata_regimento_aprovado=''
+                usuario__plano_trabalho__conselho_cultural__ata_regimento_aprovado__isnull=False).exclude(
+                usuario__plano_trabalho__conselho_cultural__ata_regimento_aprovado=''
                 )
 
         if fundo:
             usuarios = usuarios.filter(
-                plano_trabalho__fundo_cultura__lei_fundo_cultura__isnull=False).exclude(
-                plano_trabalho__fundo_cultura__lei_fundo_cultura=''
+                usuario__plano_trabalho__fundo_cultura__lei_fundo_cultura__isnull=False).exclude(
+                usuario__plano_trabalho__fundo_cultura__lei_fundo_cultura=''
                 )
 
         if plano:
             usuarios = usuarios.filter(
-                plano_trabalho__plano_cultura__lei_plano_cultura__isnull=False).exclude(
-                plano_trabalho__plano_cultura__lei_plano_cultura=''
+                usuario__plano_trabalho__plano_cultura__lei_plano_cultura__isnull=False).exclude(
+                usuario__plano_trabalho__plano_cultura__lei_plano_cultura=''
                 )
 
         if ente_federado:
-            return usuarios.filter(municipio__cidade__nome_municipio__icontains=ente_federado)
+            return usuarios.filter(cidade__nome_municipio__icontains=ente_federado)
 
-        return usuarios.filter(estado_processo='6').order_by('municipio__cidade__nome_municipio')
+        return usuarios.filter(usuario__estado_processo='6').order_by('cidade__nome_municipio')
 
 
 class ConsultarEstados(ListView):
@@ -437,49 +437,49 @@ class ConsultarEstados(ListView):
         fundo = self.request.GET.get('fundo', None)
         plano = self.request.GET.get('plano', None)
 
-        usuarios = Usuario.objects.all()
+        usuarios = Municipio.objects.all()
 
         if sistema:
             usuarios = usuarios.filter(
-                plano_trabalho__criacao_sistema__lei_sistema_cultura__isnull=False).exclude(
-                plano_trabalho__criacao_sistema__lei_sistema_cultura=''
+                usuario__plano_trabalho__criacao_sistema__lei_sistema_cultura__isnull=False).exclude(
+                usuario__plano_trabalho__criacao_sistema__lei_sistema_cultura=''
                 )
 
         if orgao:
             usuarios = usuarios.filter(
-                plano_trabalho__orgao_gestor__relatorio_atividade_secretaria__isnull=False).exclude(
-                plano_trabalho__orgao_gestor__relatorio_atividade_secretaria=''
+                usuario__plano_trabalho__orgao_gestor__relatorio_atividade_secretaria__isnull=False).exclude(
+                usuario__plano_trabalho__orgao_gestor__relatorio_atividade_secretaria=''
                 )
 
         if conselho:
             usuarios = usuarios.filter(
-                plano_trabalho__conselho_cultural__ata_regimento_aprovado__isnull=False).exclude(
-                plano_trabalho__conselho_cultural__ata_regimento_aprovado=''
+                usuario__plano_trabalho__conselho_cultural__ata_regimento_aprovado__isnull=False).exclude(
+                usuario__plano_trabalho__conselho_cultural__ata_regimento_aprovado=''
                 )
 
         if fundo:
             usuarios = usuarios.filter(
-                plano_trabalho__fundo_cultura__lei_fundo_cultura__isnull=False).exclude(
-                plano_trabalho__fundo_cultura__lei_fundo_cultura=''
+                usuario__plano_trabalho__fundo_cultura__lei_fundo_cultura__isnull=False).exclude(
+                usuario__plano_trabalho__fundo_cultura__lei_fundo_cultura=''
                 )
 
         if plano:
             usuarios = usuarios.filter(
-                plano_trabalho__plano_cultura__lei_plano_cultura__isnull=False).exclude(
-                plano_trabalho__plano_cultura__lei_plano_cultura=''
+                usuario__plano_trabalho__plano_cultura__lei_plano_cultura__isnull=False).exclude(
+                usuario__plano_trabalho__plano_cultura__lei_plano_cultura=''
                 )
 
         if ente_federado:
             usuarios = usuarios.filter(
-                Q(municipio__cidade__isnull=True),
-                Q(municipio__estado__nome_uf__icontains=ente_federado) |
-                Q(municipio__estado__sigla__iexact=ente_federado))
+                Q(cidade__isnull=True),
+                Q(estado__nome_uf__icontains=ente_federado) |
+                Q(estado__sigla__iexact=ente_federado))
 
-        return usuarios.filter(municipio__estado__isnull=False, municipio__cidade__isnull=True)
+        return usuarios.filter(estado__isnull=False, cidade__isnull=True)
 
 
 class Detalhar(DetailView):
-    model = Usuario
+    model = Municipio
     template_name = 'consultar/detalhar.html'
 
 

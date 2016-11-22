@@ -75,7 +75,7 @@
 <ul>
   {% for municipio in object_list %}
   <li>
-    <a href="{% url 'adesao:detalhar' municipio.id %}">{{ municipio.municipio.estado.nome_uf }}</a>
+    <a href="{% url 'adesao:detalhar' municipio.id %}">{{ municipio.estado.nome_uf }}</a>
   </li>
   {% empty %}
   <li>
