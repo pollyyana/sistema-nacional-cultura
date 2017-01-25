@@ -1,7 +1,8 @@
 Django==1.8.1
 django-ckeditor==4.5.0
-django-extensions==1.5.5
 django-clever-selects==0.6.9
+django-environ==0.3.0
+django-extensions==1.5.5
 django-localflavor==1.1
 django-piwik==0.1
 django-smart-selects==1.1.1
@@ -15,4 +16,5 @@ pep8==1.5.7
 psycopg2==2.6
 pyflakes==0.8.1
 six==1.9.0
-django-environ==0.3.0
+Werkzeug==0.11
+xlwt==1.0.0
