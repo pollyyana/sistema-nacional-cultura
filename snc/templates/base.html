@@ -209,6 +209,11 @@
                           <span>Plano de Trabalho</span>
                         </a>
                       </li>
+                      <li class="navTreeItem visualNoMarker navTreeFolderish section-assunto-d">
+                        <a  href="{% url 'planotrabalho:listar_conselheiros' request.user.usuario.plano_trabalho.conselho_cultural.id %}" title="" class="state-published navTreeFolderish contenttype-folder ">
+                          <span>Gerenciar Conselheiros</span>
+                        </a>
+                      </li>
                       {% endif %}
                     </ul>
                     <span class="portletBottomLeft"></span>

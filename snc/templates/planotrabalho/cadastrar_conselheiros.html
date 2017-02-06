@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+{% load widget_tweaks %}
+{% block content %}
+
+<form class="form-horizontal" method="post">
+    {% csrf_token %}
+    <h3>
+      <strong>Cadastrar Conselheiro</strong>
+    </h3>
+
+    <div class="form-group">
+      <div class="actions">
+            <label class="col-sm-4 control-label">
+                Nome
+            </label>
+            {% render_field form.nome class="form-control" placeholder="Nome Completo"%}
+            {{ form.nome.errors }}
+            <br>
+            <label class="col-sm-4 control-label">
+                Email
+            </label>
+            {% render_field form.email class="form-control" placeholder="Email"%}
+            {{ form.email.errors }}
+            <br>
+            <label class="col-sm-4 control-label">
+                Segmento
+            </label>
+            {% render_field form.segmento class="form-control segmento" %}
+            {{ form.segmento.errors }}
+        <input type="text" name="outros" placeholder="Digite aqui seu segmento" class="form-control" style="display: none;"/><br/>
+      </div>
+    </div>
+
+    <input type="submit" class="btn btn-success" value="Salvar" />
+</form>
+
+<script type="text/javascript">
+    $(".segmento").change(function(){
+      if ($(this).val() === '21'){
+        $(this).parent().children('[name=outros]').fadeIn();
+      }else {
+        $(this).parent().children('[name=outros]').fadeOut();
+      }
+    });
+</script>
+
+{% endblock content %}

@@ -6,6 +6,10 @@ SITUACAO_ENVIO = (
     (1, 'Avaliando anexo'),
     (2, 'Concluída')
     )
+SITUACAO_CONSELHEIRO = (
+    ('1', 'Habilitado'),
+    ('0', 'Desabilitado')
+    )
 
 
 class PlanoTrabalho(models.Model):
@@ -159,4 +163,12 @@ class Conselheiro(models.Model):
     nome = models.CharField(max_length=100)
     segmento = models.CharField(max_length=255)
     email = models.EmailField(unique=True)
+    situacao = models.CharField(
+        blank=True,
+        null=True,
+        max_length=1,
+        choices=SITUACAO_CONSELHEIRO,
+        default=1)
+    data_cadastro = models.DateField(blank=True, null=True)
+    data_situacao = models.DateField(blank=True, null=True)
     conselho = models.ForeignKey('ConselhoCultural')

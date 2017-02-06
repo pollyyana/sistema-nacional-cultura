@@ -1,16 +1,16 @@
 import json
 
-from django.core import serializers
+
 from django.shortcuts import redirect
 from django.http import Http404, HttpResponse
 from django.views.generic.edit import CreateView, UpdateView
-from django.views.generic.detail import DetailView
+from django.views.generic import ListView, DetailView
 from django.core.urlresolvers import reverse_lazy
 
 from planotrabalho.models import PlanoTrabalho, CriacaoSistema, OrgaoGestor, Conselheiro
 from planotrabalho.models import ConselhoCultural, FundoCultura, PlanoCultura
-from .forms import CriarSistemaForm, OrgaoGestorForm, ConselhoCulturalForm
-from .forms import FundoCulturaForm, PlanoCulturaForm
+from .forms import CriarSistemaForm, OrgaoGestorForm, ConselhoCulturalForm, DesabilitarConselheiroForm
+from .forms import FundoCulturaForm, PlanoCulturaForm, CriarConselheiroForm, AlterarConselheiroForm
 
 
 # Create your views here.
@@ -144,6 +144,72 @@ class CadastrarConselho(CreateView):
     def get_success_url(self):
         trabalho = self.request.user.usuario.plano_trabalho.id
         return reverse_lazy('planotrabalho:planotrabalho', args=[trabalho])
+
+
+class CriarConselheiro(CreateView):
+    form_class = CriarConselheiroForm
+    template_name = 'planotrabalho/cadastrar_conselheiros.html'
+
+    def get_form_kwargs(self):
+        kwargs = super(CriarConselheiro, self).get_form_kwargs()
+        kwargs['user'] = self.request.user.usuario
+        return kwargs
+
+    def get_success_url(self):
+        conselho = self.request.user.usuario.plano_trabalho.conselho_cultural.id
+        return reverse_lazy('planotrabalho:listar_conselheiros', kwargs={"pk": conselho})
+
+
+class ListarConselheiros(ListView):
+    model = Conselheiro
+    template_name = 'planotrabalho/listar_conselheiros.html'
+    paginate_by = 12
+
+    def get_queryset(self):
+        q = self.request.user.usuario.plano_trabalho.conselho_cultural.id
+        conselheiros = Conselheiro.objects.filter(conselho=q, situacao=1)  # 1 = Habilitado
+
+        return conselheiros
+
+
+class AlterarConselheiro(UpdateView):
+    form_class = AlterarConselheiroForm
+    template_name = 'planotrabalho/alterar_conselheiro.html'
+
+    def get_queryset(self):
+        pk = self.kwargs['pk']
+        conselheiro = Conselheiro.objects.filter(id=pk)
+
+        return conselheiro
+
+    def get_form_kwargs(self):
+        kwargs = super(AlterarConselheiro, self).get_form_kwargs()
+        kwargs['user'] = self.request.user.usuario
+        return kwargs
+
+    def get_success_url(self):
+        conselho = self.request.user.usuario.plano_trabalho.conselho_cultural.id
+        return reverse_lazy('planotrabalho:listar_conselheiros', kwargs={"pk": conselho})
+
+
+class DesabilitarConselheiro(UpdateView):
+    form_class = DesabilitarConselheiroForm
+    template_name = 'planotrabalho/desabilitar_conselheiro.html'
+
+    def get_queryset(self):
+        pk = self.kwargs['pk']
+        conselheiro = Conselheiro.objects.filter(id=pk)
+
+        return conselheiro
+
+    def get_form_kwargs(self):
+        kwargs = super(DesabilitarConselheiro, self).get_form_kwargs()
+        kwargs['user'] = self.request.user.usuario
+        return kwargs
+
+    def get_success_url(self):
+        conselho = self.request.user.usuario.plano_trabalho.conselho_cultural.id
+        return reverse_lazy('planotrabalho:listar_conselheiros', kwargs={"pk": conselho})
 
 
 class AlterarConselho(UpdateView):

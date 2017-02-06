@@ -12,8 +12,7 @@ LISTA_ESTADOS_PROCESSO = (
     ('4', 'Encaminhado para assinatura do Secretário SAI'),
     ('5', 'Aguarda Publicação no DOU'),
     ('6', 'Publicado no DOU'),
-    ('7', 'Responsável confirmado'),
-)
+    ('7', 'Responsável confirmado'),)
 
 
 # Create your models here.

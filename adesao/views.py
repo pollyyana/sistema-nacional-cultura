@@ -195,7 +195,7 @@ class CadastrarUsuario(CreateView):
             'Equipe SNC\nMinistério da Cultura',
             'naoresponda@cultura.gov.br',
             [self.object.email],),
-            kwargs = {'fail_silently': 'False', }
+            kwargs={'fail_silently': 'False', }
             ).start()
         return super(CadastrarUsuario, self).get_success_url()
 
