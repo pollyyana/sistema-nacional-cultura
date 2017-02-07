@@ -72,6 +72,7 @@ class Municipio(models.Model):
     telefone_um = models.CharField(max_length=100)
     telefone_dois = models.CharField(max_length=25, blank=True)
     telefone_tres = models.CharField(max_length=25, blank=True)
+    endereco_eletronico = models.CharField(max_length=255, blank=True, null=True)
     email_institucional_prefeito = models.EmailField()
     termo_posse_prefeito = models.FileField(
         upload_to='termo_posse',
