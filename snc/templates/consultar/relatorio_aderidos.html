@@ -57,45 +57,35 @@
 </div>
 {% endblock menu %}
 {% block content %}
-<form class="form-inline" method="get">
-  <div>
-    <button type="submit" class="btn btn-info" style="float:right;">Buscar</button>
-    <div style="overflow: hidden;">
-        <input name="estado" type="search" class="form-control" placeholder="Nome ou sigla da UF" />
-    </div>
-  </div>
-  <a id="busca-avancada" href="#">Mais opções...</a>
-  <div class="form-group hidden" id="filtros">
-      <div class="checkbox">
-        <label><input type="checkbox" name="sistema">Sistema</label>
-        <label><input type="checkbox" name="orgao">Órgão Gestor</label>
-        <label><input type="checkbox" name="conselho">Conselho</label>
-        <label><input type="checkbox" name="fundo">Fundo</label>
-        <label><input type="checkbox" name="plano">Plano</label>
-      </div>
-  </div>
-</form>
 
-<h1>Estados</h1>
-<ul>
-  {% for municipio in object_list %}
-  <li>
-    <a href="{% url 'adesao:detalhar' municipio.id %}">{{ municipio.estado.nome_uf }}</a>
-  </li>
-  {% empty %}
-  <li>
-    Nenhum estado encontrado.
-  </li>
-  {% endfor %}
-</ul>
+<div class="dataTable_wrapper">
+
+    <table class="table table-striped table-bordered table-hover dt-responsive" id="dataTables-example">
+        <div align="center">
+            <h3>Relatório de municípios</h3>
+            <p>Dados sobre os municípios aderidos ao SNC</p>
+        </div>
+        <thead>
+            <tr>
+              <th>Estado</th>
+              <th>Aderidos</th>
+              <th>Total</th>
+              <th>Relação ao total</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for context in object_list|dictsort:"percent_mun_by_uf" %}
+        <tr class="odd gradeX">
+            <td width="25%">{{ context.uf_sigla }}</td>
+            <td width="25%">{{ context.municipios_aderiram }}</td>
+            <td width="25%">{{ context.total_municipios_uf }}</td>
+            <td width="25%">{{ context.percent_mun_by_uf }}%</td>
+        </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+
+
 {% endblock content %}
-{% block js %}
-<script type="text/javascript">
-$(document).ready(function() {
-    $("#busca-avancada").click(function() {
-      $("#filtros").fadeIn();
-      $("#busca-avancada").fadeOut();
-    });
-});
-</script>
-{% endblock js %}

@@ -13,12 +13,13 @@ from django.contrib.auth.decorators import login_required
 from django.utils import timezone
 from django.template.loader import render_to_string
 from django.core.exceptions import ValidationError, ObjectDoesNotExist
-from django.db.models import Q
+from django.db.models import Q, Count
 
-from adesao.models import Municipio, Responsavel, Secretario, Usuario, Historico
+from adesao.models import Municipio, Responsavel, Secretario, Usuario, Historico, Uf, Cidade
 from adesao.forms import CadastrarUsuarioForm, CadastrarMunicipioForm
 from adesao.forms import CadastrarResponsavelForm, CadastrarSecretarioForm
 from adesao.utils import enviar_email_conclusao, verificar_anexo
+from pprint import pprint
 
 from wkhtmltopdf.views import PDFTemplateView
 
@@ -476,6 +477,39 @@ class ConsultarEstados(ListView):
                 Q(estado__sigla__iexact=ente_federado))
 
         return usuarios.filter(estado__isnull=False, cidade__isnull=True)
+
+
+class RelatorioAderidos(ListView):
+    template_name = 'consultar/relatorio_aderidos.html'
+
+    def get_queryset(self):
+
+        # @TODO refatorar e usar relacionamentos diretamente do ORM django
+        lista_uf = {}
+        context = []
+
+        # cria dict com estados, com estado_id como chave
+        for uf in Uf.objects.order_by('sigla'):
+            lista_uf[uf.codigo_ibge] = uf.sigla
+
+        municipios_by_uf = Municipio.objects.values('estado_id').filter(
+            usuario__estado_processo='6',
+            cidade_id__isnull=False
+            ).annotate(
+                municipios_aderiram=Count('estado_id')
+            )
+
+        for estado in municipios_by_uf:
+            estado['uf_sigla'] = lista_uf[estado['estado_id']]
+
+            estado['total_municipios_uf'] = Cidade.objects.filter(uf_id=estado['estado_id']).count()
+
+            estado['percent_mun_by_uf'] = round(
+                ((estado['municipios_aderiram'] / estado['total_municipios_uf']) * 100), 2)
+
+            context.append(estado)
+
+        return context
 
 
 class Detalhar(DetailView):
