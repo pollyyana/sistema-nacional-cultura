@@ -68,8 +68,8 @@
         <thead>
             <tr>
               <th>Estado</th>
-              <th>Aderidos</th>
               <th>Total</th>
+              <th>Aderidos</th>
               <th>Relação ao total</th>
             </tr>
         </thead>
@@ -77,8 +77,8 @@
         {% for context in object_list|dictsort:"percent_mun_by_uf" %}
         <tr class="odd gradeX">
             <td width="25%">{{ context.uf_sigla }}</td>
-            <td width="25%">{{ context.municipios_aderiram }}</td>
             <td width="25%">{{ context.total_municipios_uf }}</td>
+            <td width="25%">{{ context.municipios_aderiram }}</td>
             <td width="25%" align="center">{{ context.percent_mun_by_uf }}%</td>
         </tr>
         {% endfor %}
