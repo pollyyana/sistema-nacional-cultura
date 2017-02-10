@@ -156,8 +156,7 @@ class CriarConselheiro(CreateView):
         return kwargs
 
     def get_success_url(self):
-        conselho = self.request.user.usuario.plano_trabalho.conselho_cultural.id
-        return reverse_lazy('planotrabalho:listar_conselheiros', kwargs={"pk": conselho})
+        return reverse_lazy('planotrabalho:listar_conselheiros')
 
 
 class ListarConselheiros(ListView):
@@ -189,7 +188,7 @@ class AlterarConselheiro(UpdateView):
 
     def get_success_url(self):
         conselho = self.request.user.usuario.plano_trabalho.conselho_cultural.id
-        return reverse_lazy('planotrabalho:listar_conselheiros', kwargs={"pk": conselho})
+        return reverse_lazy('planotrabalho:listar_conselheiros')
 
 
 class DesabilitarConselheiro(UpdateView):
@@ -209,7 +208,7 @@ class DesabilitarConselheiro(UpdateView):
 
     def get_success_url(self):
         conselho = self.request.user.usuario.plano_trabalho.conselho_cultural.id
-        return reverse_lazy('planotrabalho:listar_conselheiros', kwargs={"pk": conselho})
+        return reverse_lazy('planotrabalho:listar_conselheiros')
 
 
 class AlterarConselho(UpdateView):

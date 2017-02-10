@@ -36,44 +36,11 @@
     {% endif %}
     {{ form.ata_regimento_aprovado.errors }}
   </div>
-  <div class="form-group">
-    <label>Conselheiros (clique no + para adicionar mais conselheiros)</label><br/>
-    <div class="actions">
-      <input type="text" name="conselheiro" placeholder="Nome Completo" class="form-control"/>
-      <input type="email" name="email" placeholder="Email" class="form-control"/>
-      <select name="segmento" class="form-control segmento">
-        <option value="0" selected>-- Selecione um Segmento --</option>
-        <option value="Arquitetura e Urbanismo">Arquitetura e Urbanismo</option>
-        <option value="Arquivos">Arquivos</option>
-        <option value="Arte Digital">Arte Digital</option>
-        <option value="Artes Visuais">Artes Visuais</option>
-        <option value="Artesanato">Artesanato</option>
-        <option value="Audiovisual">Audiovisual</option>
-        <option value="Circo">Circo</option>
-        <option value="Culturas Afro-brasileiras">Culturas Afro-brasileiras</option>
-        <option value="Culturas dos Povos Indígenas">Culturas dos Povos Indígenas</option>
-        <option value="Culturas Populares">Culturas Populares</option>
-        <option value="Dança">Dança</option>
-        <option value="Design">Design</option>
-        <option value="Literatura, Livro e Leitura">Literatura, Livro e Leitura</option>
-        <option value="Moda">Moda</option>
-        <option value="Museus">Museus</option>
-        <option value="Música Erudita">Música Erudita</option>
-        <option value="Música Popular">Música Popular</option>
-        <option value="Patrimônio Imaterial">Patrimônio Imaterial</option>
-        <option value="Patrimônio Material">Patrimônio Material</option>
-        <option value="Teatro">Teatro</option>
-        <option value="Outros">Outros</option>
-      </select>
-      <input type="text" name="outros_segmento" placeholder="Digite aqui seu segmento" class="form-control" style="display: none;"/><br/>
-    </div>
-    <button type="button" class="btn btn-success add">
-      <i class="fa fa-plus"></i>
-    </button>
-    <button type="button" class="btn btn-warning del">
-      <i class="fa fa-minus"></i>
-    </button>
-  </div>
+
+  <label for={{ form.data_final_instalacao_conselho.id_for_label }} class="col-sm-12">
+    Para adicionar um novo conselheiro <a href="{% url 'planotrabalho:listar_conselheiros' %}" >clique aqui</a>
+  </label>
+  </br>
   {% endif %}
 
   <div class="alert alert-info" role="alert">

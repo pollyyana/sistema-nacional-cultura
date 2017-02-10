@@ -38,7 +38,7 @@ urlpatterns = [
     url(r'^conselheiro/criar/$',
         login_required(views.CriarConselheiro.as_view()),
         name="criar_conselheiro"),
-    url(r'^conselheiro/listar/(?P<pk>[0-9]+)/$',
+    url(r'^conselheiro/listar/$',
         login_required(views.ListarConselheiros.as_view()),
         name="listar_conselheiros"),
     url(r'^conselheiro/editar/(?P<pk>[0-9]+)/$',
