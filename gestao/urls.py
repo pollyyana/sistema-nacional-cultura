@@ -68,4 +68,10 @@ urlpatterns = [
 
     # UF e Município aninhados
     url(r'^chain/municipio$', staff_member_required(views.MunicipioChain.as_view()), name='municipio_chain'),
+
+    # Inserir Documentos
+    url(r'^inserir-documentos$', staff_member_required(views.ListarDocumentos.as_view()), name='inserir_documentos'),
+    url(r'^inserir-documentos/ente-federado/(?P<pk>[0-9]+)$',
+        staff_member_required(views.AlterarDocumentos.as_view()), name='alterar_documentos'),
+
 ]

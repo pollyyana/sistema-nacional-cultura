@@ -8,7 +8,7 @@ from django.views.generic.edit import FormView, UpdateView
 
 from adesao.models import Usuario, Cidade, Municipio
 
-from .forms import AlterarSituacao, DiligenciaForm
+from .forms import AlterarSituacao, DiligenciaForm, AlterarDocumentosForm
 from .forms import AlterarCadastradorForm, AlterarUsuarioForm
 
 from clever_selects.views import ChainedSelectChoicesView
@@ -264,3 +264,36 @@ class AlterarUsuario(UpdateView):
 
     def get_success_url(self):
         return reverse_lazy('gestao:usuarios')
+
+
+class ListarDocumentos(ListView):
+    template_name = 'gestao/inserir_documentos.html'
+    paginate_by = 10
+
+    def get_queryset(self):
+        situacao = self.request.GET.get('situacao', None)
+        ente_federado = self.request.GET.get('municipio', None)
+
+        if situacao in ('1', '2', '3', '4', '5'):
+            return Municipio.objects.filter(usuario__estado_processo=situacao)
+
+        if ente_federado:
+            municipio = Municipio.objects.filter(
+                cidade__nome_municipio__icontains=ente_federado)
+            estado = Municipio.objects.filter(
+                cidade__nome_municipio__isnull=True,
+                estado__nome_uf__icontains=ente_federado)
+
+            return municipio | estado
+
+        return Municipio.objects.filter(usuario__estado_processo__range=('1', '5'))
+
+
+class AlterarDocumentos(UpdateView):
+
+    template_name = 'gestao/alterar_documentos.html'
+    form_class = AlterarDocumentosForm
+    model = Municipio
+
+    def get_success_url(self):
+        return reverse_lazy('gestao:inserir_documentos')

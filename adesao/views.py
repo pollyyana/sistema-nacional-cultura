@@ -19,7 +19,6 @@ from adesao.models import Municipio, Responsavel, Secretario, Usuario, Historico
 from adesao.forms import CadastrarUsuarioForm, CadastrarMunicipioForm
 from adesao.forms import CadastrarResponsavelForm, CadastrarSecretarioForm
 from adesao.utils import enviar_email_conclusao, verificar_anexo
-from pprint import pprint
 
 from wkhtmltopdf.views import PDFTemplateView
 

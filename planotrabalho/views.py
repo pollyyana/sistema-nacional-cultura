@@ -187,7 +187,6 @@ class AlterarConselheiro(UpdateView):
         return kwargs
 
     def get_success_url(self):
-        conselho = self.request.user.usuario.plano_trabalho.conselho_cultural.id
         return reverse_lazy('planotrabalho:listar_conselheiros')
 
 
@@ -207,7 +206,6 @@ class DesabilitarConselheiro(UpdateView):
         return kwargs
 
     def get_success_url(self):
-        conselho = self.request.user.usuario.plano_trabalho.conselho_cultural.id
         return reverse_lazy('planotrabalho:listar_conselheiros')
 
 
