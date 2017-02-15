@@ -363,7 +363,8 @@
         $(".telefone").formatter({
           'pattern': '({{99}}){{99999}}-{{9999}}',
           'persistent': false,
-        }); {% endverbatim %}
+        });
+        {% endverbatim %}
       });
       $("form").submit(function() {
         $('#overlay').show();
