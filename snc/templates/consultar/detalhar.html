@@ -20,6 +20,7 @@
     <link href="{% static 'css/MarkerCluster.css' %}" rel="stylesheet" type="text/css" />
     <link href="{% static 'css/MarkerCluster.Default.css' %}" rel="stylesheet" type="text/css" />
     <script src="{% static 'js/jquery.min.js' %}"></script>
+    <script src="{% static 'js/jquery.mask.min.js' %}"></script>
 </head>
 
 <body>
@@ -184,7 +185,7 @@
                         <div id="parent-fieldname-description" class="documentDescription" style="color: #0E3F98">Endereço: <p style="color: #6f7681">{{ object.endereco }}</p></div>
                         <div id="parent-fieldname-description" class="documentDescription" style="color: #0E3F98">Bairro: <p style="color: #6f7681">{{ object.bairro }}</p></div>
                         <div id="parent-fieldname-description" class="documentDescription" style="color: #0E3F98">CEP: <p style="color: #6f7681">{{ object.cep }}</p></div>
-                        <div id="parent-fieldname-description" class="documentDescription" style="color: #0E3F98">Telefone: <p style="color: #6f7681">{{ object.telefone_um }}</p></div>
+                        <div id="parent-fieldname-description" class="documentDescription" style="color: #0E3F98">Telefone: <p style="color: #6f7681" id="telefone-formatter">{{ object.telefone_um }}</p></div>
                         <p></p>
                         <!-- FIM DADOS DA PREFEITURA -->
 
@@ -490,6 +491,23 @@ $(document).ready(function(){
         mymap.setView(new L.LatLng(latTotal/data.length,lngTotal/data.length), 6);
     });
     {% endif %}
+
+    var telefone = $('#telefone-formatter').html().length;
+
+    if (telefone == '11') {
+        $('#telefone-formatter').mask('(00)00000-0000');
+
+    } else if (telefone == '10'){
+        $('#telefone-formatter').mask('(00)0000-0000');
+
+    } else if (telefone == '9') {
+        $('#telefone-formatter').mask('00000-0000');
+
+    } else if (telefone == '8') {
+        $('#telefone-formatter').mask('0000-0000');
+
+    }
+
 });
 </script>
 </body>

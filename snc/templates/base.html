@@ -322,6 +322,7 @@
 
     <!-- /Footer-->
     <!-- Script da Barra do Governo -->
+    <script src="{% static 'js/jquery.mask.min.js' %}"></script>
     <script src="{% static 'js/jquery.formatter.min.js' %}"></script>
     <script src="{% static 'js/jquery-ui.min.js' %}"></script>
     <script src="{% static 'js/datepicker-pt-BR.js' %}"></script>
@@ -360,13 +361,17 @@
           'pattern': '{{99}}.{{999}}-{{999}}',
           'persistent': false,
         });
-        $(".telefone").formatter({
-          'pattern': '({{99}}){{99999}}-{{9999}}',
-          'persistent': false,
-        });
+        // $(".telefone").formatter({
+        //   'pattern': '({{99}}){{99999}}-{{9999}}',
+        //   'persistent': false,
+        // });
+
+        $(".telefone").mask('(00)00000-0000')
+
         {% endverbatim %}
       });
       $("form").submit(function() {
+        $('.telefone').unmask();
         $('#overlay').show();
         return true;
       });
