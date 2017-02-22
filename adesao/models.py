@@ -100,7 +100,6 @@ class Municipio(models.Model):
 class Responsavel(models.Model):
     cpf_responsavel = models.CharField(
         max_length=14,
-        unique=True,
         verbose_name='CPF')
     rg_responsavel = models.CharField(max_length=25, verbose_name='RG')
     orgao_expeditor_rg = models.CharField(max_length=50)
@@ -120,7 +119,6 @@ class Responsavel(models.Model):
 class Secretario(models.Model):
     cpf_secretario = models.CharField(
         max_length=14,
-        unique=True,
         verbose_name='CPF')
     rg_secretario = models.CharField(max_length=25, verbose_name='RG')
     orgao_expeditor_rg = models.CharField(max_length=50)
