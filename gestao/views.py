@@ -8,11 +8,11 @@ from django.views.generic.edit import FormView, UpdateView
 
 from adesao.models import Usuario, Cidade, Municipio
 
-from .forms import AlterarSituacao, DiligenciaForm, AlterarDocumentosForm
+from .forms import AlterarSituacao, DiligenciaForm, AlterarDocumentosEnteFederadoForm
 from .forms import AlterarCadastradorForm, AlterarUsuarioForm
 
 from clever_selects.views import ChainedSelectChoicesView
-
+from pprint import pprint
 
 # Acompanhamento das adesões
 class AlterarCadastrador(FormView):
@@ -266,8 +266,8 @@ class AlterarUsuario(UpdateView):
         return reverse_lazy('gestao:usuarios')
 
 
-class ListarDocumentos(ListView):
-    template_name = 'gestao/inserir_documentos.html'
+class ListarDocumentosEnteFederado(ListView):
+    template_name = 'gestao/inserir_documentos/inserir_entefederado.html'
     paginate_by = 10
 
     def get_queryset(self):
@@ -289,11 +289,97 @@ class ListarDocumentos(ListView):
         return Municipio.objects.filter(usuario__estado_processo__range=('1', '5'))
 
 
-class AlterarDocumentos(UpdateView):
+class AlterarDocumentosEnteFederado(UpdateView):
 
-    template_name = 'gestao/alterar_documentos.html'
-    form_class = AlterarDocumentosForm
+    template_name = 'gestao/inserir_documentos/alterar_entefederado.html'
+    form_class = AlterarDocumentosEnteFederadoForm
     model = Municipio
 
     def get_success_url(self):
-        return reverse_lazy('gestao:inserir_documentos')
+        return reverse_lazy('gestao:inserir_entefederado')
+
+
+class InserirSistema(ListView):
+    template_name = 'gestao/inserir_documentos/inserir_sistema.html'
+    paginate_by = 10
+
+    def get_queryset(self):
+        q = self.request.GET.get('q', None)
+
+        usuarios = Usuario.objects.filter(estado_processo='6')
+        usuarios = usuarios.exclude(plano_trabalho__criacao_sistema=None)
+
+        usuarios = usuarios.filter(plano_trabalho__criacao_sistema__situacao_lei_sistema=1)
+
+        if q:
+            usuarios = usuarios.filter(
+                municipio__cidade__nome_municipio__icontains=q)
+
+        return usuarios
+
+
+class InserirOrgao(ListView):
+    template_name = 'gestao/inserir_documentos/inserir_orgao.html'
+    paginate_by = 10
+
+    def get_queryset(self):
+        q = self.request.GET.get('q', None)
+        usuarios = Usuario.objects.filter(estado_processo='6')
+        usuarios = usuarios.exclude(plano_trabalho__orgao_gestor=None)
+        usuarios = usuarios.filter(
+            plano_trabalho__orgao_gestor__situacao_relatorio_secretaria=1)
+        if q:
+            usuarios = usuarios.filter(
+                municipio__cidade__nome_municipio__icontains=q)
+        return usuarios
+
+
+class InserirConselho(ListView):
+    template_name = 'gestao/inserir_documentos/inserir_conselho.html'
+    paginate_by = 10
+
+    def get_queryset(self):
+        q = self.request.GET.get('q', None)
+        usuarios = Usuario.objects.filter(estado_processo='6')
+        usuarios = usuarios.exclude(plano_trabalho__conselho_cultural=None)
+        usuarios = usuarios.filter(
+            plano_trabalho__conselho_cultural__situacao_ata=1)
+        if q:
+            usuarios = usuarios.filter(
+                municipio__cidade__nome_municipio__icontains=q)
+        return usuarios
+
+
+class InserirFundo(ListView):
+    template_name = 'gestao/inserir_documentos/inserir_fundo.html'
+    paginate_by = 10
+
+    def get_queryset(self):
+        q = self.request.GET.get('q', None)
+        usuarios = Usuario.objects.filter(estado_processo='6')
+        usuarios = usuarios.exclude(plano_trabalho__fundo_cultura=None)
+        usuarios = usuarios.filter(
+            plano_trabalho__fundo_cultura__situacao_lei_plano=1)
+        if q:
+            usuarios = usuarios.filter(
+                municipio__cidade__nome_municipio__icontains=q)
+        return usuarios
+
+
+class InserirPlano(ListView):
+    template_name = 'gestao/inserir_documentos/inserir_plano.html'
+    paginate_by = 10
+
+    def get_queryset(self):
+        q = self.request.GET.get('q', None)
+        usuarios = Usuario.objects.filter(estado_processo='6')
+        usuarios = usuarios.exclude(plano_trabalho__plano_cultura=None)
+        usuarios = usuarios.filter(plano_trabalho__plano_cultura__situacao_lei_plano=1)
+
+        if q:
+            usuarios = usuarios.filter(
+                municipio__cidade__nome_municipio__icontains=q)
+
+        pprint(vars(usuarios))
+
+        return usuarios

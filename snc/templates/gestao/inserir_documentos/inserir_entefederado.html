@@ -61,7 +61,7 @@
                   <td>{{ municipio.cpf_prefeito }}</td>
                   {% endif %}
                   <td>{{ municipio.cnpj_prefeitura }}</td>
-                  <td><a href="{% url 'gestao:alterar_documentos' municipio.id %}" class="btn btn-primary" title="Alterar Documentos"><i class="fa fa-upload" /></button></td>
+                  <td><a href="{% url 'gestao:alterar_entefederado' municipio.id %}" class="btn btn-primary" title="Alterar Documentos"><i class="fa fa-upload" /></button></td>
                 </tr>
               {% endfor %}
             </tbody>

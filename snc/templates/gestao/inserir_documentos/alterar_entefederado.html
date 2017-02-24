@@ -4,7 +4,7 @@
     Alterar documentos do cadastro
   </div>
   <div class="panel-body">
-    <form action="{% url 'gestao:alterar_documentos' municipio.id %}" class="form-horizontal" method="post" enctype=multipart/form-data>{% csrf_token %}
+    <form action="{% url 'gestao:alterar_entefederado' municipio.id %}" class="form-horizontal" method="post" enctype=multipart/form-data>{% csrf_token %}
 
       <div class="form-group">
         <label class="col-sm-3 control-label">Copia RG</label>
@@ -41,7 +41,7 @@
 
       <div class="form-group">
         <div class="col-sm-offset-3 col-sm-11">
-          <a class="btn btn-default" href="{% url 'gestao:inserir_documentos' %}">Cancelar</a>
+          <a class="btn btn-default" href="{% url 'gestao:inserir_entefederado' %}">Cancelar</a>
           <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModal">Salvar</button>
 
           <div class="modal fade" id="myModal" role="dialog">

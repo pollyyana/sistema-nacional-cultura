@@ -69,9 +69,29 @@ urlpatterns = [
     # UF e Município aninhados
     url(r'^chain/municipio$', staff_member_required(views.MunicipioChain.as_view()), name='municipio_chain'),
 
-    # Inserir Documentos
-    url(r'^inserir-documentos$', staff_member_required(views.ListarDocumentos.as_view()), name='inserir_documentos'),
+    # Inserir de documentos de entes federados
+    url(r'^inserir-documentos$',
+        staff_member_required(views.ListarDocumentosEnteFederado.as_view()), name='inserir_entefederado'),
     url(r'^inserir-documentos/ente-federado/(?P<pk>[0-9]+)$',
-        staff_member_required(views.AlterarDocumentos.as_view()), name='alterar_documentos'),
+        staff_member_required(views.AlterarDocumentosEnteFederado.as_view()), name='alterar_entefederado'),
 
-]
+    # Inserção de documentos da criação do sistema de cultura
+    url(r'^inserir-documentos/sistema$', staff_member_required(
+        views.InserirSistema.as_view(),
+        login_url='adesao:login'), name='inserir_sistema'),
+    # Inserção de documentos da criação do órgão gestor
+    url(r'^inserir-documentos/orgao$', staff_member_required(
+        views.InserirOrgao.as_view(),
+        login_url='adesao:login'), name='inserir_orgao'),
+    # Inserção de documentos da criação do conselho cultural
+    url(r'^inserir-documentos/conselho$', staff_member_required(
+        views.InserirConselho.as_view(),
+        login_url='adesao:login'), name='inserir_conselho'),
+    # Inserção de documentos da criação do fundo de cultura
+    url(r'^inserir-documentos/fundo$', staff_member_required(
+        views.InserirFundo.as_view(),
+        login_url='adesao:login'), name='inserir_fundo'),
+    # Inserção de documentos da elaboração do plano de cultura
+    url(r'^inserir-documentos/plano$', staff_member_required(
+        views.InserirPlano.as_view(),
+        login_url='adesao:login'), name='inserir_plano'), ]

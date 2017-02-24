@@ -162,7 +162,7 @@
                                 Sistema de Cultura<span class="fa arrow"></span>
                               </a>
                               <ul class="nav nav-third-level">
-                                <li><a href="{% url 'gestao:acompanhar_sistema' %}?anexo=minuta_projeto_lei">Minuta</a></li>
+                                <!-- <li><a href="{% url 'gestao:acompanhar_sistema' %}?anexo=minuta_projeto_lei">Minuta</a></li> -->
                                 <li><a href="{% url 'gestao:acompanhar_sistema' %}?anexo=lei_sistema_cultura">Lei</a></li>
                               </ul>
                             </li>
@@ -172,7 +172,7 @@
                                 Órgão Gestor<span class="fa arrow"></span>
                               </a>
                               <ul class="nav nav-third-level">
-                                <li><a href="{% url 'gestao:acompanhar_orgao' %}">Relatório</a></li>
+                                <li><a href="{% url 'gestao:acompanhar_orgao' %}">Ato normativo</a></li>
                               </ul>
                             </li>
 
@@ -199,17 +199,70 @@
                                 Plano de Cultura<span class="fa arrow"></span>
                               </a>
                               <ul class="nav nav-third-level">
-                                <li><a href="{% url 'gestao:acompanhar_plano' %}?anexo=relatorio_diretrizes_aprovadas">Relatório</a></li>
-                                <li><a href="{% url 'gestao:acompanhar_plano' %}?anexo=minuta_preparada">Minuta</a></li>
-                                <li><a href="{% url 'gestao:acompanhar_plano' %}?anexo=ata_reuniao_aprovacao_plano">Ata</a></li>
                                 <li><a href="{% url 'gestao:acompanhar_plano' %}?anexo=lei_plano_cultura">Lei</a></li>
                               </ul>
                             </li>
                           </ul>
                         </li>
+
                         <!-- Inserção de documentos faltantes-->
+
                         <li>
-                        <a href="{% url 'gestao:inserir_documentos' %}"><i class="fa fa-upload fa-fw"></i>  Inserir documentos</span></a>
+                          <a href="#"><i class="fa fa-upload fa-fw"></i>  Inserir Documentos<span class="fa arrow"></span></a>
+
+                          <ul class="nav nav-second-level">
+                            <li>
+                              <a href="#">
+                                Sistema de Cultura<span class="fa arrow"></span>
+                              </a>
+                              <ul class="nav nav-third-level">
+                                <!-- <li><a href="{% url 'gestao:acompanhar_sistema' %}?anexo=minuta_projeto_lei">Minuta</a></li> -->
+                                <li><a href="{% url 'gestao:inserir_sistema' %}">Lei</a></li>
+                              </ul>
+                            </li>
+
+                            <li>
+                              <a href="#">
+                                Órgão Gestor<span class="fa arrow"></span>
+                              </a>
+                              <ul class="nav nav-third-level">
+                                <li><a href="{% url 'gestao:inserir_orgao' %}">Ato normativo</a></li>
+                              </ul>
+                            </li>
+
+                            <li>
+                              <a href="#">
+                                Conselho Cultural<span class="fa arrow"></span>
+                              </a>
+                              <ul class="nav nav-third-level">
+                                <li><a href="{% url 'gestao:inserir_conselho' %}">Ata</a></li>
+                              </ul>
+                            </li>
+
+                            <li>
+                              <a href="#">
+                                Fundo de Cultura<span class="fa arrow"></span>
+                              </a>
+                              <ul class="nav nav-third-level">
+                                <li><a href="{% url 'gestao:inserir_fundo' %}">Lei</a></li>
+                              </ul>
+                            </li>
+
+                            <li>
+                              <a href="#">
+                                Plano de Cultura<span class="fa arrow"></span>
+                              </a>
+                              <ul class="nav nav-third-level">
+                                <li><a href="{% url 'gestao:inserir_plano' %}">Lei</a></li>
+                              </ul>
+                            </li>
+
+                            <li>
+                              <a href="{% url 'gestao:inserir_entefederado' %}">
+                                Ente Federado
+                              </a>
+                            </li>
+                          </ul>
                         </li>
                     </ul>
                 </div>

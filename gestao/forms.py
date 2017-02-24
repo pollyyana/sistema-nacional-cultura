@@ -227,7 +227,7 @@ class AlterarUsuarioForm(ModelForm):
         fields = ('is_active', 'is_staff', 'email')
 
 
-class AlterarDocumentosForm(ModelForm):
+class AlterarDocumentosEnteFederadoForm(ModelForm):
     termo_posse_prefeito = RestrictedFileField(
         content_types=content_types,
         max_upload_size=max_upload_size,
