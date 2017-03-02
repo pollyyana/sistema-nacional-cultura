@@ -70,9 +70,9 @@ urlpatterns = [
     url(r'^chain/municipio$', staff_member_required(views.MunicipioChain.as_view()), name='municipio_chain'),
 
     # Inserir de documentos de entes federados
-    url(r'^inserir-documentos$',
+    url(r'^inserir-documentos/ente-federado$',
         staff_member_required(views.ListarDocumentosEnteFederado.as_view()), name='inserir_entefederado'),
-    url(r'^inserir-documentos/ente-federado/(?P<pk>[0-9]+)$',
+    url(r'^inserir-documentos/ente-federado/alterar/(?P<pk>[0-9]+)$',
         staff_member_required(views.AlterarDocumentosEnteFederado.as_view()), name='alterar_entefederado'),
 
     # Inserção de documentos da criação do sistema de cultura
@@ -94,4 +94,18 @@ urlpatterns = [
     # Inserção de documentos da elaboração do plano de cultura
     url(r'^inserir-documentos/plano$', staff_member_required(
         views.InserirPlano.as_view(),
-        login_url='adesao:login'), name='inserir_plano'), ]
+        login_url='adesao:login'), name='inserir_plano'),
+
+    # Tela de alteração de upload do plano de trabalho
+    url(r'^inserir-documentos/sistema/alterar/(?P<pk>[0-9]+)$',
+        staff_member_required(views.AlterarSistema.as_view()), name='alterar_sistema'),
+    url(r'^inserir-documentos/fundo/alterar/(?P<pk>[0-9]+)$',
+        staff_member_required(views.AlterarFundo.as_view()), name='alterar_fundo'),
+    url(r'^inserir-documentos/plano/alterar/(?P<pk>[0-9]+)$',
+        staff_member_required(views.AlterarPlano.as_view()), name='alterar_plano'),
+    url(r'^inserir-documentos/orgao/alterar/(?P<pk>[0-9]+)$',
+        staff_member_required(views.AlterarOrgao.as_view()), name='alterar_orgao'),
+    url(r'^inserir-documentos/conselho/alterar/(?P<pk>[0-9]+)$',
+        staff_member_required(views.AlterarConselho.as_view()), name='alterar_conselho'),
+
+    ]

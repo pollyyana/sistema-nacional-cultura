@@ -24,9 +24,8 @@
                 <th>Município/Estado</th>
                 <th>CNPJ</th>
                 <th>Data</th>
-                <th>Anexo</th>
-                <th></th>
-                <th></th>
+                <th>Anexo Atual</th>
+                <th>Upload</th>
               </tr>
             </thead>
             <tbody>
@@ -42,11 +41,8 @@
                   <td>
                     <a href="{{ usuario.plano_trabalho.conselho_cultural.ata_regimento_aprovado.url }}">Download</a>
                   </td>
-                  <td>
-                    <a href="{% url 'gestao:diligencia_documental' 'conselho_cultural' 'situacao_ata' usuario.id %}"><i class="fa fa-thumbs-down"></i></a>
-                  </td>
-                  <td>
-                    <a href="{% url 'gestao:concluir_etapa' 'conselho_cultural' 'situacao_ata' usuario.id %}"><i class="fa fa-thumbs-up"></i></a>
+                  <td align="center">
+                    <a href="{% url 'gestao:alterar_conselho' usuario.plano_trabalho.conselho_cultural.id %}" class="btn btn-primary" title="Alterar Documento"><i class="fa fa-upload"></i></a>
                   </td>
                 </tr>
               {% endfor %}

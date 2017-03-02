@@ -7,7 +7,8 @@ from django.template.defaultfilters import filesizeformat
 
 
 from adesao.models import Usuario, Historico, Uf, Municipio
-from planotrabalho.models import PlanoTrabalho
+from planotrabalho.models import PlanoTrabalho, CriacaoSistema, FundoCultura
+from planotrabalho.models import PlanoCultura, OrgaoGestor, ConselhoCultural
 
 from .utils import enviar_email_alteracao_situacao
 
@@ -230,17 +231,64 @@ class AlterarUsuarioForm(ModelForm):
 class AlterarDocumentosEnteFederadoForm(ModelForm):
     termo_posse_prefeito = RestrictedFileField(
         content_types=content_types,
-        max_upload_size=max_upload_size,
-        required=False)
+        max_upload_size=max_upload_size)
     rg_copia_prefeito = RestrictedFileField(
         content_types=content_types,
-        max_upload_size=max_upload_size,
-        required=False)
+        max_upload_size=max_upload_size)
     cpf_copia_prefeito = RestrictedFileField(
         content_types=content_types,
-        max_upload_size=max_upload_size,
-        required=False)
+        max_upload_size=max_upload_size)
 
     class Meta:
         model = Municipio
         fields = ('termo_posse_prefeito', 'rg_copia_prefeito', 'cpf_copia_prefeito')
+
+
+class AlterarSistemaForm(ModelForm):
+    lei_sistema_cultura = RestrictedFileField(
+        content_types=content_types,
+        max_upload_size=max_upload_size)
+
+    class Meta:
+        model = CriacaoSistema
+        fields = ('lei_sistema_cultura',)
+
+
+class AlterarFundoForm(ModelForm):
+    lei_fundo_cultura = RestrictedFileField(
+        content_types=content_types,
+        max_upload_size=max_upload_size)
+
+    class Meta:
+        model = FundoCultura
+        fields = ('lei_fundo_cultura',)
+
+
+class AlterarPlanoForm(ModelForm):
+    lei_plano_cultura = RestrictedFileField(
+        content_types=content_types,
+        max_upload_size=max_upload_size)
+
+    class Meta:
+        model = PlanoCultura
+        fields = ('lei_plano_cultura',)
+
+
+class AlterarOrgaoForm(ModelForm):
+    relatorio_atividade_secretaria = RestrictedFileField(
+        content_types=content_types,
+        max_upload_size=max_upload_size)
+
+    class Meta:
+        model = OrgaoGestor
+        fields = ('relatorio_atividade_secretaria',)
+
+
+class AlterarConselhoForm(ModelForm):
+    ata_regimento_aprovado = RestrictedFileField(
+        content_types=content_types,
+        max_upload_size=max_upload_size)
+
+    class Meta:
+        model = ConselhoCultural
+        fields = ('ata_regimento_aprovado',)

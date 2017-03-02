@@ -7,12 +7,14 @@ from django.views.generic import ListView, DetailView
 from django.views.generic.edit import FormView, UpdateView
 
 from adesao.models import Usuario, Cidade, Municipio
+from planotrabalho.models import CriacaoSistema, PlanoCultura, FundoCultura, OrgaoGestor, ConselhoCultural
 
 from .forms import AlterarSituacao, DiligenciaForm, AlterarDocumentosEnteFederadoForm
-from .forms import AlterarCadastradorForm, AlterarUsuarioForm
+from .forms import AlterarCadastradorForm, AlterarUsuarioForm, AlterarOrgaoForm
+from .forms import AlterarFundoForm, AlterarPlanoForm, AlterarConselhoForm, AlterarSistemaForm
 
 from clever_selects.views import ChainedSelectChoicesView
-from pprint import pprint
+
 
 # Acompanhamento das adesões
 class AlterarCadastrador(FormView):
@@ -318,6 +320,15 @@ class InserirSistema(ListView):
         return usuarios
 
 
+class AlterarSistema(UpdateView):
+    template_name = 'gestao/inserir_documentos/alterar_sistema.html'
+    form_class = AlterarSistemaForm
+    model = CriacaoSistema
+
+    def get_success_url(self):
+        return reverse_lazy('gestao:inserir_sistema')
+
+
 class InserirOrgao(ListView):
     template_name = 'gestao/inserir_documentos/inserir_orgao.html'
     paginate_by = 10
@@ -332,6 +343,15 @@ class InserirOrgao(ListView):
             usuarios = usuarios.filter(
                 municipio__cidade__nome_municipio__icontains=q)
         return usuarios
+
+
+class AlterarOrgao(UpdateView):
+    template_name = 'gestao/inserir_documentos/alterar_orgao.html'
+    form_class = AlterarOrgaoForm
+    model = OrgaoGestor
+
+    def get_success_url(self):
+        return reverse_lazy('gestao:inserir_orgao')
 
 
 class InserirConselho(ListView):
@@ -350,6 +370,15 @@ class InserirConselho(ListView):
         return usuarios
 
 
+class AlterarConselho(UpdateView):
+    template_name = 'gestao/inserir_documentos/alterar_conselho.html'
+    form_class = AlterarConselhoForm
+    model = ConselhoCultural
+
+    def get_success_url(self):
+        return reverse_lazy('gestao:inserir_conselho')
+
+
 class InserirFundo(ListView):
     template_name = 'gestao/inserir_documentos/inserir_fundo.html'
     paginate_by = 10
@@ -366,6 +395,15 @@ class InserirFundo(ListView):
         return usuarios
 
 
+class AlterarFundo(UpdateView):
+    template_name = 'gestao/inserir_documentos/alterar_fundo.html'
+    form_class = AlterarFundoForm
+    model = FundoCultura
+
+    def get_success_url(self):
+        return reverse_lazy('gestao:inserir_fundo')
+
+
 class InserirPlano(ListView):
     template_name = 'gestao/inserir_documentos/inserir_plano.html'
     paginate_by = 10
@@ -380,6 +418,13 @@ class InserirPlano(ListView):
             usuarios = usuarios.filter(
                 municipio__cidade__nome_municipio__icontains=q)
 
-        pprint(vars(usuarios))
-
         return usuarios
+
+
+class AlterarPlano(UpdateView):
+    template_name = 'gestao/inserir_documentos/alterar_plano.html'
+    form_class = AlterarPlanoForm
+    model = PlanoCultura
+
+    def get_success_url(self):
+        return reverse_lazy('gestao:inserir_plano')
