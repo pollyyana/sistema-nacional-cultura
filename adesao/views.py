@@ -16,6 +16,7 @@ from django.core.exceptions import ValidationError, ObjectDoesNotExist
 from django.db.models import Q, Count
 
 from adesao.models import Municipio, Responsavel, Secretario, Usuario, Historico, Uf, Cidade
+from planotrabalho.models import Conselheiro, PlanoTrabalho
 from adesao.forms import CadastrarUsuarioForm, CadastrarMunicipioForm
 from adesao.forms import CadastrarResponsavelForm, CadastrarSecretarioForm
 from adesao.utils import enviar_email_conclusao, verificar_anexo
@@ -514,6 +515,15 @@ class RelatorioAderidos(ListView):
 class Detalhar(DetailView):
     model = Municipio
     template_name = 'consultar/detalhar.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(Detalhar, self).get_context_data(**kwargs)
+        planotrabalho = Usuario.objects.get(municipio_id=self.kwargs['pk'])
+        conselhocultural = PlanoTrabalho.objects.get(id=planotrabalho.plano_trabalho_id)
+        context['conselheiros'] = Conselheiro.objects.filter(
+            conselho_id=conselhocultural.conselho_cultural_id, situacao='1')  # Situação ativo
+
+        return context
 
 
 class ConsultarPlanoTrabalhoMunicipio(ListView):
