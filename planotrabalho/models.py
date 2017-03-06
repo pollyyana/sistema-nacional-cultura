@@ -162,7 +162,7 @@ class PlanoCultura(models.Model):
 class Conselheiro(models.Model):
     nome = models.CharField(max_length=100)
     segmento = models.CharField(max_length=255)
-    email = models.EmailField(unique=True)
+    email = models.EmailField(unique=False)
     situacao = models.CharField(
         blank=True,
         null=True,

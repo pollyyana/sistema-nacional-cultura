@@ -81,7 +81,7 @@
             }
         });
 
-        if(segmentos.indexOf("{{conselheiro.segmento}}") === -1){
+        if(segmentos.indexOf("{{conselheiro.segmento}}") === -1 && $('#id_email').val() != ''){
             $("#id_segmento option[value='21']").attr("selected","selected");
             $(".segmento").trigger("change");
             $('#outros').val("{{conselheiro.segmento}}");
