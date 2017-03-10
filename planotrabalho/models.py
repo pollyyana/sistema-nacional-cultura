@@ -39,7 +39,6 @@ class PlanoTrabalho(models.Model):
 
 
 class CriacaoSistema(models.Model):
-    data_final_elaboracao_projeto_lei = models.DateField()
     minuta_projeto_lei = models.FileField(
         upload_to='minuta_lei',
         max_length=255,
@@ -107,7 +106,6 @@ class FundoCultura(models.Model):
 
 
 class PlanoCultura(models.Model):
-    data_final_estabelecimento_instancias = models.DateField()
     relatorio_diretrizes_aprovadas = models.FileField(
         upload_to='relatorio_diretrizes',
         max_length=255,
@@ -117,7 +115,6 @@ class PlanoCultura(models.Model):
         max_length=1,
         choices=SITUACAO_ENVIO,
         default=0)
-    data_final_elaboracao_plano_cultura = models.DateField()
     minuta_preparada = models.FileField(
         upload_to='minuta_preparada',
         max_length=255,
@@ -127,7 +124,6 @@ class PlanoCultura(models.Model):
         max_length=1,
         choices=SITUACAO_ENVIO,
         default=0)
-    data_final_aprovacao_plano_cultura = models.DateField()
     ata_reuniao_aprovacao_plano = models.FileField(
         upload_to='ata_aprovacao_plano',
         max_length=255,

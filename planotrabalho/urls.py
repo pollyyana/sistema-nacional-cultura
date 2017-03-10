@@ -65,4 +65,4 @@ urlpatterns = [
     url(r'^plano/(?P<pk>[0-9]+)/$',
         login_required(views.AlterarPlano.as_view()),
         name='alterar_plano'),
-]
+    ]
