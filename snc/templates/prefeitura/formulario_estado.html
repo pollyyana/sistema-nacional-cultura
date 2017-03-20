@@ -131,6 +131,15 @@
   </div>
 
   <div class="form-group">
+    <label for="{{ form.endereço_eletronico.id_for_label }}" class="col-sm-offset-1 col-sm-3 control-label">Endereço Eletrônico (Agenda Digital)</label>
+
+    <div class="col-sm-4">
+        {% render_field form.endereco_eletronico class="form-control" placeholder="http://www.exemplo.com.br" %} {{ form.endereco_eletronico.errors }}
+    </div>
+
+  </div>
+
+  <div class="form-group">
 
     <label for="{{ form.telefone_um.id_for_label }}" class="col-sm-offset-1 col-sm-3 control-label">Telefone Institucional</label>
 

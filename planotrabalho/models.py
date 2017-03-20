@@ -6,6 +6,10 @@ SITUACAO_ENVIO = (
     (1, 'Avaliando anexo'),
     (2, 'Concluída')
     )
+SITUACAO_CONSELHEIRO = (
+    ('1', 'Habilitado'),
+    ('0', 'Desabilitado')
+    )
 
 
 class PlanoTrabalho(models.Model):
@@ -35,7 +39,6 @@ class PlanoTrabalho(models.Model):
 
 
 class CriacaoSistema(models.Model):
-    data_final_elaboracao_projeto_lei = models.DateField()
     minuta_projeto_lei = models.FileField(
         upload_to='minuta_lei',
         max_length=255,
@@ -103,7 +106,6 @@ class FundoCultura(models.Model):
 
 
 class PlanoCultura(models.Model):
-    data_final_estabelecimento_instancias = models.DateField()
     relatorio_diretrizes_aprovadas = models.FileField(
         upload_to='relatorio_diretrizes',
         max_length=255,
@@ -113,7 +115,6 @@ class PlanoCultura(models.Model):
         max_length=1,
         choices=SITUACAO_ENVIO,
         default=0)
-    data_final_elaboracao_plano_cultura = models.DateField()
     minuta_preparada = models.FileField(
         upload_to='minuta_preparada',
         max_length=255,
@@ -123,7 +124,6 @@ class PlanoCultura(models.Model):
         max_length=1,
         choices=SITUACAO_ENVIO,
         default=0)
-    data_final_aprovacao_plano_cultura = models.DateField()
     ata_reuniao_aprovacao_plano = models.FileField(
         upload_to='ata_aprovacao_plano',
         max_length=255,
@@ -158,5 +158,13 @@ class PlanoCultura(models.Model):
 class Conselheiro(models.Model):
     nome = models.CharField(max_length=100)
     segmento = models.CharField(max_length=255)
-    email = models.EmailField(unique=True)
+    email = models.EmailField(unique=False)
+    situacao = models.CharField(
+        blank=True,
+        null=True,
+        max_length=1,
+        choices=SITUACAO_CONSELHEIRO,
+        default=1)
+    data_cadastro = models.DateField(blank=True, null=True)
+    data_situacao = models.DateField(blank=True, null=True)
     conselho = models.ForeignKey('ConselhoCultural')

@@ -1,32 +1,35 @@
+import datetime
 from django import forms
 from django.forms import ModelForm
 from django.forms.widgets import FileInput
 
 from .models import CriacaoSistema, OrgaoGestor, ConselhoCultural
-from .models import FundoCultura, PlanoCultura, Conselheiro
+from .models import FundoCultura, PlanoCultura, Conselheiro, SITUACAO_CONSELHEIRO
 from .utils import validar_cnpj, add_anos
 
 SETORIAIS = (
-    (1, 'Arquitetura e Urbanismo'),
-    (2, 'Arquivos'),
-    (3, 'Arte Digital'),
-    (4, 'Artes Visuais'),
-    (5, 'Artesanato'),
-    (6, 'Audiovisual'),
-    (7, 'Circo'),
-    (8, 'Culturas Afro-brasileiras'),
-    (9, 'Culturas dos Povos Indígenas'),
-    (10, 'Culturas Populares'),
-    (11, 'Dança'),
-    (12, 'Design'),
-    (13, 'Literatura, Livro e Leitura'),
-    (14, 'Moda'),
-    (15, 'Museus'),
-    (16, 'Música Erudita'),
-    (17, 'Música Popular'),
-    (18, 'Patrimônio Imaterial'),
-    (19, 'Patrimônio Material'),
-    (20, 'Teatro')
+    ('0', '-- Selecione um Segmento --'),
+    ('1', 'Arquitetura e Urbanismo'),
+    ('2', 'Arquivos'),
+    ('3', 'Arte Digital'),
+    ('4', 'Artes Visuais'),
+    ('5', 'Artesanato'),
+    ('6', 'Audiovisual'),
+    ('7', 'Circo'),
+    ('8', 'Culturas Afro-brasileiras'),
+    ('9', 'Culturas dos Povos Indígenas'),
+    ('10', 'Culturas Populares'),
+    ('11', 'Dança'),
+    ('12', 'Design'),
+    ('13', 'Literatura, Livro e Leitura'),
+    ('14', 'Moda'),
+    ('15', 'Museus'),
+    ('16', 'Música Erudita'),
+    ('17', 'Música Popular'),
+    ('18', 'Patrimônio Imaterial'),
+    ('19', 'Patrimônio Material'),
+    ('20', 'Teatro'),
+    ('21', 'Outros')
     )
 
 
@@ -38,19 +41,19 @@ class CriarSistemaForm(ModelForm):
         self.usuario = kwargs.pop('user')
         super(CriarSistemaForm, self).__init__(*args, **kwargs)
 
-    def clean_data_final_elaboracao_projeto_lei(self):
-        if not self.usuario.data_publicacao_acordo:
-            return self.cleaned_data['data_final_elaboracao_projeto_lei']
-        if not self.cleaned_data['data_final_elaboracao_projeto_lei']:
-            return self.cleaned_data['data_final_elaboracao_projeto_lei']
-
-        limite = add_anos(self.usuario.data_publicacao_acordo, self.usuario.prazo)
-
-        if self.cleaned_data['data_final_elaboracao_projeto_lei'] > limite:
-            raise forms.ValidationError('A data deve ser anterior a ' +
-                                        limite.strftime("%d/%m/%Y"))
-
-        return self.cleaned_data['data_final_elaboracao_projeto_lei']
+    # def clean_data_final_elaboracao_projeto_lei(self):
+    #     if not self.usuario.data_publicacao_acordo:
+    #         return self.cleaned_data['data_final_elaboracao_projeto_lei']
+    #     if not self.cleaned_data['data_final_elaboracao_projeto_lei']:
+    #         return self.cleaned_data['data_final_elaboracao_projeto_lei']
+    #
+    #     limite = add_anos(self.usuario.data_publicacao_acordo, self.usuario.prazo)
+    #
+    #     if self.cleaned_data['data_final_elaboracao_projeto_lei'] > limite:
+    #         raise forms.ValidationError('A data deve ser anterior a ' +
+    #                                     limite.strftime("%d/%m/%Y"))
+    #
+    #     return self.cleaned_data['data_final_elaboracao_projeto_lei']
 
     def clean_data_final_sancao_lei(self):
         if not self.usuario.data_publicacao_acordo:
@@ -80,7 +83,7 @@ class CriarSistemaForm(ModelForm):
 
     class Meta:
         model = CriacaoSistema
-        exclude = ['situacao_minuta', 'situacao_lei_sistema']
+        exclude = ['situacao_minuta', 'situacao_lei_sistema', 'data_final_elaboracao_projeto_lei']
 
 
 class OrgaoGestorForm(ModelForm):
@@ -230,48 +233,6 @@ class PlanoCulturaForm(ModelForm):
         self.usuario = kwargs.pop('user')
         super(PlanoCulturaForm, self).__init__(*args, **kwargs)
 
-    def clean_data_final_estabelecimento_instancias(self):
-        if not self.usuario.data_publicacao_acordo:
-            return self.cleaned_data['data_final_estabelecimento_instancias']
-        if not self.cleaned_data['data_final_estabelecimento_instancias']:
-            return self.cleaned_data['data_final_estabelecimento_instancias']
-
-        limite = add_anos(self.usuario.data_publicacao_acordo, self.usuario.prazo)
-
-        if self.cleaned_data['data_final_estabelecimento_instancias'] > limite:
-            raise forms.ValidationError('A data deve ser anterior a ' +
-                                        limite.strftime("%d/%m/%Y"))
-
-        return self.cleaned_data['data_final_estabelecimento_instancias']
-
-    def clean_data_final_elaboracao_plano_cultura(self):
-        if not self.usuario.data_publicacao_acordo:
-            return self.cleaned_data['data_final_elaboracao_plano_cultura']
-        if not self.cleaned_data['data_final_elaboracao_plano_cultura']:
-            return self.cleaned_data['data_final_elaboracao_plano_cultura']
-
-        limite = add_anos(self.usuario.data_publicacao_acordo, self.usuario.prazo)
-
-        if self.cleaned_data['data_final_elaboracao_plano_cultura'] > limite:
-            raise forms.ValidationError('A data deve ser anterior a ' +
-                                        limite.strftime("%d/%m/%Y"))
-
-        return self.cleaned_data['data_final_elaboracao_plano_cultura']
-
-    def clean_data_final_aprovacao_plano_cultura(self):
-        if not self.usuario.data_publicacao_acordo:
-            return self.cleaned_data['data_final_aprovacao_plano_cultura']
-        if not self.cleaned_data['data_final_aprovacao_plano_cultura']:
-            return self.cleaned_data['data_final_aprovacao_plano_cultura']
-
-        limite = add_anos(self.usuario.data_publicacao_acordo, self.usuario.prazo)
-
-        if self.cleaned_data['data_final_aprovacao_plano_cultura'] > limite:
-            raise forms.ValidationError('A data deve ser anterior a ' +
-                                        limite.strftime("%d/%m/%Y"))
-
-        return self.cleaned_data['data_final_aprovacao_plano_cultura']
-
     def clean_data_final_sancao_lei_plano_cultura(self):
         if not self.usuario.data_publicacao_acordo:
             return self.cleaned_data['data_final_sancao_lei_plano_cultura']
@@ -314,4 +275,102 @@ class PlanoCulturaForm(ModelForm):
             'situacao_minuta',
             'situacao_ata',
             'situacao_ata_votacao',
-            'situacao_lei_plano']
+            'situacao_lei_plano',
+            'data_final_estabelecimento_instancias',
+            'data_final_aprovacao_plano_cultura',
+            'data_final_elaboracao_plano_cultura']
+
+
+class CriarConselheiroForm(ModelForm):
+    segmento = forms.ChoiceField(choices=SETORIAIS)
+    outros = forms.CharField(required=False)
+
+    def __init__(self, *args, **kwargs):
+        self.usuario = kwargs.pop('user')
+        super(CriarConselheiroForm, self).__init__(*args, **kwargs)
+
+    def clean_segmento(self):
+        if self.cleaned_data['segmento'] == '0':
+            raise forms.ValidationError("Este campo é obrigatório.")
+
+        return self.cleaned_data['segmento']
+
+    def save(self, commit=True, *args, **kwargs):
+        conselheiro = super(CriarConselheiroForm, self).save(commit=False)
+        conselheiro.conselho = self.usuario.plano_trabalho.conselho_cultural
+        conselheiro.data_cadastro = datetime.datetime.now()
+        conselheiro.data_situacao = datetime.datetime.now()
+        conselheiro.situacao = 1  # Situação 1 = Habilitado
+
+        if self.cleaned_data['segmento'] == '21':  # outros
+            outros = self.cleaned_data['outros']  # texto livre
+            conselheiro.segmento = outros if outros else 'Outros'
+        else:
+            segmento = self.cleaned_data['segmento']
+            conselheiro.segmento = dict(SETORIAIS).get(segmento)
+
+        if commit:
+            conselheiro.save()
+        return conselheiro
+
+    class Meta:
+        model = Conselheiro
+        exclude = ['conselho']
+
+
+class AlterarConselheiroForm(ModelForm):
+    segmento = forms.ChoiceField(choices=SETORIAIS)
+    outros = forms.CharField(required=False)
+    situacao = forms.ChoiceField(choices=SITUACAO_CONSELHEIRO, required=True)
+
+    def __init__(self, *args, **kwargs):
+        self.usuario = kwargs.pop('user')
+        super(AlterarConselheiroForm, self).__init__(*args, **kwargs)
+        self.fields['situacao'].required = False
+
+    def clean_segmento(self):
+        if self.cleaned_data['segmento'] == '0':
+            raise forms.ValidationError("Este campo é obrigatório.")
+
+        return self.cleaned_data['segmento']
+
+    def save(self, commit=True, *args, **kwargs):
+        conselheiro = super(AlterarConselheiroForm, self).save(commit=False)
+        conselheiro.conselho = self.usuario.plano_trabalho.conselho_cultural
+
+        if self.cleaned_data['segmento'] == '21':  # outros
+            outros = self.cleaned_data['outros']  # texto livre
+            conselheiro.segmento = outros if outros else 'Outros'
+        else:
+            segmento = self.cleaned_data['segmento']
+            conselheiro.segmento = dict(SETORIAIS).get(segmento)
+
+        if commit:
+            conselheiro.save()
+        return conselheiro
+
+    class Meta:
+        model = Conselheiro
+        exclude = ['conselho', 'situacao']
+
+
+class DesabilitarConselheiroForm(ModelForm):
+
+    def __init__(self, *args, **kwargs):
+        self.usuario = kwargs.pop('user')
+        super(DesabilitarConselheiroForm, self).__init__(*args, **kwargs)
+
+    def save(self, commit=True, *args, **kwargs):
+        conselheiro = super(DesabilitarConselheiroForm, self).save(commit=False)
+        conselheiro.conselho = self.usuario.plano_trabalho.conselho_cultural
+
+        conselheiro.data_situacao = datetime.datetime.now()
+        conselheiro.situacao = 0  # Situação 0 = Desabilitado
+
+        if commit:
+            conselheiro.save()
+        return conselheiro
+
+    class Meta:
+        model = Conselheiro
+        fields = ['situacao', 'data_situacao']

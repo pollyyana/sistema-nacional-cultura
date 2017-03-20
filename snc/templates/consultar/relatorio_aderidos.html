@@ -1,0 +1,91 @@
+{% extends "base.html" %} {% load gestao_tags %}
+{% block menu %}
+<div class="portletWrapper" id="portletwrapper-706c6f6e652e6c656674636f6c756d6e0a636f6e746578740a2f706f7274616c0a736f627265" data-portlethash="706c6f6e652e6c656674636f6c756d6e0a636f6e746578740a2f706f7274616c0a736f627265">
+  <dl class="portlet portletNavigationTree">
+    <dt class="portletHeader">
+      <span class="portletTopLeft"></span>
+      <a href="#" class="tile ui-droppable">Consultas</a>
+      <span class="portletTopRight"></span>
+    </dt>
+    <dd class="portletItem lastItem">
+      <ul class="navTree navTreeLevel0">
+        <li class="navTreeItem visualNoMarker navTreeFolderish section-sobre-a">
+          <a href="{% url 'adesao:consultar' %}" title="" class="state-published navTreeFolderish contenttype-folder">
+            <span>Municípios</span>
+          </a>
+        </li>
+        <li class="navTreeItem visualNoMarker navTreeFolderish section-sobre-a">
+          <a href="{% url 'adesao:consultar_estados' %}" title="" class="state-published navTreeFolderish contenttype-folder">
+            <span>Estados</span>
+          </a>
+        </li>
+        <li class="navTreeItem visualNoMarker navTreeFolderish section-sobre-a">
+          <a href="{% url 'adesao:relatorio_aderidos' %}" title="" class="state-published navTreeFolderish contenttype-folder">
+            <span>Relatório de Município</span>
+          </a>
+        </li>
+      </ul>
+      <span class="portletBottomLeft"></span>
+      <span class="portletBottomRight"></span>
+    </dd>
+  </dl>
+</div>
+<div class="portletWrapper" id="portletwrapper-706c6f6e652e6c656674636f6c756d6e0a636f6e746578740a2f706f7274616c0a736f627265" data-portlethash="706c6f6e652e6c656674636f6c756d6e0a636f6e746578740a2f706f7274616c0a736f627265">
+  <dl class="portlet portletNavigationTree">
+    <dt class="portletHeader">
+      <span class="portletTopLeft"></span>
+      <a href="#" class="tile ui-droppable">Exportar Dados</a>
+      <span class="portletTopRight"></span>
+    </dt>
+    <dd class="portletItem lastItem">
+      <ul class="navTree navTreeLevel0">
+        <li class="navTreeItem visualNoMarker navTreeFolderish section-sobre-a">
+          <a href="{% url 'exportar_csv' %}" title="" class="state-published navTreeFolderish contenttype-folder">
+            <span>CSV</span>
+          </a>
+        </li>
+        <li class="navTreeItem visualNoMarker navTreeFolderish section-sobre-a">
+          <a href="{% url 'exportar_ods' %}" title="" class="state-published navTreeFolderish contenttype-folder">
+            <span>Planilha</span>
+          </a>
+        </li>
+      </ul>
+      <span class="portletBottomLeft"></span>
+      <span class="portletBottomRight"></span>
+    </dd>
+  </dl>
+</div>
+{% endblock menu %}
+{% block content %}
+
+<div class="dataTable_wrapper">
+
+    <table class="table table-striped table-bordered table-hover dt-responsive" id="dataTables-example">
+        <div align="center">
+            <h3>Relatório de municípios</h3>
+            <p>Dados sobre os municípios aderidos ao SNC</p>
+        </div>
+        <thead>
+            <tr>
+              <th>Estado</th>
+              <th>Total</th>
+              <th>Aderidos</th>
+              <th>Relação ao total</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for context in object_list|dictsort:"percent_mun_by_uf" %}
+        <tr class="odd gradeX">
+            <td width="25%">{{ context.uf_sigla }}</td>
+            <td width="25%">{{ context.total_municipios_uf }}</td>
+            <td width="25%">{{ context.municipios_aderiram }}</td>
+            <td width="25%" align="center">{{ context.percent_mun_by_uf }}%</td>
+        </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+
+
+{% endblock content %}

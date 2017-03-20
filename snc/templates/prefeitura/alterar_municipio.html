@@ -144,12 +144,21 @@
   </div>
 
   <div class="form-group">
+    <label for="{{ form.endereço_eletronico.id_for_label }}" class="col-sm-offset-1 col-sm-3 control-label">Endereço Eletrônico (Agenda Digital)</label>
+
+    <div class="col-sm-4">
+        {% render_field form.endereco_eletronico class="form-control" placeholder="http://www.exemplo.com.br" %} {{ form.endereco_eletronico.errors }}
+    </div>
+
+  </div>
+
+  <div class="form-group">
 
     <label for="{{ form.telefone_um.id_for_label }}" class="col-sm-offset-1 col-sm-3 control-label">Telefone Institucional</label>
 
     <div class="col-sm-4">
       <div class="input-group input-group-sm">
-        {% render_field form.telefone_um class="form-control" %}
+        {% render_field form.telefone_um class="form-control telefone" %}
         <span class="input-group-btn">
           <button id="add" type="button" class="btn btn-default add">
             <span class="glyphicon glyphicon-plus"></span>
@@ -164,7 +173,7 @@
   <div style="display:none;" class="form-group telefone2">
     <div class="col-sm-offset-4 col-sm-4">
       <div class="input-group input-group-sm">
-        {% render_field form.telefone_dois class="form-control" %}
+        {% render_field form.telefone_dois class="form-control telefone" %}
         <span class="input-group-btn">
           <button type="button" class="btn btn-default add2">
             <span class="glyphicon glyphicon-plus"></span>
@@ -177,7 +186,7 @@
 
   <div style="display:none;" class="form-group telefone3">
     <div class="col-sm-offset-4 col-sm-4">
-      {% render_field form.telefone_tres class="form-control" %} {{ form.telefone_tres.errors }}
+      {% render_field form.telefone_tres class="form-control telefone" %} {{ form.telefone_tres.errors }}
     </div>
   </div>
 

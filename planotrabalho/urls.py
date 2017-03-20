@@ -35,6 +35,20 @@ urlpatterns = [
     url(r'^conselheiros/$',
         login_required(views.get_conselheiros),
         name='get_conselheiros'),
+    url(r'^conselheiro/criar/$',
+        login_required(views.CriarConselheiro.as_view()),
+        name="criar_conselheiro"),
+    url(r'^conselheiro/listar/$',
+        login_required(views.ListarConselheiros.as_view()),
+        name="listar_conselheiros"),
+    url(r'^conselheiro/editar/(?P<pk>[0-9]+)/$',
+        login_required(views.AlterarConselheiro.as_view()),
+        name="alterar_conselheiro"),
+    url(r'^conselheiro/remover/(?P<pk>[0-9]+)/$',
+        login_required(views.DesabilitarConselheiro.as_view()),
+        name="remover_conselheiro"),
+
+
 
     # Quarta etapa - Criação do Fundo de Cultura
     url(r'^fundo/$',
@@ -51,4 +65,4 @@ urlpatterns = [
     url(r'^plano/(?P<pk>[0-9]+)/$',
         login_required(views.AlterarPlano.as_view()),
         name='alterar_plano'),
-]
+    ]

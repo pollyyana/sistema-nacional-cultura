@@ -4,7 +4,9 @@
 <div class="container">
 <form method="post" enctype="multipart/form-data">
   {% csrf_token %}
-  <p>
+  <h3>{{ form.data_final_elaboracao_projeto_lei.errors }}</h3>
+
+  <!-- <p>
     <strong>Institucionalização do Sistema de Cultura</strong>
   </p>
   <p>
@@ -44,9 +46,9 @@
     - Encaminhar ao Poder Legislativo.
   </div>
 
-  <hr />
+  <hr /> -->
   <p>
-    <strong>1.2 Sanção da Lei do Sistema de Cultura pelo Governador/Prefeito</strong>
+    <strong>Sanção da Lei de criação do Sistema de Cultura pelo Governador/Prefeito</strong>
   </p>
   <div class="form-group">
     <label for={{ form.data_final_sancao_lei.id_for_label }} class="col-sm-12">

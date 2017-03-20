@@ -7,9 +7,11 @@ from django.views.generic import ListView, DetailView
 from django.views.generic.edit import FormView, UpdateView
 
 from adesao.models import Usuario, Cidade, Municipio
+from planotrabalho.models import CriacaoSistema, PlanoCultura, FundoCultura, OrgaoGestor, ConselhoCultural
 
-from .forms import AlterarSituacao, DiligenciaForm
-from .forms import AlterarCadastradorForm, AlterarUsuarioForm
+from .forms import AlterarSituacao, DiligenciaForm, AlterarDocumentosEnteFederadoForm
+from .forms import AlterarCadastradorForm, AlterarUsuarioForm, AlterarOrgaoForm
+from .forms import AlterarFundoForm, AlterarPlanoForm, AlterarConselhoForm, AlterarSistemaForm
 
 from clever_selects.views import ChainedSelectChoicesView
 
@@ -264,3 +266,165 @@ class AlterarUsuario(UpdateView):
 
     def get_success_url(self):
         return reverse_lazy('gestao:usuarios')
+
+
+class ListarDocumentosEnteFederado(ListView):
+    template_name = 'gestao/inserir_documentos/inserir_entefederado.html'
+    paginate_by = 10
+
+    def get_queryset(self):
+        situacao = self.request.GET.get('situacao', None)
+        ente_federado = self.request.GET.get('municipio', None)
+
+        if situacao in ('1', '2', '3', '4', '5'):
+            return Municipio.objects.filter(usuario__estado_processo=situacao)
+
+        if ente_federado:
+            municipio = Municipio.objects.filter(
+                cidade__nome_municipio__icontains=ente_federado)
+            estado = Municipio.objects.filter(
+                cidade__nome_municipio__isnull=True,
+                estado__nome_uf__icontains=ente_federado)
+
+            return municipio | estado
+
+        return Municipio.objects.filter(usuario__estado_processo__range=('1', '5'))
+
+
+class AlterarDocumentosEnteFederado(UpdateView):
+
+    template_name = 'gestao/inserir_documentos/alterar_entefederado.html'
+    form_class = AlterarDocumentosEnteFederadoForm
+    model = Municipio
+
+    def get_success_url(self):
+        return reverse_lazy('gestao:inserir_entefederado')
+
+
+class InserirSistema(ListView):
+    template_name = 'gestao/inserir_documentos/inserir_sistema.html'
+    paginate_by = 10
+
+    def get_queryset(self):
+        q = self.request.GET.get('q', None)
+
+        usuarios = Usuario.objects.filter(estado_processo='6')
+        usuarios = usuarios.exclude(plano_trabalho__criacao_sistema=None)
+
+        usuarios = usuarios.filter(plano_trabalho__criacao_sistema__situacao_lei_sistema=1)
+
+        if q:
+            usuarios = usuarios.filter(
+                municipio__cidade__nome_municipio__icontains=q)
+
+        return usuarios
+
+
+class AlterarSistema(UpdateView):
+    template_name = 'gestao/inserir_documentos/alterar_sistema.html'
+    form_class = AlterarSistemaForm
+    model = CriacaoSistema
+
+    def get_success_url(self):
+        return reverse_lazy('gestao:inserir_sistema')
+
+
+class InserirOrgao(ListView):
+    template_name = 'gestao/inserir_documentos/inserir_orgao.html'
+    paginate_by = 10
+
+    def get_queryset(self):
+        q = self.request.GET.get('q', None)
+        usuarios = Usuario.objects.filter(estado_processo='6')
+        usuarios = usuarios.exclude(plano_trabalho__orgao_gestor=None)
+        usuarios = usuarios.filter(
+            plano_trabalho__orgao_gestor__situacao_relatorio_secretaria=1)
+        if q:
+            usuarios = usuarios.filter(
+                municipio__cidade__nome_municipio__icontains=q)
+        return usuarios
+
+
+class AlterarOrgao(UpdateView):
+    template_name = 'gestao/inserir_documentos/alterar_orgao.html'
+    form_class = AlterarOrgaoForm
+    model = OrgaoGestor
+
+    def get_success_url(self):
+        return reverse_lazy('gestao:inserir_orgao')
+
+
+class InserirConselho(ListView):
+    template_name = 'gestao/inserir_documentos/inserir_conselho.html'
+    paginate_by = 10
+
+    def get_queryset(self):
+        q = self.request.GET.get('q', None)
+        usuarios = Usuario.objects.filter(estado_processo='6')
+        usuarios = usuarios.exclude(plano_trabalho__conselho_cultural=None)
+        usuarios = usuarios.filter(
+            plano_trabalho__conselho_cultural__situacao_ata=1)
+        if q:
+            usuarios = usuarios.filter(
+                municipio__cidade__nome_municipio__icontains=q)
+        return usuarios
+
+
+class AlterarConselho(UpdateView):
+    template_name = 'gestao/inserir_documentos/alterar_conselho.html'
+    form_class = AlterarConselhoForm
+    model = ConselhoCultural
+
+    def get_success_url(self):
+        return reverse_lazy('gestao:inserir_conselho')
+
+
+class InserirFundo(ListView):
+    template_name = 'gestao/inserir_documentos/inserir_fundo.html'
+    paginate_by = 10
+
+    def get_queryset(self):
+        q = self.request.GET.get('q', None)
+        usuarios = Usuario.objects.filter(estado_processo='6')
+        usuarios = usuarios.exclude(plano_trabalho__fundo_cultura=None)
+        usuarios = usuarios.filter(
+            plano_trabalho__fundo_cultura__situacao_lei_plano=1)
+        if q:
+            usuarios = usuarios.filter(
+                municipio__cidade__nome_municipio__icontains=q)
+        return usuarios
+
+
+class AlterarFundo(UpdateView):
+    template_name = 'gestao/inserir_documentos/alterar_fundo.html'
+    form_class = AlterarFundoForm
+    model = FundoCultura
+
+    def get_success_url(self):
+        return reverse_lazy('gestao:inserir_fundo')
+
+
+class InserirPlano(ListView):
+    template_name = 'gestao/inserir_documentos/inserir_plano.html'
+    paginate_by = 10
+
+    def get_queryset(self):
+        q = self.request.GET.get('q', None)
+        usuarios = Usuario.objects.filter(estado_processo='6')
+        usuarios = usuarios.exclude(plano_trabalho__plano_cultura=None)
+        usuarios = usuarios.filter(plano_trabalho__plano_cultura__situacao_lei_plano=1)
+
+        if q:
+            usuarios = usuarios.filter(
+                municipio__cidade__nome_municipio__icontains=q)
+
+        return usuarios
+
+
+class AlterarPlano(UpdateView):
+    template_name = 'gestao/inserir_documentos/alterar_plano.html'
+    form_class = AlterarPlanoForm
+    model = PlanoCultura
+
+    def get_success_url(self):
+        return reverse_lazy('gestao:inserir_plano')

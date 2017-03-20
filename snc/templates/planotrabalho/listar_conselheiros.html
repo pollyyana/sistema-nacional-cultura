@@ -1,0 +1,94 @@
+{% extends "base.html" %}
+{% load gestao_tags %}
+{% csrf_token %}
+{% block content %}
+
+
+
+<div class="dataTable_wrapper">
+  <table class="table table-striped table-bordered table-hover dt-responsive" id="dataTables-example">
+      <div align="center">
+          <h3>Lista de gerenciamento de conselheiros</h3>
+      </div>
+    {% if object_list%}
+    <p align="center" >Passe o mouse em cima do nome para mais informações.</p>
+    <thead>
+      <tr>
+        <th>Nome</th>
+        <th>Segmento</th>
+        <th align="center" colspan="2">Ações</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for conselheiro in object_list %}
+        <tr class="odd gradeX">
+            <td width="50%" ><a title-data="Email: {{conselheiro.email}}" class="tooltip" >{{conselheiro.nome}}</a></td>
+            <td width="50%">{{ conselheiro.segmento }}</td>
+            <td >
+                <a href="{% url 'planotrabalho:alterar_conselheiro' conselheiro.id %}">
+                    <button class="btn btn-success edit" type="button" data-toggle="tooltip" title="Editar">
+                        <i class="fa fa-pencil" aria-hidden="true"></i>
+                    </button>
+                </a>
+            </td>
+            <td>
+                <a href="{% url 'planotrabalho:remover_conselheiro' conselheiro.id %}" >
+                    <button class="btn btn-warning" type="button" data-toggle="tooltip" title="Remover">
+                        <i class="fa fa-trash" aria-hidden="true"></i>
+                    </button>
+                </a>
+            </td>
+        </tr>
+      {% endfor %}
+    </tbody>
+    {% else %}
+    <div align="center">
+        <p>Nenhum dado cadastrado.</p>
+    </div>
+    {% endif%}
+  </table>
+  {% if is_paginated %}
+  <div style="float:right;">
+    {% if page_obj.has_previous %}
+      <a class="paginate_button previous" href="?{% url_replace 'page' page_obj.previous_page_number %}">Anterior</a>
+    {% endif %}
+      <a>Página {{ page_obj.number }} de {{ page_obj.paginator.num_pages }}</a>
+    {% if page_obj.has_next %}
+      <a class="paginate_button next" href="?{% url_replace 'page' page_obj.next_page_number %}">Próximo</a>
+    {% endif %}
+  </div>
+  </div>
+  {% endif %}
+  <br>
+  <a href="{% url 'planotrabalho:criar_conselheiro' %}">
+      <button type="button" class="btn btn-info" id="add" data-toggle="tooltip" title="Adicionar novo">
+          <i class="fa fa-plus"></i>
+      </button>
+  </a>
+</div>
+
+
+<style>
+
+.tooltip{
+    display: inline;
+    position: relative;
+}
+
+.tooltip:hover:after{
+    background: #333;
+    background: rgba(0,0,0,.8);
+    border-radius: 5px;
+    bottom: 26px;
+    color: #fff;
+    content: attr(title-data);
+    left: 20%;
+    padding: 5px 15px;
+    position: absolute;
+    z-index: 98;
+    width: 220px;
+}
+
+</style>
+
+{% endblock content %}

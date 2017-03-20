@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% block content %}
+
+<form method="post">
+    {% csrf_token %}
+    <div align="center">
+        <h3>Tem certeza que deseja remover este conselheiro?</h3>
+        <p>Esta ação não pode ser desfeita.</p>
+
+        <a class="btn btn-default" href="{% url 'planotrabalho:listar_conselheiros'%}">Não</a>
+        <input class="btn btn-success" type="submit" value="Sim">
+    </div>
+</form>
+
+{% endblock content %}
