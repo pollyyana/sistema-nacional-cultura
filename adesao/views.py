@@ -518,13 +518,17 @@ class Detalhar(DetailView):
 
     def get_context_data(self, **kwargs):
         context = super(Detalhar, self).get_context_data(**kwargs)
-        planotrabalho = Usuario.objects.get(municipio_id=self.kwargs['pk'])
-        if planotrabalho.plano_trabalho_id:
-            conselhocultural = PlanoTrabalho.objects.get(id=planotrabalho.plano_trabalho_id)
-            context['conselheiros'] = Conselheiro.objects.filter(
-                conselho_id=conselhocultural.conselho_cultural_id, situacao='1')  # Situação ativo
 
-        return context
+        try:
+            planotrabalho = Usuario.objects.get(municipio_id=self.kwargs['pk'])
+            if planotrabalho.plano_trabalho_id:
+                conselhocultural = PlanoTrabalho.objects.get(id=planotrabalho.plano_trabalho_id)
+                context['conselheiros'] = Conselheiro.objects.filter(
+                    conselho_id=conselhocultural.conselho_cultural_id, situacao='1')  # Situação ativo
+                return context
+        except:
+            context['conselheiros'] = None
+            return context
 
 
 class ConsultarPlanoTrabalhoMunicipio(ListView):
