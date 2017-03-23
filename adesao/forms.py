@@ -133,13 +133,13 @@ class CadastrarMunicipioForm(ModelForm):
 
     def clean(self):
         super(CadastrarMunicipioForm, self).clean()
-        if not self.cleaned_data.get("cidade"):
-            estado = Municipio.objects.filter(
-                estado__sigla=self.cleaned_data['estado'],
-                cidade__isnull=True)
-            print(estado)
-            if estado:
-                self.add_error('estado', 'Este estado já foi cadastrado!')
+        if 'estado' in self.changed_data:
+            if not self.cleaned_data.get("cidade"):
+                estado = Municipio.objects.filter(
+                    estado__sigla=self.cleaned_data['estado'],
+                    cidade__isnull=True)
+                if estado:
+                    self.add_error('estado', 'Este estado já foi cadastrado!')
 
     class Meta:
         model = Municipio
