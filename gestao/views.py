@@ -311,8 +311,6 @@ class InserirSistema(ListView):
         usuarios = Usuario.objects.filter(estado_processo='6')
         usuarios = usuarios.exclude(plano_trabalho__criacao_sistema=None)
 
-        usuarios = usuarios.filter(plano_trabalho__criacao_sistema__situacao_lei_sistema=1)
-
         if q:
             usuarios = usuarios.filter(
                 municipio__cidade__nome_municipio__icontains=q)
@@ -337,8 +335,7 @@ class InserirOrgao(ListView):
         q = self.request.GET.get('q', None)
         usuarios = Usuario.objects.filter(estado_processo='6')
         usuarios = usuarios.exclude(plano_trabalho__orgao_gestor=None)
-        usuarios = usuarios.filter(
-            plano_trabalho__orgao_gestor__situacao_relatorio_secretaria=1)
+
         if q:
             usuarios = usuarios.filter(
                 municipio__cidade__nome_municipio__icontains=q)
@@ -362,8 +359,7 @@ class InserirConselho(ListView):
         q = self.request.GET.get('q', None)
         usuarios = Usuario.objects.filter(estado_processo='6')
         usuarios = usuarios.exclude(plano_trabalho__conselho_cultural=None)
-        usuarios = usuarios.filter(
-            plano_trabalho__conselho_cultural__situacao_ata=1)
+
         if q:
             usuarios = usuarios.filter(
                 municipio__cidade__nome_municipio__icontains=q)
@@ -387,8 +383,7 @@ class InserirFundo(ListView):
         q = self.request.GET.get('q', None)
         usuarios = Usuario.objects.filter(estado_processo='6')
         usuarios = usuarios.exclude(plano_trabalho__fundo_cultura=None)
-        usuarios = usuarios.filter(
-            plano_trabalho__fundo_cultura__situacao_lei_plano=1)
+
         if q:
             usuarios = usuarios.filter(
                 municipio__cidade__nome_municipio__icontains=q)
@@ -412,7 +407,6 @@ class InserirPlano(ListView):
         q = self.request.GET.get('q', None)
         usuarios = Usuario.objects.filter(estado_processo='6')
         usuarios = usuarios.exclude(plano_trabalho__plano_cultura=None)
-        usuarios = usuarios.filter(plano_trabalho__plano_cultura__situacao_lei_plano=1)
 
         if q:
             usuarios = usuarios.filter(
