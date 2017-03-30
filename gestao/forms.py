@@ -292,3 +292,38 @@ class AlterarConselhoForm(ModelForm):
     class Meta:
         model = ConselhoCultural
         fields = ('ata_regimento_aprovado',)
+
+
+class ProrrogacaoFundoForm(ModelForm):
+
+    class Meta:
+        model = FundoCultura
+        fields = ('data_final_instituicao_fundo_cultura',)
+
+
+class ProrrogacaoConselhoForm(ModelForm):
+
+    class Meta:
+        model = ConselhoCultural
+        fields = ('data_final_instalacao_conselho',)
+
+
+class ProrrogacaoSistemaForm(ModelForm):
+
+    class Meta:
+        model = CriacaoSistema
+        fields = ('data_final_sancao_lei',)
+
+
+class ProrrogacaoOrgaoForm(ModelForm):
+
+    class Meta:
+        model = OrgaoGestor
+        fields = ('data_final_estruturacao_secretaria',)
+
+
+class ProrrogacaoPlanoForm(ModelForm):
+
+    class Meta:
+        model = PlanoCultura
+        fields = ('data_final_sancao_lei_plano_cultura',)

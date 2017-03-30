@@ -1,0 +1,29 @@
+{% extends "gestao/base_gestao.html" %} {% load widget_tweaks %} {% block content %}
+<div class="panel panel-default">
+  <div class="panel-heading">
+    Prorrogar prazo do Fundo de Cultura
+  </div>
+  <div class="panel-body">
+    <form action="{% url 'gestao:prorrogacao_fundo' fundocultura.id %}" class="form-horizontal" method="post" enctype=multipart/form-data>{% csrf_token %}
+      <div class="form-group">
+        <label class="col-sm-3 control-label">Data do prazo</label>
+
+        <div class="col-sm-7">
+          {% render_field form.data_final_instituicao_fundo_cultura class="date" %}
+        </div>
+        <div class="col-sm-offset-3 col-sm-9">
+          {{ form.data_final_instituicao_fundo_cultura.errors }}
+        </div>
+      </div>
+
+      <div class="form-group">
+        <div class="col-sm-offset-3 col-sm-11">
+          <a class="btn btn-default" href="{% url 'gestao:prorrogacao' %}">Cancelar</a>
+          <input type="submit" class="btn btn-primary" value="Salvar" />
+
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+{% endblock content %}

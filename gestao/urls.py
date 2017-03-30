@@ -108,4 +108,11 @@ urlpatterns = [
     url(r'^inserir-documentos/conselho/alterar/(?P<pk>[0-9]+)$',
         staff_member_required(views.AlterarConselho.as_view()), name='alterar_conselho'),
 
+    # Prorrogar o prazo do plano de trabalho
+    url(r'^prorrogacao/$', views.Prorrogacao.as_view(), name='prorrogacao'),
+    url(r'^prorrogacao/fundo/(?P<pk>[0-9]+)$', views.ProrrogacaoFundo.as_view(), name='prorrogacao_fundo'),
+    url(r'^prorrogacao/conselho/(?P<pk>[0-9]+)$', views.ProrrogacaoConselho.as_view(), name='prorrogacao_conselho'),
+    url(r'^prorrogacao/sistema/(?P<pk>[0-9]+)$', views.ProrrogacaoSistema.as_view(), name='prorrogacao_sistema'),
+    url(r'^prorrogacao/orgao/(?P<pk>[0-9]+)$', views.ProrrogacaoOrgao.as_view(), name='prorrogacao_orgao'),
+    url(r'^prorrogacao/plano/(?P<pk>[0-9]+)$', views.ProrrogacaoPlano.as_view(), name='prorrogacao_plano'),
     ]
