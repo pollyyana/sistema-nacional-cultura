@@ -59,4 +59,5 @@ urlpatterns = [
     url(r'^ckeditor/', include('ckeditor.urls')),
     url(r'^exportar/dados.csv', views.exportar_csv, name='exportar_csv'),
     url(r'^exportar/dados.ods', views.exportar_ods, name='exportar_ods'),
+    url(r'^exportar/dados.xls', views.exportar_xls, name='exportar_xls'),
     ] + static.static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
