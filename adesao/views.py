@@ -540,7 +540,7 @@ class ConsultarEstados(ListView):
                 Q(estado__nome_uf__icontains=ente_federado) |
                 Q(estado__sigla__iexact=ente_federado))
 
-        return usuarios.filter(estado__isnull=False, cidade__isnull=True)
+        return usuarios.filter(estado__isnull=False, cidade__isnull=True).order_by('estado')
 
 
 class RelatorioAderidos(ListView):
