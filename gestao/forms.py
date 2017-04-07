@@ -156,16 +156,18 @@ class AlterarCadastradorForm(ChainedChoicesForm):
                 municipio__cidade=municipio, municipio__estado__sigla=uf)
             user_novo = Usuario.objects.get(user__username__iexact=cpf_usuario)
 
+            if user_antigo.user.username == user_novo.user.username:
+                raise forms.ValidationError('Cadastrador já se encontra vinculado ao municípío selecionado.')
             if user_antigo.estado_processo == '6':
-                if user_antigo.user.username == user_novo.user.username:
-                    raise forms.ValidationError('Cadastrador já se encontra vinculado ao municípío selecionado.')
-                if not user_antigo.data_publicacao_acordo and not self.cleaned_data.get('data_publicacao_acordo', None):
-                    raise forms.ValidationError(
-                        'Não foi encontrada a data de publicação do acordo deste município, por favor informe a data')
-        except Usuario.DoesNotExist:
-            if not self.cleaned_data.get('data_publicacao_acordo', None):
-                raise forms.ValidationError(
-                    'Não foi encontrada a data de publicação do acordo deste município, por favor informe a data')
+                if not user_antigo.data_publicacao_acordo or not self.cleaned_data.get('data_publicacao_acordo', None):
+                    errormsg = 'Não foi encontrada a data de publicação do acordo deste município, por favor informe a data'
+                    municipio = Municipio.objects.get(cidade=municipio, estado__sigla=uf)
+                    if municipio.numero_processo:
+                        errormsg += '. Ela pode ser encontrada no processo de número: ' + municipio.numero_processo
+                    raise forms.ValidationError(errormsg)
+        except:
+                user_antigo = None
+                pass
 
     def save(self, commit=True):
         cpf_usuario = self.cleaned_data['cpf_usuario']
@@ -211,7 +213,7 @@ class AlterarCadastradorForm(ChainedChoicesForm):
 
             user_novo.municipio = user_antigo
             user_novo.data_publicacao_acordo = data_publicacao_acordo
-            user_novo.estado_processo = '6'
+            user_novo.estado_processo = '0'
             user_novo.plano_trabalho = planotrabalho
 
         if commit:

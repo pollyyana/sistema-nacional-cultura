@@ -1,5 +1,5 @@
 from django.shortcuts import redirect, render
-from django.http import Http404
+from django.http import Http404, JsonResponse
 from django.db.models import Q
 from django.contrib.auth.models import User
 from django.core.urlresolvers import reverse_lazy
@@ -19,6 +19,7 @@ from clever_selects.views import ChainedSelectChoicesView
 
 
 # Acompanhamento das adesões
+
 class AlterarCadastrador(FormView):
     template_name = 'gestao/alterar_cadastrador.html'
     form_class = AlterarCadastradorForm
@@ -56,6 +57,31 @@ def alterar_situacao(request, id):
         if form.is_valid():
             form.save()
     return redirect('gestao:acompanhar_adesao')
+
+
+def ajax_cadastrador_cpf(request):
+    if request.method == "POST":
+        try:
+            municipio_id = request.POST.get("municipio_id", "")
+            municipio = Municipio.objects.get(cidade=municipio_id)
+            usuario = Usuario.objects.get(municipio_id=municipio.id)
+            user = User.objects.get(id=usuario.user_id)
+            if usuario.data_publicacao_acordo:
+                data_de_publicacao = usuario.data_publicacao_acordo.strftime('%d/%m/%Y')
+            else:
+                data_de_publicacao = None
+
+            data = {
+                'cpf': user.username,
+                'data_publicacao_acordo': data_de_publicacao,
+                'estado': usuario.estado_processo
+                }
+            return JsonResponse(data)
+
+        except:
+            return JsonResponse(data={"erro": True})
+    else:
+        return JsonResponse(data={"erro": True})
 
 
 class AcompanharPrazo(ListView):

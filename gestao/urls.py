@@ -115,4 +115,7 @@ urlpatterns = [
     url(r'^prorrogacao/sistema/(?P<pk>[0-9]+)$', views.ProrrogacaoSistema.as_view(), name='prorrogacao_sistema'),
     url(r'^prorrogacao/orgao/(?P<pk>[0-9]+)$', views.ProrrogacaoOrgao.as_view(), name='prorrogacao_orgao'),
     url(r'^prorrogacao/plano/(?P<pk>[0-9]+)$', views.ProrrogacaoPlano.as_view(), name='prorrogacao_plano'),
+
+    # ajax mudança de cadastrador
+    url(r'^ajax_cadastrador_cpf$', staff_member_required(views.ajax_cadastrador_cpf), name='ajax_cadastrador_cpf'),
     ]
