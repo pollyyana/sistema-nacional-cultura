@@ -94,7 +94,12 @@ python3 manage.py loaddata dump.json
 ```
 Obs.: caso seu dump não possua as mesmas colunas do código atual, adicione -i no loaddata
 
-12. Execute a aplicação (É preciso ter o ambiente virtual ativado)
+12. Copie os arquivos estaticos do projeto
+```
+python3 manage.py collectstatic
+```
+
+13. Execute a aplicação (É preciso ter o ambiente virtual ativado)
     ```
     python3 manage.py runserver
 
