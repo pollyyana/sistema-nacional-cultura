@@ -78,17 +78,18 @@ CREATE DATABASE dbsnc;
 ```
 
 11. Execute os comandos de criação do banco
-Execute para a criação de migração para cada APP
+
+Criação de migração para cada APP
 ```
 python3 manage.py makemigrations planotrabalho
 python3 manage.py makemigrations gestao
 python3 manage.py makemigrations adesao
 ```
-Execute o comando migrate para criar a estrutura do banco (DDL)
+Comando migrate para criar a estrutura do banco (DDL)
 ```
 python3 manage.py migrate
 ```
-Execute o comando de importação da base atual
+Comando de importação da base atual
 ```
 python3 manage.py loaddata dump.json
 ```
