@@ -1,4 +1,4 @@
-{% extends "gestao/base_gestao.html" %} {% load widget_tweaks %} {% block content %} {% csrf_token %}
+{% extends "gestao/base_gestao.html" %} {% load widget_tweaks %} {% block content %}
 <div class="panel panel-default">
   <div class="panel-heading">
     Alteração de cadastrador para Municípios
@@ -74,7 +74,7 @@ $(document).ready(function(){
           cache: false,
           data: {
             'csrfmiddlewaretoken': '{{ csrf_token }}',
-            'municipio_id': $('#municipio_id').val()
+            'ente_federado': $('#municipio_id').val(),
             },
           success: function(data){
             $('#id_data_publicacao_acordo').val("");
@@ -85,7 +85,7 @@ $(document).ready(function(){
                 if(!data.cpf){
                     $('#cpf_usuario').val("Não consta");
                 }
-                if(data.estado == 0){
+                if(data.estado_processo == 0){
                     $( "#id_data_publicacao_acordo" ).prop( "disabled", true );
                 }
             }else{

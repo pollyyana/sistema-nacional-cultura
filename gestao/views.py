@@ -62,8 +62,14 @@ def alterar_situacao(request, id):
 def ajax_cadastrador_cpf(request):
     if request.method == "POST":
         try:
-            municipio_id = request.POST.get("municipio_id", "")
-            municipio = Municipio.objects.get(cidade=municipio_id)
+            ente_federado = request.POST.get("ente_federado", None)
+            estado = request.POST.get("estado", None)
+
+            if estado:
+                municipio = Municipio.objects.get(cidade__isnull=True, estado_id=ente_federado)
+            else:
+                municipio = Municipio.objects.get(cidade=ente_federado)
+
             usuario = Usuario.objects.get(municipio_id=municipio.id)
             user = User.objects.get(id=usuario.user_id)
             if usuario.data_publicacao_acordo:
@@ -74,7 +80,7 @@ def ajax_cadastrador_cpf(request):
             data = {
                 'cpf': user.username,
                 'data_publicacao_acordo': data_de_publicacao,
-                'estado': usuario.estado_processo
+                'estado_processo': usuario.estado_processo
                 }
             return JsonResponse(data)
 
