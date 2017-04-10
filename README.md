@@ -70,8 +70,31 @@ O arquivo pode ser baixado de forma direta e rápida utilizando o comando wget -
 9. Configure o arquivo settings.py
 
 10. Configure o banco de dados
+Crie o banco dbsnc no seu serviço de acordo com o settings.py.
+```
+sudo -u postgres psql
+CREATE DATABASE dbsnc;
+\q
+```
 
-11. Execute a aplicação (É preciso ter o ambiente virtual ativado)
+11. Execute os comandos de criação do banco
+Execute para a criação de migração para cada APP
+```
+python3 manage.py makemigrations planotrabalho
+python3 manage.py makemigrations gestao
+python3 manage.py makemigrations adesao
+```
+Execute o comando migrate para criar a estrutura do banco (DDL)
+```
+python3 manage.py migrate
+```
+Execute o comando de importação da base atual
+```
+python3 manage.py loaddata dump.json
+```
+Obs.: caso seu dump não possua as mesmas colunas do código atual, adicione -i no loaddata
+
+12. Execute a aplicação (É preciso ter o ambiente virtual ativado)
     ```
     python3 manage.py runserver
 
