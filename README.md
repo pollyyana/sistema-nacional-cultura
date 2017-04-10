@@ -65,7 +65,7 @@ O arquivo pode ser baixado de forma direta e rápida utilizando o comando wget -
 8. Instale as dependências python do projeto
     ```
     sudo pip3 install -r requirements.txt
-
+    sudo apt-get install python3-dev
     ```
 9. Configure o arquivo settings.py
 
