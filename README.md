@@ -65,13 +65,42 @@ O arquivo pode ser baixado de forma direta e rápida utilizando o comando wget -
 8. Instale as dependências python do projeto
     ```
     sudo pip3 install -r requirements.txt
-
+    sudo apt-get install python3-dev
     ```
 9. Configure o arquivo settings.py
 
 10. Configure o banco de dados
+Crie o banco dbsnc no seu serviço de acordo com o settings.py.
+```
+sudo -u postgres psql
+CREATE DATABASE dbsnc;
+\q
+```
 
-11. Execute a aplicação (É preciso ter o ambiente virtual ativado)
+11. Execute os comandos de criação do banco
+
+Criação de migração para cada APP
+```
+python3 manage.py makemigrations planotrabalho
+python3 manage.py makemigrations gestao
+python3 manage.py makemigrations adesao
+```
+Comando migrate para criar a estrutura do banco (DDL)
+```
+python3 manage.py migrate
+```
+Comando de importação da base atual
+```
+python3 manage.py loaddata dump.json
+```
+Obs.: caso seu dump não possua as mesmas colunas do código atual, adicione -i no loaddata
+
+12. Copie os arquivos estaticos do projeto
+```
+python3 manage.py collectstatic
+```
+
+13. Execute a aplicação (É preciso ter o ambiente virtual ativado)
     ```
     python3 manage.py runserver
 
