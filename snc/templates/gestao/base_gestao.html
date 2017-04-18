@@ -35,76 +35,77 @@
 
 <body>
 
-    <div id="wrapper">
+  <div id="wrapper">
 
-        <!-- Navigation -->
-        <nav class="navbar navbar-default navbar-static-top" role="navigation" style="margin-bottom: 0">
-            <div class="navbar-header">
-                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
-                    <span class="sr-only">Toggle navigation</span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                </button>
-                <a class="navbar-brand" href="index.html">SNC</a>
-            </div>
-            <!-- /.navbar-header -->
+      <!-- Navigation -->
+      <nav class="navbar navbar-default navbar-static-top" role="navigation" style="margin-bottom: 0">
+          <div class="navbar-header">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                  <span class="sr-only">Toggle navigation</span>
+                  <span class="icon-bar"></span>
+                  <span class="icon-bar"></span>
+                  <span class="icon-bar"></span>
+              </button>
+              <a class="navbar-brand" href="index.html">SNC</a>
+          </div>
+          <!-- /.navbar-header -->
 
-            <ul class="nav navbar-top-links navbar-right">
-                <li class="dropdown">
-                    <a class="dropdown-toggle" data-toggle="dropdown" href="#">
-                        <i class="fa fa-user fa-fw"></i> {{ request.user.usuario.nome_usuario }} <i class="fa fa-caret-down"></i>
-                    </a>
-                    <ul class="dropdown-menu dropdown-user">
-                        <li><a href="{% url 'mudar_senha' %}"><i class="fa fa-user fa-fw"></i> Alterar Senha</a>
-                        </li>
-                        <li class="divider"></li>
-                        <li><a href="{% url 'adesao:logout' %}"><i class="fa fa-sign-out fa-fw"></i> Sair</a>
-                        </li>
-                    </ul>
-                    <!-- /.dropdown-user -->
-                </li>
-                <!-- /.dropdown -->
-            </ul>
-            <!-- /.navbar-top-links -->
+          <ul class="nav navbar-top-links navbar-right">
+              <li class="dropdown">
+                  <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                      <i class="fa fa-user fa-fw"></i> {{ request.user.usuario.nome_usuario }} <i class="fa fa-caret-down"></i>
+                  </a>
+                  <ul class="dropdown-menu dropdown-user">
+                      <li><a href="{% url 'mudar_senha' %}"><i class="fa fa-user fa-fw"></i> Alterar Senha</a>
+                      </li>
+                      <li class="divider"></li>
+                      <li><a href="{% url 'adesao:logout' %}"><i class="fa fa-sign-out fa-fw"></i> Sair</a>
+                      </li>
+                  </ul>
+                  <!-- /.dropdown-user -->
+              </li>
+              <!-- /.dropdown -->
+          </ul>
+          <!-- /.navbar-top-links -->
 
-            <div class="navbar-default sidebar" role="navigation">
-                <div class="sidebar-nav navbar-collapse">
-                    <ul class="nav" id="side-menu">
-                        <li class="sidebar-search">
-                            <div class="input-group custom-search-form">
-                              <form action="{% url 'gestao:acompanhar_adesao' %}" method="get">
-                                <input type="text" name="municipio" class="form-control" placeholder="Buscar...">
-                                <span class="input-group-btn">
-                                    <button class="btn btn-default" type="submit">
-                                        <i class="fa fa-search"></i>
-                                    </button>
-                                </span>
-                              </form>
-                            </div>
-                            <!-- /input-group -->
-                        </li>
-                        <!--<li>
-                          <a href="#"><i class="fa fa-dashboard fa-fw"></i>  Dashboard</a>
-                        </li>-->
-                        <li>
-                          <a href="{% url 'gestao:acompanhar_adesao' %}">Início</a>
-                        </li>
-                        <li>
-                          <a href="{% url 'gestao:usuarios' %}">Usuários</a>
-                        </li>
-                        <li>
-                          <a href="{% url 'exportar_ods' %}">Exportar Planilha ODS</a>
-                        </li>
-                        <li>
-                          <a href="{% url 'exportar_xls' %}">Exportar Planilha XLS</a>
-                        </li>
-                        <li>
-                          <a href="{% url 'gestao:prorrogacao' %}">Prorrogar prazo</a>
-                        </li>
-                        <li>
-                          <a href="#"><i class="fa fa-exchange fa-fw"></i>  Alterar Cadastradores<span class="fa arrow"></span></a>
-                          <ul class="nav nav-second-level">
+          <div class="navbar-default sidebar" role="navigation">
+              <div class="sidebar-nav navbar-collapse">
+                  <ul class="nav" id="side-menu">
+                      <li class="sidebar-search">
+                          <div class="input-group custom-search-form">
+                            <form action="{% url 'gestao:acompanhar_adesao' %}" method="get">
+                              <input type="text" name="municipio" class="form-control" placeholder="Buscar...">
+                              <span class="input-group-btn">
+                                  <button class="btn btn-default" type="submit">
+                                      <i class="fa fa-search"></i>
+                                  </button>
+                              </span>
+                            </form>
+                          </div>
+                          <!-- /input-group -->
+                      </li>
+                      <!--<li>
+                        <a href="#"><i class="fa fa-dashboard fa-fw"></i>  Dashboard</a>
+                      </li>-->
+                      <li>
+                        <a href="{% url 'gestao:acompanhar_adesao' %}">Início</a>
+                      </li>
+                      <li>
+                        <a href="{% url 'gestao:usuarios' %}">Usuários</a>
+                      </li>
+                      <li>
+                        <a href="{% url 'exportar_ods' %}">Exportar Planilha ODS</a>
+                      </li>
+                      <li>
+                        <a href="{% url 'exportar_xls' %}">Exportar Planilha XLS</a>
+                      </li>
+                      <li>
+                        <a href="{% url 'gestao:prorrogacao' %}">Prorrogar prazo</a>
+                      </li>
+                      <li class="active">
+                        <a href="#" data-toggle="collapse" data-target="#alterar_cadastradores"><i class="fa fa-exchange fa-fw"></i>  Alterar Cadastradores<span class="fa arrow"></span></a>
+                        <div class="collapse" id="alterar_cadastradores" style="height: 0px;">
+                          <ul class="nav nav-second-level nav-list">
                             <li>
                               <a href="{% url 'gestao:alterar_cadastrador' %}">
                                 Município
@@ -116,159 +117,183 @@
                               </a>
                             </li>
                           </ul>
-                        </li>
-                        <li>
-                            <a href="#"><i class="fa fa-table fa-fw"></i>  Acompanhar Processos<span class="fa arrow"></span></a>
-
+                      </div>
+                      </li>
+                      <li>
+                          <a href="#" data-toggle="collapse" data-target="#acompanhar_processos"><i class="fa fa-exchange fa-fw"></i>  Acompanhar Processos<span class="fa arrow"></span></a>
+                          <div class="collapse" id="acompanhar_processos" style="height: 0px;">
                             <ul class="nav nav-second-level">
-                              <li>
-                                <a href="{% url 'gestao:acompanhar_adesao' %}?situacao=1">
-                                  Aguardando envio da documentação
-                                </a>
-                              </li>
+                            <li>
+                              <a href="{% url 'gestao:acompanhar_adesao' %}?situacao=1">
+                                Aguardando envio da documentação
+                              </a>
+                            </li>
 
-                              <li>
-                                <a href="{% url 'gestao:acompanhar_adesao' %}?situacao=2">
-                                  Documentação Recebida - Aguarda Análise
-                                </a>
-                              </li>
+                            <li>
+                              <a href="{% url 'gestao:acompanhar_adesao' %}?situacao=2">
+                                Documentação Recebida - Aguarda Análise
+                              </a>
+                            </li>
 
-                              <li>
-                                <a href="{% url 'gestao:acompanhar_adesao' %}?situacao=3">
-                                  Diligência Documental
-                                </a>
-                              </li>
+                            <li>
+                              <a href="{% url 'gestao:acompanhar_adesao' %}?situacao=3">
+                                Diligência Documental
+                              </a>
+                            </li>
 
-                              <li>
-                                <a href="{% url 'gestao:acompanhar_adesao' %}?situacao=4">
-                                  Encaminhado para assinatura do Secretário SAI
-                                </a>
-                              </li>
+                            <li>
+                              <a href="{% url 'gestao:acompanhar_adesao' %}?situacao=4">
+                                Encaminhado para assinatura do Secretário SAI
+                              </a>
+                            </li>
 
-                              <li>
-                                <a href="{% url 'gestao:acompanhar_adesao' %}?situacao=5">
-                                  Aguarda Publicação no DOU
-                                </a>
-                              </li>
+                            <li>
+                              <a href="{% url 'gestao:acompanhar_adesao' %}?situacao=5">
+                                Aguarda Publicação no DOU
+                              </a>
+                            </li>
 
-                              <li>
-                                <a href="{% url 'gestao:acompanhar_prazo' %}">
-                                  Alterar Prazos
-                                </a>
-                              </li>
-                            </ul>
-                        </li>
+                            <li>
+                              <a href="{% url 'gestao:acompanhar_prazo' %}">
+                                Alterar Prazos
+                              </a>
+                            </li>
+
+                          </ul>
+                        </div>
+
+                      </li>
                         <!-- Acompanhamento da execução do Plano de Trabalho -->
                         <li>
-                          <a href="#"><i class="fa fa-sitemap fa-fw"></i>  Plano de Trabalho<span class="fa arrow"></span></a>
-
+                          <a href="#" data-toggle="collapse" data-target="#plano_trabalho"><i class="fa fa-sitemap fa-fw"></i>  Plano de Trabalho<span class="fa arrow"></span></a>
+                          <div class="collapse" id="plano_trabalho" style="height: 0px;">
                           <ul class="nav nav-second-level">
                             <li>
-                              <a href="#">
-                                Sistema de Cultura<span class="fa arrow"></span>
+                              <a href="#" data-toggle="collapse" data-target="#sistema_cultura">  Sistema de Cultura<span class="fa arrow"></span>
                               </a>
-                              <ul class="nav nav-third-level">
-                                <!-- <li><a href="{% url 'gestao:acompanhar_sistema' %}?anexo=minuta_projeto_lei">Minuta</a></li> -->
-                                <li><a href="{% url 'gestao:acompanhar_sistema' %}?anexo=lei_sistema_cultura">Lei</a></li>
-                              </ul>
+                              <div class="collapse" id="sistema_cultura" style="height: 0px;">
+                                <ul class="nav nav-third-level">
+                                  <li><a href="{% url 'gestao:acompanhar_sistema' %}?anexo=lei_sistema_cultura">Lei</a></li>
+                                </ul>
+                              </div>
+                            </li>
+
+                              <li>
+                                <a href="#" data-toggle="collapse" data-target="#orgao">
+                                  Órgão Gestor<span class="fa arrow"></span>
+                                </a>
+                                <div class="collapse" id="orgao" style="height: 0px;">
+                                  <ul class="nav nav-third-level">
+                                    <li><a href="{% url 'gestao:acompanhar_orgao' %}">Ato normativo</a></li>
+                                  </ul>
+                                </div>
+                              </li>
+
+                              <li>
+                                <a href="#" data-toggle="collapse" data-target="#conselho">
+                                  Conselho Cultural<span class="fa arrow"></span>
+                                </a>
+                                <div class="collapse" id="conselho" style="height: 0px;">
+                                  <ul class="nav nav-third-level">
+                                    <li><a href="{% url 'gestao:acompanhar_conselho' %}">Ata</a></li>
+                                  </ul>
+                                </div>
+                              </li>
+
+                              <li>
+                                <a href="#" data-toggle="collapse" data-target="#fundo">
+                                  Fundo de Cultura<span class="fa arrow"></span>
+                                </a>
+                                <div class="collapse" id="fundo" style="height: 0px;">
+                                  <ul class="nav nav-third-level">
+                                    <li><a href="{% url 'gestao:acompanhar_fundo' %}">Lei</a></li>
+                                  </ul>
+                                </div>
                             </li>
 
                             <li>
-                              <a href="#">
-                                Órgão Gestor<span class="fa arrow"></span>
-                              </a>
-                              <ul class="nav nav-third-level">
-                                <li><a href="{% url 'gestao:acompanhar_orgao' %}">Ato normativo</a></li>
-                              </ul>
-                            </li>
-
-                            <li>
-                              <a href="#">
-                                Conselho Cultural<span class="fa arrow"></span>
-                              </a>
-                              <ul class="nav nav-third-level">
-                                <li><a href="{% url 'gestao:acompanhar_conselho' %}">Ata</a></li>
-                              </ul>
-                            </li>
-
-                            <li>
-                              <a href="#">
-                                Fundo de Cultura<span class="fa arrow"></span>
-                              </a>
-                              <ul class="nav nav-third-level">
-                                <li><a href="{% url 'gestao:acompanhar_fundo' %}">Lei</a></li>
-                              </ul>
-                            </li>
-
-                            <li>
-                              <a href="#">
+                              <a href="#" data-toggle="collapse" data-target="#plano_cultura">
                                 Plano de Cultura<span class="fa arrow"></span>
                               </a>
-                              <ul class="nav nav-third-level">
-                                <li><a href="{% url 'gestao:acompanhar_plano' %}?anexo=lei_plano_cultura">Lei</a></li>
-                              </ul>
+                              <div class="collapse" id="plano_cultura" style="height: 0px;">
+                                <ul class="nav nav-third-level">
+                                  <li><a href="{% url 'gestao:acompanhar_plano' %}?anexo=lei_plano_cultura">Lei</a></li>
+                                </ul>
+                              </div>
                             </li>
                           </ul>
+                         </div>
                         </li>
 
                         <!-- Inserção de documentos faltantes-->
 
                         <li>
-                          <a href="#"><i class="fa fa-upload fa-fw"></i>  Inserir Documentos<span class="fa arrow"></span></a>
+                          <a href="#" data-toggle="collapse" data-target="#inserir_documentos"><i class="fa fa-upload fa-fw"></i>  Inserir Documentos<span class="fa arrow"></span></a>
+                          <div class="collapse" id="inserir_documentos" style="height: 0px;">
+                            <ul class="nav nav-second-level">
+                                <li>
+                                  <a href="#" data-toggle="collapse" data-target="#sistemacult">
+                                    Sistema de Cultura<span class="fa arrow"></span>
+                                  </a>
+                                <div class="collapse" id="sistemacult" style="height: 0px;">
+                                  <ul class="nav nav-third-level">
+                                    <!-- <li><a href="{% url 'gestao:acompanhar_sistema' %}?anexo=minuta_projeto_lei">Minuta</a></li> -->
+                                    <li><a href="{% url 'gestao:inserir_sistema' %}">Lei</a></li>
+                                  </ul>
+                                </div>
+                              </li>
 
-                          <ul class="nav nav-second-level">
-                            <li>
-                              <a href="#">
-                                Sistema de Cultura<span class="fa arrow"></span>
-                              </a>
-                              <ul class="nav nav-third-level">
-                                <!-- <li><a href="{% url 'gestao:acompanhar_sistema' %}?anexo=minuta_projeto_lei">Minuta</a></li> -->
-                                <li><a href="{% url 'gestao:inserir_sistema' %}">Lei</a></li>
-                              </ul>
-                            </li>
+                              <li>
+                                <a href="#" data-toggle="collapse" data-target="#orgaogestor">
+                                  Órgão Gestor<span class="fa arrow"></span>
+                                </a>
+                                <div class="collapse" id="orgaogestor" style="height: 0px;">
+                                  <ul class="nav nav-third-level">
+                                    <li><a href="{% url 'gestao:inserir_orgao' %}">Ato normativo</a></li>
+                                  </ul>
+                                </div>
+                              </li>
 
-                            <li>
-                              <a href="#">
-                                Órgão Gestor<span class="fa arrow"></span>
-                              </a>
-                              <ul class="nav nav-third-level">
-                                <li><a href="{% url 'gestao:inserir_orgao' %}">Ato normativo</a></li>
-                              </ul>
-                            </li>
+                              <li>
+                                <a  href="#" data-toggle="collapse" data-target="#conselhocult">
+                                  Conselho Cultural<span class="fa arrow"></span>
+                                </a>
+                                <div class="collapse" id="conselhocult" style="height: 0px;">
+                                  <ul class="nav nav-third-level">
+                                    <li><a href="{% url 'gestao:inserir_conselho' %}">Ata</a></li>
+                                  </ul>
+                                </div>
+                              </li>
 
-                            <li>
-                              <a href="#">
-                                Conselho Cultural<span class="fa arrow"></span>
-                              </a>
-                              <ul class="nav nav-third-level">
-                                <li><a href="{% url 'gestao:inserir_conselho' %}">Ata</a></li>
-                              </ul>
-                            </li>
+                              <li>
+                                <a href="#" data-toggle="collapse" data-target="#fundocult">
+                                  Fundo de Cultura<span class="fa arrow"></span>
+                                </a>
+                                <div class="collapse" id="fundocult" style="height: 0px;">
+                                  <ul class="nav nav-third-level">
+                                    <li><a href="{% url 'gestao:inserir_fundo' %}">Lei</a></li>
+                                  </ul>
+                                </div>
+                              </li>
 
-                            <li>
-                              <a href="#">
-                                Fundo de Cultura<span class="fa arrow"></span>
-                              </a>
-                              <ul class="nav nav-third-level">
-                                <li><a href="{% url 'gestao:inserir_fundo' %}">Lei</a></li>
-                              </ul>
-                            </li>
+                              <li>
+                                <a href="#" data-toggle="collapse" data-target="#planocult">
+                                  Plano de Cultura<span class="fa arrow"></span>
+                                </a>
+                                <div class="collapse" id="planocult" style="height: 0px;" >
+                                  <ul class="nav nav-third-level">
+                                    <li><a href="{% url 'gestao:inserir_plano' %}">Lei</a></li>
+                                  </ul>
+                                </div>
+                              </li>
 
-                            <li>
-                              <a href="#">
-                                Plano de Cultura<span class="fa arrow"></span>
-                              </a>
-                              <ul class="nav nav-third-level">
-                                <li><a href="{% url 'gestao:inserir_plano' %}">Lei</a></li>
-                              </ul>
-                            </li>
-
-                            <li>
-                              <a href="{% url 'gestao:inserir_entefederado' %}">
-                                Ente Federado
-                              </a>
-                            </li>
-                          </ul>
+                              <li>
+                                <a href="{% url 'gestao:inserir_entefederado' %}">
+                                  Ente Federado
+                                </a>
+                              </li>
+                            </ul>
+                          </div>
                         </li>
                     </ul>
                 </div>
