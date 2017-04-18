@@ -98,20 +98,22 @@ class AcompanharPrazo(ListView):
         ente_federado = self.request.GET.get('municipio', None)
         if ente_federado:
             municipio = Usuario.objects.filter(
-                municipio__cidade__nome_municipio__icontains=ente_federado)
+                municipio__cidade__nome_municipio__icontains=ente_federado).order_by('municipio__estado__nome_uf')
             estado = Usuario.objects.filter(
                 municipio__cidade__isnull=True,
-                municipio__estado__nome_uf__icontains=ente_federado)
+                municipio__estado__nome_uf__icontains=ente_federado).order_by('municipio__estado__nome_uf')
 
             return municipio | estado
-        return Usuario.objects.filter(prazo=2, estado_processo='6', data_publicacao_acordo__isnull=False)
+        return Usuario.objects.filter(estado_processo='6', data_publicacao_acordo__isnull=False).order_by(
+            'municipio__estado__nome_uf')
 
 
 def aditivar_prazo(request, id):
     if request.method == "POST":
         user = Usuario.objects.get(id=id)
-        user.prazo = 4
+        user.prazo = user.prazo + 1
         user.save()
+
     return redirect('gestao:acompanhar_prazo')
 
 
