@@ -119,6 +119,10 @@ class CadastrarMunicipioForm(ModelForm):
         content_types=content_types,
         max_upload_size=5242880)
 
+    def __init__(self, *args, **kwargs):
+        self.usuario = kwargs.pop('user')
+        super(CadastrarMunicipioForm, self).__init__(*args, **kwargs)
+
     def clean_cpf_prefeito(self):
         if not validar_cpf(self.cleaned_data['cpf_prefeito']):
             raise forms.ValidationError('Por favor, digite um CPF válido!')
@@ -133,12 +137,16 @@ class CadastrarMunicipioForm(ModelForm):
 
     def clean(self):
         super(CadastrarMunicipioForm, self).clean()
-        if 'estado' in self.changed_data:
+
+        if 'estado' in self.changed_data or 'cidade' in self.changed_data:
+            if self.usuario.estado_processo == '6':
+                self.add_error('estado', '''Não é possivel modificar o município ou estado após a
+                 publicação do plano de trabalho no DOU. Em caso de dúvida entre em contato através do Fale Conosco.''')
             if not self.cleaned_data.get("cidade"):
-                estado = Municipio.objects.filter(
+                estado_validacao = Municipio.objects.filter(
                     estado__sigla=self.cleaned_data['estado'],
                     cidade__isnull=True)
-                if estado:
+                if estado_validacao:
                     self.add_error('estado', 'Este estado já foi cadastrado!')
 
     class Meta:

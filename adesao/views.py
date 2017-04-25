@@ -310,6 +310,11 @@ class AlterarMunicipio(UpdateView):
 
         return super(AlterarMunicipio, self).dispatch(*args, **kwargs)
 
+    def get_form_kwargs(self):
+        kwargs = super(AlterarMunicipio, self).get_form_kwargs()
+        kwargs['user'] = self.request.user.usuario
+        return kwargs
+
 
 class CadastrarResponsavel(CreateView):
     form_class = CadastrarResponsavelForm
