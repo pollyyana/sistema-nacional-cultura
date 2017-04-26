@@ -535,6 +535,8 @@ def rotina_limpeza_arquivos_inexistentes(request):
     fundos = FundoCultura.objects.exclude(lei_fundo_cultura='')
     planos = PlanoCultura.objects.exclude(lei_plano_cultura='')
 
+    st_enviar_comprovacao = 0  # situacao do documento
+
     mediaurl = settings.BASE_DIR + settings.MEDIA_URL
 
     for municipio in municipios:
@@ -557,29 +559,34 @@ def rotina_limpeza_arquivos_inexistentes(request):
         lei = os.path.exists(mediaurl + criacaosistema.lei_sistema_cultura.__str__())
         if not lei:
             criacaosistema.lei_sistema_cultura = ''
+            criacaosistema.situacao_lei_sistema = st_enviar_comprovacao  # situacao do documento
             criacaosistema.save()
 
     for orgaogestor in orgaogestores:
         ato_normativo = os.path.exists(mediaurl + orgaogestor.relatorio_atividade_secretaria.__str__())
         if not ato_normativo:
             orgaogestor.relatorio_atividade_secretaria = ''
+            orgaogestor.situacao_relatorio_secretaria = st_enviar_comprovacao  # situacao do documento
             orgaogestor.save()
 
     for conselho in conselhos:
         ata = os.path.exists(mediaurl + conselho.ata_regimento_aprovado.__str__())
         if not ata:
             conselho.ata_regimento_aprovado = ''
+            conselho.situacao_ata = st_enviar_comprovacao  # situacao do documento
             conselho.save()
 
     for fundo in fundos:
         lei_fundo = os.path.exists(mediaurl + fundo.lei_fundo_cultura.__str__())
         if not lei_fundo:
             fundo.lei_fundo_cultura = ''
+            fundo.situacao_lei_plano = st_enviar_comprovacao  # situacao do documento
             fundo.save()
 
     for plano in planos:
         lei_plano = os.path.exists(mediaurl + plano.lei_plano_cultura.__str__())
         if not lei_plano:
             plano.lei_plano_cultura = ''
+            plano.situacao_lei_plano = st_enviar_comprovacao  # situacao do documento
             plano.save()
     return redirect('gestao:acompanhar_adesao')
