@@ -548,22 +548,22 @@ def rotina_limpeza_arquivos_inexistentes(request):
 
         if not cpf:
             municipio.cpf_copia_prefeito = ''
-            log += [municipio.id + ' - cpf']
+            log += [municipio.id.__str__() + ' - cpf']
 
         if not rg:
             municipio.rg_copia_prefeito = ''
-            log += [municipio.id + ' - rg']
+            log += [municipio.id.__str__() + ' - rg']
 
         if not termo:
             municipio.termo_posse_prefeito = ''
-            log += [municipio.id + ' - termo']
+            log += [municipio.id.__str__() + ' - termo']
 
         municipio.save()
 
     for criacaosistema in criacaosistemas:
         lei = os.path.exists(mediaurl + criacaosistema.lei_sistema_cultura.__str__())
         if not lei:
-            log += [criacaosistema.id + ' - Criacao Sistema']
+            log += [criacaosistema.id.__str__() + ' - Criacao Sistema']
             criacaosistema.lei_sistema_cultura = ''
             criacaosistema.situacao_lei_sistema = st_enviar_comprovacao  # situacao do documento
             criacaosistema.save()
@@ -571,7 +571,7 @@ def rotina_limpeza_arquivos_inexistentes(request):
     for orgaogestor in orgaogestores:
         ato_normativo = os.path.exists(mediaurl + orgaogestor.relatorio_atividade_secretaria.__str__())
         if not ato_normativo:
-            log += [orgaogestor.id + ' - Orgao gestor']
+            log += [orgaogestor.id.__str__() + ' - Orgao gestor']
             orgaogestor.relatorio_atividade_secretaria = ''
             orgaogestor.situacao_relatorio_secretaria = st_enviar_comprovacao  # situacao do documento
             orgaogestor.save()
@@ -579,7 +579,7 @@ def rotina_limpeza_arquivos_inexistentes(request):
     for conselho in conselhos:
         ata = os.path.exists(mediaurl + conselho.ata_regimento_aprovado.__str__())
         if not ata:
-            log += [conselho.id + ' - Conselho']
+            log += [conselho.id.__str__() + ' - Conselho']
             conselho.ata_regimento_aprovado = ''
             conselho.situacao_ata = st_enviar_comprovacao  # situacao do documento
             conselho.save()
@@ -587,15 +587,15 @@ def rotina_limpeza_arquivos_inexistentes(request):
     for fundo in fundos:
         lei_fundo = os.path.exists(mediaurl + fundo.lei_fundo_cultura.__str__())
         if not lei_fundo:
-            log += [fundo.id + ' - Fundo']
+            log += [fundo.id.__str__() + ' - Fundo']
             fundo.lei_fundo_cultura = ''
             fundo.situacao_lei_plano = st_enviar_comprovacao  # situacao do documento
             fundo.save()
 
     for plano in planos:
-        log += [plano.id + ' - Plano']
         lei_plano = os.path.exists(mediaurl + plano.lei_plano_cultura.__str__())
         if not lei_plano:
+            log += [plano.id.__str__() + ' - Plano']
             plano.lei_plano_cultura = ''
             plano.situacao_lei_plano = st_enviar_comprovacao  # situacao do documento
             plano.save()
