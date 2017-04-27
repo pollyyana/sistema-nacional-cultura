@@ -603,7 +603,7 @@ def rotina_limpeza_arquivos_inexistentes(request):
     # criar arquivo de log
     log[1:]
     log = "\n".join(log[1:])
-    log_dir = settings.BASE_DIR + '../rotina_limpeza_arquivos_inexistentes.log'
+    log_dir = settings.BASE_DIR + '/../rotina_limpeza_arquivos_inexistentes.log'
     print(log_dir)
     with open(log_dir, 'a') as out:
         out.write(log + '\n')
