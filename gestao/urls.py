@@ -118,4 +118,7 @@ urlpatterns = [
 
     # ajax mudança de cadastrador
     url(r'^ajax_cadastrador_cpf$', staff_member_required(views.ajax_cadastrador_cpf), name='ajax_cadastrador_cpf'),
+
+    url(r'^rotina-limpeza-arquivos$', staff_member_required(
+        views.rotina_limpeza_arquivos_inexistentes), name='rotina_limpeza_arquivos'),
     ]

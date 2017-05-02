@@ -8,7 +8,7 @@ O cadastro do SNC é feito sobre o framework Python-Django, Python3, com banco d
 As dependencias de pacotes estão no requirements.txt
 
 
-##Requisitos
+## Requisitos
 
 * Python3
 * PIP
@@ -17,7 +17,7 @@ As dependencias de pacotes estão no requirements.txt
 * wkhtmltopdf
 * postgresql-server-dev-9.4
 
-##Passos da Instalação para Debian/Ubuntu
+## Passos da Instalação para Debian/Ubuntu
 
 1. Instale o PIP que é o instalador de pacotes do python3
 
