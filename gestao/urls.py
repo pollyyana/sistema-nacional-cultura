@@ -55,7 +55,7 @@ urlpatterns = [
 
     # Detalhar usuário
     url(r'^detalhar/municipio/(?P<pk>[0-9]+)$',
-        views.DetalharUsuario.as_view(),
+        staff_member_required(views.DetalharUsuario.as_view()),
         name='detalhar'),
     url(r'^usuarios/',
         staff_member_required(
@@ -109,12 +109,18 @@ urlpatterns = [
         staff_member_required(views.AlterarConselho.as_view()), name='alterar_conselho'),
 
     # Prorrogar o prazo do plano de trabalho
-    url(r'^prorrogacao/$', views.Prorrogacao.as_view(), name='prorrogacao'),
-    url(r'^prorrogacao/fundo/(?P<pk>[0-9]+)$', views.ProrrogacaoFundo.as_view(), name='prorrogacao_fundo'),
-    url(r'^prorrogacao/conselho/(?P<pk>[0-9]+)$', views.ProrrogacaoConselho.as_view(), name='prorrogacao_conselho'),
-    url(r'^prorrogacao/sistema/(?P<pk>[0-9]+)$', views.ProrrogacaoSistema.as_view(), name='prorrogacao_sistema'),
-    url(r'^prorrogacao/orgao/(?P<pk>[0-9]+)$', views.ProrrogacaoOrgao.as_view(), name='prorrogacao_orgao'),
-    url(r'^prorrogacao/plano/(?P<pk>[0-9]+)$', views.ProrrogacaoPlano.as_view(), name='prorrogacao_plano'),
+    url(r'^prorrogacao/$', staff_member_required(
+        views.Prorrogacao.as_view()), name='prorrogacao'),
+    url(r'^prorrogacao/fundo/(?P<pk>[0-9]+)$', staff_member_required(
+        views.ProrrogacaoFundo.as_view()), name='prorrogacao_fundo'),
+    url(r'^prorrogacao/conselho/(?P<pk>[0-9]+)$', staff_member_required(
+        views.ProrrogacaoConselho.as_view()), name='prorrogacao_conselho'),
+    url(r'^prorrogacao/sistema/(?P<pk>[0-9]+)$', staff_member_required(
+        views.ProrrogacaoSistema.as_view()), name='prorrogacao_sistema'),
+    url(r'^prorrogacao/orgao/(?P<pk>[0-9]+)$', staff_member_required(
+        views.ProrrogacaoOrgao.as_view()), name='prorrogacao_orgao'),
+    url(r'^prorrogacao/plano/(?P<pk>[0-9]+)$', staff_member_required(
+        views.ProrrogacaoPlano.as_view()), name='prorrogacao_plano'),
 
     # ajax mudança de cadastrador
     url(r'^ajax_cadastrador_cpf$', staff_member_required(views.ajax_cadastrador_cpf), name='ajax_cadastrador_cpf'),
