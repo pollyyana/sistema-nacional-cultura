@@ -44,20 +44,13 @@ class CriacaoSistema(models.Model):
         max_length=255,
         blank=True,
         null=True)
-    situacao_minuta = models.CharField(
-        max_length=1,
-        choices=SITUACAO_ENVIO,
-        default=0)
     data_final_sancao_lei = models.DateField()
     lei_sistema_cultura = models.FileField(
         upload_to='leis_sistema_cultura',
         max_length=255,
         blank=True,
         null=True)
-    situacao_lei_sistema = models.CharField(
-        max_length=1,
-        choices=SITUACAO_ENVIO,
-        default=0)
+    situacao_lei_sistema = models.ForeignKey('SituacoesArquivoPlano', db_column='situacao_lei_sistema')
 
 
 class OrgaoGestor(models.Model):
@@ -67,10 +60,7 @@ class OrgaoGestor(models.Model):
         max_length=255,
         blank=True,
         null=True)
-    situacao_relatorio_secretaria = models.CharField(
-        max_length=1,
-        choices=SITUACAO_ENVIO,
-        default=0)
+    situacao_relatorio_secretaria = models.ForeignKey('SituacoesArquivoPlano', db_column='situacao_relatorio_secretaria')
 
 
 class ConselhoCultural(models.Model):
@@ -80,10 +70,7 @@ class ConselhoCultural(models.Model):
         max_length=255,
         blank=True,
         null=True)
-    situacao_ata = models.CharField(
-        max_length=1,
-        choices=SITUACAO_ENVIO,
-        default=0)
+    situacao_ata = models.ForeignKey('SituacoesArquivoPlano', db_column='situacao_ata')
 
 
 class FundoCultura(models.Model):
@@ -99,10 +86,7 @@ class FundoCultura(models.Model):
         max_length=255,
         blank=True,
         null=True)
-    situacao_lei_plano = models.CharField(
-        max_length=1,
-        choices=SITUACAO_ENVIO,
-        default=0)
+    situacao_lei_plano = models.ForeignKey('SituacoesArquivoPlano', db_column='situacao_lei_plano')
 
 
 class PlanoCultura(models.Model):
@@ -111,48 +95,29 @@ class PlanoCultura(models.Model):
         max_length=255,
         blank=True,
         null=True)
-    situacao_relatorio_diretrizes = models.CharField(
-        max_length=1,
-        choices=SITUACAO_ENVIO,
-        default=0)
     minuta_preparada = models.FileField(
         upload_to='minuta_preparada',
         max_length=255,
         blank=True,
         null=True)
-    situacao_minuta = models.CharField(
-        max_length=1,
-        choices=SITUACAO_ENVIO,
-        default=0)
     ata_reuniao_aprovacao_plano = models.FileField(
         upload_to='ata_aprovacao_plano',
         max_length=255,
         blank=True,
         null=True)
-    situacao_ata = models.CharField(
-        max_length=1,
-        choices=SITUACAO_ENVIO,
-        default=0)
     data_final_tramitacao_projeto_lei = models.DateField(blank=True, null=True)
     ata_votacao_projeto_lei = models.FileField(
         upload_to='ata_votacao_lei',
         max_length=255,
         blank=True,
         null=True)
-    situacao_ata_votacao = models.CharField(
-        max_length=1,
-        choices=SITUACAO_ENVIO,
-        default=0)
     data_final_sancao_lei_plano_cultura = models.DateField()
     lei_plano_cultura = models.FileField(
         upload_to='lei_plano_cultura',
         max_length=255,
         blank=True,
         null=True)
-    situacao_lei_plano = models.CharField(
-        max_length=1,
-        choices=SITUACAO_ENVIO,
-        default=0)
+    situacao_lei_plano = models.ForeignKey('SituacoesArquivoPlano', db_column='situacao_lei_plano')
 
 
 class Conselheiro(models.Model):
@@ -168,3 +133,8 @@ class Conselheiro(models.Model):
     data_cadastro = models.DateField(blank=True, null=True)
     data_situacao = models.DateField(blank=True, null=True)
     conselho = models.ForeignKey('ConselhoCultural')
+
+
+class SituacoesArquivoPlano(models.Model):
+    situacao_arquivo = models.CharField(primary_key=True, max_length=1)
+    descricao = models.CharField(max_length=75, null=False)
