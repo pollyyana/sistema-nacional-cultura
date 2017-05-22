@@ -230,10 +230,11 @@
                         <h3 class="portlet-topper "> Conselheiros de Política Cultural</h3>
 
                         {% for conselheiro in conselheiros %}
-                        <div id="parent-fieldname-description" class="documentDescription" style="color: #0E3F98">Conselheiro</div>
-                        <div id="parent-fieldname-description" class="documentDescription" style="color: #0E3F98">Nome:<p style="color: #6f7681">{{ conselheiro.nome }}</div>
-                        <div id="parent-fieldname-description" class="documentDescription" style="color: #0E3F98">Setorial:<p style="color: #6f7681">{{ conselheiro.segmento }}</div>
-                        <div id="parent-fieldname-description" class="documentDescription" style="color: #0E3F98">E-mail:<p style="color: #6f7681">{{ conselheiro.email }}</div>
+                        <p class="callout">
+                            <span style="font-size:14px;"><strong>{{ conselheiro.segmento }}</strong></span><br />
+                                {{ conselheiro.nome }}<br />
+                            <span>E-mail: <a href="mailto:{{ conselheiro.email }}">&nbsp;</a></span><a href="mailto:{{ conselheiro.email }}">{{ conselheiro.email }}</a>
+                        </p>
                         {% empty %}
                         <div id="parent-fieldname-description" class="documentDescription" style="color: #6f7681">Nenhum conselheiro informado</div>
                         {% endfor %}
