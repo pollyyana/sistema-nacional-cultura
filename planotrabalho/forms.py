@@ -295,6 +295,10 @@ class CriarConselheiroForm(ModelForm):
 
         return self.cleaned_data['segmento']
 
+    def clean(self):
+        if self.cleaned_data['segmento'] == '21' and self.cleaned_data['outros'] == '':
+            self.add_error('segmento', 'Este campo é obrigatório.')
+
     def save(self, commit=True, *args, **kwargs):
         conselheiro = super(CriarConselheiroForm, self).save(commit=False)
         conselheiro.conselho = self.usuario.plano_trabalho.conselho_cultural
@@ -335,7 +339,6 @@ class AlterarConselheiroForm(ModelForm):
         return self.cleaned_data['segmento']
 
     def clean(self):
-
         if self.cleaned_data['segmento'] == '21' and self.cleaned_data['outros'] == '':
             self.add_error('segmento', 'Este campo é obrigatório.')
 
