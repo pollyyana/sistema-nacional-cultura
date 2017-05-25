@@ -48,7 +48,6 @@ class CriacaoSistema(models.Model):
         max_length=1,
         choices=SITUACAO_ENVIO,
         default=0)
-    data_final_sancao_lei = models.DateField()
     lei_sistema_cultura = models.FileField(
         upload_to='leis_sistema_cultura',
         max_length=255,
@@ -61,7 +60,6 @@ class CriacaoSistema(models.Model):
 
 
 class OrgaoGestor(models.Model):
-    data_final_estruturacao_secretaria = models.DateField()
     relatorio_atividade_secretaria = models.FileField(
         upload_to='relatorio_atividades',
         max_length=255,
@@ -74,7 +72,6 @@ class OrgaoGestor(models.Model):
 
 
 class ConselhoCultural(models.Model):
-    data_final_instalacao_conselho = models.DateField()
     ata_regimento_aprovado = models.FileField(
         upload_to='regimentos',
         max_length=255,
@@ -87,7 +84,6 @@ class ConselhoCultural(models.Model):
 
 
 class FundoCultura(models.Model):
-    data_final_instituicao_fundo_cultura = models.DateField()
     cnpj_fundo_cultura = models.CharField(
         max_length=18,
         verbose_name='CNPJ',
@@ -133,7 +129,6 @@ class PlanoCultura(models.Model):
         max_length=1,
         choices=SITUACAO_ENVIO,
         default=0)
-    data_final_tramitacao_projeto_lei = models.DateField(blank=True, null=True)
     ata_votacao_projeto_lei = models.FileField(
         upload_to='ata_votacao_lei',
         max_length=255,
@@ -143,7 +138,6 @@ class PlanoCultura(models.Model):
         max_length=1,
         choices=SITUACAO_ENVIO,
         default=0)
-    data_final_sancao_lei_plano_cultura = models.DateField()
     lei_plano_cultura = models.FileField(
         upload_to='lei_plano_cultura',
         max_length=255,

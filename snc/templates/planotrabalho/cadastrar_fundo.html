@@ -10,17 +10,7 @@
   <h5>
     <strong>2.3 Instituição do Fundo de Cultura</strong>
   </h5>
-  <div class="form-group">
-    <label for={{ form.data_final_instituicao_fundo_cultura.id_for_label }} class="col-sm-12">
-      Data final para instituição do Fundo de Cultura
-    </label>
-    {% if request.user.usuario.plano_trabalho.fundo_cultura %}
-      {% render_field form.data_final_instituicao_fundo_cultura readonly="true" %}
-    {% else %}
-      {% render_field form.data_final_instituicao_fundo_cultura class="date"%}
-    {% endif %}
-    {{ form.data_final_instituicao_fundo_cultura.errors }}
-  </div>
+
   {% if request.user.usuario.plano_trabalho.fundo_cultura %}
   <div class="form-group">
     <label for="{{ form.cnpj_fundo_cultura.id_for_label }}" class="col-sm-12">
@@ -50,7 +40,7 @@
     - Elaborar minuta (proposta) de regulamentação do fundo e de outros mecanismos de financiamento;<br>
     - Encaminhar para discussão a minuta para avaliação e aprovação;<br>
     - Publicar no Diário Oficial a regulamentação do fundo e dos outros mecanismos de financiamento.<br>
-    
+
   </div>
 
 

@@ -11,6 +11,10 @@
   <p>
     {% blocktrans %}Quarto parágrafo da tela inicial do Plano de Trabalho{% endblocktrans %}
   </p>
+
+  <p>
+    <strong>Data final de envio dos componentes:</strong> {{ data_final}}<br>
+  </p>
   <hr />
 
   <ul class="list-group">
@@ -22,14 +26,11 @@
       <p>
         Lei de Criação do Sistema de Cultura
       </p>
-      <strong>Data final para sanção da Lei do Sistema de Cultura:</strong> {{request.user.usuario.plano_trabalho.criacao_sistema.data_final_sancao_lei}}<br>
       {% if request.user.usuario.plano_trabalho.criacao_sistema.situacao_lei_sistema != '2' %}
       {% if request.user.usuario.plano_trabalho.criacao_sistema.situacao_lei_sistema == '1' %}
       <a class="btn btn-warning" style="color:#FFF" href="{% url 'planotrabalho:sistema' %}">Aguarda Análise</a>
-      {% elif datas_preenchidas %}
+      {% elif request.user.usuario.estado_processo == '6' %}
       <a class="btn btn-success" style="color:#FFF" href="{% url 'planotrabalho:sistema' %}">Enviar Comprovação</a>
-      {% elif not request.user.usuario.plano_trabalho.criacao_sistema %}
-      <a class ="btn btn-warning" style="color:#FFF" href="{% url 'planotrabalho:sistema' %}" >Preencher</a>
       {% endif %}
       {% endif %}
       <br />
@@ -44,42 +45,33 @@
         <p>
           a) Órgão Gestor
         </p>
-        <strong>Data final para estruturação da Secretaria de Cultura:</strong> {{request.user.usuario.plano_trabalho.orgao_gestor.data_final_estruturacao_secretaria}} <br>
         {% if request.user.usuario.plano_trabalho.orgao_gestor.situacao_relatorio_secretaria != '2' %}
         {% if request.user.usuario.plano_trabalho.orgao_gestor.situacao_relatorio_secretaria == '1' %}
         <a class="btn btn-warning" style="color:#FFF" href="{% url 'planotrabalho:gestor' %}">Aguarda Análise</a>
-        {% elif datas_preenchidas %}
+        {% elif request.user.usuario.estado_processo == '6' %}
         <a class="btn btn-success" style="color:#FFF" href="{% url 'planotrabalho:gestor' %}" />Enviar Comprovação</a>
-        {% elif not request.user.usuario.plano_trabalho.orgao_gestor %}
-        <a class="btn btn-warning" style="color:#FFF" href="{% url 'planotrabalho:gestor' %}" />Preencher</a>
         {% endif %}
         {% endif %}
         <br />
         <p>
           b) Conselho de Política Cultural
         </p>
-        <strong>Data final para instalação do Conselho de Política Cultural:</strong> {{request.user.usuario.plano_trabalho.conselho_cultural.data_final_instalacao_conselho}} <br>
         {% if request.user.usuario.plano_trabalho.conselho_cultural.situacao_ata != '2' %}
         {% if request.user.usuario.plano_trabalho.conselho_cultural.situacao_ata == '1' %}
         <a class="btn btn-warning" style="color:#FFF" href="{% url 'planotrabalho:conselho' %}">Aguarda Análise</a>
-        {% elif datas_preenchidas %}
+        {% elif request.user.usuario.estado_processo == '6' %}
         <a class="btn btn-success" style="color:#FFF" href="{% url 'planotrabalho:conselho' %}" >Enviar Comprovação</a>
-        {% elif not request.user.usuario.plano_trabalho.conselho_cultural %}
-        <a class="btn btn-warning" style="color:#FFF" href="{% url 'planotrabalho:conselho' %}" >Preencher</a>
         {% endif %}
         {% endif %}
         <br />
         <p>
           c) Fundo de Cultura
         </p>
-        <strong>Data final para instituição do Fundo de Cultura:</strong> {{request.user.usuario.plano_trabalho.fundo_cultura.data_final_instituicao_fundo_cultura}} <br>
         {% if request.user.usuario.plano_trabalho.fundo_cultura.situacao_lei_plano != '2' %}
         {% if request.user.usuario.plano_trabalho.fundo_cultura.situacao_lei_plano == '1' %}
         <a class="btn btn-warning" style="color:#FFF" href="{% url 'planotrabalho:fundo' %}">Aguarda Análise</a>
-        {% elif datas_preenchidas %}
+        {% elif request.user.usuario.estado_processo == '6' %}
         <a class="btn btn-success" style="color:#FFF" href="{% url 'planotrabalho:fundo' %}" >Enviar Comprovação</a>
-        {% elif not request.user.usuario.plano_trabalho.fundo_cultura %}
-        <a class="btn btn-warning" style="color:#FFF" href="{% url 'planotrabalho:fundo' %}" >Preencher</a>
         {% endif %}
         {% endif %}
         <br />
@@ -93,14 +85,11 @@
         <p>
           Plano de Cultura
         </p>
-        <strong>Data final para sanção da Lei do Plano de Cultura:</strong> {{request.user.usuario.plano_trabalho.plano_cultura.data_final_sancao_lei_plano_cultura}} <br>
         {% if request.user.usuario.plano_trabalho.plano_cultura.situacao_lei_plano != '2' %}
         {% if request.user.usuario.plano_trabalho.plano_cultura.situacao_lei_plano == '1' %}
         <a class="btn btn-warning" style="color:#FFF" href="{% url 'planotrabalho:plano' %}">Aguarda Análise</a>
-        {% elif datas_preenchidas %}
+        {% elif request.user.usuario.estado_processo == '6' %}
         <a class="btn btn-success" style="color:#FFF" href="{% url 'planotrabalho:plano' %}" >Enviar Comprovação</a>
-        {% elif not request.user.usuario.plano_trabalho.plano_cultura %}
-        <a class="btn btn-warning" style="color:#FFF" href="{% url 'planotrabalho:plano' %}" >Preencher</a>
         {% endif %}
         {% endif %}
     </li>

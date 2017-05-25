@@ -10,17 +10,6 @@
   <h5>
     <strong>2.2 Instalação do Conselho de Política Cultural</strong>
   </h5>
-  <div class="form-group">
-    <label for={{ form.data_final_instalacao_conselho.id_for_label }} class="col-sm-12">
-      Data final para instalação do Conselho de Política Cultural
-    </label>
-    {% if request.user.usuario.plano_trabalho.conselho_cultural %}
-      {% render_field form.data_final_instalacao_conselho readonly="true" %}
-    {% else %}
-      {% render_field form.data_final_instalacao_conselho class="date"%}
-    {% endif %}
-    {{ form.data_final_instalacao_conselho.errors }}
-  </div>
   {% if request.user.usuario.plano_trabalho.conselho_cultural %}
   <div class="form-group">
     <label for="{{ form.ata_regimento_aprovado.id_for_label }}">

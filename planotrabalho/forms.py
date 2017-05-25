@@ -41,33 +41,12 @@ class CriarSistemaForm(ModelForm):
         self.usuario = kwargs.pop('user')
         super(CriarSistemaForm, self).__init__(*args, **kwargs)
 
-    # def clean_data_final_elaboracao_projeto_lei(self):
-    #     if not self.usuario.data_publicacao_acordo:
-    #         return self.cleaned_data['data_final_elaboracao_projeto_lei']
-    #     if not self.cleaned_data['data_final_elaboracao_projeto_lei']:
-    #         return self.cleaned_data['data_final_elaboracao_projeto_lei']
-    #
-    #     limite = add_anos(self.usuario.data_publicacao_acordo, self.usuario.prazo)
-    #
-    #     if self.cleaned_data['data_final_elaboracao_projeto_lei'] > limite:
-    #         raise forms.ValidationError('A data deve ser anterior a ' +
-    #                                     limite.strftime("%d/%m/%Y"))
-    #
-    #     return self.cleaned_data['data_final_elaboracao_projeto_lei']
-
-    def clean_data_final_sancao_lei(self):
-        if not self.usuario.data_publicacao_acordo:
-            return self.cleaned_data['data_final_sancao_lei']
-        if not self.cleaned_data['data_final_sancao_lei']:
-            return self.cleaned_data['data_final_sancao_lei']
-
+    def clean(self):
         limite = add_anos(self.usuario.data_publicacao_acordo, self.usuario.prazo)
-
-        if self.cleaned_data['data_final_sancao_lei'] > (limite):
-            raise forms.ValidationError('A data deve ser anterior a ' +
-                                        limite.strftime("%d/%m/%Y"))
-
-        return self.cleaned_data['data_final_sancao_lei']
+        hoje = datetime.date.today()
+        if hoje > limite:
+            self.add_error('lei_sistema_cultura', 'Não foi possível salvar. Você ultrapassou a data limite de envio: ' +
+                limite.strftime("%d/%m/%Y"))
 
     def save(self, commit=True, *args, **kwargs):
         sistema = super(CriarSistemaForm, self).save(commit=False)
@@ -94,19 +73,12 @@ class OrgaoGestorForm(ModelForm):
         self.usuario = kwargs.pop('user')
         super(OrgaoGestorForm, self).__init__(*args, **kwargs)
 
-    def clean_data_final_estruturacao_secretaria(self):
-        if not self.usuario.data_publicacao_acordo:
-            return self.cleaned_data['data_final_estruturacao_secretaria']
-        if not self.cleaned_data['data_final_estruturacao_secretaria']:
-            return self.cleaned_data['data_final_estruturacao_secretaria']
-
+    def clean(self):
         limite = add_anos(self.usuario.data_publicacao_acordo, self.usuario.prazo)
-
-        if self.cleaned_data['data_final_estruturacao_secretaria'] > limite:
-            raise forms.ValidationError('A data deve ser anterior a ' +
-                                        limite.strftime("%d/%m/%Y"))
-
-        return self.cleaned_data['data_final_estruturacao_secretaria']
+        hoje = datetime.date.today()
+        if hoje > limite:
+            self.add_error('relatorio_atividade_secretaria', '''Não foi possível salvar. Você ultrapassou a
+                data limite de envio: ''' + limite.strftime("%d/%m/%Y"))
 
     def save(self, commit=True, *args, **kwargs):
         orgao = super(OrgaoGestorForm, self).save(commit=False)
@@ -129,19 +101,12 @@ class ConselhoCulturalForm(ModelForm):
         self.usuario = kwargs.pop('user')
         super(ConselhoCulturalForm, self).__init__(*args, **kwargs)
 
-    def clean_data_final_instalacao_conselho(self):
-        if not self.usuario.data_publicacao_acordo:
-            return self.cleaned_data['data_final_instalacao_conselho']
-        if not self.cleaned_data['data_final_instalacao_conselho']:
-            return self.cleaned_data['data_final_instalacao_conselho']
-
+    def clean(self):
         limite = add_anos(self.usuario.data_publicacao_acordo, self.usuario.prazo)
-
-        if self.cleaned_data['data_final_instalacao_conselho'] > limite:
-            raise forms.ValidationError('A data deve ser anterior a ' +
-                                        limite.strftime("%d/%m/%Y"))
-
-        return self.cleaned_data['data_final_instalacao_conselho']
+        hoje = datetime.date.today()
+        if hoje > limite:
+            self.add_error('ata_regimento_aprovado', '''Não foi possível salvar.
+                Você ultrapassou a data limite de envio: ''' + limite.strftime("%d/%m/%Y"))
 
     def save(self, commit=True, *args, **kwargs):
         conselho = super(ConselhoCulturalForm, self).save(commit=False)
@@ -180,19 +145,12 @@ class FundoCulturaForm(ModelForm):
         self.usuario = kwargs.pop('user')
         super(FundoCulturaForm, self).__init__(*args, **kwargs)
 
-    def clean_data_final_instituicao_fundo_cultura(self):
-        if not self.usuario.data_publicacao_acordo:
-            return self.cleaned_data['data_final_instituicao_fundo_cultura']
-        if not self.cleaned_data['data_final_instituicao_fundo_cultura']:
-            return self.cleaned_data['data_final_instituicao_fundo_cultura']
-
+    def clean(self):
         limite = add_anos(self.usuario.data_publicacao_acordo, self.usuario.prazo)
-
-        if self.cleaned_data['data_final_instituicao_fundo_cultura'] > limite:
-            raise forms.ValidationError('A data deve ser anterior a ' +
-                                        limite.strftime("%d/%m/%Y"))
-
-        return self.cleaned_data['data_final_instituicao_fundo_cultura']
+        hoje = datetime.date.today()
+        if hoje > limite:
+            self.add_error('lei_fundo_cultura', '''Não foi possível salvar.
+            Você ultrapassou a data limite de envio: ''' + limite.strftime("%d/%m/%Y"))
 
     def clean_cnpj_fundo_cultura(self):
         cnpj = self.cleaned_data['cnpj_fundo_cultura']
@@ -233,19 +191,12 @@ class PlanoCulturaForm(ModelForm):
         self.usuario = kwargs.pop('user')
         super(PlanoCulturaForm, self).__init__(*args, **kwargs)
 
-    def clean_data_final_sancao_lei_plano_cultura(self):
-        if not self.usuario.data_publicacao_acordo:
-            return self.cleaned_data['data_final_sancao_lei_plano_cultura']
-        if not self.cleaned_data['data_final_sancao_lei_plano_cultura']:
-            return self.cleaned_data['data_final_sancao_lei_plano_cultura']
-
+    def clean(self):
         limite = add_anos(self.usuario.data_publicacao_acordo, self.usuario.prazo)
-
-        if self.cleaned_data['data_final_sancao_lei_plano_cultura'] > limite:
-            raise forms.ValidationError('A data deve ser anterior a ' +
-                                        limite.strftime("%d/%m/%Y"))
-
-        return self.cleaned_data['data_final_sancao_lei_plano_cultura']
+        hoje = datetime.date.today()
+        if hoje > limite:
+            self.add_error('lei_plano_cultura', '''Não foi possível salvar.
+             Você ultrapassou a data limite de envio: ''' + limite.strftime("%d/%m/%Y"))
 
     def save(self, commit=True, *args, **kwargs):
         plano = super(PlanoCulturaForm, self).save(commit=False)
