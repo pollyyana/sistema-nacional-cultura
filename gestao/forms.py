@@ -314,38 +314,3 @@ class AlterarConselhoForm(ModelForm):
     class Meta:
         model = ConselhoCultural
         fields = ('ata_regimento_aprovado',)
-
-
-class ProrrogacaoFundoForm(ModelForm):
-
-    class Meta:
-        model = FundoCultura
-        fields = '__all__'
-
-
-class ProrrogacaoConselhoForm(ModelForm):
-
-    class Meta:
-        model = ConselhoCultural
-        fields = '__all__'
-
-
-class ProrrogacaoSistemaForm(ModelForm):
-
-    class Meta:
-        model = CriacaoSistema
-        fields = '__all__'
-
-
-class ProrrogacaoOrgaoForm(ModelForm):
-
-    class Meta:
-        model = OrgaoGestor
-        fields = '__all__'
-
-
-class ProrrogacaoPlanoForm(ModelForm):
-
-    class Meta:
-        model = PlanoCultura
-        fields = '__all__'
