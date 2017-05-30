@@ -23,7 +23,6 @@
               <tr>
                 <th>Município/Estado</th>
                 <th>CNPJ</th>
-                <th>Data</th>
                 <th>Anexo</th>
                 <th></th>
                 <th></th>
@@ -38,7 +37,6 @@
                   <td>{{ usuario.municipio.estado.nome_uf }}</td>
                 {% endif %}
                   <td>{{ usuario.municipio.cnpj_prefeitura }}</td>
-                  <td>{{ usuario.plano_trabalho.conselho_cultural.data_final_instalacao_conselho }}</td>
                   <td>
                     <a href="{{ usuario.plano_trabalho.conselho_cultural.ata_regimento_aprovado.url }}">Download</a>
                   </td>
