@@ -11,10 +11,11 @@
   <p>
     {% blocktrans %}Quarto parágrafo da tela inicial do Plano de Trabalho{% endblocktrans %}
   </p>
-
+  {% request.user.usuario.estado_processo == '6' %}
   <p>
     <strong>Data final de envio dos componentes:</strong> {{ data_final}}<br>
   </p>
+  {% endif %}
   <hr />
 
   <ul class="list-group">
