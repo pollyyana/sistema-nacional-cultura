@@ -67,6 +67,11 @@ class AlterarSituacao(ModelForm):
     localizacao = forms.CharField(max_length="10", required=False)
     num_processo = forms.CharField(max_length="50", required=False)
 
+    def clean(self):
+        if self.cleaned_data['estado_processo'] == '6':
+            if not self.cleaned_data['data_publicacao_acordo']:
+                self.add_error('estado_processo', 'Este campo é obrigatório')
+
     def save(self, commit=True):
         usuario = super(AlterarSituacao, self).save(commit=False)
         historico = Historico()
@@ -179,7 +184,8 @@ class AlterarCadastradorForm(ChainedChoicesForm):
                 raise forms.ValidationError('Cadastrador já se encontra vinculado ao municípío selecionado.')
             if user_antigo.estado_processo == '6':
                 if not user_antigo.data_publicacao_acordo or not self.cleaned_data.get('data_publicacao_acordo', None):
-                    errormsg = 'Não foi encontrada a data de publicação do acordo deste município, por favor informe a data'
+                    errormsg = '''Não foi encontrada a data de publicação
+                        do acordo deste município, por favor informe a data'''
                     municipio = Municipio.objects.get(cidade=municipio, estado__sigla=uf)
                     if municipio.numero_processo:
                         errormsg += '. Ela pode ser encontrada no processo de número: ' + municipio.numero_processo
