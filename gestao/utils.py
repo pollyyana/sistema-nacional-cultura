@@ -33,5 +33,15 @@ def enviar_email_alteracao_situacao(usuario, historico=None):
         message_txt,
         'naoresponda@cultura.gov.br',
         [usuario.user.email],),
-        kwargs = {'fail_silently': 'False', 'html_message': message_html}
+        kwargs={'fail_silently': 'False', 'html_message': message_html}
     ).start()
+
+
+def enviar_email_aprovacao_plano(user, message_txt, message_html):
+    Thread(target=send_mail, args=(
+        'Sistema Nacional de Cultura - Aprovação do Plano de Trabalho',
+        message_txt,
+        'naoresponda@cultura.gov.br',
+        [user.email],),
+        kwargs={'fail_silently': 'False', 'html_message': message_html}
+        ).start()

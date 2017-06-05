@@ -6,8 +6,9 @@ from django.core.urlresolvers import reverse_lazy
 from django.views.generic import ListView, DetailView
 from django.views.generic.edit import FormView, UpdateView
 
-from adesao.models import Usuario, Cidade, Municipio
+from adesao.models import Usuario, Cidade, Municipio, Historico
 from planotrabalho.models import CriacaoSistema, PlanoCultura, FundoCultura, OrgaoGestor, ConselhoCultural
+from gestao.utils import enviar_email_aprovacao_plano
 
 from .forms import AlterarSituacao, DiligenciaForm, AlterarDocumentosEnteFederadoForm
 from .forms import AlterarCadastradorForm, AlterarUsuarioForm, AlterarOrgaoForm
@@ -59,7 +60,25 @@ def alterar_situacao(request, id):
             instance=Usuario.objects.get(id=id))
         if form.is_valid():
             form.save()
-    return redirect('gestao:acompanhar_adesao')
+
+            # try:
+            #     usuario = Usuario.objects.get(
+            #         id=id, plano_trabalho__criacao_sistema__situacao_lei_sistema_id='2',
+            #         plano_trabalho__conselho_cultural__situacao_ata_id='2',
+            #         plano_trabalho__fundo_cultura__situacao_lei_plano_id='2',
+            #         plano_trabalho__orgao_gestor__situacao_relatorio_secretaria_id='2',
+            #         plano_trabalho__plano_cultura__situacao_lei_plano_id='2')
+            #     usuario = User.objects.get(id=usuario.user_id)
+            #
+            #     message_txt = render('emails/aprovacao_plano.txt')
+            #     message_html = render('emails/aprovacao_plano.email')
+            #     enviar_email_aprovacao_plano(usuario, message_txt, message_html)
+            #     print('enviar email')
+            # except Exception as e:
+            #     print(e)
+            #     return redirect('gestao:detalhar', pk=id)
+
+    return redirect('gestao:detalhar', pk=id)
 
 
 def ajax_cadastrador_cpf(request):
@@ -128,7 +147,7 @@ class AcompanharAdesao(ListView):
         situacao = self.request.GET.get('situacao', None)
         ente_federado = self.request.GET.get('municipio', None)
 
-        if situacao in ('1', '2', '3', '4', '5'):
+        if situacao in ('1', '2', '3', '4', '5', '6'):
             return Municipio.objects.filter(usuario__estado_processo=situacao)
 
         if ente_federado:
@@ -164,7 +183,7 @@ def concluir_etapa(request, etapa, st, id):
     usuario = Usuario.objects.get(id=id)
     setattr(getattr(usuario.plano_trabalho, etapa), st, 2)
     getattr(usuario.plano_trabalho, etapa).save()
-    return redirect('gestao:acompanhar_adesao')
+    return redirect('gestao:detalhar', pk=id)
 
 
 class AcompanharSistema(ListView):
@@ -278,6 +297,28 @@ class AcompanharPlano(ListView):
 class DetalharUsuario(DetailView):
     model = Usuario
     template_name = 'gestao/detalhe_municipio.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(DetalharUsuario, self).get_context_data(**kwargs)
+        situacao = context['usuario'].estado_processo
+
+        if situacao == '3':
+            historico = Historico.objects.filter(usuario_id=context['usuario'].id)
+            historico = historico[0]
+            context['dado_situacao'] = historico.descricao
+
+        elif situacao == '2':
+            municipio = Municipio.objects.get(usuario__id=context['usuario'].id)
+            context['dado_situacao'] = municipio.localizacao
+
+        elif situacao == '4':
+            municipio = Municipio.objects.get(usuario__id=context['usuario'].id)
+            context['dado_situacao'] = municipio.numero_processo
+
+        elif situacao == '6':
+            context['dado_situacao'] = context['usuario'].data_publicacao_acordo.strftime('%d/%m/%Y')
+
+        return context
 
 
 class ListarUsuarios(ListView):

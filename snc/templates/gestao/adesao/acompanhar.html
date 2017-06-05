@@ -21,14 +21,14 @@
           <table class="table table-striped table-bordered table-hover dt-responsive" id="dataTables-example">
             <thead>
               <tr>
-                <th>Detalhar</th>
+                <th>Análise</th>
                 <th>Município/Estado</th>
                 <th>Prefeito/Governador</th>
                 <th>RG</th>
                 <th>CPF</th>
                 <th>CNPJ</th>
-                <th>Situação</th>
-                <th></th>
+                <th>Situação <a data-toggle="modal" data-target="#situacoes" ><i class="fa fa-search" title="Filtrar Por Situação"></i><a/></th>
+                <!-- <th></th> -->
               </tr>
             </thead>
             <tbody>
@@ -66,30 +66,38 @@
                   <form name="form" action="{% url 'gestao:alterar_situacao' municipio.usuario.id %}" method="post">
                   <td>
                     {% csrf_token %}
-                      <select id="select_situacao_{{forloop.counter0}}" name="estado_processo" class="form-control">
+                      <!-- <select id="select_situacao_{{forloop.counter0}}" name="estado_processo" class="form-control">
                         <option value="1" {% if municipio.usuario.estado_processo == '1' %}selected{% endif %}>Aguardando envio da documentação</option>
                         <option value="2" {% if municipio.usuario.estado_processo == '2' %}selected{% endif %}>Documentação Recebida - Aguarda Análise</option>
                         <option value="3" {% if municipio.usuario.estado_processo == '3' %}selected{% endif %}>Diligência Documental</option>
                         <option value="4" {% if municipio.usuario.estado_processo == '4' %}selected{% endif %}>Encaminhado para assinatura do Secretário SAI</option>
                         <option value="5" {% if municipio.usuario.estado_processo == '5' %}selected{% endif %}>Aguarda Publicação no DOU</option>
                         <option value="6" {% if municipio.usuario.estado_processo == '6' %}selected{% endif %}>Publicado no DOU</option>
-                      </select>
+                      </select> -->
+                        {% if municipio.usuario.estado_processo == '1' %}Aguardando envio da documentação{% endif %}
+                        {% if municipio.usuario.estado_processo == '2' %}Documentação Recebida - Aguarda Análise{% endif %}
+                        {% if municipio.usuario.estado_processo == '3' %}Diligência Documental{% endif %}
+                        {% if municipio.usuario.estado_processo == '4' %}Encaminhado para assinatura do Secretário SAI{% endif %}
+                        {% if municipio.usuario.estado_processo == '5' %}Aguarda Publicação no DOU{% endif %}
+                        {% if municipio.usuario.estado_processo == '6' %}Publicado no DOU{% endif %}
+
                       <textarea id="justificativa_{{forloop.counter0}}" name="justificativa" class="form-control hide" placeholder="Justificativa" rows="4" cols="20"></textarea>
                       <input type="text" id="data_acordo_{{forloop.counter0}}" name="data_publicacao_acordo" class="form-control date hide" placeholder="Data de Publicação"></input>
                       <input type="text" id="localizacao_{{forloop.counter0}}" name="localizacao" class="form-control hide", placeholder="Localização"></input>
                       <input type="text" id="num_processo_{{forloop.counter0}}" name="num_processo" class="form-control hide" placeholder="Número do Processo"></input>
                     </td>
-                    <td>
+                    <!-- <td>
                       <button type="submit" class="btn btn-primary" title="Alterar Situação" ><i class="fa fa-check"></i></button>
-                    </td>
+                    </td> -->
                   </form>
                   {% else %}
-                  <td>Município sem cadastrador</td>
-                  {% if municipio.cidade %}
-                  <td><a href="{% url 'gestao:alterar_cadastrador' %}" class="btn btn-primary" title="Alterar Cadastrador"><i class="fa fa-wrench" /></button></td>
-                  {% else %}
-                  <td><a href="{% url 'gestao:alterar_cadastrador_estado' %}" class="btn btn-primary" title="Alterar Cadastrador"><i class="fa fa-wrench" /></button></td>
-                  {% endif %}
+                  <td>Município sem cadastrador
+                   {% if municipio.cidade %}
+                   <a href="{% url 'gestao:alterar_cadastrador' %}" title="Alterar Cadastrador"><i class="fa fa-wrench" />
+                   {% else %}
+                   <a href="{% url 'gestao:alterar_cadastrador_estado' %}" title="Alterar Cadastrador"><i class="fa fa-wrench" />
+                   {% endif %}</td>
+
                   {% endif %}
                 </tr>
               {% endfor %}
@@ -123,10 +131,78 @@
   </div>
   <!-- /.col-lg-12 -->
 </div>
+
+
+
+<div class="form-group">
+  <div class="col-sm-offset-3 col-sm-11">
+    <!-- <a class="btn btn-default" href="#" >Cancelar</a>
+    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModal">Salvar</button> -->
+
+    <div class="modal fade" id="situacoes" role="dialog">
+        <div class="modal-dialog">
+
+          <!-- Modal content-->
+          <div class="modal-content">
+            <div class="modal-header">
+              <button type="button" class="close" data-dismiss="modal">&times;</button>
+              <h4 class="modal-title ">Escolha uma situação para filtrar</h4>
+            </div>
+            <div class="modal-body">
+                <div class="list-group row">
+                   <a href="/gestao/?situacao=1" class="list-group-item">
+                       Aguardando envio da documentação
+                    </a>
+                   <a href="/gestao/?situacao=2" class="list-group-item">
+                       Documentação Recebida - Aguarda Análise
+                    </a>
+                   <a href="/gestao/?situacao=3" class="list-group-item">
+                       Diligência Documental
+                    </a>
+                   <a href="/gestao/?situacao=4" class="list-group-item">
+                       Encaminhado para assinatura do Secretário SAI
+                    </a>
+                   <a href="/gestao/?situacao=5" class="list-group-item">
+                       Aguarda Publicação no DOU
+                    </a>
+                   <a href="/gestao/?situacao=6" class="list-group-item">
+                       Publicado no DOU
+                    </a>
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <form action="/gestao">
+                    <input type="submit" class="btn btn-default" value="Limpar" />
+                </form>
+            </div>
+
+          </div>
+
+        </div>
+      </div>
+
+  </div>
+</div>
+
+
+
+
+
+
 {% endblock content %}
 {% block js%}
 <script type="text/javascript">
   $(document).ready(function(){
+
+
+
+
+
+
+
+
+
     $("[id^='select_situacao']").change(function(e){
       index = $(this).parent().parent().index();
       if($(this).val()==="2"){

@@ -1,141 +1,425 @@
 {% extends "gestao/base_gestao.html" %} {% load gestao_tags %} {% block content %}
-<div class="panel panel-info">
-  <div class="panel-heading">
-    Dados do Ente Federado
-  </div>
-  <div class="panel-body">
-    <p><strong>Localização: </strong></p>
-    <p><strong>Município:</strong> {{ object.municipio.cidade }}-{{ object.municipio.estado }}</p>
-    <p><strong>CNPJ:</strong> {{ object.municipio.cnpj_prefeitura }}</p>
-    <p><strong>Prefeito:</strong> {{ object.municipio.nome_prefeito }}</p>
-    <p><strong>CPF:</strong> {{ object.municipio.cpf_prefeito }}</p>
-    <p><strong>RG:</strong> {{ object.municipio.rg_prefeito }}</p>
-    <p><strong>E-mail:</strong> {{ object.municipio.email_institucional_prefeito }}</p>
-    <p><strong>Telefone:</strong> {{ object.municipio.telefone_um }}</p>
-    <p><strong>Endereço:</strong> {{ object.municipio.endereco }}</p>
-    <p><strong>Complemento:</strong> {{ object.municipio.complemento }}</p>
-    <p><strong>Bairro:</strong> {{ object.municipio.bairro }}</p>
-    <p></p>
-  </div>
+<div class="row">
+    <div class="col-sm-12 col-md-6">
+        <div class="panel panel-info">
+          <div class="panel-heading">
+            Dados do Ente Federado
+          </div>
+          <div class="panel-body">
+              <div class="row">
+                  <div class="col-md-7">
+                    <p><strong>Localização: </strong></p>
+                    <p><strong>Município:</strong> {{ object.municipio.cidade }}-{{ object.municipio.estado }}</p>
+                    <p><strong>CNPJ:</strong> {{ object.municipio.cnpj_prefeitura }}</p>
+                    <p><strong>Prefeito:</strong>
+                        {% if object.municipio.termo_posse_prefeito %}
+                        <a href="{{ object.municipio.termo_posse_prefeito.url }}">{{ municipio.nome_prefeito }}</a>
+                        {% else %}
+                        {{ object.municipio.nome_prefeito }}
+                        {% endif %}
+                    </p>
+                    <p><strong>CPF:</strong>
+                        {% if object.municipio.cpf_copia_prefeito %}
+                        <a href="{{ object.municipio.cpf_copia_prefeito.url }}">{{ object.municipio.cpf_prefeito }}</a>
+                        {% else %}
+                        {{ object.municipio.cpf_prefeito }}
+                        {% endif %}
+                    </p>
+                    <p><strong>RG:</strong>
+                         {% if object.municipio.rg_copia_prefeito %}
+                         <a href="{{ object.municipio.rg_copia_prefeito.url }}">{{ object.municipio.rg_prefeito }}</a>
+                         {% else %}
+                         {{ object.municipio.rg_prefeito }}
+                         {% endif %}
+                    </p>
+                    <p><strong>E-mail:</strong> {{ object.municipio.email_institucional_prefeito }}</p>
+
+                </div>
+
+                <div class="col-md-5">
+                    <p><strong>Telefone:</strong> {{ object.municipio.telefone_um }}</p>
+                    <p><strong>Endereço:</strong> {{ object.municipio.endereco }}</p>
+                    <p><strong>Complemento:</strong> {{ object.municipio.complemento }}</p>
+                    <p><strong>Bairro:</strong> {{ object.municipio.bairro }}</p>
+                    {% if object.data_publicacao_acordo %}<p><strong>Publicação no DOU:</strong> {{object.data_publicacao_acordo|date:'d/m/Y'}} </p>  {% endif %}
+
+                </div>
+            </div>
+          </div>
+        </div>
+    </div>
+
+    <div class="col-sm-12 col-md-6">
+       <div class="panel panel-info">
+          <div class="panel-heading">
+            Dados do Interlocutor
+          </div>
+          <div class="panel-body">
+            <p><strong>Nome:</strong> {{ object.secretario.nome_secretario }}</p>
+            <p><strong>CPF:</strong> {{ object.secretario.cpf_secretario }}</p>
+            <p><strong>RG:</strong> {{ object.secretario.rg_secretario }}</p>
+            <p><strong>Cargo:</strong> {{ object.secretario.cargo_secretario }}</p>
+            <p><strong>Instituição:</strong> {{ object.secretario.instituicao_secretario }}</p>
+            <p><strong>E-mail:</strong> {{ object.secretario.email_institucional_secretario }}</p>
+            <p><strong>Telefone:</strong> {{ object.secretario.telefone_um }}</p>
+          </div>
+        </div>
+    </div>
 </div>
 
-<div class="panel panel-info">
-  <div class="panel-heading">
-    Dados do Interlocutor
-  </div>
-  <div class="panel-body">
-    <p><strong>Nome:</strong> {{ object.secretario.nome_secretario }}</p>
-    <p><strong>CPF:</strong> {{ object.secretario.cpf_secretario }}</p>
-    <p><strong>RG:</strong> {{ object.secretario.rg_secretario }}</p>
-    <p><strong>Cargo:</strong> {{ object.secretario.cargo_secretario }}</p>
-    <p><strong>Instituição:</strong> {{ object.secretario.instituicao_secretario }}</p>
-    <p><strong>E-mail:</strong> {{ object.secretario.email_institucional_secretario }}</p>
-    <p><strong>Telefone:</strong> {{ object.secretario.telefone_um }}</p>
-  </div>
-</div>
+<div class="row">
+    <div class="col-sm-12 col-md-6">
+        <div class="panel panel-info">
+          <div class="panel-heading">
+            Dados do Responsável Indicado
+          </div>
+          <div class="panel-body">
+              <div class="row">
+                  <div class="col-md-6">
+                    <p><strong>Nome:</strong> {{ object.responsavel.nome_responsavel }}</p>
+                    <p><strong>CPF:</strong> {{ object.responsavel.cpf_responsavel }}</p>
+                    <p><strong>RG:</strong> {{ object.responsavel.rg_responsavel }}</p>
+                    <p><strong>Cargo:</strong> {{ object.responsavel.cargo_responsavel }}</p>
 
-<div class="panel panel-info">
-  <div class="panel-heading">
-    Dados do Responsável Indicado
-  </div>
-  <div class="panel-body">
-    <p><strong>Nome:</strong> {{ object.responsavel.nome_responsavel }}</p>
-    <p><strong>CPF:</strong> {{ object.responsavel.cpf_responsavel }}</p>
-    <p><strong>RG:</strong> {{ object.responsavel.rg_responsavel }}</p>
-    <p><strong>Cargo:</strong> {{ object.responsavel.cargo_responsavel }}</p>
-    <p><strong>Instituição:</strong> {{ object.responsavel.instituicao_responsavel }}</p>
-    <p><strong>E-mail:</strong> {{ object.responsavel.email_institucional_responsavel }}</p>
-    <p><strong>Telefone:</strong> {{ object.responsavel.telefone_um }}</p>
-  </div>
-</div>
+                  </div>
+                  <div class="col-md-6">
 
-<div class="panel panel-info">
-  <div class="panel-heading">
-    Dados do Cadastrador
-  </div>
-  <div class="panel-body">
-    <p><strong>CPF:</strong> {{ object.user.username }}</p>
-    <p><strong>Nome:</strong> {{ object.nome_usuario }}</p>
-    <p><strong>E-mail:</strong> {{ object.user.email }}</p>
-    <p><strong>Data de cadastro:</strong> {{ object.data_cadastro }}</p>
-  </div>
+                    <p><strong>Instituição:</strong> {{ object.responsavel.instituicao_responsavel }}</p>
+                    <p><strong>E-mail:</strong> {{ object.responsavel.email_institucional_responsavel }}</p>
+                    <p><strong>Telefone:</strong> {{ object.responsavel.telefone_um }}</p>
+                  </div>
+
+              </div>
+          </div>
+        </div>
+    </div>
+
+    <div class="col-sm-12 col-md-6">
+        <div class="panel panel-info">
+          <div class="panel-heading">
+            Dados do Cadastrador
+          </div>
+          <div class="panel-body">
+            <p><strong>CPF:</strong> {{ object.user.username }}</p>
+            <p><strong>Nome:</strong> {{ object.nome_usuario }}</p>
+            <p><strong>E-mail:</strong> {{ object.user.email }}</p>
+            <p><strong>Data de cadastro:</strong> {{ object.data_cadastro }}</p>
+          </div>
+        </div>
+    </div>
 </div>
 
 <div class="panel panel-info">
   <div class="panel-heading">
     Dados do Plano de Trabalho
   </div>
+
   <div class="panel-body">
-    <div class="list-group">
-      <p class="list-group-item">
-        Criação do Sistema
-      </p>
-      {% if object.plano_trabalho.criacao_sistema.minuta_projeto_lei %}
-      <a href="{{ object.plano_trabalho.criacao_sistema.minuta_projeto_lei.url }}" class="list-group-item">
-        Minuta
-      </a>
-      {% endif %}
-      {% if object.plano_trabalho.criacao_sistema.lei_sistema_cultura %}
-      <a href="{{ object.plano_trabalho.criacao_sistema.lei_sistema_cultura.url }}" class="list-group-item">
-        Lei
-      </a>
-      {% endif %}
+    {% if object.plano_trabalho.criacao_sistema.lei_sistema_cultura %}
+    <div class="list-group row">
+        <div class="col-md-12">
+            <div  class="list-group-item col-xs-8">
+                Criação do Sistema - Lei
+            </div>
+
+            <div class="list-group-item col-xs-2 text-center">
+                <a href="{{ object.plano_trabalho.criacao_sistema.lei_sistema_cultura.url }}">Download</a>
+            </div>
+
+            {% if object.plano_trabalho.criacao_sistema.situacao_lei_sistema_id == 1 %}
+            <div class="list-group-item col-xs-1 text-center">
+                <a href="{% url 'gestao:diligencia_documental' 'criacao_sistema' 'situacao_lei_sistema_id' usuario.id %}"><i class="fa fa-thumbs-down"></i></a>
+            </div>
+            <div class="list-group-item col-xs-1 text-center">
+                <a href="{% url 'gestao:concluir_etapa' 'criacao_sistema' 'situacao_lei_sistema_id' usuario.id %}"><i class="fa fa-thumbs-up"></i></a>
+            </div>
+            {% else %}
+            <div class="list-group-item col-xs-2 text-center">
+                <b>{{ object.plano_trabalho.criacao_sistema.situacao_lei_sistema.descricao }}</b>
+            </div>
+            {% endif %}
+        </div>
     </div>
-    <div class="list-group">
-      <p class="list-group-item">
-        Órgão Gestor
-      </p>
-      {% if object.plano_trabalho.orgao_gestor.relatorio_atividade_secretaria %}
-      <a href="{{ object.plano_trabalho.orgao_gestor.relatorio_atividade_secretaria.url }}" class="list-group-item">
-        Relatório
-      </a>
-      {% endif %}
+    {% endif %}
+
+    {% if object.plano_trabalho.orgao_gestor.relatorio_atividade_secretaria %}
+    <div class="list-group row">
+      <div class="col-md-12">
+          <div  class="list-group-item col-xs-8">
+            Órgão Gestor - Ato normativo
+          </div>
+          <div class="list-group-item col-xs-2 text-center">
+              <a href="{{ object.plano_trabalho.orgao_gestor.relatorio_atividade_secretaria.url }}">Download</a>
+          </div>
+          {% if object.plano_trabalho.orgao_gestor.situacao_relatorio_secretaria.id == 1 %}
+          <div class="list-group-item col-xs-1 text-center">
+              <a href="{% url 'gestao:diligencia_documental' 'orgao_gestor' 'situacao_relatorio_secretaria_id' usuario.id %}"><i class="fa fa-thumbs-down"></i></a>
+          </div>
+
+          <div class="list-group-item col-xs-1 text-center">
+              <a href="{% url 'gestao:concluir_etapa' 'orgao_gestor' 'situacao_relatorio_secretaria_id' usuario.id %}"><i class="fa fa-thumbs-up"></i></a>
+          </div>
+          {% else %}
+          <div class="list-group-item col-xs-2 text-center">
+              <b>{{ object.plano_trabalho.orgao_gestor.situacao_relatorio_secretaria.descricao }}</b>
+          </div>
+          {% endif %}
+      </div>
     </div>
-    <div class="list-group">
-      <p href="#" class="list-group-item">
-        Conselho Cultural
-      </p>
-      {% if object.plano_trabalho.conselho_cultural.ata_regimento_aprovado %}
-      <a href="{{ object.plano_trabalho.conselho_cultural.ata_regimento_aprovado.url }}" class="list-group-item">
-        Ata
-      </a>
-      {% endif %}
+    {% endif %}
+
+    {% if object.plano_trabalho.conselho_cultural.ata_regimento_aprovado %}
+    <div class="list-group row">
+      <div class="col-md-12">
+          <div  class="list-group-item col-xs-8">
+            Conselho Cultural - Ata
+          </div>
+
+          <div class="list-group-item col-xs-2 text-center">
+              <a href="{{ object.plano_trabalho.conselho_cultural.ata_regimento_aprovado.url }}">Download</a>
+          </div>
+
+          {% if object.plano_trabalho.conselho_cultural.situacao_ata.id == 1 %}
+          <div class="list-group-item col-xs-1 text-center">
+              <a  href="{% url 'gestao:diligencia_documental' 'conselho_cultural' 'situacao_ata_id' usuario.id %}"><i class="fa fa-thumbs-down"></i></a>
+          </div>
+
+          <div class="list-group-item col-xs-1 text-center">
+              <a href="{% url 'gestao:concluir_etapa' 'conselho_cultural' 'situacao_ata_id' usuario.id %}"><i class="fa fa-thumbs-up"></i></a>
+          </div>
+          {% else %}
+          <div class="list-group-item col-xs-2 text-center">
+              <b>{{ object.plano_trabalho.conselho_cultural.situacao_ata.descricao }}</b>
+          </div>
+          {% endif %}
+      </div>
     </div>
-    <div class="list-group">
-      <p class="list-group-item">
-        Fundo de Cultura - CNPJ: {{ object.plano_trabalho.fundo_cultura.cnpj_fundo_cultura|default_if_none:"" }}
-      </p>
-      {% if object.plano_trabalho.fundo_cultura.lei_fundo_cultura %}
-      <a href="{{ object.plano_trabalho.fundo_cultura.lei_fundo_cultura.url }}" class="list-group-item">
-        Lei
-      </a>
-      {% endif %}
+    {% endif %}
+
+    {% if object.plano_trabalho.fundo_cultura.lei_fundo_cultura %}
+    <div class="list-group row">
+       <div class="col-md-12">
+          <div  class="list-group-item col-xs-8">
+            Fundo de Cultura - Lei {% if object.plano_trabalho.fundo_cultura.cnpj_fundo_cultura %} (CNPJ: {{object.plano_trabalho.fundo_cultura.cnpj_fundo_cultura}}) {% endif %}
+          </div>
+
+          <div class="list-group-item col-xs-2 text-center">
+              <a href="{{ object.plano_trabalho.fundo_cultura.lei_fundo_cultura.url }}">Download</a>
+          </div>
+
+          {% if object.plano_trabalho.fundo_cultura.situacao_lei_plano.id == 1 %}
+
+          <div class="list-group-item col-xs-1 text-center">
+              <a href="{% url 'gestao:diligencia_documental' 'fundo_cultura' 'situacao_lei_plano_id' usuario.id %}"><i class="fa fa-thumbs-down"></i></a>
+          </div>
+
+          <div class="list-group-item col-xs-1 text-center">
+              <a href="{% url 'gestao:concluir_etapa' 'fundo_cultura' 'situacao_lei_plano_id' usuario.id %}"><i class="fa fa-thumbs-up"></i></a>
+          </div>
+          {% else %}
+          <div class="list-group-item col-xs-2 text-center">
+              <b>{{ object.plano_trabalho.fundo_cultura.situacao_lei_plano.descricao }}</b>
+          </div>
+          {% endif %}
+       </div>
     </div>
-    <div class="list-group">
-      <p class="list-group-item">
-        Plano de Cultura
-      </p>
-      {% if object.plano_trabalho.plano_cultura.relatorio_diretrizes_aprovadas %}
-      <a href="{{ object.plano_trabalho.plano_cultura.relatorio_diretrizes_aprovadas.url }}" class="list-group-item">
-        Relatório
-      </a>
-      {% endif %}
-      {% if object.plano_trabalho.plano_cultura.minuta_preparada %}
-      <a href="{{ object.plano_trabalho.plano_cultura.minuta_preparada.url }}" class="list-group-item">
-        Minuta
-      </a>
-      {% endif %}
-      {% if object.plano_trabalho.plano_cultura.ata_reuniao_aprovacao_plano %}
-      <a href="{{ object.plano_trabalho.plano_cultura.ata_reuniao_aprovacao_plano.url }}" class="list-group-item">
-        Ata
-      </a>
-      {% endif %}
-      {% if object.plano_trabalho.plano_cultura.lei_plano_cultura %}
-      <a href="{{ object.plano_trabalho.plano_cultura.lei_plano_cultura.url }}" class="list-group-item">
-        Lei
-      </a>
-      {% endif %}
+    {% endif %}
+
+    {% if object.plano_trabalho.plano_cultura.lei_plano_cultura %}
+    <div class="list-group row">
+        <div class="col-md-12">
+          <div  class="list-group-item col-xs-8">
+            Plano de Cultura - Lei
+          </div>
+
+          <div class="list-group-item col-xs-2 text-center">
+              <a href="{{ object.plano_trabalho.criacao_sistema.lei_sistema_cultura.url }}">Download</a>
+          </div>
+          {% if object.plano_trabalho.plano_cultura.situacao_lei_plano.id == 1 %}
+
+          <div class="list-group-item col-xs-1 text-center">
+              <a href="{% url 'gestao:diligencia_documental' 'plano_cultura' 'situacao_lei_plano_id' usuario.id %}"><i class="fa fa-thumbs-down"></i></a>
+          </div>
+
+          <div class="list-group-item col-xs-1 text-center">
+              <a href="{% url 'gestao:concluir_etapa' 'plano_cultura' 'situacao_lei_plano' usuario.id %}"><i class="fa fa-thumbs-up"></i></a>
+          </div>
+          {% else %}
+          <div class="list-group-item col-xs-2 text-center">
+              <b>{{ object.plano_trabalho.plano_cultura.situacao_lei_plano.descricao }}</b>
+          </div>
+          {% endif %}
+      </div>
     </div>
+    {% endif %}
+
+        <div class="list-group row">
+          <div class="col-md-12">
+              <p class="list-group-item col-md-10">
+                  <b>Situação Geral do Plano de Trabalho</b>
+              </p>
+                  {% if object.plano_trabalho.criacao_sistema.situacao_lei_sistema_id == 2 and object.plano_trabalho.orgao_gestor.situacao_relatorio_secretaria_id == 2 and object.plano_trabalho.conselho_cultural.situacao_ata_id == 2 and object.plano_trabalho.plano_cultura.situacao_lei_plano_id == 2 and object.plano_trabalho.fundo_cultura.situacao_lei_plano_id == 2 %}
+                  <div class="list-group-item col-md-2 text-center text-success">
+                  Concluído <i class="fa fa-check-square-o"></i></a>
+                  {% else %}
+                  <div class="list-group-item col-md-2 text-center text-danger">
+                  Aguardando avaliação </a>
+                  {% endif %}
+                </div>
+              </div>
+          </div>
+      </div>
+</div>
+
+<div class="row">
+    <div class="col-md-6">
+        <div class="panel panel-info">
+          <div class="panel-heading">
+            Situação da Adesão
+          </div>
+          <form name="form" action="{% url 'gestao:alterar_situacao' object.id %}" method="post">
+              <div class="panel-body ">
+                  {% csrf_token %}
+                  <div class="list-group-item col-md-8 text-center">
+                      <div class="form-group">
+                          <select id="select_situacoes" name="estado_processo" class="form-control">
+                              <option value="1" {% if object.estado_processo == '1' %}selected{% endif %}>Aguardando envio da documentação</option>
+                              <option value="2" {% if object.estado_processo == '2' %}selected{% endif %}>Documentação Recebida - Aguarda Análise</option>
+                              <option value="3" {% if object.estado_processo == '3' %}selected{% endif %}>Diligência Documental</option>
+                              <option value="4" {% if object.estado_processo == '4' %}selected{% endif %}>Encaminhado para assinatura do Secretário SAI</option>
+                              <option value="5" {% if object.estado_processo == '5' %}selected{% endif %}>Aguarda Publicação no DOU</option>
+                              <option value="6" {% if object.estado_processo == '6' %}selected{% endif %}>Publicado no DOU</option>
+                            </select>
+                      </div>
+
+                      <div class="form-group">
+                        <textarea id="justificativa_situacao" name="justificativa" class="form-control hide" style="resize:none" placeholder="Justificativa" rows="4" cols="20">{% if object.estado_processo == '3' %} {{dado_situacao}} {% endif %}</textarea>
+                        <input type="text" id="data_acordo_situacao" name="data_publicacao_acordo" class="form-control date hide" value="{% if object.estado_processo == '6' %} {{dado_situacao}} {% endif %}" placeholder="Data de Publicação"></input>
+                        <input type="text" id="localizacao_situacao" name="localizacao" class="form-control hide" placeholder="Localização" value="{% if object.estado_processo == '2' %} {{dado_situacao}} {% endif %}"></input>
+                        <input type="text" id="num_processo_situacao" name="num_processo" class="form-control hide" placeholder="Número do Processo" value="{% if object.estado_processo == '4' %} {{dado_situacao}} {% endif %}"></input>
+                      </div>
+                      <div class="row">
+                          <div class="col-md-12">
+                            <button type="submit" class="btn btn-primary btn-xs" title="Alterar Situação" >Salvar</button>
+                            <a href="{% url 'gestao:detalhar' object.id %}" class="btn btn-default btn-xs" value="Cancelar" >Cancelar</a>
+                          </div>
+                      </div>
+                  </div>
+
+              </div>
+          </form>
+        </div>
+    </div>
+</div>
+
+<!-- MODAL DE RECUSO DE PLANO PARA DETERMINAR A SITUAÇÃO -->
+<div class="form-group">
+  <div class="col-sm-offset-3 col-sm-11">
+    <!-- <a class="btn btn-default" href="#" >Cancelar</a>
+    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModal">Salvar</button> -->
+
+    <div class="modal fade" id="opcoes_plano" role="dialog">
+        <div class="modal-dialog">
+
+          <!-- Modal content-->
+          <div class="modal-content">
+            <div class="modal-header">
+              <button type="button" class="close" data-dismiss="modal">&times;</button>
+              <h4 class="modal-title ">Escolha uma ação para o plano recusado</h4>
+            </div>
+            <div class="modal-body">
+                <div class="list-group row">
+                   <a class="list-group-item">
+                       Arquivo aprovado com ressalvas
+                    </a>
+                   <a class="list-group-item">
+                       Arquivo danificado
+                    </a>
+                   <a class="list-group-item">
+                       Arquivo incompleto
+                    </a>
+                   <a class="list-group-item">
+                       Arquivo incorreto
+                    </a>
+                </div>
+            </div>
+
+          </div>
+
+        </div>
+      </div>
+
   </div>
 </div>
+
 {% endblock content %}
+
+{% block js%}
+<script type="text/javascript">
+  $(document).ready(function(){
+
+    var situacao_campos = function(e){
+
+
+      if($('#select_situacoes').val()==="2"){
+        $("input[id$='_situacao'], textarea[id$='_situacao']").each(function(){
+          if(!$(this).hasClass('hide')){
+            $(this).addClass('hide');
+            $(this).fadeIn();
+          }
+        });
+        if($("#localizacao_situacao").hasClass('hide')){
+          $("#localizacao_situacao").removeClass('hide');
+          $("#localizacao_situacao").fadeIn();
+        }
+      }
+      else if($('#select_situacoes').val()==="3"){
+        $("input[id$='_situacao'], textarea[id$='_situacao']").each(function(){
+          if(!$(this).hasClass('hide')){
+            $(this).addClass('hide');
+            $(this).fadeIn();
+          }
+        });
+        if($("#justificativa_situacao").hasClass('hide')){
+          $("#justificativa_situacao").removeClass('hide');
+          $("#justificativa_situacao").fadeIn();
+        }
+      }
+      else if($('#select_situacoes').val()==="4"){
+        $("input[id$='_situacao'], textarea[id$='_situacao']").each(function(){
+          if(!$(this).hasClass('hide')){
+            $(this).addClass('hide');
+            $(this).fadeIn();
+          }
+        });
+        if($("#num_processo_situacao").hasClass('hide')){
+          $("#num_processo_situacao").removeClass('hide');
+          $("#num_processo_situacao").fadeIn();
+        }
+      }
+      else if($('#select_situacoes').val()==="6"){
+        $("input[id$='_situacao'], textarea[id$='_situacao']").each(function(){
+          if(!$(this).hasClass('hide')){
+            $(this).addClass('hide');
+            $(this).fadeIn();
+          }
+        });
+        if($("#data_acordo_situacao").hasClass('hide')){
+          $("#data_acordo_situacao").removeClass('hide');
+          $("#data_acordo_situacao").fadeIn();
+        }
+      }
+      else {
+        $("input[id$='_situacao'], textarea[id$='_situacao']").each(function(){
+          if(!$(this).hasClass('hide')){
+            $(this).addClass('hide');
+            $(this).fadeIn();
+          }
+        });
+      }
+    }
+    $('#select_situacoes').change(situacao_campos).ready(situacao_campos);
+
+  });
+</script>
+{% endblock js%}

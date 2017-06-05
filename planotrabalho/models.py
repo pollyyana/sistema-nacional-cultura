@@ -50,7 +50,7 @@ class CriacaoSistema(models.Model):
         max_length=255,
         blank=True,
         null=True)
-    situacao_lei_sistema = models.ForeignKey('SituacoesArquivoPlano', db_column='situacao_lei_sistema')
+    situacao_lei_sistema = models.ForeignKey('SituacoesArquivoPlano')
 
 
 class OrgaoGestor(models.Model):
@@ -60,7 +60,7 @@ class OrgaoGestor(models.Model):
         max_length=255,
         blank=True,
         null=True)
-    situacao_relatorio_secretaria = models.ForeignKey('SituacoesArquivoPlano', db_column='situacao_relatorio_secretaria')
+    situacao_relatorio_secretaria = models.ForeignKey('SituacoesArquivoPlano')
 
 
 class ConselhoCultural(models.Model):
@@ -70,7 +70,7 @@ class ConselhoCultural(models.Model):
         max_length=255,
         blank=True,
         null=True)
-    situacao_ata = models.ForeignKey('SituacoesArquivoPlano', db_column='situacao_ata')
+    situacao_ata = models.ForeignKey('SituacoesArquivoPlano')
 
 
 class FundoCultura(models.Model):
@@ -86,7 +86,7 @@ class FundoCultura(models.Model):
         max_length=255,
         blank=True,
         null=True)
-    situacao_lei_plano = models.ForeignKey('SituacoesArquivoPlano', db_column='situacao_lei_plano')
+    situacao_lei_plano = models.ForeignKey('SituacoesArquivoPlano')
 
 
 class PlanoCultura(models.Model):
@@ -117,7 +117,7 @@ class PlanoCultura(models.Model):
         max_length=255,
         blank=True,
         null=True)
-    situacao_lei_plano = models.ForeignKey('SituacoesArquivoPlano', db_column='situacao_lei_plano')
+    situacao_lei_plano = models.ForeignKey('SituacoesArquivoPlano')
 
 
 class Conselheiro(models.Model):
@@ -136,5 +136,4 @@ class Conselheiro(models.Model):
 
 
 class SituacoesArquivoPlano(models.Model):
-    situacao_arquivo = models.CharField(primary_key=True, max_length=1)
     descricao = models.CharField(max_length=75, null=False)
