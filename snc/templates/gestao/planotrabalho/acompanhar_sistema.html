@@ -24,7 +24,6 @@
               <tr>
                 <th>Município/Estado</th>
                 <th>CNPJ</th>
-                <th>Data</th>
                 <th>Anexo</th>
                 <th></th>
                 <th></th>
@@ -39,13 +38,6 @@
                   <td>{{ usuario.municipio.estado.nome_uf }}</td>
                 {% endif %}
                   <td>{{ usuario.municipio.cnpj_prefeitura }}</td>
-                  <td>
-                    {% if request.GET.anexo == 'minuta_projeto_lei' %}
-                    {{ usuario.plano_trabalho.criacao_sistema.data_final_elaboracao_projeto_lei }}
-                    {% else %}
-                    {{ usuario.plano_trabalho.criacao_sistema.data_final_sancao_lei }}
-                    {% endif %}
-                  </td>
                   <td>
                     {% if request.GET.anexo == 'minuta_projeto_lei' %}
                     <a href="{{ usuario.plano_trabalho.criacao_sistema.minuta_projeto_lei.url }}">Download</a>

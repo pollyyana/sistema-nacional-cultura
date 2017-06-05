@@ -24,7 +24,6 @@
                 <th>Município/Estado</th>
                 <th>CNPJ</th>
                 <th>CNPJ do Fundo</th>
-                <th>Data</th>
                 <th>Anexo</th>
                 <th></th>
                 <th></th>
@@ -40,7 +39,6 @@
                 {% endif %}
                   <td>{{ usuario.municipio.cnpj_prefeitura }}</td>
                   <td>{{ usuario.plano_trabalho.fundo_cultura.cnpj_fundo_cultura }}</td>
-                  <td>{{ usuario.plano_trabalho.fundo_cultura.data_final_instituicao_fundo_cultura }}</td>
                   <td>
                     <a href="{{ usuario.plano_trabalho.fundo_cultura.lei_fundo_cultura.url }}">Download</a>
                   </td>

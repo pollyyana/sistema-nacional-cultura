@@ -4,63 +4,10 @@
 <div class="container">
 <form method="post" enctype="multipart/form-data">
   {% csrf_token %}
-  <h3>{{ form.data_final_elaboracao_projeto_lei.errors }}</h3>
 
-  <!-- <p>
-    <strong>Institucionalização do Sistema de Cultura</strong>
-  </p>
-  <p>
-    <strong>1.1 Elaboração do Projeto de Lei do Sistema de Cultura</strong>
-  </p>
-  <div class="form-group">
-    <label for={{ form.data_final_elaboracao_projeto_lei.id_for_label }} class="col-sm-12">
-      Data final para elaboração do Projeto de Lei do Sistema de Cultura
-    </label>
-    {% if request.user.usuario.plano_trabalho.criacao_sistema %}
-      {% render_field form.data_final_elaboracao_projeto_lei readonly="true" %}
-    {% else %}
-      {% render_field form.data_final_elaboracao_projeto_lei class="date"%}
-    {% endif %}
-    {{ form.data_final_elaboracao_projeto_lei.errors }}
-  </div>
-  {% if request.user.usuario.plano_trabalho.criacao_sistema %}
-  <div class="form-group">
-    <label for="{{ form.minuta_projeto_lei.id_for_label }}">Minuta do Projeto de Lei</label>
-    {% if form.minuta_projeto_lei.value %}
-    <p><a href="{{form.minuta_projeto_lei.value.url}}">Baixar arquivo atual</a></p>
-    {% if request.user.usuario.plano_trabalho.criacao_sistema.situacao_minuta != 2 %}
-    <p>Modificar: {% render_field form.minuta_projeto_lei %}</p>
-    {% endif %}
-    {% else %}
-    <p>{% render_field form.minuta_projeto_lei %}</p>
-    {% endif %}
-    {{ form.lei_sistema_cultura.errors }}
-  </div>
-  {% endif %}
-  <div class="alert alert-info" role="alert">
-    <strong>Para execução, sugerimos as seguintes atividades:</strong><br>
-    - Elaborar minuta;<br>
-    - Discutir e consultar a sociedade civil (através de seminários, reuniões com entidade civil, audiências, etc...);<br>
-    - Encaminhar para análise jurídica;<br>
-    - Encaminhar ao governador/prefeito para aprovação;<br>
-    - Encaminhar ao Poder Legislativo.
-  </div>
-
-  <hr /> -->
   <p>
     <strong>Sanção da Lei de criação do Sistema de Cultura pelo Governador/Prefeito</strong>
   </p>
-  <div class="form-group">
-    <label for={{ form.data_final_sancao_lei.id_for_label }} class="col-sm-12">
-      Data final para sanção da Lei do Sistema de Cultura pelo Governador/Prefeito
-    </label>
-    {% if request.user.usuario.plano_trabalho.criacao_sistema %}
-      {% render_field form.data_final_sancao_lei readonly="true" %}
-    {% else %}
-      {% render_field form.data_final_sancao_lei class="date"%}
-    {% endif %}
-    {{ form.data_final_sancao_lei.errors }}
-  </div>
   {% if request.user.usuario.plano_trabalho.criacao_sistema %}
   <div class="form-group">
     <label for="{{ form.lei_sistema_cultura.id_for_label }}">Lei do Sistema de Cultura</label>

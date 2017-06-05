@@ -11,17 +11,7 @@
     <strong>2.1 Estruturação e implementação da Secretaria de Cultura ou órgão equivalente
       (Secretaria em conjunto com outras políticas, fundação de cultura, departamento, coordenação, diretoria, etc)</strong>
   </h5>
-  <div class="form-group">
-    <label for={{ form.data_final_estruturacao_secretaria.id_for_label }} class="col-sm-12">
-      Data final para estruturação da Secretaria de Cultura
-    </label>
-    {% if request.user.usuario.plano_trabalho.orgao_gestor %}
-      {% render_field form.data_final_estruturacao_secretaria readonly="true" %}
-    {% else %}
-      {% render_field form.data_final_estruturacao_secretaria class="date"%}
-    {% endif %}
-    {{ form.data_final_estruturacao_secretaria.errors }}
-  </div>
+
   {% if request.user.usuario.plano_trabalho.orgao_gestor %}
   <div class="form-group">
     <label for="{{ form.relatorio_atividade_secretaria.id_for_label }}">

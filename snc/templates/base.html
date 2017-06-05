@@ -209,9 +209,7 @@
                           <span>Plano de Trabalho</span>
                         </a>
                       </li>
-                      {% endif %}
-                      <!--  Verifica se todas as datas do plano de trabalho foram preenchidas -->
-                      {% if request.user.usuario.plano_trabalho.criacao_sistema and request.user.usuario.plano_trabalho.orgao_gestor and request.user.usuario.plano_trabalho.conselho_cultural and request.user.usuario.plano_trabalho.fundo_cultura and request.user.usuario.plano_trabalho.plano_cultura %}
+
                       <li class="navTreeItem visualNoMarker navTreeFolderish section-assunto-d">
                         <a  href="{% url 'planotrabalho:listar_conselheiros' %}" title="" class="state-published navTreeFolderish contenttype-folder ">
                           <span>Conselheiros</span>

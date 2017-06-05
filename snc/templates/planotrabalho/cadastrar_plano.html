@@ -11,17 +11,7 @@
   <h5>
     <strong>Lei de criação do Plano de Cultura (com as metas)</strong>
   </h5>
-  <div class="form-group">
-    <label for={{ form.data_final_sancao_lei_plano_cultura.id_for_label }} class="col-sm-12">
-      Data final para sanção da lei do Plano de Cultura
-    </label>
-    {% if request.user.usuario.plano_trabalho.plano_cultura %}
-      {% render_field form.data_final_sancao_lei_plano_cultura readonly="true" %}
-    {% else %}
-      {% render_field form.data_final_sancao_lei_plano_cultura class="date"%}
-    {% endif %}
-    {{ form.data_final_sancao_lei_plano_cultura.errors }}
-  </div>
+
   {% if request.user.usuario.plano_trabalho.plano_cultura %}
   <div class="form-group">
     <label for="{{ form.lei_plano_cultura.id_for_label }}">

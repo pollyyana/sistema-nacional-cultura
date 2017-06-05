@@ -24,7 +24,6 @@
               <tr>
                 <th>Município/Estado</th>
                 <th>CNPJ</th>
-                <th>Data</th>
                 <th>Anexo</th>
                 <th></th>
                 <th></th>
@@ -39,17 +38,6 @@
                   <td>{{ usuario.municipio.estado.nome_uf }}</td>
                 {% endif %}
                   <td>{{ usuario.municipio.cnpj_prefeitura }}</td>
-                  <td>
-                    {% if request.GET.anexo == 'relatorio_diretrizes_aprovadas' %}
-                    {{ usuario.plano_trabalho.plano_cultura.data_final_estabelecimento_instancias }}
-                    {% elif request.GET.anexo == 'minuta_preparada' %}
-                    {{ usuario.plano_trabalho.plano_cultura.data_final_elaboracao_plano_cultura }}
-                    {% elif request.GET.anexo == 'ata_reuniao_aprovacao_plano' %}
-                    {{ usuario.plano_trabalho.plano_cultura.data_final_aprovacao_plano_cultura }}
-                    {% elif request.GET.anexo == 'lei_plano_cultura' %}
-                    {{ usuario.plano_trabalho.plano_cultura.data_final_sancao_lei_plano_cultura }}
-                    {% endif %}
-                  </td>
                   <td>
                     {% if request.GET.anexo == 'relatorio_diretrizes_aprovadas' %}
                     <a href="{{ usuario.plano_trabalho.plano_cultura.relatorio_diretrizes_aprovadas.url }}">Download</a>

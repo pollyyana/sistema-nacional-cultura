@@ -13,8 +13,6 @@ from gestao.utils import enviar_email_aprovacao_plano
 from .forms import AlterarSituacao, DiligenciaForm, AlterarDocumentosEnteFederadoForm
 from .forms import AlterarCadastradorForm, AlterarUsuarioForm, AlterarOrgaoForm
 from .forms import AlterarFundoForm, AlterarPlanoForm, AlterarConselhoForm, AlterarSistemaForm
-from .forms import ProrrogacaoFundoForm, ProrrogacaoConselhoForm
-from .forms import ProrrogacaoSistemaForm, ProrrogacaoOrgaoForm, ProrrogacaoPlanoForm
 
 from clever_selects.views import ChainedSelectChoicesView
 
@@ -521,51 +519,6 @@ class Prorrogacao(ListView):
             usuarios = usuarios.filter(
                 municipio__cidade__nome_municipio__icontains=q)
         return usuarios
-
-
-class ProrrogacaoFundo(UpdateView):
-    template_name = 'gestao/prorrogacao/prorrogacao_fundo.html'
-    form_class = ProrrogacaoFundoForm
-    model = FundoCultura
-
-    def get_success_url(self):
-        return reverse_lazy('gestao:prorrogacao')
-
-
-class ProrrogacaoConselho(UpdateView):
-    template_name = 'gestao/prorrogacao/prorrogacao_conselho.html'
-    form_class = ProrrogacaoConselhoForm
-    model = ConselhoCultural
-
-    def get_success_url(self):
-        return reverse_lazy('gestao:prorrogacao')
-
-
-class ProrrogacaoSistema(UpdateView):
-    template_name = 'gestao/prorrogacao/prorrogacao_sistema.html'
-    form_class = ProrrogacaoSistemaForm
-    model = CriacaoSistema
-
-    def get_success_url(self):
-        return reverse_lazy('gestao:prorrogacao')
-
-
-class ProrrogacaoOrgao(UpdateView):
-    template_name = 'gestao/prorrogacao/prorrogacao_orgao.html'
-    form_class = ProrrogacaoOrgaoForm
-    model = OrgaoGestor
-
-    def get_success_url(self):
-        return reverse_lazy('gestao:prorrogacao')
-
-
-class ProrrogacaoPlano(UpdateView):
-    template_name = 'gestao/prorrogacao/prorrogacao_plano.html'
-    form_class = ProrrogacaoPlanoForm
-    model = PlanoCultura
-
-    def get_success_url(self):
-        return reverse_lazy('gestao:prorrogacao')
 
 
 def rotina_limpeza_arquivos_inexistentes(request):

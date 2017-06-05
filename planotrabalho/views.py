@@ -19,15 +19,13 @@ class PlanoTrabalho(DetailView):
     template_name = 'planotrabalho/plano_trabalho.html'
 
     def get_context_data(self, **kwargs):
-        plano = self.request.user.usuario.plano_trabalho
-        context = super(PlanoTrabalho, self).get_context_data(**kwargs)
-        datas_list = [
-            plano.criacao_sistema,
-            plano.orgao_gestor,
-            plano.conselho_cultural,
-            plano.fundo_cultura,
-            plano.plano_cultura]
-        context['datas_preenchidas'] = all(datas_list)
+        try:
+            data_final = self.request.user.usuario.data_publicacao_acordo
+            prazo = self.request.user.usuario.prazo
+            context = super(PlanoTrabalho, self).get_context_data(**kwargs)
+            context['data_final'] = data_final.replace(year=data_final.year + prazo)
+        except:
+            return context
         return context
 
     def dispatch(self, *args, **kwargs):

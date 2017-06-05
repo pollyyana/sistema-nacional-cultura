@@ -67,6 +67,11 @@ class AlterarSituacao(ModelForm):
     localizacao = forms.CharField(max_length="10", required=False)
     num_processo = forms.CharField(max_length="50", required=False)
 
+    def clean(self):
+        if self.cleaned_data['estado_processo'] == '6':
+            if not self.cleaned_data['data_publicacao_acordo']:
+                self.add_error('estado_processo', 'Este campo é obrigatório')
+
     def save(self, commit=True):
         usuario = super(AlterarSituacao, self).save(commit=False)
         historico = Historico()
@@ -82,6 +87,25 @@ class AlterarSituacao(ModelForm):
         elif self.cleaned_data['estado_processo'] == '6':
             if usuario.plano_trabalho is None:
                 plano_trabalho = PlanoTrabalho()
+
+                conselho_cultural = ConselhoCultural()
+                criacao_sistema = CriacaoSistema()
+                fundo_cultura = FundoCultura()
+                orgao_gestor = OrgaoGestor()
+                plano_cultura = PlanoCultura()
+
+                if commit:
+                    criacao_sistema.save()
+                    fundo_cultura.save()
+                    orgao_gestor.save()
+                    conselho_cultural.save()
+                    plano_cultura.save()
+
+                plano_trabalho.conselho_cultural_id = conselho_cultural.id
+                plano_trabalho.criacao_sistema_id = criacao_sistema.id
+                plano_trabalho.fundo_cultura_id = fundo_cultura.id
+                plano_trabalho.orgao_gestor_id = orgao_gestor.id
+                plano_trabalho.plano_cultura_id = plano_cultura.id
 
                 if commit:
                     plano_trabalho.save()
@@ -160,7 +184,8 @@ class AlterarCadastradorForm(ChainedChoicesForm):
                 raise forms.ValidationError('Cadastrador já se encontra vinculado ao municípío selecionado.')
             if user_antigo.estado_processo == '6':
                 if not user_antigo.data_publicacao_acordo or not self.cleaned_data.get('data_publicacao_acordo', None):
-                    errormsg = 'Não foi encontrada a data de publicação do acordo deste município, por favor informe a data'
+                    errormsg = '''Não foi encontrada a data de publicação
+                        do acordo deste município, por favor informe a data'''
                     municipio = Municipio.objects.get(cidade=municipio, estado__sigla=uf)
                     if municipio.numero_processo:
                         errormsg += '. Ela pode ser encontrada no processo de número: ' + municipio.numero_processo
@@ -295,38 +320,3 @@ class AlterarConselhoForm(ModelForm):
     class Meta:
         model = ConselhoCultural
         fields = ('ata_regimento_aprovado',)
-
-
-class ProrrogacaoFundoForm(ModelForm):
-
-    class Meta:
-        model = FundoCultura
-        fields = ('data_final_instituicao_fundo_cultura',)
-
-
-class ProrrogacaoConselhoForm(ModelForm):
-
-    class Meta:
-        model = ConselhoCultural
-        fields = ('data_final_instalacao_conselho',)
-
-
-class ProrrogacaoSistemaForm(ModelForm):
-
-    class Meta:
-        model = CriacaoSistema
-        fields = ('data_final_sancao_lei',)
-
-
-class ProrrogacaoOrgaoForm(ModelForm):
-
-    class Meta:
-        model = OrgaoGestor
-        fields = ('data_final_estruturacao_secretaria',)
-
-
-class ProrrogacaoPlanoForm(ModelForm):
-
-    class Meta:
-        model = PlanoCultura
-        fields = ('data_final_sancao_lei_plano_cultura',)
