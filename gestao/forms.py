@@ -68,9 +68,12 @@ class AlterarSituacao(ModelForm):
     num_processo = forms.CharField(max_length="50", required=False)
 
     def clean(self):
-        if self.cleaned_data['estado_processo'] == '6':
-            if not self.cleaned_data['data_publicacao_acordo']:
-                self.add_error('estado_processo', 'Este campo é obrigatório')
+        try:
+            if self.cleaned_data['estado_processo'] == '6':
+                if not self.cleaned_data['data_publicacao_acordo']:
+                    raise forms.ValidationError('Insira a data corretamente.')
+        except:
+            raise forms.ValidationError('Insira a data corretamente.')
 
     def save(self, commit=True):
         usuario = super(AlterarSituacao, self).save(commit=False)
@@ -94,6 +97,12 @@ class AlterarSituacao(ModelForm):
                 orgao_gestor = OrgaoGestor()
                 plano_cultura = PlanoCultura()
 
+                conselho_cultural.situacao_ata_id = 0
+                criacao_sistema.situacao_lei_sistema_id = 0
+                fundo_cultura.situacao_lei_plano_id = 0
+                orgao_gestor.situacao_relatorio_secretaria_id = 0
+                plano_cultura.situacao_lei_plano_id = 0
+
                 if commit:
                     criacao_sistema.save()
                     fundo_cultura.save()
@@ -111,6 +120,42 @@ class AlterarSituacao(ModelForm):
                     plano_trabalho.save()
 
                 usuario.plano_trabalho = plano_trabalho
+
+            if (
+                    usuario.plano_trabalho.conselho_cultural is None and
+                    usuario.plano_trabalho.criacao_sistema is None and
+                    usuario.plano_trabalho.fundo_cultura is None and
+                    usuario.plano_trabalho.orgao_gestor is None and
+                    usuario.plano_trabalho.plano_cultura is None
+                    ):
+
+                conselho_cultural = ConselhoCultural()
+                criacao_sistema = CriacaoSistema()
+                fundo_cultura = FundoCultura()
+                orgao_gestor = OrgaoGestor()
+                plano_cultura = PlanoCultura()
+
+                conselho_cultural.situacao_ata_id = 0
+                criacao_sistema.situacao_lei_sistema_id = 0
+                fundo_cultura.situacao_lei_plano_id = 0
+                orgao_gestor.situacao_relatorio_secretaria_id = 0
+                plano_cultura.situacao_lei_plano_id = 0
+
+                if commit:
+                    criacao_sistema.save()
+                    fundo_cultura.save()
+                    orgao_gestor.save()
+                    conselho_cultural.save()
+                    plano_cultura.save()
+
+                usuario.plano_trabalho.conselho_cultural_id = conselho_cultural.id
+                usuario.plano_trabalho.criacao_sistema_id = criacao_sistema.id
+                usuario.plano_trabalho.fundo_cultura_id = fundo_cultura.id
+                usuario.plano_trabalho.orgao_gestor_id = orgao_gestor.id
+                usuario.plano_trabalho.plano_cultura_id = plano_cultura.id
+
+                if commit:
+                    usuario.plano_trabalho.save()
 
         if commit:
             usuario.municipio.save()

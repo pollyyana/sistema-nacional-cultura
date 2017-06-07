@@ -21,27 +21,6 @@ urlpatterns = [
     url(r'^aditivar/prazo/(?P<id>[\w]+)$',
         staff_member_required(views.aditivar_prazo, login_url='adesao:login'), name='aditivar_prazo'),
 
-    # Acompanhar criação do sistema de cultura
-    url(r'^acompanhar/sistema$', staff_member_required(
-        views.AcompanharSistema.as_view(),
-        login_url='adesao:login'), name='acompanhar_sistema'),
-    # Acompanhar criação do órgão gestor
-    url(r'^acompanhar/orgao$', staff_member_required(
-        views.AcompanharOrgao.as_view(),
-        login_url='adesao:login'), name='acompanhar_orgao'),
-    # Acompanhar criação do conselho cultural
-    url(r'^acompanhar/conselho$', staff_member_required(
-        views.AcompanharConselho.as_view(),
-        login_url='adesao:login'), name='acompanhar_conselho'),
-    # Acompanhar criação do fundo de cultura
-    url(r'^acompanhar/fundo$', staff_member_required(
-        views.AcompanharFundo.as_view(),
-        login_url='adesao:login'), name='acompanhar_fundo'),
-    # Acompanhar elaboração do plano de cultura
-    url(r'^acompanhar/plano$', staff_member_required(
-        views.AcompanharPlano.as_view(),
-        login_url='adesao:login'), name='acompanhar_plano'),
-
     # Diligência no anexo
     url(r'^diligencia/(?P<etapa>[\w]+)/(?P<st>[\w]+)/(?P<id>[\w]+)$',
         staff_member_required(
@@ -111,6 +90,4 @@ urlpatterns = [
     # ajax mudança de cadastrador
     url(r'^ajax_cadastrador_cpf$', staff_member_required(views.ajax_cadastrador_cpf), name='ajax_cadastrador_cpf'),
 
-    url(r'^rotina-limpeza-arquivos$', staff_member_required(
-        views.rotina_limpeza_arquivos_inexistentes), name='rotina_limpeza_arquivos'),
     ]

@@ -13,7 +13,6 @@ from .forms import CriarSistemaForm, OrgaoGestorForm, ConselhoCulturalForm, Desa
 from .forms import FundoCulturaForm, PlanoCulturaForm, CriarConselheiroForm, AlterarConselheiroForm
 
 
-# Create your views here.
 class PlanoTrabalho(DetailView):
     model = PlanoTrabalho
     template_name = 'planotrabalho/plano_trabalho.html'
@@ -23,7 +22,7 @@ class PlanoTrabalho(DetailView):
             data_final = self.request.user.usuario.data_publicacao_acordo
             prazo = self.request.user.usuario.prazo
             context = super(PlanoTrabalho, self).get_context_data(**kwargs)
-            context['data_final'] = data_final.replace(year=data_final.year + prazo)
+            context['data_final'] = data_final.replace(year=data_final.year + prazo, day=data_final.day + 1)
         except:
             return context
         return context

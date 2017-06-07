@@ -50,11 +50,8 @@ class CriarSistemaForm(ModelForm):
 
     def save(self, commit=True, *args, **kwargs):
         sistema = super(CriarSistemaForm, self).save(commit=False)
-        if 'minuta_projeto_lei' in self.changed_data:
-            sistema.situacao_minuta = 1
-
         if 'lei_sistema_cultura' in self.changed_data:
-            sistema.situacao_lei_sistema = 1
+            sistema.situacao_lei_sistema_id = 1
 
         if commit:
             sistema.save()
@@ -62,7 +59,7 @@ class CriarSistemaForm(ModelForm):
 
     class Meta:
         model = CriacaoSistema
-        exclude = ['situacao_minuta', 'situacao_lei_sistema', 'data_final_elaboracao_projeto_lei']
+        fields = ['lei_sistema_cultura', ]
 
 
 class OrgaoGestorForm(ModelForm):
@@ -83,7 +80,7 @@ class OrgaoGestorForm(ModelForm):
     def save(self, commit=True, *args, **kwargs):
         orgao = super(OrgaoGestorForm, self).save(commit=False)
         if 'relatorio_atividade_secretaria' in self.changed_data:
-            orgao.situacao_relatorio_secretaria = 1
+            orgao.situacao_relatorio_secretaria_id = 1
 
         if commit:
             orgao.save()
@@ -111,7 +108,7 @@ class ConselhoCulturalForm(ModelForm):
     def save(self, commit=True, *args, **kwargs):
         conselho = super(ConselhoCulturalForm, self).save(commit=False)
         if 'ata_regimento_aprovado' in self.changed_data:
-            conselho.situacao_ata = 1
+            conselho.situacao_ata_id = 1
 
         if commit:
             conselho.save()
@@ -135,7 +132,7 @@ class ConselhoCulturalForm(ModelForm):
 
     class Meta:
         model = ConselhoCultural
-        exclude = ['situacao_ata']
+        fields = ['ata_regimento_aprovado', ]
 
 
 class FundoCulturaForm(ModelForm):
@@ -168,7 +165,7 @@ class FundoCulturaForm(ModelForm):
     def save(self, commit=True, *args, **kwargs):
         fundo = super(FundoCulturaForm, self).save(commit=False)
         if 'lei_fundo_cultura' in self.changed_data and self.is_valid:
-            fundo.situacao_lei_plano = 1
+            fundo.situacao_lei_plano_id = 1
 
         if commit:
             fundo.save()
@@ -176,7 +173,7 @@ class FundoCulturaForm(ModelForm):
 
     class Meta:
         model = FundoCultura
-        exclude = ['situacao_lei_plano']
+        fields = ['cnpj_fundo_cultura', ]
 
 
 class PlanoCulturaForm(ModelForm):
@@ -200,20 +197,9 @@ class PlanoCulturaForm(ModelForm):
 
     def save(self, commit=True, *args, **kwargs):
         plano = super(PlanoCulturaForm, self).save(commit=False)
-        if 'relatorio_diretrizes_aprovadas' in self.changed_data:
-            plano.situacao_relatorio_diretrizes = 1
-
-        if 'minuta_preparada' in self.changed_data:
-            plano.situacao_minuta = 1
-
-        if 'ata_reuniao_aprovacao_plano' in self.changed_data:
-            plano.situacao_ata = 1
-
-        if 'ata_votacao_projeto_lei' in self.changed_data:
-            plano.situacao_ata_votacao = 1
 
         if 'lei_plano_cultura' in self.changed_data:
-            plano.situacao_lei_plano = 1
+            plano.situacao_lei_plano_id = 1
 
         if commit:
             plano.save()
@@ -221,15 +207,7 @@ class PlanoCulturaForm(ModelForm):
 
     class Meta:
         model = PlanoCultura
-        exclude = [
-            'situacao_relatorio_diretrizes',
-            'situacao_minuta',
-            'situacao_ata',
-            'situacao_ata_votacao',
-            'situacao_lei_plano',
-            'data_final_estabelecimento_instancias',
-            'data_final_aprovacao_plano_cultura',
-            'data_final_elaboracao_plano_cultura']
+        fields = ['lei_plano_cultura', ]
 
 
 class CriarConselheiroForm(ModelForm):

@@ -71,9 +71,7 @@ def alterar_situacao(request, id):
             #     message_txt = render('emails/aprovacao_plano.txt')
             #     message_html = render('emails/aprovacao_plano.email')
             #     enviar_email_aprovacao_plano(usuario, message_txt, message_html)
-            #     print('enviar email')
             # except Exception as e:
-            #     print(e)
             #     return redirect('gestao:detalhar', pk=id)
 
     return redirect('gestao:detalhar', pk=id)
@@ -184,114 +182,6 @@ def concluir_etapa(request, etapa, st, id):
     return redirect('gestao:detalhar', pk=id)
 
 
-class AcompanharSistema(ListView):
-    template_name = 'gestao/planotrabalho/acompanhar_sistema.html'
-    paginate_by = 10
-
-    def get_queryset(self):
-        anexo = self.request.GET.get('anexo', None)
-        q = self.request.GET.get('q', None)
-        if not anexo:
-            raise Http404()
-        usuarios = Usuario.objects.filter(estado_processo='6')
-        usuarios = usuarios.exclude(plano_trabalho__criacao_sistema=None)
-
-        if anexo == 'lei_sistema_cultura':
-            usuarios = usuarios.filter(
-                plano_trabalho__criacao_sistema__situacao_lei_sistema=1)
-            usuarios = usuarios.exclude(
-                plano_trabalho__criacao_sistema__lei_sistema_cultura='')
-        else:
-            raise Http404()
-
-        if q:
-            usuarios = usuarios.filter(
-                municipio__cidade__nome_municipio__icontains=q)
-
-        return usuarios
-
-
-class AcompanharOrgao(ListView):
-    template_name = 'gestao/planotrabalho/acompanhar_orgao.html'
-    paginate_by = 10
-
-    def get_queryset(self):
-        q = self.request.GET.get('q', None)
-        usuarios = Usuario.objects.filter(estado_processo='6')
-        usuarios = usuarios.exclude(plano_trabalho__orgao_gestor=None)
-        usuarios = usuarios.filter(
-            plano_trabalho__orgao_gestor__situacao_relatorio_secretaria=1)
-        usuarios = usuarios.exclude(
-            plano_trabalho__orgao_gestor__relatorio_atividade_secretaria='')
-        if q:
-            usuarios = usuarios.filter(
-                municipio__cidade__nome_municipio__icontains=q)
-        return usuarios
-
-
-class AcompanharConselho(ListView):
-    template_name = 'gestao/planotrabalho/acompanhar_conselho.html'
-    paginate_by = 10
-
-    def get_queryset(self):
-        q = self.request.GET.get('q', None)
-        usuarios = Usuario.objects.filter(estado_processo='6')
-        usuarios = usuarios.exclude(plano_trabalho__conselho_cultural=None)
-        usuarios = usuarios.filter(
-            plano_trabalho__conselho_cultural__situacao_ata=1)
-        usuarios = usuarios.exclude(
-            plano_trabalho__conselho_cultural__ata_regimento_aprovado='')
-        if q:
-            usuarios = usuarios.filter(
-                municipio__cidade__nome_municipio__icontains=q)
-        return usuarios
-
-
-class AcompanharFundo(ListView):
-    template_name = 'gestao/planotrabalho/acompanhar_fundo.html'
-    paginate_by = 10
-
-    def get_queryset(self):
-        q = self.request.GET.get('q', None)
-        usuarios = Usuario.objects.filter(estado_processo='6')
-        usuarios = usuarios.exclude(plano_trabalho__fundo_cultura=None)
-        usuarios = usuarios.filter(
-            plano_trabalho__fundo_cultura__situacao_lei_plano=1)
-        usuarios = usuarios.exclude(
-            plano_trabalho__fundo_cultura__lei_fundo_cultura='')
-        if q:
-            usuarios = usuarios.filter(
-                municipio__cidade__nome_municipio__icontains=q)
-        return usuarios
-
-
-class AcompanharPlano(ListView):
-    template_name = 'gestao/planotrabalho/acompanhar_plano.html'
-    paginate_by = 10
-
-    def get_queryset(self):
-        anexo = self.request.GET.get('anexo', None)
-        q = self.request.GET.get('q', None)
-        if not anexo:
-            raise Http404()
-        usuarios = Usuario.objects.filter(estado_processo='6')
-        usuarios = usuarios.exclude(plano_trabalho__plano_cultura=None)
-
-        if anexo == 'lei_plano_cultura':
-            usuarios = usuarios.filter(
-                plano_trabalho__plano_cultura__situacao_lei_plano=1)
-            usuarios = usuarios.exclude(
-                plano_trabalho__plano_cultura__lei_plano_cultura='')
-        else:
-            raise Http404()
-
-        if q:
-            usuarios = usuarios.filter(
-                municipio__cidade__nome_municipio__icontains=q)
-
-        return usuarios
-
-
 class DetalharUsuario(DetailView):
     model = Usuario
     template_name = 'gestao/detalhe_municipio.html'
@@ -299,23 +189,25 @@ class DetalharUsuario(DetailView):
     def get_context_data(self, **kwargs):
         context = super(DetalharUsuario, self).get_context_data(**kwargs)
         situacao = context['usuario'].estado_processo
+        try:
 
-        if situacao == '3':
-            historico = Historico.objects.filter(usuario_id=context['usuario'].id)
-            historico = historico[0]
-            context['dado_situacao'] = historico.descricao
+            if situacao == '3':
+                historico = Historico.objects.filter(usuario_id=context['usuario'].id)
+                historico = historico[0]
+                context['dado_situacao'] = historico.descricao
 
-        elif situacao == '2':
-            municipio = Municipio.objects.get(usuario__id=context['usuario'].id)
-            context['dado_situacao'] = municipio.localizacao
+            elif situacao == '2':
+                municipio = Municipio.objects.get(usuario__id=context['usuario'].id)
+                context['dado_situacao'] = municipio.localizacao
 
-        elif situacao == '4':
-            municipio = Municipio.objects.get(usuario__id=context['usuario'].id)
-            context['dado_situacao'] = municipio.numero_processo
+            elif situacao == '4':
+                municipio = Municipio.objects.get(usuario__id=context['usuario'].id)
+                context['dado_situacao'] = municipio.numero_processo
 
-        elif situacao == '6':
-            context['dado_situacao'] = context['usuario'].data_publicacao_acordo.strftime('%d/%m/%Y')
-
+            elif situacao == '6':
+                context['dado_situacao'] = context['usuario'].data_publicacao_acordo.strftime('%d/%m/%Y')
+        except:
+            pass
         return context
 
 
@@ -519,87 +411,3 @@ class Prorrogacao(ListView):
             usuarios = usuarios.filter(
                 municipio__cidade__nome_municipio__icontains=q)
         return usuarios
-
-
-def rotina_limpeza_arquivos_inexistentes(request):
-    log = []
-
-    municipios = Municipio.objects.exclude(cpf_copia_prefeito='', rg_copia_prefeito='', termo_posse_prefeito='')
-    criacaosistemas = CriacaoSistema.objects.exclude(lei_sistema_cultura='')
-    orgaogestores = OrgaoGestor.objects.exclude(relatorio_atividade_secretaria='')
-    conselhos = ConselhoCultural.objects.exclude(ata_regimento_aprovado='')
-    fundos = FundoCultura.objects.exclude(lei_fundo_cultura='')
-    planos = PlanoCultura.objects.exclude(lei_plano_cultura='')
-
-    st_enviar_comprovacao = 0  # situacao do documento
-
-    mediaurl = settings.BASE_DIR + settings.MEDIA_URL
-
-    for municipio in municipios:
-        cpf = os.path.exists(mediaurl + municipio.cpf_copia_prefeito.__str__())
-        rg = os.path.exists(mediaurl + municipio.rg_copia_prefeito.__str__())
-        termo = os.path.exists(mediaurl + municipio.termo_posse_prefeito.__str__())
-
-        if not cpf:
-            municipio.cpf_copia_prefeito = ''
-            log += [municipio.id.__str__() + ' - cpf']
-
-        if not rg:
-            municipio.rg_copia_prefeito = ''
-            log += [municipio.id.__str__() + ' - rg']
-
-        if not termo:
-            municipio.termo_posse_prefeito = ''
-            log += [municipio.id.__str__() + ' - termo']
-
-        municipio.save()
-
-    for criacaosistema in criacaosistemas:
-        lei = os.path.exists(mediaurl + criacaosistema.lei_sistema_cultura.__str__())
-        if not lei:
-            log += [criacaosistema.id.__str__() + ' - Criacao Sistema']
-            criacaosistema.lei_sistema_cultura = ''
-            criacaosistema.situacao_lei_sistema = st_enviar_comprovacao  # situacao do documento
-            criacaosistema.save()
-
-    for orgaogestor in orgaogestores:
-        ato_normativo = os.path.exists(mediaurl + orgaogestor.relatorio_atividade_secretaria.__str__())
-        if not ato_normativo:
-            log += [orgaogestor.id.__str__() + ' - Orgao gestor']
-            orgaogestor.relatorio_atividade_secretaria = ''
-            orgaogestor.situacao_relatorio_secretaria = st_enviar_comprovacao  # situacao do documento
-            orgaogestor.save()
-
-    for conselho in conselhos:
-        ata = os.path.exists(mediaurl + conselho.ata_regimento_aprovado.__str__())
-        if not ata:
-            log += [conselho.id.__str__() + ' - Conselho']
-            conselho.ata_regimento_aprovado = ''
-            conselho.situacao_ata = st_enviar_comprovacao  # situacao do documento
-            conselho.save()
-
-    for fundo in fundos:
-        lei_fundo = os.path.exists(mediaurl + fundo.lei_fundo_cultura.__str__())
-        if not lei_fundo:
-            log += [fundo.id.__str__() + ' - Fundo']
-            fundo.lei_fundo_cultura = ''
-            fundo.situacao_lei_plano = st_enviar_comprovacao  # situacao do documento
-            fundo.save()
-
-    for plano in planos:
-        lei_plano = os.path.exists(mediaurl + plano.lei_plano_cultura.__str__())
-        if not lei_plano:
-            log += [plano.id.__str__() + ' - Plano']
-            plano.lei_plano_cultura = ''
-            plano.situacao_lei_plano = st_enviar_comprovacao  # situacao do documento
-            plano.save()
-
-    # criar arquivo de log
-    log[1:]
-    log = "\n".join(log[1:])
-    log_dir = settings.BASE_DIR + '/../rotina_limpeza_arquivos_inexistentes.log'
-    print(log_dir)
-    with open(log_dir, 'a') as out:
-        out.write(log + '\n')
-
-    return redirect('gestao:acompanhar_adesao')

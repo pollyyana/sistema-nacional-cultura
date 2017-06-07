@@ -109,6 +109,7 @@
     </div>
 </div>
 
+{% if object.estado_processo == '6' %}
 <div class="panel panel-info">
   <div class="panel-heading">
     Dados do Plano de Trabalho
@@ -253,23 +254,25 @@
     </div>
     {% endif %}
 
-        <div class="list-group row">
+        <!-- <div class="list-group row">
           <div class="col-md-12">
               <p class="list-group-item col-md-10">
                   <b>Situação Geral do Plano de Trabalho</b>
               </p>
                   {% if object.plano_trabalho.criacao_sistema.situacao_lei_sistema_id == 2 and object.plano_trabalho.orgao_gestor.situacao_relatorio_secretaria_id == 2 and object.plano_trabalho.conselho_cultural.situacao_ata_id == 2 and object.plano_trabalho.plano_cultura.situacao_lei_plano_id == 2 and object.plano_trabalho.fundo_cultura.situacao_lei_plano_id == 2 %}
                   <div class="list-group-item col-md-2 text-center text-success">
-                  Concluído <i class="fa fa-check-square-o"></i></a>
+                  Aprovado <i class="fa fa-check-square-o"></i></a>
                   {% else %}
                   <div class="list-group-item col-md-2 text-center text-danger">
-                  Aguardando avaliação </a>
+                  Aguardando avaliação <a href="#" title="Enviar diligência"><i class="fa fa-paper-plane text-danger"></i></a>
                   {% endif %}
                 </div>
               </div>
-          </div>
-      </div>
+          </div> -->
+    </div>
 </div>
+{% endif %}
+
 
 <div class="row">
     <div class="col-md-6">
@@ -310,46 +313,6 @@
           </form>
         </div>
     </div>
-</div>
-
-<!-- MODAL DE RECUSO DE PLANO PARA DETERMINAR A SITUAÇÃO -->
-<div class="form-group">
-  <div class="col-sm-offset-3 col-sm-11">
-    <!-- <a class="btn btn-default" href="#" >Cancelar</a>
-    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModal">Salvar</button> -->
-
-    <div class="modal fade" id="opcoes_plano" role="dialog">
-        <div class="modal-dialog">
-
-          <!-- Modal content-->
-          <div class="modal-content">
-            <div class="modal-header">
-              <button type="button" class="close" data-dismiss="modal">&times;</button>
-              <h4 class="modal-title ">Escolha uma ação para o plano recusado</h4>
-            </div>
-            <div class="modal-body">
-                <div class="list-group row">
-                   <a class="list-group-item">
-                       Arquivo aprovado com ressalvas
-                    </a>
-                   <a class="list-group-item">
-                       Arquivo danificado
-                    </a>
-                   <a class="list-group-item">
-                       Arquivo incompleto
-                    </a>
-                   <a class="list-group-item">
-                       Arquivo incorreto
-                    </a>
-                </div>
-            </div>
-
-          </div>
-
-        </div>
-      </div>
-
-  </div>
 </div>
 
 {% endblock content %}
