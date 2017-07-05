@@ -21,13 +21,13 @@ As dependencias de pacotes estão no requirements.txt
 
 1. Instale o PIP que é o instalador de pacotes do python3
 
-    Baixe o arquivo get-pip.py que é um arquivo instalador executado pelo Python. O arquivo se encontra no link https://bootstrap.pypa.io/get-pip.py. 
+    Baixe o arquivo get-pip.py que é um arquivo instalador executado pelo Python. O arquivo se encontra no link https://bootstrap.pypa.io/get-pip.py.
 O arquivo pode ser baixado de forma direta e rápida utilizando o comando wget -c. A opção -c tem a função de continuar o download em caso de perda de conexão.
 
     ```
     wget -c https://bootstrap.pypa.io/get-pip.py
 
-    sudo python3 get-pip.py
+    sudo python get-pip.py
     ```
 
 2. Instale o construtor de ambiente virtual
@@ -35,7 +35,7 @@ O arquivo pode ser baixado de forma direta e rápida utilizando o comando wget -
     sudo apt-get install python3-virtualenv python3-venv
     ```
 
-3. Instale o wkhtmltopdf que é o aplicativo para renderizar html em pdf 
+3. Instale o wkhtmltopdf que é o aplicativo para renderizar html em pdf
     ```
     sudo apt-get install wkhtmltopdf
     ```
@@ -43,31 +43,51 @@ O arquivo pode ser baixado de forma direta e rápida utilizando o comando wget -
 4. Instale o PostgreSQL e as bibliotecas de desenvolvimento
     ```
     sudo apt-get install postgresql-9.4 postgresql-server-dev-9.4
- 
+
     ```    
 5. Crie o ambiente virtual
     ```
     pyvenv /caminho/para/o/ambiente/virtual
- 
+
     ```    
+    E depois entre no diretório
+     ```
+     cd  /caminho/para/o/ambiente/virtual
+
+     ```
 6. Clone o repositório do projeto do github
     ```
-    git clone https://github.com/culturagovbr/sistema-nacional-cultura.git snc & cd snc
+    git clone https://github.com/culturagovbr/sistema-nacional-cultura.git snc
 
     ```
-    
+
 7. Ative o ambiente virtual
     ```
     source /caminho/para/o/ambiente/virtual/bin/activate
 
     ```
+    E depois entre no diretório do projeto
+     ```
+     cd  /caminho/para/o/ambiente/virtual/snc/
+
+     ```
 
 8. Instale as dependências python do projeto
     ```
-    sudo pip3 install -r requirements.txt
+    sudo pip install -r requirements.txt
     sudo apt-get install python3-dev
     ```
-9. Configure o arquivo settings.py
+    OBS: Caso a dependência ```django-smart-selects==1.1.1``` dê erro, utilize
+     ```
+     pip install https://pypi.python.org/packages/source/d/django-smart-selects/django-smart-selects-1.1.1.tar.gz
+
+     ```
+     E novamente
+
+9. Configure o arquivo settings.py e altere o caminho para ele no ``` manage.py``` na linha abaixo:
+```
+  os.environ.setdefault("DJANGO_SETTINGS_MODULE", "snc.config.settings.local")
+```
 
 10. Configure o banco de dados
 Crie o banco dbsnc no seu serviço de acordo com o settings.py.
@@ -90,6 +110,7 @@ Comando migrate para criar a estrutura do banco (DDL)
 python3 manage.py migrate
 ```
 Comando de importação da base atual
+OBS:o arquivo dump.json não é fornecido e deverá ser criado a partir dos registros existentes no banco de dados, caso
 ```
 python3 manage.py loaddata dump.json
 ```
