@@ -1,6 +1,6 @@
 *.pyc
 *.swp
-#*static*
+*static*
 *staticfiles*
 *pycache*
 *media*
@@ -9,6 +9,8 @@
 *.mo
 *.sqlite
 *.json
+*migrations*
+*settings_*
 
 # ignore pycharm files
 *.idea
