@@ -104,13 +104,13 @@ CREATE DATABASE dbsnc;
 
 Criação de migração para cada APP
 ```
-python3 manage.py makemigrations planotrabalho
-python3 manage.py makemigrations gestao
-python3 manage.py makemigrations adesao
+sudo python3 manage.py makemigrations planotrabalho
+sudo python3 manage.py makemigrations gestao
+sudo python3 manage.py makemigrations adesao
 ```
 Comando migrate para criar a estrutura do banco (DDL)
 ```
-python3 manage.py migrate
+sudo python3 manage.py migrate
 ```
 Comando de importação da base atual
 OBS:o arquivo dump.json não é fornecido e deverá ser criado a partir dos registros existentes no banco de dados, caso
