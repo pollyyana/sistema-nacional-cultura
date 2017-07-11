@@ -79,7 +79,7 @@ O arquivo pode ser baixado de forma direta e rápida utilizando o comando wget -
     ```
     OBS: Caso a dependência ```django-smart-selects==1.1.1``` dê erro, utilize
      ```
-     pip install https://pypi.python.org/packages/source/d/django-smart-selects/django-smart-selects-1.1.1.tar.gz
+     sudo pip install https://pypi.python.org/packages/source/d/django-smart-selects/django-smart-selects-1.1.1.tar.gz
 
      ```
      E novamente
