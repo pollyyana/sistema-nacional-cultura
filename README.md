@@ -27,7 +27,7 @@ O arquivo pode ser baixado de forma direta e rápida utilizando o comando wget -
     ```
     wget -c https://bootstrap.pypa.io/get-pip.py
 
-    sudo python get-pip.py
+    sudo python3 get-pip.py
     ```
 
 2. Instale o construtor de ambiente virtual
@@ -79,7 +79,7 @@ O arquivo pode ser baixado de forma direta e rápida utilizando o comando wget -
     ```
     OBS: Caso a dependência ```django-smart-selects==1.1.1``` dê erro, utilize
      ```
-     sudo pip install https://pypi.python.org/packages/source/d/django-smart-selects/django-smart-selects-1.1.1.tar.gz
+     pip install https://pypi.python.org/packages/source/d/django-smart-selects/django-smart-selects-1.1.1.tar.gz
 
      ```
      E novamente
@@ -104,13 +104,13 @@ CREATE DATABASE dbsnc;
 
 Criação de migração para cada APP
 ```
-sudo python3 manage.py makemigrations planotrabalho
-sudo python3 manage.py makemigrations gestao
-sudo python3 manage.py makemigrations adesao
+python3 manage.py makemigrations planotrabalho
+python3 manage.py makemigrations gestao
+python3 manage.py makemigrations adesao
 ```
 Comando migrate para criar a estrutura do banco (DDL)
 ```
-sudo python3 manage.py migrate
+python3 manage.py migrate
 ```
 Comando de importação da base atual
 OBS:o arquivo dump.json não é fornecido e deverá ser criado a partir dos registros existentes no banco de dados, caso
