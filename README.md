@@ -74,21 +74,21 @@ O arquivo pode ser baixado de forma direta e rápida utilizando o comando wget -
 
 8. Instale as dependências python do projeto
     ```
-    sudo pip3 install -r requirements.txt
+    pip3 install -r requirements.txt
     sudo apt-get install python3-dev
     ```
     OBS: Caso a dependência ```django-smart-selects==1.1.1``` dê erro, utilize
      ```
 
-     sudo pip3 install https://pypi.python.org/packages/source/d/django-smart-selects/django-smart-selects-1.1.1.tar.gz
+     pip3 install https://pypi.python.org/packages/source/d/django-smart-selects/django-smart-selects-1.1.1.tar.gz
 
      ```
      E novamente
      ```
-    sudo pip3 install -r requirements.txt
+     pip3 install -r requirements.txt
     ```
 
-9. Configure o arquivo settings.py e altere o caminho para ele no ``` manage.py``` e no ```wsgi.py``` usando a  linha abaixo:
+9. Configure o arquivo settings.py e altere o caminho para ele no ``` manage.py``` e no ```wsgi.py``` conforme o exemplo abaixo:
 ```
   os.environ.setdefault("DJANGO_SETTINGS_MODULE", "snc.config.settings.local")
 ```
@@ -105,13 +105,13 @@ CREATE DATABASE dbsnc;
 
 Criação de migração para cada APP
 ```
-sudo python3 manage.py makemigrations planotrabalho
-sudo python3 manage.py makemigrations gestao
-sudo python3 manage.py makemigrations adesao
+python3 manage.py makemigrations planotrabalho
+python3 manage.py makemigrations gestao
+python3 manage.py makemigrations adesao
 ```
 Comando migrate para criar a estrutura do banco (DDL)
 ```
-sudo python3 manage.py migrate
+python3 manage.py migrate
 ```
 Comando de importação da base atual
 OBS:o arquivo dump.json não é fornecido e deverá ser criado a partir dos registros existentes no banco de dados, caso
