@@ -113,6 +113,14 @@ Comando migrate para criar a estrutura do banco (DDL)
 ```
 python3 manage.py migrate
 ```
+
+Exclua as tabelas de controle do DJANGO geradas automaticamente
+
+```
+delete from auth_permission;
+delete from django_content_type;
+```
+
 Comando de importação da base atual
 OBS:o arquivo dump.json não é fornecido e deverá ser criado a partir dos registros existentes no banco de dados, caso
 ```
