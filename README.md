@@ -74,17 +74,18 @@ O arquivo pode ser baixado de forma direta e rápida utilizando o comando wget -
 
 8. Instale as dependências python do projeto
     ```
-    sudo pip install -r requirements.txt
+    pip3 install -r requirements.txt
     sudo apt-get install python3-dev
     ```
     OBS: Caso a dependência ```django-smart-selects==1.1.1``` dê erro, utilize
      ```
-     pip install https://pypi.python.org/packages/source/d/django-smart-selects/django-smart-selects-1.1.1.tar.gz
+
+     pip3 install https://pypi.python.org/packages/source/d/django-smart-selects/django-smart-selects-1.1.1.tar.gz
 
      ```
      E novamente
      ```
-    sudo pip install -r requirements.txt
+     pip3 install -r requirements.txt
     ```
 
 9. Configure o arquivo settings.py e altere o caminho para ele no ``` manage.py``` e no ```wsgi.py``` usando a  linha abaixo:
