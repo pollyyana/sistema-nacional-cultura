@@ -9,7 +9,13 @@
               <div class="row">
                   <div class="col-md-7">
                     <p><strong>Localização: </strong></p>
-                    <p><strong>Município:</strong> {{ object.municipio.cidade }}-{{ object.municipio.estado }}</p>
+                    <p><strong>Município:</strong>
+                    {% if object.municipio.cidade == None  %}
+                      {{ object.municipio.estado }}
+                    {% else %}
+                    {{object.municipio.cidade}}-{{ object.municipio.estado }}
+                    {% endif %}
+                    </p>
                     <p><strong>CNPJ:</strong> {{ object.municipio.cnpj_prefeitura }}</p>
                     <p><strong>Prefeito:</strong>
                         {% if object.municipio.termo_posse_prefeito %}
