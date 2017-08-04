@@ -10,12 +10,12 @@
                   <div class="col-md-7">
                     <p><strong>Localização: </strong></p>
                     <p><strong>Município:</strong>
-                    {% if object.municipio.cidade == None  %}
-                      {{ object.municipio.estado }}
-                    {% else %}
-                    {{object.municipio.cidade}}-{{ object.municipio.estado }}
-                    {% endif %}
-                    </p>
+                      {% if object.municipio.cidade == None  %}
+                       {{ object.municipio.estado }}
+                      {% else %}
+                        {{object.municipio.cidade}}-{{ object.municipio.estado }}
+                      {% endif %}
+                     </p>
                     <p><strong>CNPJ:</strong> {{ object.municipio.cnpj_prefeitura }}</p>
                     <p><strong>Prefeito:</strong>
                         {% if object.municipio.termo_posse_prefeito %}
@@ -122,7 +122,7 @@
   </div>
 
   <div class="panel-body">
-    {% if object.plano_trabalho.criacao_sistema.lei_sistema_cultura %}
+  {% if object.plano_trabalho.criacao_sistema.lei_sistema_cultura %}
     <div class="list-group row">
         <div class="col-md-12">
             <div  class="list-group-item col-xs-8">
@@ -130,13 +130,14 @@
             </div>
 
             <div class="list-group-item col-xs-2 text-center">
-                <a href="{{ object.plano_trabalho.criacao_sistema.lei_sistema_cultura.url }}">Download</a>
+              <a href="{{ object.plano_trabalho.criacao_sistema.lei_sistema_cultura.url }}">Download</a>
+            </div>
+        {% if object.plano_trabalho.criacao_sistema.situacao_lei_sistema_id == 1 %}
+
+              <div class="list-group-item col-xs-1 text-center ">
+                <a data-toggle="modal" data-target="#criacaosistema"><i class="fa fa-thumbs-down"></i></a>
             </div>
 
-            {% if object.plano_trabalho.criacao_sistema.situacao_lei_sistema_id == 1 %}
-            <div class="list-group-item col-xs-1 text-center">
-                <a href="{% url 'gestao:diligencia_documental' 'criacao_sistema' 'situacao_lei_sistema_id' usuario.id %}"><i class="fa fa-thumbs-down"></i></a>
-            </div>
             <div class="list-group-item col-xs-1 text-center">
                 <a href="{% url 'gestao:concluir_etapa' 'criacao_sistema' 'situacao_lei_sistema_id' usuario.id %}"><i class="fa fa-thumbs-up"></i></a>
             </div>
@@ -144,10 +145,11 @@
             <div class="list-group-item col-xs-2 text-center">
                 <b>{{ object.plano_trabalho.criacao_sistema.situacao_lei_sistema.descricao }}</b>
             </div>
-            {% endif %}
+        {% endif %}
+
         </div>
     </div>
-    {% endif %}
+  {% endif %}
 
     {% if object.plano_trabalho.orgao_gestor.relatorio_atividade_secretaria %}
     <div class="list-group row">
@@ -155,12 +157,14 @@
           <div  class="list-group-item col-xs-8">
             Órgão Gestor - Ato normativo
           </div>
+
           <div class="list-group-item col-xs-2 text-center">
-              <a href="{{ object.plano_trabalho.orgao_gestor.relatorio_atividade_secretaria.url }}">Download</a>
+            <a href="{{ object.plano_trabalho.orgao_gestor.relatorio_atividade_secretaria.url }}">Download</a>
           </div>
           {% if object.plano_trabalho.orgao_gestor.situacao_relatorio_secretaria.id == 1 %}
+
           <div class="list-group-item col-xs-1 text-center">
-              <a href="{% url 'gestao:diligencia_documental' 'orgao_gestor' 'situacao_relatorio_secretaria_id' usuario.id %}"><i class="fa fa-thumbs-down"></i></a>
+              <a data-toggle="modal" data-target="#orgaogestorr"><i class="fa fa-thumbs-down"></i></a>
           </div>
 
           <div class="list-group-item col-xs-1 text-center">
@@ -171,6 +175,7 @@
               <b>{{ object.plano_trabalho.orgao_gestor.situacao_relatorio_secretaria.descricao }}</b>
           </div>
           {% endif %}
+
       </div>
     </div>
     {% endif %}
@@ -183,12 +188,12 @@
           </div>
 
           <div class="list-group-item col-xs-2 text-center">
-              <a href="{{ object.plano_trabalho.conselho_cultural.ata_regimento_aprovado.url }}">Download</a>
+            <a href="{{ object.plano_trabalho.conselho_cultural.ata_regimento_aprovado.url }}">Download</a>
           </div>
-
           {% if object.plano_trabalho.conselho_cultural.situacao_ata.id == 1 %}
+
           <div class="list-group-item col-xs-1 text-center">
-              <a  href="{% url 'gestao:diligencia_documental' 'conselho_cultural' 'situacao_ata_id' usuario.id %}"><i class="fa fa-thumbs-down"></i></a>
+              <a  data-toggle="modal" data-target="#conselhocultural"><i class="fa fa-thumbs-down"></i></a>
           </div>
 
           <div class="list-group-item col-xs-1 text-center">
@@ -199,6 +204,7 @@
               <b>{{ object.plano_trabalho.conselho_cultural.situacao_ata.descricao }}</b>
           </div>
           {% endif %}
+
       </div>
     </div>
     {% endif %}
@@ -211,13 +217,12 @@
           </div>
 
           <div class="list-group-item col-xs-2 text-center">
-              <a href="{{ object.plano_trabalho.fundo_cultura.lei_fundo_cultura.url }}">Download</a>
+            <a href="{{ object.plano_trabalho.fundo_cultura.lei_fundo_cultura.url }}">Download</a>
           </div>
-
           {% if object.plano_trabalho.fundo_cultura.situacao_lei_plano.id == 1 %}
 
           <div class="list-group-item col-xs-1 text-center">
-              <a href="{% url 'gestao:diligencia_documental' 'fundo_cultura' 'situacao_lei_plano_id' usuario.id %}"><i class="fa fa-thumbs-down"></i></a>
+              <a data-toggle="modal" data-target="#fundocultura"><i class="fa fa-thumbs-down"></i></a>
           </div>
 
           <div class="list-group-item col-xs-1 text-center">
@@ -228,9 +233,12 @@
               <b>{{ object.plano_trabalho.fundo_cultura.situacao_lei_plano.descricao }}</b>
           </div>
           {% endif %}
+
        </div>
     </div>
     {% endif %}
+
+
 
     {% if object.plano_trabalho.plano_cultura.lei_plano_cultura %}
     <div class="list-group row">
@@ -240,44 +248,251 @@
           </div>
 
           <div class="list-group-item col-xs-2 text-center">
-              <a href="{{ object.plano_trabalho.criacao_sistema.lei_sistema_cultura.url }}">Download</a>
+            <a href="{{ object.plano_trabalho.criacao_sistema.lei_sistema_cultura.url }}">Download</a>
           </div>
           {% if object.plano_trabalho.plano_cultura.situacao_lei_plano.id == 1 %}
 
           <div class="list-group-item col-xs-1 text-center">
-              <a href="{% url 'gestao:diligencia_documental' 'plano_cultura' 'situacao_lei_plano_id' usuario.id %}"><i class="fa fa-thumbs-down"></i></a>
+              <a data-toggle="modal" data-target="#planocultura"><i class="fa fa-thumbs-down"></i></a>
           </div>
 
           <div class="list-group-item col-xs-1 text-center">
-              <a href="{% url 'gestao:concluir_etapa' 'plano_cultura' 'situacao_lei_plano' usuario.id %}"><i class="fa fa-thumbs-up"></i></a>
+              <a href="{% url 'gestao:concluir_etapa' 'plano_cultura' 'situacao_lei_plano_id' usuario.id %}"><i class="fa fa-thumbs-up"></i></a>
           </div>
           {% else %}
           <div class="list-group-item col-xs-2 text-center">
               <b>{{ object.plano_trabalho.plano_cultura.situacao_lei_plano.descricao }}</b>
           </div>
           {% endif %}
+
+
       </div>
     </div>
     {% endif %}
 
-        <!-- <div class="list-group row">
+<!-- situaçao geral do plano de trabalho -->
+  <div class="list-group row">
           <div class="col-md-12">
-              <p class="list-group-item col-md-10">
-                  <b>Situação Geral do Plano de Trabalho</b>
-              </p>
-                  {% if object.plano_trabalho.criacao_sistema.situacao_lei_sistema_id == 2 and object.plano_trabalho.orgao_gestor.situacao_relatorio_secretaria_id == 2 and object.plano_trabalho.conselho_cultural.situacao_ata_id == 2 and object.plano_trabalho.plano_cultura.situacao_lei_plano_id == 2 and object.plano_trabalho.fundo_cultura.situacao_lei_plano_id == 2 %}
-                  <div class="list-group-item col-md-2 text-center text-success">
-                  Aprovado <i class="fa fa-check-square-o"></i></a>
-                  {% else %}
-                  <div class="list-group-item col-md-2 text-center text-danger">
-                  Aguardando avaliação <a href="#" title="Enviar diligência"><i class="fa fa-paper-plane text-danger"></i></a>
-                  {% endif %}
+            <div class="list-group-item col-xs-8">
+              <b>Situação do Plano de Trabalho</b>
+            </div>
+            {% if object.plano_trabalho.criacao_sistema.situacao_lei_sistema_id == 1 or object.plano_trabalho.orgao_gestor.situacao_relatorio_secretaria_id == 1 or object.plano_trabalho.conselho_cultural.situacao_ata_id == 1 or object.plano_trabalho.plano_cultura.situacao_lei_plano_id == 1 or object.plano_trabalho.fundo_cultura.situacao_lei_plano_id == 1  %}
+                <div class="list-group-item col-xs-4 text-center text-danger">
+                  <b>Aguardando Avaliação</b> <i class="glyphicon glyphicon-remove"></i>
                 </div>
-              </div>
-          </div> -->
+
+            {% elif object.plano_trabalho.criacao_sistema.situacao_lei_sistema_id == 2 and object.plano_trabalho.orgao_gestor.situacao_relatorio_secretaria_id == 2 and object.plano_trabalho.conselho_cultural.situacao_ata_id == 2 and object.plano_trabalho.plano_cultura.situacao_lei_plano_id == 2 and object.plano_trabalho.fundo_cultura.situacao_lei_plano_id == 2 %}
+            <div class="list-group-item col-xs-4 text-center text-danger">
+              <b>Aprovado</b> <i class="fa fa-thumbs-up"></i>
+            </div>
+            <!--  -->
+            {% elif object.plano_trabalho.criacao_sistema.situacao_lei_sistema_id != 0  or object.plano_trabalho.orgao_gestor.situacao_relatorio_secretaria_id != 0 or object.plano_trabalho.conselho_cultural.situacao_ata_id != 0 or object.plano_trabalho.plano_cultura.situacao_lei_plano_id != 0 and object.plano_trabalho.fundo_cultura.situacao_lei_plano_id != 0 %}
+                <div class="list-group-item col-xs-2 text-center text-danger">
+                  <b>Não concluido</b> <i class="glyphicon glyphicon-remove"></i>
+                </div>
+                <div class="list-group-item col-xs-2 text-center">
+                  <a href="{% url 'gestao:diligencia_documental' 'plano_cultura' 'situacao_lei_plano_id' usuario.id %}">Criar Diligência</a>
+                </div>
+
+            {% elif object.plano_trabalho.criacao_sistema.situacao_lei_sistema_id != 1  or object.plano_trabalho.orgao_gestor.situacao_relatorio_secretaria_id != 1 or object.plano_trabalho.conselho_cultural.situacao_ata_id != 1 or object.plano_trabalho.plano_cultura.situacao_lei_plano_id != 1 and object.plano_trabalho.fundo_cultura.situacao_lei_plano_id != 1 %}
+                <div class="list-group-item col-xs-2 text-center text-danger">
+                  <b>Não concluido</b> <i class="glyphicon glyphicon-remove"></i>
+                </div>
+                <div class="list-group-item col-xs-2 text-center">
+                  <a href="{% url 'gestao:diligencia_documental' 'plano_cultura' 'situacao_lei_plano_id' usuario.id %}">Criar Diligência</a>
+                </div>
+
+            {% elif object.plano_trabalho.criacao_sistema.situacao_lei_sistema_id != 2  or object.plano_trabalho.orgao_gestor.situacao_relatorio_secretaria_id != 2 or object.plano_trabalho.conselho_cultural.situacao_ata_id != 2 or object.plano_trabalho.plano_cultura.situacao_lei_plano_id != 2 and object.plano_trabalho.fundo_cultura.situacao_lei_plano_id != 2 %}
+                  <div class="list-group-item col-xs-2 text-center text-danger">
+                    <b>Não concluido</b> <i class="glyphicon glyphicon-remove"></i>
+                  </div>
+                  <div class="list-group-item col-xs-2 text-center">
+                    <a href="{% url 'gestao:diligencia_documental' 'plano_cultura' 'situacao_lei_plano_id' usuario.id %}">Criar Diligência</a>
+                  </div>
+
+            {% endif %}
+          </div>
+
+        </div>
+
+
+
+
+
+
     </div>
 </div>
 {% endif %}
+
+<!--AVALIAÇÂO NEGATIVA == CRIAÇÂO SISTEMA-->
+
+<div class="modal fade" id="criacaosistema" tabindex="-1" role="dialog">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title">Motivo da Reprovação:</h4>
+      </div>
+      <div class="modal-body">
+        <div class="list-group row">
+           <a href="{% url 'gestao:situacao_3' 'criacao_sistema' 'situacao_lei_sistema_id' usuario.id %}" class="list-group-item">
+               Arquivo aprovado com ressalvas
+            </a>
+           <a href="{% url 'gestao:situacao_4' 'criacao_sistema' 'situacao_lei_sistema_id' usuario.id %}" class="list-group-item">
+               Arquivo danificado
+            </a>
+           <a href="{% url 'gestao:situacao_5' 'criacao_sistema' 'situacao_lei_sistema_id' usuario.id %}" class="list-group-item">
+               Arquivo incompleto
+            </a>
+           <a href="{% url 'gestao:situacao_6' 'criacao_sistema' 'situacao_lei_sistema_id' usuario.id %}" class="list-group-item">
+               Arquivo incorreto
+            </a>
+
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+
+<!--AVALIAÇÂO NEGATIVA == ORGAO GESTOR-->
+
+<div class="modal fade" id="orgaogestorr" tabindex="-1" role="dialog">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title">Motivo da Reprovação:</h4>
+      </div>
+      <div class="modal-body">
+        <div class="list-group row">
+           <a href="{% url 'gestao:situacao_3' 'orgao_gestor' 'situacao_relatorio_secretaria_id' usuario.id %}" class="list-group-item">
+               Arquivo aprovado com ressalvas
+            </a>
+           <a href="{% url 'gestao:situacao_4' 'orgao_gestor' 'situacao_relatorio_secretaria_id' usuario.id %}" class="list-group-item">
+               Arquivo danificado
+            </a>
+           <a href="{% url 'gestao:situacao_5' 'orgao_gestor' 'situacao_relatorio_secretaria_id' usuario.id %}" class="list-group-item">
+               Arquivo incompleto
+            </a>
+           <a href="{% url 'gestao:situacao_6' 'orgao_gestor' 'situacao_relatorio_secretaria_id' usuario.id %}" class="list-group-item">
+               Arquivo incorreto
+            </a>
+
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+
+<!--AVALIAÇÂO NEGATIVA == CONSELHO CULTURAL-->
+
+<div class="modal fade" id="conselhocultural" tabindex="-1" role="dialog">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title">Motivo da Reprovação:</h4>
+      </div>
+      <div class="modal-body">
+        <div class="list-group row">
+           <a href="{% url 'gestao:situacao_3' 'conselho_cultural' 'situacao_ata_id' usuario.id %}" class="list-group-item">
+               Arquivo aprovado com ressalvas
+            </a>
+           <a href="{% url 'gestao:situacao_4' 'conselho_cultural' 'situacao_ata_id' usuario.id %}" class="list-group-item">
+               Arquivo danificado
+            </a>
+           <a href="{% url 'gestao:situacao_5' 'conselho_cultural' 'situacao_ata_id' usuario.id %}" class="list-group-item">
+               Arquivo incompleto
+            </a>
+           <a href="{% url 'gestao:situacao_6' 'conselho_cultural' 'situacao_ata_id' usuario.id %}" class="list-group-item">
+               Arquivo incorreto
+            </a>
+
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+
+<!--AVALIAÇÂO NEGATIVA == FUNDO CULTURA-->
+
+<div class="modal fade" id="fundocultura" tabindex="-1" role="dialog">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title">Motivo da Reprovação:</h4>
+      </div>
+      <div class="modal-body">
+        <div class="list-group row">
+           <a href="{% url 'gestao:situacao_3' 'fundo_cultura' 'situacao_lei_plano_id' usuario.id %}" class="list-group-item">
+               Arquivo aprovado com ressalvas
+            </a>
+           <a href="{% url 'gestao:situacao_4' 'fundo_cultura' 'situacao_lei_plano_id' usuario.id %}" class="list-group-item">
+               Arquivo danificado
+            </a>
+           <a href="{% url 'gestao:situacao_5' 'fundo_cultura' 'situacao_lei_plano_id' usuario.id %}" class="list-group-item">
+               Arquivo incompleto
+            </a>
+           <a href="{% url 'gestao:situacao_6' 'fundo_cultura' 'situacao_lei_plano_id' usuario.id %}" class="list-group-item">
+               Arquivo incorreto
+            </a>
+
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- AVALIAÇÂO NEGATIVA == PLANO CULTURA-->
+
+<div class="modal fade" id="planocultura" tabindex="-1" role="dialog">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title">Motivo da Reprovação:</h4>
+      </div>
+      <div class="modal-body">
+        <div class="list-group row">
+           <a href="{% url 'gestao:situacao_3' 'plano_cultura' 'situacao_lei_plano_id' usuario.id %}" class="list-group-item">
+               Arquivo aprovado com ressalvas
+            </a>
+           <a href="{% url 'gestao:situacao_4' 'plano_cultura' 'situacao_lei_plano_id' usuario.id %}" class="list-group-item">
+               Arquivo danificado
+            </a>
+           <a href="{% url 'gestao:situacao_5' 'plano_cultura' 'situacao_lei_plano_id' usuario.id %}" class="list-group-item">
+               Arquivo incompleto
+            </a>
+           <a href="{% url 'gestao:situacao_6' 'plano_cultura' 'situacao_lei_plano_id' usuario.id %}" class="list-group-item">
+               Arquivo incorreto
+            </a>
+
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+
+      </div>
+    </div>
+  </div>
+</div>
+</div>
 
 
 <div class="row">
@@ -389,6 +604,27 @@
     }
     $('#select_situacoes').change(situacao_campos).ready(situacao_campos);
 
-  });
+
+});
+
+  $("#thumbs").click(function() {
+  $("#criacaosistema").modal('show');
+});
+
+  $("#thumbs").click(function() {
+  $("#orgaogestorr").modal('show');
+});
+
+  $("#thumbs").click(function() {
+  $("#conselhocultural").modal('show');
+});
+
+  $("#thumbs").click(function() {
+  $("#fundocultura").modal('show');
+});
+
+  $("#thumbs").click(function() {
+  $("#planocultura").modal('show');
+});
 </script>
 {% endblock js%}

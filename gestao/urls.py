@@ -31,6 +31,26 @@ urlpatterns = [
         staff_member_required(
             views.concluir_etapa,
             login_url='adesao:login'), name='concluir_etapa'),
+    # Situação da Avaliação = '3'
+    url(r'^reprovar/(?P<etapa>[\w]+)/(?P<st>[\w]+)/(?P<id>[\w]+)$',
+        staff_member_required(
+            views.situacao_3,
+            login_url='adesao:login'), name='situacao_3'),
+    # Situação da Avaliação = '4'
+    url(r'^reprovar4/(?P<etapa>[\w]+)/(?P<st>[\w]+)/(?P<id>[\w]+)$',
+        staff_member_required(
+            views.situacao_4,
+            login_url='adesao:login'), name='situacao_4'),
+    # Situação da Avaliação = '5'
+    url(r'^reprovar5/(?P<etapa>[\w]+)/(?P<st>[\w]+)/(?P<id>[\w]+)$',
+        staff_member_required(
+            views.situacao_5,
+            login_url='adesao:login'), name='situacao_5'),
+    # Situação da Avaliação = '6'
+    url(r'^reprovar6/(?P<etapa>[\w]+)/(?P<st>[\w]+)/(?P<id>[\w]+)$',
+        staff_member_required(
+            views.situacao_6,
+            login_url='adesao:login'), name='situacao_6'),
 
     # Detalhar usuário
     url(r'^detalhar/municipio/(?P<pk>[0-9]+)$',

@@ -3,7 +3,7 @@ from django import forms
 from django.forms import ModelForm
 from django.forms.widgets import FileInput
 
-from .models import CriacaoSistema, OrgaoGestor, ConselhoCultural
+from .models import CriacaoSistema, OrgaoGestor, ConselhoCultural, FundoCultura
 from .models import FundoCultura, PlanoCultura, Conselheiro, SITUACAO_CONSELHEIRO
 from .utils import validar_cnpj, add_anos
 
@@ -174,6 +174,7 @@ class FundoCulturaForm(ModelForm):
     class Meta:
         model = FundoCultura
         fields = ['cnpj_fundo_cultura', ]
+
 
 
 class PlanoCulturaForm(ModelForm):

@@ -181,6 +181,32 @@ def concluir_etapa(request, etapa, st, id):
     getattr(usuario.plano_trabalho, etapa).save()
     return redirect('gestao:detalhar', pk=id)
 
+def situacao_3 (request, etapa, st, id):
+    usuario = Usuario.objects.get(id=id)
+    setattr(getattr(usuario.plano_trabalho, etapa), st, 3)
+    getattr(usuario.plano_trabalho, etapa).save()
+    return redirect('gestao:detalhar', pk=id)
+
+def situacao_4 (request, etapa, st, id):
+    usuario = Usuario.objects.get(id=id)
+    setattr(getattr(usuario.plano_trabalho, etapa), st, 4)
+    getattr(usuario.plano_trabalho, etapa).save()
+    return redirect('gestao:detalhar', pk=id)
+
+def situacao_5 (request, etapa, st, id):
+    usuario = Usuario.objects.get(id=id)
+    setattr(getattr(usuario.plano_trabalho, etapa), st, 5)
+    getattr(usuario.plano_trabalho, etapa).save()
+    return redirect('gestao:detalhar', pk=id)
+
+def situacao_6 (request, etapa, st, id):
+    usuario = Usuario.objects.get(id=id)
+    setattr(getattr(usuario.plano_trabalho, etapa), st, 6)
+    getattr(usuario.plano_trabalho, etapa).save()
+    return redirect('gestao:detalhar', pk=id)
+
+
+
 
 class DetalharUsuario(DetailView):
     model = Usuario
