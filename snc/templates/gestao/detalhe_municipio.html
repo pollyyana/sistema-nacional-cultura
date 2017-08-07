@@ -276,16 +276,22 @@
             <div class="list-group-item col-xs-8">
               <b>Situação do Plano de Trabalho</b>
             </div>
-            {% if object.plano_trabalho.criacao_sistema.situacao_lei_sistema_id == 1 or object.plano_trabalho.orgao_gestor.situacao_relatorio_secretaria_id == 1 or object.plano_trabalho.conselho_cultural.situacao_ata_id == 1 or object.plano_trabalho.plano_cultura.situacao_lei_plano_id == 1 or object.plano_trabalho.fundo_cultura.situacao_lei_plano_id == 1  %}
+            {% if object.plano_trabalho.criacao_sistema.situacao_lei_sistema_id == 1 and object.plano_trabalho.orgao_gestor.situacao_relatorio_secretaria_id == 1 and object.plano_trabalho.conselho_cultural.situacao_ata_id == 1 and object.plano_trabalho.plano_cultura.situacao_lei_plano_id == 1 and object.plano_trabalho.fundo_cultura.situacao_lei_plano_id == 1  %}
                 <div class="list-group-item col-xs-4 text-center text-danger">
                   <b>Aguardando Avaliação</b> <i class="glyphicon glyphicon-remove"></i>
                 </div>
-
             {% elif object.plano_trabalho.criacao_sistema.situacao_lei_sistema_id == 2 and object.plano_trabalho.orgao_gestor.situacao_relatorio_secretaria_id == 2 and object.plano_trabalho.conselho_cultural.situacao_ata_id == 2 and object.plano_trabalho.plano_cultura.situacao_lei_plano_id == 2 and object.plano_trabalho.fundo_cultura.situacao_lei_plano_id == 2 %}
-            <div class="list-group-item col-xs-4 text-center text-danger">
-              <b>Aprovado</b> <i class="fa fa-thumbs-up"></i>
-            </div>
-            <!--  -->
+                <div class="list-group-item col-xs-4 text-center text-danger">
+                  <b>Aprovado</b> <i class="fa fa-thumbs-up"></i>
+                </div>
+
+            {% elif object.plano_trabalho.criacao_sistema.situacao_lei_sistema_id == 2 or object.plano_trabalho.orgao_gestor.situacao_relatorio_secretaria_id == 2 or object.plano_trabalho.conselho_cultural.situacao_ata_id == 2 or object.plano_trabalho.plano_cultura.situacao_lei_plano_id == 2 or object.plano_trabalho.fundo_cultura.situacao_lei_plano_id == 2 %}
+                <div class="list-group-item col-xs-4 text-center text-danger">
+                  <b>Avaliações pendentes</b> <i class="fa fa-thumbs-up"></i>
+                </div>
+
+
+
             {% elif object.plano_trabalho.criacao_sistema.situacao_lei_sistema_id != 0  or object.plano_trabalho.orgao_gestor.situacao_relatorio_secretaria_id != 0 or object.plano_trabalho.conselho_cultural.situacao_ata_id != 0 or object.plano_trabalho.plano_cultura.situacao_lei_plano_id != 0 and object.plano_trabalho.fundo_cultura.situacao_lei_plano_id != 0 %}
                 <div class="list-group-item col-xs-2 text-center text-danger">
                   <b>Não concluido</b> <i class="glyphicon glyphicon-remove"></i>
