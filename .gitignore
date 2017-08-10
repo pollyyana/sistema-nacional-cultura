@@ -11,6 +11,8 @@
 *.json
 *migrations*
 *settings_*
+manage.py
+snc/wsgi.py
 
 # ignore pycharm files
 *.idea
