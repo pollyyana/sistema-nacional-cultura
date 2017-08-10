@@ -173,7 +173,7 @@ class FundoCulturaForm(ModelForm):
 
     class Meta:
         model = FundoCultura
-        fields = ['cnpj_fundo_cultura', ]
+        fields = ['cnpj_fundo_cultura', 'lei_fundo_cultura']
 
 
 

@@ -274,7 +274,7 @@
   <div class="list-group row">
           <div class="col-md-12">
             <div class="list-group-item col-xs-8">
-              <b>Situação do Plano de Trabalho</b>
+              <b>Situação Geral do Plano de Trabalho</b>
             </div>
             {% if object.plano_trabalho.criacao_sistema.situacao_lei_sistema_id == 1 or object.plano_trabalho.orgao_gestor.situacao_relatorio_secretaria_id == 1 or object.plano_trabalho.conselho_cultural.situacao_ata_id == 1 or object.plano_trabalho.plano_cultura.situacao_lei_plano_id == 1 or object.plano_trabalho.fundo_cultura.situacao_lei_plano_id == 1  %}
                 <div class="list-group-item col-xs-4 text-center text-danger">
@@ -282,7 +282,7 @@
                 </div>
 
             {% elif object.plano_trabalho.criacao_sistema.situacao_lei_sistema_id == 2 and object.plano_trabalho.orgao_gestor.situacao_relatorio_secretaria_id == 2 and object.plano_trabalho.conselho_cultural.situacao_ata_id == 2 and object.plano_trabalho.plano_cultura.situacao_lei_plano_id == 2 and object.plano_trabalho.fundo_cultura.situacao_lei_plano_id == 2 %}
-                <div class="list-group-item col-xs-4 text-center text-danger">
+                <div class="list-group-item col-xs-4 text-center text-success">
                   <b>Aprovado</b> <i class="fa fa-thumbs-up"></i>
                 </div>
 
@@ -349,7 +349,7 @@
             </a>
 
       </div>
-    
+
     </div>
   </div>
 </div>
