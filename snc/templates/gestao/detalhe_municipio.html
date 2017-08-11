@@ -248,7 +248,7 @@
           </div>
 
           <div class="list-group-item col-xs-2 text-center">
-            <a href="{{ object.plano_trabalho.criacao_sistema.lei_sistema_cultura.url }}">Download</a>
+            <a href="{{ object.plano_trabalho.plano_cultura.lei_plano_cultura.url }}">Download</a>
           </div>
           {% if object.plano_trabalho.plano_cultura.situacao_lei_plano.id == 1 %}
 
@@ -334,7 +334,7 @@
         <h4 class="modal-title">Motivo da Reprovação:</h4>
       </div>
       <div class="modal-body">
-        <div class="list-group row">
+        <div class="list-group">
            <a href="{% url 'gestao:situacao_3' 'criacao_sistema' 'situacao_lei_sistema_id' usuario.id %}" class="list-group-item">
                Arquivo aprovado com ressalvas
             </a>
