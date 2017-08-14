@@ -88,7 +88,7 @@ O arquivo pode ser baixado de forma direta e rápida utilizando o comando wget -
      pip3 install -r requirements.txt
     ```
 
-9. Configure o arquivo settings.py e altere o caminho para ele no ``` manage.py``` e no ```wsgi.py``` conforme o exemplo abaixo:
+9. Configure o arquivo settings.py e altere o caminho para ele no ``` manage.py``` e no ```wsgi.py``` usando a  linha abaixo:
 ```
   os.environ.setdefault("DJANGO_SETTINGS_MODULE", "snc.config.settings.local")
 ```
