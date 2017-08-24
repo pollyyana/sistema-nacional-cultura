@@ -1,4 +1,4 @@
-﻿BEGIN;
+BEGIN;
 
 CREATE TABLE "planotrabalho_situacoesarquivoplano" ("id" serial NOT NULL PRIMARY KEY, "descricao" varchar(75) NOT NULL);
 INSERT INTO "planotrabalho_situacoesarquivoplano" (id,descricao) VALUES ('0','Em preenchimento');
@@ -8,6 +8,13 @@ INSERT INTO "planotrabalho_situacoesarquivoplano" (id,descricao) VALUES ('3','Ar
 INSERT INTO "planotrabalho_situacoesarquivoplano" (id,descricao) VALUES ('4','Arquivo danificado');
 INSERT INTO "planotrabalho_situacoesarquivoplano" (id,descricao) VALUES ('5','Arquivo incompleto');
 INSERT INTO "planotrabalho_situacoesarquivoplano" (id,descricao) VALUES ('6','Arquivo incorreto');
+
+ALTER TABLE "planotrabalho_criacaosistema" DROP "situacao_minuta" CASCADE;
+ALTER TABLE "planotrabalho_planocultura" DROP "situacao_ata" CASCADE;
+ALTER TABLE "planotrabalho_planocultura"DROP "situacao_ata_votacao" CASCADE;
+ALTER TABLE "planotrabalho_planocultura" DROP "situacao_minuta" CASCADE;
+ALTER TABLE "planotrabalho_planocultura" DROP "situacao_relatorio_diretrizes" CASCADE;
+
 
 ALTER TABLE "planotrabalho_conselhocultural" RENAME COLUMN "situacao_ata" TO "situacao_ata_id";
 ALTER TABLE "planotrabalho_conselhocultural" ALTER COLUMN "situacao_ata_id" TYPE integer USING "situacao_ata_id"::INTEGER;
