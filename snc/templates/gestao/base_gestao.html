@@ -122,6 +122,108 @@
                       </div>
                       </li>
 
+                        <!--TESTE CHRISTIAN -->
+
+                        <li>
+                           <a href="#" data-toggle="collapse" data-target="#acompanhar_processos"><i class="fa fa-exchange fa-fw"></i>  Acompanhar Processos<span class="fa arrow"></span></a>
+                           <div class="collapse" id="acompanhar_processos" style="height: 0px;">
+                             <ul class="nav nav-second-level">
+                             <li>
+                               <a href="{% url 'gestao:acompanhar_adesao' %}?situacao=1">
+                                 Aguardando envio da documentação
+                               </a>
+                             </li>
+
+                             <li>
+                               <a href="{% url 'gestao:acompanhar_adesao' %}?situacao=2">
+                                 Documentação Recebida - Aguarda Análise
+                               </a>
+                             </li>
+
+                             <li>
+                               <a href="{% url 'gestao:acompanhar_adesao' %}?situacao=3">
+                                 Diligência Documental
+                               </a>
+                             </li>
+
+                             <li>
+                               <a href="{% url 'gestao:acompanhar_adesao' %}?situacao=4">
+                                 Encaminhado para assinatura do Secretário SAI
+                               </a>
+                             </li>
+
+                             <li>
+                               <a href="{% url 'gestao:acompanhar_adesao' %}?situacao=5">
+                                 Aguarda Publicação no DOU
+                               </a>
+                             </li>
+
+                           </ul>
+                         </div>
+
+                       </li>
+                         <!-- Acompanhamento da execução do Plano de Trabalho -->
+                          <li>
+                           <a href="#" data-toggle="collapse" data-target="#plano_trabalho"><i class="fa fa-sitemap fa-fw"></i>  Plano de Trabalho<span class="fa arrow"></span></a>
+                           <div class="collapse" id="plano_trabalho" style="height: 0px;">
+                           <ul class="nav nav-second-level">
+                             <li>
+                               <a href="#" data-toggle="collapse" data-target="#sistema_cultura">  Sistema de Cultura<span class="fa arrow"></span>
+                               </a>
+                               <div class="collapse" id="sistema_cultura" style="height: 0px;">
+                                 <ul class="nav nav-third-level">
+                                   <li><a href="{% url 'gestao:acompanhar_sistema' %}?anexo=lei_sistema_cultura">Lei</a></li>
+                                 </ul>
+                               </div>
+                             </li>
+
+                               <li>
+                                 <a href="#" data-toggle="collapse" data-target="#orgao">
+                                   Órgão Gestor<span class="fa arrow"></span>
+                                 </a>
+                                 <div class="collapse" id="orgao" style="height: 0px;">
+                                   <ul class="nav nav-third-level">
+                                     <li><a href="{% url 'gestao:acompanhar_orgao' %}">Ato normativo</a></li>
+                                   </ul>
+                                 </div>
+                               </li>
+
+                               <li>
+                                 <a href="#" data-toggle="collapse" data-target="#conselho">
+                                   Conselho Cultural<span class="fa arrow"></span>
+                                 </a>
+                                 <div class="collapse" id="conselho" style="height: 0px;">
+                                   <ul class="nav nav-third-level">
+                                     <li><a href="{% url 'gestao:acompanhar_conselho' %}">Ata</a></li>
+                                   </ul>
+                                 </div>
+                               </li>
+
+                               <li>
+                                 <a href="#" data-toggle="collapse" data-target="#fundo">
+                                   Fundo de Cultura<span class="fa arrow"></span>
+                                 </a>
+                                 <div class="collapse" id="fundo" style="height: 0px;">
+                                   <ul class="nav nav-third-level">
+                                     <li><a href="{% url 'gestao:acompanhar_fundo' %}">Lei</a></li>
+                                   </ul>
+                                 </div>
+                             </li>
+
+                             <li>
+                               <a href="#" data-toggle="collapse" data-target="#plano_cultura">
+                                 Plano de Cultura<span class="fa arrow"></span>
+                               </a>
+                               <div class="collapse" id="plano_cultura" style="height: 0px;">
+                                 <ul class="nav nav-third-level">
+                                   <li><a href="{% url 'gestao:acompanhar_plano' %}?anexo=lei_plano_cultura">Lei</a></li>
+                                 </ul>
+                               </div>
+                             </li>
+                           </ul>
+                          </div>
+                         </li>
+
                         <!-- Inserção de documentos faltantes-->
 
                         <li>
