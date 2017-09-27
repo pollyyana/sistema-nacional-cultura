@@ -205,7 +205,116 @@ def situacao_6 (request, etapa, st, id):
     getattr(usuario.plano_trabalho, etapa).save()
     return redirect('gestao:detalhar', pk=id)
 
+#Teste Christian
 
+class AcompanharSistema(ListView):
+    template_name = 'gestao/planotrabalho/acompanhar_sistema.html'
+    paginate_by = 10
+
+    def get_queryset(self):
+        anexo = self.request.GET.get('anexo', None)
+        q = self.request.GET.get('q', None)
+        if not anexo:
+            raise Http404()
+        usuarios = Usuario.objects.filter(estado_processo='6')
+        usuarios = usuarios.exclude(plano_trabalho__criacao_sistema=None)
+
+        if anexo == 'lei_sistema_cultura':
+            usuarios = usuarios.filter(
+                plano_trabalho__criacao_sistema__situacao_lei_sistema=1)
+            usuarios = usuarios.exclude(
+                plano_trabalho__criacao_sistema__lei_sistema_cultura='')
+        else:
+            raise Http404()
+
+        if q:
+            usuarios = usuarios.filter(
+                municipio__cidade__nome_municipio__icontains=q)
+
+        return usuarios
+
+
+class AcompanharOrgao(ListView):
+    template_name = 'gestao/planotrabalho/acompanhar_orgao.html'
+    paginate_by = 10
+
+    def get_queryset(self):
+        q = self.request.GET.get('q', None)
+        usuarios = Usuario.objects.filter(estado_processo='6')
+        usuarios = usuarios.exclude(plano_trabalho__orgao_gestor=None)
+        usuarios = usuarios.filter(
+            plano_trabalho__orgao_gestor__situacao_relatorio_secretaria=1)
+        usuarios = usuarios.exclude(
+            plano_trabalho__orgao_gestor__relatorio_atividade_secretaria='')
+        if q:
+            usuarios = usuarios.filter(
+                municipio__cidade__nome_municipio__icontains=q)
+        return usuarios
+
+
+class AcompanharConselho(ListView):
+    template_name = 'gestao/planotrabalho/acompanhar_conselho.html'
+    paginate_by = 10
+
+    def get_queryset(self):
+        q = self.request.GET.get('q', None)
+        usuarios = Usuario.objects.filter(estado_processo='6')
+        usuarios = usuarios.exclude(plano_trabalho__conselho_cultural=None)
+        usuarios = usuarios.filter(
+            plano_trabalho__conselho_cultural__situacao_ata=1)
+        usuarios = usuarios.exclude(
+            plano_trabalho__conselho_cultural__ata_regimento_aprovado='')
+        if q:
+            usuarios = usuarios.filter(
+                municipio__cidade__nome_municipio__icontains=q)
+        return usuarios
+
+
+class AcompanharFundo(ListView):
+    template_name = 'gestao/planotrabalho/acompanhar_fundo.html'
+    paginate_by = 10
+
+    def get_queryset(self):
+        q = self.request.GET.get('q', None)
+        usuarios = Usuario.objects.filter(estado_processo='6')
+        usuarios = usuarios.exclude(plano_trabalho__fundo_cultura=None)
+        usuarios = usuarios.filter(
+            plano_trabalho__fundo_cultura__situacao_lei_plano=1)
+        usuarios = usuarios.exclude(
+            plano_trabalho__fundo_cultura__lei_fundo_cultura='')
+        if q:
+            usuarios = usuarios.filter(
+                municipio__cidade__nome_municipio__icontains=q)
+        return usuarios
+
+
+class AcompanharPlano(ListView):
+    template_name = 'gestao/planotrabalho/acompanhar_plano.html'
+    paginate_by = 10
+
+    def get_queryset(self):
+        anexo = self.request.GET.get('anexo', None)
+        q = self.request.GET.get('q', None)
+        if not anexo:
+            raise Http404()
+        usuarios = Usuario.objects.filter(estado_processo='6')
+        usuarios = usuarios.exclude(plano_trabalho__plano_cultura=None)
+
+        if anexo == 'lei_plano_cultura':
+            usuarios = usuarios.filter(
+                plano_trabalho__plano_cultura__situacao_lei_plano=1)
+            usuarios = usuarios.exclude(
+                plano_trabalho__plano_cultura__lei_plano_cultura='')
+        else:
+            raise Http404()
+
+        if q:
+            usuarios = usuarios.filter(
+                municipio__cidade__nome_municipio__icontains=q)
+
+        return usuarios
+
+#Teste Christian
 
 
 class DetalharUsuario(DetailView):
