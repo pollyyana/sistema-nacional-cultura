@@ -32,9 +32,9 @@
               {% for usuario in object_list %}
                 <tr class="odd gradeX">
                 {% if usuario.municipio.cidade %}
-                  <td>{{ usuario.municipio.cidade }}/{{ usuario.municipio.estado }}</td>
+                  <td><a href="{% url 'gestao:detalhar' usuario.id %}">{{ usuario.municipio.cidade }}/{{ usuario.municipio.estado }}</a></td>
                 {% else %}
-                  <td>{{ usuario.municipio.estado.nome_uf }}</td>
+                  <td><a href="{% url 'gestao:detalhar' usuario.id %}">{{ usuario.municipio.estado.nome_uf }}</a></td>
                 {% endif %}
                   <td>{{ usuario.municipio.cnpj_prefeitura }}</td>
                   <td>
