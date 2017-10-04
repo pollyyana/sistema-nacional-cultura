@@ -128,13 +128,15 @@ def exportar_ods(request):
     planilha.write(0, 5, 'Bairro')
     planilha.write(0, 6, 'CEP')
     planilha.write(0, 7, 'Telefone')
-    planilha.write(0, 8, 'Email')
-    planilha.write(0, 9, 'Localização do processo')
-    planilha.write(0, 10, 'Possui Lei do Sistema de Cultura')
-    planilha.write(0, 11, 'Possui Órgão Gestor')
-    planilha.write(0, 12, 'Possui Conselho de Política Cultural')
-    planilha.write(0, 13, 'Possui Fundo de Cultura')
-    planilha.write(0, 14, 'Possui Plano de Cultura')
+    planilha.write(0, 8, 'Email Prefeito')
+    planilha.write(0, 9, 'Email do Cadastrador')
+    planilha.write(0, 10, 'Email do Responsável')
+    planilha.write(0, 11, 'Localização do processo')
+    planilha.write(0, 12, 'Possui Lei do Sistema de Cultura')
+    planilha.write(0, 13, 'Possui Órgão Gestor')
+    planilha.write(0, 14, 'Possui Conselho de Política Cultural')
+    planilha.write(0, 15, 'Possui Fundo de Cultura')
+    planilha.write(0, 16, 'Possui Plano de Cultura')
 
     for i, municipio in enumerate(Municipio.objects.all().order_by('-cidade'), start=1):
         uf = municipio.estado.sigla
@@ -146,15 +148,21 @@ def exportar_ods(request):
             cod_ibge = municipio.estado.codigo_ibge
         try:
             estado_processo = municipio.usuario.get_estado_processo_display()
-            if estado_processo != 'Publicado no DOU':
-                continue
         except ObjectDoesNotExist:
+            #Documentando: isso foi colocado aqui pois, os municipios migrados
+            #fizeram adesão sem cadastrador e consequentemente estado do processo
             estado_processo = 'Publicado no DOU'
         endereco = municipio.endereco
         bairro = municipio.bairro
         cep = municipio.cep
         telefone = municipio.telefone_um
-        email = municipio.email_institucional_prefeito
+        email_prefeito = municipio.email_institucional_prefeito
+        try:
+            #email_cadastrador = Usuario.objects.get(municipio_id=municipio.id).user.email
+            email_cadastrador = municipio.usuario.user.email
+            print(Usuario.objects.get(municipio_id=municipio.id).user.email)
+        except ObjectDoesNotExist:
+            email_cadastrador = ""
         local = municipio.localizacao
 
         planilha.write(i, 0, uf)
@@ -165,13 +173,15 @@ def exportar_ods(request):
         planilha.write(i, 5, bairro)
         planilha.write(i, 6, cep)
         planilha.write(i, 7, telefone)
-        planilha.write(i, 8, email)
-        planilha.write(i, 9, local)
-        planilha.write(i, 10, verificar_anexo(municipio, 'criacao_sistema', 'lei_sistema_cultura'))
-        planilha.write(i, 11, verificar_anexo(municipio, 'orgao_gestor', 'relatorio_atividade_secretaria'))
-        planilha.write(i, 12, verificar_anexo(municipio, 'conselho_cultural', 'ata_regimento_aprovado'))
-        planilha.write(i, 13, verificar_anexo(municipio, 'fundo_cultura', 'lei_fundo_cultura'))
-        planilha.write(i, 14, verificar_anexo(municipio, 'plano_cultura', 'lei_plano_cultura'))
+        planilha.write(i, 8, email_prefeito)
+        planilha.write(i, 9, email_cadastrador)
+        planilha.write(i, 10, email_prefeito)
+        planilha.write(i, 11, local)
+        planilha.write(i, 12, verificar_anexo(municipio, 'criacao_sistema', 'lei_sistema_cultura'))
+        planilha.write(i, 13, verificar_anexo(municipio, 'orgao_gestor', 'relatorio_atividade_secretaria'))
+        planilha.write(i, 14, verificar_anexo(municipio, 'conselho_cultural', 'ata_regimento_aprovado'))
+        planilha.write(i, 15, verificar_anexo(municipio, 'fundo_cultura', 'lei_fundo_cultura'))
+        planilha.write(i, 16, verificar_anexo(municipio, 'plano_cultura', 'lei_plano_cultura'))
 
     workbook.save(response)
 
