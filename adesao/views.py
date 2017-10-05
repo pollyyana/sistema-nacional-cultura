@@ -1,5 +1,7 @@
 import csv
 import xlwt
+import xlsxwriter
+from io import BytesIO
 from datetime import timedelta
 from threading import Thread
 
@@ -199,11 +201,14 @@ def exportar_ods(request):
 
 
 def exportar_xls(request):
-        response = HttpResponse(content_type='application/vnd.ms-excel')
-        response['Content-Disposition'] = 'attachment; filename="dados-municipios-cadastrados-snc.xls"'
 
-        workbook = xlwt.Workbook()
-        planilha = workbook.add_sheet('SNC')
+        output = BytesIO()
+
+        #workbook = xlwt.Workbook()
+        workbook = xlsxwriter.Workbook(output)
+        #planilha = workbook.add_sheet('SNC')
+        planilha = workbook.add_worksheet('SNC')
+
         planilha.write(0, 0, 'UF')
         planilha.write(0, 1, 'Ente Federado')
         planilha.write(0, 2, 'Cod.IBGE')
@@ -221,7 +226,7 @@ def exportar_xls(request):
         planilha.write(0, 14, 'Possui Conselho de Política Cultural')
         planilha.write(0, 15, 'Possui Fundo de Cultura')
         planilha.write(0, 16, 'Possui Plano de Cultura')
-
+        ultima_linha = 0
         for i, municipio in enumerate(Municipio.objects.all().order_by('-cidade'), start=1):
             uf = municipio.estado.sigla
             if municipio.cidade:
@@ -276,8 +281,15 @@ def exportar_xls(request):
             planilha.write(i, 14, verificar_anexo(municipio, 'conselho_cultural', 'ata_regimento_aprovado'))
             planilha.write(i, 15, verificar_anexo(municipio, 'fundo_cultura', 'lei_fundo_cultura'))
             planilha.write(i, 16, verificar_anexo(municipio, 'plano_cultura', 'lei_plano_cultura'))
+            ultima_linha = i
 
-        workbook.save(response)
+        #workbook.save(response)
+        planilha.autofilter(0, 0, ultima_linha, 16)
+        workbook.close()
+        output.seek(0)
+
+        response = HttpResponse(output.read(), content_type='application/vnd.ms-excel')
+        response['Content-Disposition'] = 'attachment; filename="dados-municipios-cadastrados-snc.xls"'
 
         return response
 
