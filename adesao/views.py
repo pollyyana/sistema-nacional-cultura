@@ -156,13 +156,23 @@ def exportar_ods(request):
         bairro = municipio.bairro
         cep = municipio.cep
         telefone = municipio.telefone_um
-        email_prefeito = municipio.email_institucional_prefeito
+        if municipio.email_institucional_prefeito != "":
+            email_prefeito = municipio.email_institucional_prefeito
+        else:
+            email_prefeito = "Não cadastrado"
         try:
             #email_cadastrador = Usuario.objects.get(municipio_id=municipio.id).user.email
             email_cadastrador = municipio.usuario.user.email
-            print(Usuario.objects.get(municipio_id=municipio.id).user.email)
         except ObjectDoesNotExist:
-            email_cadastrador = ""
+            email_cadastrador = "Não cadastrado"
+        try:
+            if municipio.usuario.responsavel:
+                email_responsavel = municipio.usuario.responsavel.email_institucional_responsavel
+            else:
+                email_responsavel = "Não cadastrado"
+        except ObjectDoesNotExist:
+            email_responsavel = "Não cadastrado"
+
         local = municipio.localizacao
 
         planilha.write(i, 0, uf)
@@ -175,7 +185,7 @@ def exportar_ods(request):
         planilha.write(i, 7, telefone)
         planilha.write(i, 8, email_prefeito)
         planilha.write(i, 9, email_cadastrador)
-        planilha.write(i, 10, email_prefeito)
+        planilha.write(i, 10, email_responsavel)
         planilha.write(i, 11, local)
         planilha.write(i, 12, verificar_anexo(municipio, 'criacao_sistema', 'lei_sistema_cultura'))
         planilha.write(i, 13, verificar_anexo(municipio, 'orgao_gestor', 'relatorio_atividade_secretaria'))
