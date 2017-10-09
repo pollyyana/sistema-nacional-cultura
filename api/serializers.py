@@ -1,5 +1,6 @@
 from rest_framework import serializers
 from adesao.models import Municipio, Cidade, Usuario
+from planotrabalho.models import PlanoTrabalho
 
 class MunicipioSerializer(serializers.ModelSerializer):
     cidade= serializers.ReadOnlyField(source='cidade.nome_municipio')
@@ -22,3 +23,9 @@ class UsuarioSerializer(serializers.ModelSerializer):
         fields = ('id','nome_usuario', 'municipio', 'responsavel',
                    'plano_trabalho', 'estado_processo','data_publicacao_acordo',
                    'codigo_ativacao','data_cadastro','prazo')
+
+class PlanoTrabalhoSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = PlanoTrabalho
+        fields = ('criacao_sistema','orgao_gestor','conselho_cultural',
+                  'fundo_cultura','plano_cultura')
