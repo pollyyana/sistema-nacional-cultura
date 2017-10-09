@@ -271,7 +271,8 @@
     {% endif %}
 
 <!-- situaçao geral do plano de trabalho -->
-  <div class="list-group row">
+    {% if object.plano_trabalho.plano_cultura %}
+    <div class="list-group row">
           <div class="col-md-12">
             <div class="list-group-item col-xs-8">
               <b>Situação Geral do Plano de Trabalho</b>
@@ -321,6 +322,7 @@
 
 
     </div>
+    {% endif %}
 </div>
 {% endif %}
 
