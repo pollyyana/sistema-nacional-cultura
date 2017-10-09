@@ -69,7 +69,7 @@ THIRD_PARTY_APPS = (
     'piwik',
     'clever_selects',
     'rest_framework',
-    'django_filters'
+#    'django_filters'
     
     )
 
@@ -79,6 +79,7 @@ LOCAL_APPS = (
     'adesao',
     'planotrabalho',
     'gestao',
+    'api'
     )
 
 INSTALLED_APPS = DEFAULT_APPS + THIRD_PARTY_APPS + LOCAL_APPS
@@ -87,11 +88,10 @@ REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': [
         'rest_framework.permissions.IsAdminUser',
     ],
-    'DEFAULT_FILTER_BACKENDS': 
-        ('django_filters.rest_framework.DjangoFilterBackend',)
-    
-    
-    }
+#    'DEFAULT_FILTER_BACKENDS': 
+#        ('django_filters.rest_framework.DjangoFilterBackend',)
+        
+}
 
 MIDDLEWARE_CLASSES = (
     'django.contrib.sessions.middleware.SessionMiddleware',
