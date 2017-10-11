@@ -31,10 +31,20 @@ def municipio_detail(request, pk, format=None):
 @api_view(['GET'])
 def planoTrabalho_list(request, format=None):
     if request.method == 'GET':
-        plano = PlanoTrabalho.objects.filter().order_by('criacao_sistema')[:30]
+        plano = PlanoTrabalho.objects.filter().order_by('id')[:30]
         serializer = PlanoTrabalhoSerializer(plano, many=True)
         return Response(serializer.data)
 
+@api_view(['GET'])
+def planoTrabalho_detail(request, pk, format=None):
+    try:
+        plano = PlanoTrabalho.objects.get(pk=pk)
+    except PlanoTrabalho.DoesNotExist:
+        return Response(status=status.HTTP_404_NOT_FOUND)
+
+    if request.method == 'GET':
+        serializer = PlanoTrabalhoSerializer(plano)
+        return Response(serializer.data)
     
 
 # USUÁRIOS    

@@ -51,7 +51,7 @@ class PlanoTrabalhoSerializer(serializers.ModelSerializer):
     plano_cultura = PlanoCulturaSerializer()
     class Meta:
         model = PlanoTrabalho
-        fields = ('criacao_sistema','orgao_gestor','conselho_cultural',
+        fields = ('id','criacao_sistema','orgao_gestor','conselho_cultural',
                   'fundo_cultura','plano_cultura')
 
 # Usuario
