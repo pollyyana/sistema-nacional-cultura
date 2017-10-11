@@ -7,7 +7,7 @@ from django.views.generic import ListView, DetailView
 from django.views.generic.edit import FormView, UpdateView
 
 from adesao.models import Usuario, Cidade, Municipio, Historico
-from planotrabalho.models import CriacaoSistema, PlanoCultura, FundoCultura, OrgaoGestor, ConselhoCultural
+from planotrabalho.models import CriacaoSistema, PlanoCultura, FundoCultura, OrgaoGestor, ConselhoCultural, SituacoesArquivoPlano
 from gestao.utils import enviar_email_aprovacao_plano
 
 from .forms import AlterarSituacao, DiligenciaForm, AlterarDocumentosEnteFederadoForm
@@ -161,7 +161,12 @@ class AcompanharAdesao(ListView):
 # Acompanhamento dos planos de trabalho
 def diligencia_documental(request, etapa, st, id):
     usuario = Usuario.objects.get(id=id)
-    setattr(getattr(usuario.plano_trabalho, etapa), st, 0)
+    #print(getattr(getattr(usuario.plano_trabalho, etapa), st))
+    #modificando o comportamento pois, no caso da "SituacoesArquivoPlano" agora é um objeto, e não só um valor 0 na tabela
+    if isinstance(getattr(getattr(usuario.plano_trabalho, etapa), st), SituacoesArquivoPlano):
+        usuario.plano_trabalho.criacao_sistema.situacao_lei_sistema = SituacoesArquivoPlano.objects.get(pk=0)
+    else:
+        setattr(getattr(usuario.plano_trabalho, etapa), st, 0)
     form = DiligenciaForm()
     if request.method == 'POST':
         form = DiligenciaForm(request.POST, usuario=usuario)
