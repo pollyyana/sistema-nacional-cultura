@@ -182,9 +182,13 @@ def diligencia_documental(request, etapa, st, id):
 
 def concluir_etapa(request, etapa, st, id):
     usuario = Usuario.objects.get(id=id)
-    setattr(getattr(usuario.plano_trabalho, etapa), st, 2)
+    if isinstance(getattr(getattr(usuario.plano_trabalho, etapa), st), SituacoesArquivoPlano):
+        usuario.plano_trabalho.criacao_sistema.situacao_lei_sistema = SituacoesArquivoPlano.objects.get(pk=2)
+    else:
+        setattr(getattr(usuario.plano_trabalho, etapa), st, 2)
     getattr(usuario.plano_trabalho, etapa).save()
     return redirect('gestao:detalhar', pk=id)
+
 
 def situacao_3 (request, etapa, st, id):
     usuario = Usuario.objects.get(id=id)
