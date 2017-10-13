@@ -1,8 +1,4 @@
-from rest_framework import status 
-from rest_framework.decorators import api_view
-from rest_framework.views import APIView
-from rest_framework.response import Response 
-import django_filters
+from rest_framework import generics
 
 from planotrabalho.models import PlanoTrabalho
 from adesao.models import Municipio, Cidade, Usuario
@@ -10,63 +6,37 @@ from api.serializers import MunicipioSerializer, UsuarioSerializer, PlanoTrabalh
 
 
 # MUNICIPIOS
-@api_view(['GET'])
-def municipio_list(request, format=None):
-    if request.method == 'GET':
-        municipios = Municipio.objects.filter().order_by('id')[:30]
-        serializer = MunicipioSerializer(municipios, many=True)
-        return Response(serializer.data)
+# Lista todos os municipios
+class  MunicipioList(generics.ListAPIView):
+    queryset = Municipio.objects.filter().order_by('id')
+    serializer_class = MunicipioSerializer
 
-@api_view(['GET'])
-def municipio_detail(request, pk, format=None):
-    try:
-        municipio = Municipio.objects.get(pk=pk)
-    except Municipio.DoesNotExist:
-        return Response(status=status.HTTP_404_NOT_FOUND)
-
-    if request.method == 'GET':
-        serializer = MunicipioSerializer(municipio)
-        return Response(serializer.data)
-
+# Retorna um municipio especificado pela pk
+class MunicipioDetail(generics.RetrieveAPIView):
+    queryset = Municipio.objects.filter().order_by('id') 
+    serializer_class = MunicipioSerializer
 
 # PLANO TRABALHO
-@api_view(['GET'])
-def planoTrabalho_list(request, format=None):
-    if request.method == 'GET':
-        plano = PlanoTrabalho.objects.filter().order_by('id')[:30]
-        serializer = PlanoTrabalhoSerializer(plano, many=True)
-        return Response(serializer.data)
+# Lista todos os planos de trabalho 
+class PlanoTrabalhoList(generics.ListAPIView):
+    queryset = PlanoTrabalho.objects.filter().order_by('id')
+    serializer_class = PlanoTrabalhoSerializer 
 
-@api_view(['GET'])
-def planoTrabalho_detail(request, pk, format=None):
-    try:
-        plano = PlanoTrabalho.objects.get(pk=pk)
-    except PlanoTrabalho.DoesNotExist:
-        return Response(status=status.HTTP_404_NOT_FOUND)
-
-    if request.method == 'GET':
-        serializer = PlanoTrabalhoSerializer(plano)
-        return Response(serializer.data)
-    
-
+# Retorna um plano de trabalho especificado pela pk
+class PlanoTrabalhoDetail(generics.RetrieveAPIView):
+    queryset = PlanoTrabalho.objects.filter().order_by('id') 
+    serializer_class = PlanoTrabalhoSerializer 
+ 
 # USUÁRIOS    
-@api_view(['GET'])
-def usuarios_detail(request, pk, format=None):
-    try:
-        usuarios = Usuario.objects.get(pk=pk)
-    except Usuario.DoesNotExist:
-        return Response(status=status.HTTP_404_NOT_FOUND)
-    
-    if request.method == 'GET':
-        serializer = UsuarioSerializer(usuarios)
-        return Response(serializer.data)
-    
-class Usuarios_list(APIView):
-    
-    def get(self, request, format=None):
-            usuarios = Usuario.objects.filter().order_by('id')[:30]
-            serializer = UsuarioSerializer(usuarios, many=True)
-            return Response(serializer.data)
+# Lista todos os usuários
+class UsuarioList(generics.ListAPIView):
+    queryset = Usuario.objects.filter().order_by('id')
+    serializer_class = UsuarioSerializer
+
+# Retorna um usuário especificado pela pk
+class UsuarioDetail(generics.RetrieveAPIView):
+    queryset = Usuario.objects.filter().order_by('id') 
+    serializer_class = UsuarioSerializer
         
 
         

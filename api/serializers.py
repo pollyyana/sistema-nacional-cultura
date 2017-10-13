@@ -1,7 +1,6 @@
 from rest_framework import serializers
 from adesao.models import Municipio, Cidade, Usuario
 from planotrabalho.models import PlanoTrabalho, CriacaoSistema, OrgaoGestor,ConselhoCultural, FundoCultura, PlanoCultura
-from django_filters.rest_framework import DjangoFilterBackend
 
 # Componentes do Plano de Trabalho
 class CriacaoSistemaSerializer(serializers.ModelSerializer):
