@@ -78,3 +78,12 @@ class MunicipioSerializer(serializers.ModelSerializer):
                    'complemento', 'cep','bairro','cidade','estado',
                    'endereco_eletronico','telefone_um','telefone_dois',
                    'telefone_tres','usuario')
+
+## Prefeito 
+#class PrefeitoSerializer(serializers.ModelSerializer):
+#    class Meta:
+#        model = Municipio
+#        fields = ('nome_prefeito', 'rg_prefeito', 'cpf_prefeito', 'termo_posse_prefeito','email_institucional_prefeito')
+        
+        
+        
