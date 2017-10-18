@@ -9,6 +9,10 @@ from api.serializers import MunicipioSerializer, UsuarioSerializer, PlanoTrabalh
 # MUNICIPIOS
 # Lista todos os municipios
 class  MunicipioList(generics.ListAPIView):
+    page_size = 10
+    page_size_query_param = 'page_size'
+    max_page_size = 10
+
     queryset = Municipio.objects.filter().order_by('-id')
     serializer_class = MunicipioSerializer
     
