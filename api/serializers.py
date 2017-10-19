@@ -63,26 +63,34 @@ class UsuarioSerializer(serializers.ModelSerializer):
         model = Usuario
         fields = ('municipio', 'responsavel','plano_trabalho','estado_processo',
                   'data_publicacao_acordo')
-        
+# Cidade        
+class CidadeSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Cidade
+        fields = ('codigo_ibge', 'nome_municipio')
+
 # Municipio
 class MunicipioSerializer(serializers.ModelSerializer):
-    cidade= serializers.ReadOnlyField(source='cidade.nome_municipio')
-    estado = serializers.ReadOnlyField(source='estado.sigla')
     usuario = UsuarioSerializer()
+    ente_federado = serializers.SerializerMethodField() 
     class Meta:
         model = Municipio
-        fields = ('nome_prefeito', 'cnpj_prefeitura',
+        fields = ('ente_federado','nome_prefeito',
                   'termo_posse_prefeito', 'email_institucional_prefeito',
-                   'endereco', 
-                   'complemento', 'cep','bairro','cidade','estado',
-                   'endereco_eletronico','telefone_um','telefone_dois',
-                   'telefone_tres','usuario')
-        
-## Prefeito 
-#class PrefeitoSerializer(serializers.ModelSerializer):
-#    class Meta:
-#        model = Municipio
-#        fields = ('nome_prefeito', 'rg_prefeito', 'cpf_prefeito', 'termo_posse_prefeito','email_institucional_prefeito')
-        
-        
-        
+                  'endereco_eletronico','usuario')
+ 
+    def get_ente_federado(self,obj):
+        ente_federado = {"cnpj": obj.cnpj_prefeitura,"localizacao": self.get_localizacao(obj),"telefones": self.get_telefones(obj)}
+        return ente_federado
+
+    def get_localizacao(self,obj):
+        cidade_serialized = CidadeSerializer(obj.cidade)
+
+        localizacao = {"estado":obj.estado.sigla,"bairro":obj.bairro, "complemento":obj.complemento,
+                "endereco": obj.endereco, "cep": obj.cep, "cidade": cidade_serialized.data}
+        return localizacao
+ 
+    def get_telefones(self,obj):
+        telefones = {"telefone_um":obj.telefone_um ,"telefone_dois":obj.telefone_dois ,"telefone_tres":obj.telefone_tres}
+        return telefones
+          
