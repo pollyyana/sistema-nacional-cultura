@@ -57,6 +57,8 @@ class PlanoTrabalhoSerializer(serializers.ModelSerializer):
 # Usuario
 class UsuarioSerializer(serializers.ModelSerializer):
     plano_trabalho = PlanoTrabalhoSerializer()
+    municipio = serializers.ReadOnlyField(source = 'municipio.cidade.nome_municipio')
+    responsavel = serializers.ReadOnlyField(source = 'responsavel.nome_responsavel')
     class Meta:
         model = Usuario
         fields = ('municipio', 'responsavel','plano_trabalho','estado_processo',
