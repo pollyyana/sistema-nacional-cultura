@@ -78,12 +78,11 @@ class UfSerializer(serializers.ModelSerializer):
 class MunicipioSerializer(serializers.ModelSerializer):
     usuario = UsuarioSerializer()
     ente_federado = serializers.SerializerMethodField() 
+    governo = serializers.SerializerMethodField()
 
     class Meta:
         model = Municipio
-        fields = ('ente_federado','nome_prefeito',
-                  'termo_posse_prefeito', 'email_institucional_prefeito',
-                  'endereco_eletronico','usuario')
+        fields = ('ente_federado','governo','endereco_eletronico','usuario')
  
     # Estrutura dados no objeto ente_federado
     def get_ente_federado(self,obj):
@@ -96,6 +95,15 @@ class MunicipioSerializer(serializers.ModelSerializer):
         serializer = EnteFederadoSerializer(ente_federado)
 
         return serializer.data 
+
+    def get_governo(self,obj):
+        governo = Governo(nome_prefeito=obj.nome_prefeito,
+                email_institucional_prefeito=obj.email_institucional_prefeito,
+                termo_posse_prefeito=obj.termo_posse_prefeito)
+        serializer = GovernoSerializer(governo)
+        
+        return serializer.data
+
 
 # Classes para estruturar os objetos de adesoes
 class EnteFederado(object):
@@ -119,6 +127,13 @@ class Telefones(object):
         self.telefone_dois = telefone_dois
         self.telefone_tres = telefone_tres
 
+class Governo(object):
+    def __init__(self, nome_prefeito, email_institucional_prefeito,
+            termo_posse_prefeito):
+        self.nome_prefeito = nome_prefeito
+        self.email_institucional_prefeito = email_institucional_prefeito
+        self.termo_posse_prefeito = termo_posse_prefeito
+
 # Serializers das classes de estruturação de adesoes
 class LocalizacaoSerializer(serializers.Serializer):
     estado = UfSerializer() 
@@ -137,4 +152,9 @@ class EnteFederadoSerializer(serializers.Serializer):
     cnpj_prefeitura = serializers.CharField()
     localizacao = LocalizacaoSerializer()
     telefones = TelefonesSerializer()
+
+class GovernoSerializer(serializers.Serializer):
+    nome_prefeito = serializers.CharField()
+    email_institucional_prefeito = serializers.CharField()
+    termo_posse_prefeito = serializers.FileField()
 
