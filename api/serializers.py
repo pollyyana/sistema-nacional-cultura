@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from adesao.models import Municipio, Cidade, Usuario
+from adesao.models import Municipio, Uf, Cidade, Usuario
 from planotrabalho.models import PlanoTrabalho, CriacaoSistema, OrgaoGestor,ConselhoCultural, FundoCultura, PlanoCultura
 
 # Componentes do Plano de Trabalho
@@ -68,29 +68,73 @@ class CidadeSerializer(serializers.ModelSerializer):
     class Meta:
         model = Cidade
         fields = ('codigo_ibge', 'nome_municipio')
+# UF
+class UfSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Uf 
+        fields = ('codigo_ibge', 'sigla')
 
 # Municipio
 class MunicipioSerializer(serializers.ModelSerializer):
     usuario = UsuarioSerializer()
     ente_federado = serializers.SerializerMethodField() 
+
     class Meta:
         model = Municipio
         fields = ('ente_federado','nome_prefeito',
                   'termo_posse_prefeito', 'email_institucional_prefeito',
                   'endereco_eletronico','usuario')
  
+    # Estrutura dados no objeto ente_federado
     def get_ente_federado(self,obj):
-        ente_federado = {"cnpj": obj.cnpj_prefeitura,"localizacao": self.get_localizacao(obj),"telefones": self.get_telefones(obj)}
-        return ente_federado
+        localizacao = Localizacao(estado=obj.estado, cidade=obj.cidade,
+                cep=obj.cep, bairro=obj.bairro, endereco=obj.endereco, complemento=obj.complemento)
+        telefones = Telefones(telefone_um=obj.telefone_um, telefone_dois=obj.telefone_dois,
+                telefone_tres=obj.telefone_tres) 
+        ente_federado = EnteFederado(cnpj_prefeitura=obj.cnpj_prefeitura,localizacao=localizacao,
+                telefones=telefones)
+        serializer = EnteFederadoSerializer(ente_federado)
 
-    def get_localizacao(self,obj):
-        cidade_serialized = CidadeSerializer(obj.cidade)
+        return serializer.data 
 
-        localizacao = {"estado":obj.estado.sigla,"bairro":obj.bairro, "complemento":obj.complemento,
-                "endereco": obj.endereco, "cep": obj.cep, "cidade": cidade_serialized.data}
-        return localizacao
+# Classes para estruturar os objetos de adesoes
+class EnteFederado(object):
+    def __init__(self, cnpj_prefeitura, localizacao, telefones):
+        self.cnpj_prefeitura = cnpj_prefeitura
+        self.localizacao = localizacao
+        self.telefones = telefones
  
-    def get_telefones(self,obj):
-        telefones = {"telefone_um":obj.telefone_um ,"telefone_dois":obj.telefone_dois ,"telefone_tres":obj.telefone_tres}
-        return telefones
-          
+class Localizacao(object):
+    def __init__(self, estado, cidade, cep, bairro, endereco, complemento):
+        self.estado = estado
+        self.cidade = cidade 
+        self.cep = cep 
+        self.bairro = bairro
+        self.endereco = endereco
+        self.complemento = complemento
+
+class Telefones(object):
+    def __init__(self, telefone_um, telefone_dois, telefone_tres):
+        self.telefone_um = telefone_um
+        self.telefone_dois = telefone_dois
+        self.telefone_tres = telefone_tres
+
+# Serializers das classes de estruturação de adesoes
+class LocalizacaoSerializer(serializers.Serializer):
+    estado = UfSerializer() 
+    cidade = CidadeSerializer()
+    cep = serializers.CharField() 
+    bairro = serializers.CharField() 
+    endereco = serializers.CharField() 
+    complemento = serializers.CharField() 
+
+class TelefonesSerializer(serializers.Serializer):
+    telefone_um = serializers.CharField()
+    telefone_dois = serializers.CharField()
+    telefone_tres = serializers.CharField()
+
+class EnteFederadoSerializer(serializers.Serializer):
+    cnpj_prefeitura = serializers.CharField()
+    localizacao = LocalizacaoSerializer()
+    telefones = TelefonesSerializer()
+
