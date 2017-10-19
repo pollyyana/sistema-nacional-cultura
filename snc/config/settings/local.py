@@ -69,7 +69,8 @@ THIRD_PARTY_APPS = (
     'piwik',
     'clever_selects',
     'rest_framework',
-    'django_filters'
+    'django_filters',
+    'rest_framework_swagger',
     
     )
 
