@@ -12,7 +12,6 @@
       (Secretaria em conjunto com outras políticas, fundação de cultura, departamento, coordenação, diretoria, etc)</strong>
   </h5>
 
-  {% if request.user.usuario.plano_trabalho.orgao_gestor %}
   <div class="form-group">
     <label for="{{ form.relatorio_atividade_secretaria.id_for_label }}">
       Comprovação de criação do órgão gestor
@@ -27,7 +26,6 @@
     {% endif %}
     {{ form.relatorio_atividade_secretaria.errors }}
   </div>
-  {% endif %}
 
   <div class="alert alert-info" role="alert">
     <strong>Para execução, sugerimos as seguintes atividades:</strong><br>

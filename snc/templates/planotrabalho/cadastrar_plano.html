@@ -12,7 +12,6 @@
     <strong>Lei de criação do Plano de Cultura (com as metas)</strong>
   </h5>
 
-  {% if request.user.usuario.plano_trabalho.plano_cultura %}
   <div class="form-group">
     <label for="{{ form.lei_plano_cultura.id_for_label }}">
       Publicação da Lei no Diário Oficial
@@ -23,11 +22,11 @@
     <p>Modificar: {% render_field form.lei_plano_cultura %}</p>
     {% endif %}
     {% else %}
-    {% render_field form.lei_plano_cultura %}
+    <p>{% render_field form.lei_plano_cultura %}</p>
     {% endif %}
     {{ form.lei_plano_cultura.errors }}
   </div>
-  {% endif %}
+
   <div class="alert alert-info" role="alert">
     <strong>Para execução, sugerimos as seguintes atividades:</strong><br>
 

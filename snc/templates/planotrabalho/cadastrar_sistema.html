@@ -8,7 +8,7 @@
   <p>
     <strong>Sanção da Lei de criação do Sistema de Cultura pelo Governador/Prefeito</strong>
   </p>
-  {% if request.user.usuario.plano_trabalho.criacao_sistema %}
+
   <div class="form-group">
     <label for="{{ form.lei_sistema_cultura.id_for_label }}">Lei do Sistema de Cultura</label>
     {% if form.lei_sistema_cultura.value %}
@@ -21,7 +21,7 @@
     {% endif %}
     {{ form.lei_sistema_cultura.errors }}
   </div>
-  {% endif %}
+
   <div class="alert alert-info" role="alert">
     <strong>Para execução, sugerimos as seguintes atividades:</strong><br>
     - Elaborar a minuta e discuti-la com a sociedade;<br>

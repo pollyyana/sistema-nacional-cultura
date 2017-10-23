@@ -10,7 +10,7 @@
   <h5>
     <strong>2.2 Instalação do Conselho de Política Cultural</strong>
   </h5>
-  {% if request.user.usuario.plano_trabalho.conselho_cultural %}
+
   <div class="form-group">
     <label for="{{ form.ata_regimento_aprovado.id_for_label }}">
       Ata da última reunião realizada pelo conselho
@@ -30,7 +30,6 @@
     Para adicionar um novo conselheiro <a href="{% url 'planotrabalho:listar_conselheiros' %}" >clique aqui</a>
   </label>
   </br>
-  {% endif %}
 
   <div class="alert alert-info" role="alert">
     <strong>Para execução, sugerimos as seguintes atividades:</strong><br>

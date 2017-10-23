@@ -11,7 +11,6 @@
     <strong>2.3 Instituição do Fundo de Cultura</strong>
   </h5>
 
-  {% if request.user.usuario.plano_trabalho.fundo_cultura %}
   <div class="form-group">
     <label for="{{ form.cnpj_fundo_cultura.id_for_label }}" class="col-sm-12">
       CNPJ
@@ -34,7 +33,7 @@
     {% endif %}
     {{ form.lei_fundo_cultura.errors }}
   </div>
-  {% endif %}
+
   <div class="alert alert-info" role="alert">
     <strong>Para execução, sugerimos as seguintes atividades:</strong><br>
     - Elaborar minuta (proposta) de regulamentação do fundo e de outros mecanismos de financiamento;<br>
