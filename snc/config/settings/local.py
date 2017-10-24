@@ -71,7 +71,7 @@ THIRD_PARTY_APPS = (
     'rest_framework',
     'django_filters',
     'rest_framework_swagger',
-    
+    'drf_hal_json' 
     )
 
 
@@ -86,8 +86,16 @@ LOCAL_APPS = (
 INSTALLED_APPS = DEFAULT_APPS + THIRD_PARTY_APPS + LOCAL_APPS
 
 REST_FRAMEWORK = {
-    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.LimitOffsetPagination',
-    'PAGE_SIZE': 100
+    'DEFAULT_PAGINATION_CLASS': 'drf_hal_json.pagination.HalPageNumberPagination',
+    'PAGE_SIZE': 1,
+    'DEFAULT_PARSER_CLASSES': ('drf_hal_json.parsers.JsonHalParser',),
+    'DEFAULT_RENDERER_CLASSES': (
+        'drf_hal_json.renderers.JsonHalRenderer',
+        'rest_framework.renderers.BrowsableAPIRenderer',
+    
+    ),
+
+    'URL_FIELD_NAME': 'self',
 }
 
 MIDDLEWARE_CLASSES = (

@@ -1,14 +1,14 @@
 from rest_framework import generics
 from django_filters.rest_framework import DjangoFilterBackend
-
-from planotrabalho.models import PlanoTrabalho
+from drf_hal_json import views as hal_views
+from planotrabalho.models import PlanoTrabalho 
 from adesao.models import Municipio, Cidade, Usuario
 from api.serializers import MunicipioSerializer, UsuarioSerializer, PlanoTrabalhoSerializer
 
 
 # MUNICIPIOS
 # Lista todos os municipios
-class  MunicipioList(generics.ListAPIView):
+class  MunicipioList(hal_views.HalCreateModelMixin,generics.ListAPIView):
     page_size = 10
     page_size_query_param = 'page_size'
     max_page_size = 10
@@ -37,7 +37,7 @@ class PlanoTrabalhoDetail(generics.RetrieveAPIView):
 # USUÁRIOS
 
 # Lista todos os usuários
-class UsuarioList(generics.ListAPIView):
+class UsuarioList(hal_views.HalCreateModelMixin,generics.ListAPIView):
     queryset = Usuario.objects.filter().order_by('-id')
     serializer_class = UsuarioSerializer
     
@@ -48,6 +48,4 @@ class UsuarioList(generics.ListAPIView):
 class UsuarioDetail(generics.RetrieveAPIView):
     queryset = Usuario.objects.filter().order_by('-id') 
     serializer_class = UsuarioSerializer
-        
 
-        
