@@ -2,8 +2,9 @@ from rest_framework import serializers
 from drf_hal_json import serializers as hal_serializers
 from adesao.models import Municipio, Uf, Cidade, Usuario
 from planotrabalho.models import (PlanoTrabalho, CriacaoSistema, OrgaoGestor,
-ConselhoCultural, FundoCultura, PlanoCultura)
+ConselhoCultural, FundoCultura, PlanoCultura, Conselheiro)
 from drf_hal_json.fields import HalHyperlinkedRelatedField, HalContributeToLinkField
+import json
 
 # Componentes do Plano de Trabalho
 class CriacaoSistemaSerializer(hal_serializers.HalModelSerializer):
@@ -24,10 +25,16 @@ class OrgaoGestorSerializer(hal_serializers.HalModelSerializer):
 class ConselhoCulturalSerializer(hal_serializers.HalModelSerializer):
     situacao_ata = serializers.ReadOnlyField(
             source = 'situacao_ata.descricao')
-    
+#    conselho = HalContributeToLinkField(place_on='conselho') 
     class Meta:
         model = ConselhoCultural
         fields = ('ata_regimento_aprovado','situacao_ata')
+        
+#    def get_conselho(self,obj):
+#        for i in range(len(obj.conselheiro)):
+#            serializer = ConselheiroSerializer(obj.conselheiro([i]))
+#            return serializer.data    
+        
 
 class FundoCulturaSerializer(hal_serializers.HalModelSerializer):
     situacao_lei_plano = serializers.ReadOnlyField(
@@ -80,19 +87,28 @@ class UfSerializer(serializers.ModelSerializer):
         model = Uf 
         fields = ('codigo_ibge', 'sigla')
 
+#Conselho
+class ConselheiroSerializer(hal_serializers.HalModelSerializer):
+    class Meta:
+        model = Conselheiro
+        fields = ('nome','segmento','email','situacao','data_cadastro','data_situacao','conselho')
+        
 # Municipio
 class MunicipioSerializer(hal_serializers.HalModelSerializer):
     ente_federado = serializers.SerializerMethodField() 
     governo = serializers.SerializerMethodField()
-    plano_trabalho = HalContributeToLinkField(place_on='plano_trabalho') 
+    componentes = HalContributeToLinkField(place_on='componentes') 
+    
     class Meta:
         model = Municipio
-        fields = ('self','ente_federado','governo','endereco_eletronico','usuario','plano_trabalho')
+        fields = ('self','ente_federado','governo','endereco_eletronico','usuario','componentes')
 
-    def get_plano_trabalho(self,obj):
+    def get_componentes(self,obj):
         serializer = PlanoTrabalhoSerializer(obj.usuario.plano_trabalho)
         return serializer.data
-         
+    
+
+    
     # Estrutura dados no objeto ente_federado
     def get_ente_federado(self,obj):
         localizacao = Localizacao(estado=obj.estado, cidade=obj.cidade,
@@ -151,6 +167,16 @@ class Componentes(object):
         self.ata_conselho_cultural = ata_conselho_culturalr
         self.lei_fundo_cultura = lei_fundo_cultura
         self.lei_plano_cultura = lei_plano_cultura
+
+class Conselheiro(object):
+    def __init__(self, nome, segmento, email, situacao, data_cadastro, data_situacao, conselho):
+        self.nome = nome
+        self.segmento = segmento
+        self.email = email
+        self.situacao = situacao
+        self.data_cadastro = data_cadastro
+        self.data_situacao = data_situacao
+        self.conselho = conselho        
         
 # Serializers das classes de estruturação de adesoes
 class LocalizacaoSerializer(serializers.Serializer):
