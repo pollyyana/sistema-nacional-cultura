@@ -2,7 +2,7 @@ from rest_framework import serializers
 from drf_hal_json import serializers as hal_serializers
 from adesao.models import Municipio, Uf, Cidade, Usuario
 from planotrabalho.models import (PlanoTrabalho, CriacaoSistema, OrgaoGestor,
-ConselhoCultural, FundoCultura, PlanoCultura, Conselheiro)
+ConselhoCultural, FundoCultura, PlanoCultura, Conselheiro, SituacoesArquivoPlano)
 from drf_hal_json.fields import HalHyperlinkedRelatedField, HalContributeToLinkField
 import json
 
@@ -25,15 +25,14 @@ class OrgaoGestorSerializer(hal_serializers.HalModelSerializer):
 class ConselhoCulturalSerializer(hal_serializers.HalModelSerializer):
     situacao_ata = serializers.ReadOnlyField(
             source = 'situacao_ata.descricao')
-#    conselho = HalContributeToLinkField(place_on='conselho') 
     class Meta:
         model = ConselhoCultural
         fields = ('ata_regimento_aprovado','situacao_ata')
-        
-#    def get_conselho(self,obj):
-#        for i in range(len(obj.conselheiro)):
-#            serializer = ConselheiroSerializer(obj.conselheiro([i]))
-#            return serializer.data    
+#Conselheiro
+class ConselheiroSerializer(hal_serializers.HalModelSerializer):
+    class Meta:
+        model = Conselheiro
+        fields = ('nome','segmento','email','situacao','data_cadastro','data_situacao')
         
 
 class FundoCulturaSerializer(hal_serializers.HalModelSerializer):
@@ -87,27 +86,24 @@ class UfSerializer(serializers.ModelSerializer):
         model = Uf 
         fields = ('codigo_ibge', 'sigla')
 
-#Conselho
-class ConselheiroSerializer(hal_serializers.HalModelSerializer):
-    class Meta:
-        model = Conselheiro
-        fields = ('nome','segmento','email','situacao','data_cadastro','data_situacao','conselho')
-        
 # Municipio
 class MunicipioSerializer(hal_serializers.HalModelSerializer):
     ente_federado = serializers.SerializerMethodField() 
     governo = serializers.SerializerMethodField()
     componentes = HalContributeToLinkField(place_on='componentes') 
+    conselheiros = HalContributeToLinkField(place_on='conselheiros')
     
     class Meta:
         model = Municipio
-        fields = ('self','ente_federado','governo','endereco_eletronico','usuario','componentes')
+        fields = ('self','ente_federado','governo','endereco_eletronico','usuario','componentes', 'conselheiros')
 
     def get_componentes(self,obj):
         serializer = PlanoTrabalhoSerializer(obj.usuario.plano_trabalho)
         return serializer.data
     
-
+    def get_conselheiros(self,obj):
+            serializer = ConselheiroSerializer()
+            return serializer.data
     
     # Estrutura dados no objeto ente_federado
     def get_ente_federado(self,obj):
