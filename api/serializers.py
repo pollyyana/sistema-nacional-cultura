@@ -32,7 +32,7 @@ class ConselhoCulturalSerializer(hal_serializers.HalModelSerializer):
 class ConselheiroSerializer(hal_serializers.HalModelSerializer):
     class Meta:
         model = Conselheiro
-        fields = ('nome','segmento','email','situacao','data_cadastro','data_situacao')
+        fields = ('segmento','nome','email','data_cadastro','data_situacao','situacao')
         
 
 class FundoCulturaSerializer(hal_serializers.HalModelSerializer):
