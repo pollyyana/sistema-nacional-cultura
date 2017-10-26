@@ -22,13 +22,25 @@ class OrgaoGestorSerializer(hal_serializers.HalModelSerializer):
         fields = ('relatorio_atividade_secretaria',
                   'situacao_relatorio_secretaria')
 
+# Conselho Cultural
 class ConselhoCulturalSerializer(hal_serializers.HalModelSerializer):
     situacao_ata = serializers.ReadOnlyField(
             source = 'situacao_ata.descricao')
+    conselheiros = HalContributeToLinkField(place_on='conselheiros')
+
     class Meta:
         model = ConselhoCultural
-        fields = ('ata_regimento_aprovado','situacao_ata')
-#Conselheiro
+        fields = ('ata_regimento_aprovado','situacao_ata','conselheiros')
+
+    # WIP: Retornando somente o primeiro conselheiro
+    def get_conselheiros(self,obj):
+        conselheiros = obj.conselheiro_set.filter(
+                    conselho_id=obj.id)
+        serializer=ConselheiroSerializer(conselheiros[0])
+
+        return serializer.data 
+         
+# Conselheiro
 class ConselheiroSerializer(hal_serializers.HalModelSerializer):
     class Meta:
         model = Conselheiro
@@ -59,10 +71,13 @@ class PlanoTrabalhoSerializer(hal_serializers.HalModelSerializer):
     conselho_cultural = ConselhoCulturalSerializer()
     fundo_cultura = FundoCulturaSerializer()
     plano_cultura = PlanoCulturaSerializer()
+
     class Meta:
         model = PlanoTrabalho
         fields = ('criacao_sistema','orgao_gestor','conselho_cultural',
                   'fundo_cultura','plano_cultura')
+
+       
 
         
 # Usuario
@@ -91,19 +106,15 @@ class MunicipioSerializer(hal_serializers.HalModelSerializer):
     ente_federado = serializers.SerializerMethodField() 
     governo = serializers.SerializerMethodField()
     componentes = HalContributeToLinkField(place_on='componentes') 
-    conselheiros = HalContributeToLinkField(place_on='conselheiros')
+    #conselheiros = HalContributeToLinkField(place_on='conselheiros')
     
     class Meta:
         model = Municipio
-        fields = ('self','ente_federado','governo','endereco_eletronico','usuario','componentes', 'conselheiros')
+        fields = ('self','ente_federado','governo','endereco_eletronico','usuario','componentes' )
 
     def get_componentes(self,obj):
         serializer = PlanoTrabalhoSerializer(obj.usuario.plano_trabalho)
         return serializer.data
-    
-    def get_conselheiros(self,obj):
-            serializer = ConselheiroSerializer()
-            return serializer.data
     
     # Estrutura dados no objeto ente_federado
     def get_ente_federado(self,obj):
