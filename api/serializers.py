@@ -26,26 +26,34 @@ class OrgaoGestorSerializer(hal_serializers.HalModelSerializer):
 class ConselhoCulturalSerializer(hal_serializers.HalModelSerializer):
     situacao_ata = serializers.ReadOnlyField(
             source = 'situacao_ata.descricao')
-    conselheiros = HalContributeToLinkField(place_on='conselheiros')
+#    conselheiros = HalContributeToLinkField(place_on='conselheiros')
+
+    conselheiros = serializers.SerializerMethodField()
 
     class Meta:
         model = ConselhoCultural
         fields = ('ata_regimento_aprovado','situacao_ata','conselheiros')
 
-    # WIP: Retornando somente o primeiro conselheiro
-    def get_conselheiros(self,obj):
-        conselheiros = obj.conselheiro_set.filter(
-                    conselho_id=obj.id)
-        serializer=ConselheiroSerializer(conselheiros[0])
+#    # Retornando a lista de conselheiros do ConselhoCultural
+    def get_conselheiros(self, obj):
+        conselheiros = obj.conselheiro_set.filter(conselho_id=obj.id)
+        lista = list(range(len(conselheiros)))
 
-        return serializer.data 
-         
+        for i in range(len(conselheiros)):
+            while i <= len(conselheiros):
+                serializer = ConselheiroSerializer(conselheiros[i])
+                lista[i] = ({str(i+1):serializer.data})
+                break
+        return lista
+
+
 # Conselheiro
 class ConselheiroSerializer(hal_serializers.HalModelSerializer):
     class Meta:
         model = Conselheiro
-        fields = ('segmento','nome','email','data_cadastro','data_situacao','situacao')
-        
+        fields = ('nome','segmento','email','data_cadastro','data_situacao','situacao')
+
+
 
 class FundoCulturaSerializer(hal_serializers.HalModelSerializer):
     situacao_lei_plano = serializers.ReadOnlyField(
@@ -77,9 +85,6 @@ class PlanoTrabalhoSerializer(hal_serializers.HalModelSerializer):
         fields = ('criacao_sistema','orgao_gestor','conselho_cultural',
                   'fundo_cultura','plano_cultura')
 
-       
-
-        
 # Usuario
 class UsuarioSerializer(hal_serializers.HalModelSerializer):
     #plano_trabalho = PlanoTrabalhoSerializer()
