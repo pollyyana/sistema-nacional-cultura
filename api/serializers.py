@@ -28,30 +28,20 @@ class ConselhoCulturalSerializer(hal_serializers.HalModelSerializer):
             source = 'situacao_ata.descricao')
 #    conselheiros = HalContributeToLinkField(place_on='conselheiros')
 
-    conselheiros = serializers.SerializerMethodField()
+#    conselheiros = serializers.SerializerMethodField()
 
     class Meta:
         model = ConselhoCultural
-        fields = ('ata_regimento_aprovado','situacao_ata','conselheiros')
+        fields = ('ata_regimento_aprovado','situacao_ata')
 
-#    # Retornando a lista de conselheiros do ConselhoCultural
-    def get_conselheiros(self, obj):
-        conselheiros = obj.conselheiro_set.filter(conselho_id=obj.id)
-        lista = list(range(len(conselheiros)))
 
-        for i in range(len(conselheiros)):
-            while i <= len(conselheiros):
-                serializer = ConselheiroSerializer(conselheiros[i])
-                lista[i] = ({str(i+1):serializer.data})
-                break
-        return lista
 
 
 # Conselheiro
 class ConselheiroSerializer(hal_serializers.HalModelSerializer):
     class Meta:
         model = Conselheiro
-        fields = ('nome','segmento','email','data_cadastro','data_situacao','situacao')
+        fields = ['nome','segmento','email','situacao', 'data_cadastro', 'data_situacao']
 
 
 
@@ -110,12 +100,38 @@ class UfSerializer(serializers.ModelSerializer):
 class MunicipioSerializer(hal_serializers.HalModelSerializer):
     ente_federado = serializers.SerializerMethodField() 
     governo = serializers.SerializerMethodField()
-    componentes = HalContributeToLinkField(place_on='componentes') 
-    #conselheiros = HalContributeToLinkField(place_on='conselheiros')
+    plano_trabalho = serializers.SerializerMethodField()
+    conselho = serializers.SerializerMethodField()
     
     class Meta:
         model = Municipio
-        fields = ('self','ente_federado','governo','endereco_eletronico','usuario','componentes' )
+        fields = ('self','ente_federado','governo','endereco_eletronico','plano_trabalho','conselho')
+
+    # Retornando a lista de conselheiros do ConselhoCultural
+    def get_conselho(self, obj):
+        conselheiros = obj.usuario.plano_trabalho.conselho_cultural.conselheiro_set.filter(conselho_id=obj.usuario.plano_trabalho.conselho_cultural)
+        lista = list(range(len(conselheiros)))
+
+        for i in range(len(conselheiros)):
+            while i <= len(conselheiros):
+                serializer = ConselheiroSerializer(conselheiros[i])
+                lista[i] = serializer.data
+                break
+        return  ({str('conselheiros'):lista})
+
+    # TODO: Arrumar context de retorno, atualmente usando uma função de test,
+    # que retorna uma URL errada
+    def get_plano_trabalho(self,obj):
+        factory = APIRequestFactory()
+        request = factory.get('/')
+
+        serializer_context = {
+                   'request': Request(request),
+                  }
+        plano_trabalho = obj.usuario.plano_trabalho
+        serializer = PlanoTrabalhoSerializer(instance=plano_trabalho,context=serializer_context)
+        
+        return serializer.data
 
     def get_componentes(self,obj):
         serializer = PlanoTrabalhoSerializer(obj.usuario.plano_trabalho)
