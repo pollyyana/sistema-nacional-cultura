@@ -35,7 +35,6 @@ class PlanoTrabalhoDetail(generics.RetrieveAPIView):
     serializer_class = PlanoTrabalhoSerializer 
 
 # USUÁRIOS
-
 # Lista todos os usuários
 class UsuarioList(hal_views.HalCreateModelMixin,generics.ListAPIView):
     queryset = Usuario.objects.filter().order_by('-id')

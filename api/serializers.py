@@ -1,13 +1,14 @@
 from rest_framework import serializers
 
 from drf_hal_json import serializers as hal_serializers
+
 from adesao.models import Municipio, Uf, Cidade, Usuario
 from planotrabalho.models import (PlanoTrabalho, CriacaoSistema, OrgaoGestor,
 ConselhoCultural, FundoCultura, PlanoCultura, Conselheiro, SituacoesArquivoPlano)
 from drf_hal_json.fields import HalHyperlinkedRelatedField, HalContributeToLinkField
 import json
 
-# Componentes do Plano de Trabalho
+# Criacao do Sistema 
 class CriacaoSistemaSerializer(hal_serializers.HalModelSerializer):
     situacao_lei_sistema = serializers.ReadOnlyField(
             source = 'situacao_lei_sistema.descricao')
@@ -15,6 +16,7 @@ class CriacaoSistemaSerializer(hal_serializers.HalModelSerializer):
         model = CriacaoSistema
         fields = ('lei_sistema_cultura', 'situacao_lei_sistema')
 
+# Orgão gestor
 class OrgaoGestorSerializer(hal_serializers.HalModelSerializer):
     situacao_relatorio_secretaria = serializers.ReadOnlyField(
             source = 'situacao_relatorio_secretaria.descricao')
@@ -27,16 +29,10 @@ class OrgaoGestorSerializer(hal_serializers.HalModelSerializer):
 class ConselhoCulturalSerializer(hal_serializers.HalModelSerializer):
     situacao_ata = serializers.ReadOnlyField(
             source = 'situacao_ata.descricao')
-#    conselheiros = HalContributeToLinkField(place_on='conselheiros')
-
-#    conselheiros = serializers.SerializerMethodField()
 
     class Meta:
         model = ConselhoCultural
         fields = ('ata_regimento_aprovado','situacao_ata')
-
-
-
 
 # Conselheiro
 class ConselheiroSerializer(hal_serializers.HalModelSerializer):
@@ -45,7 +41,7 @@ class ConselheiroSerializer(hal_serializers.HalModelSerializer):
         fields = ['nome','segmento','email','situacao', 'data_cadastro', 'data_situacao']
 
 
-
+# Fundo cultural
 class FundoCulturaSerializer(hal_serializers.HalModelSerializer):
     situacao_lei_plano = serializers.ReadOnlyField(
             source = 'situacao_lei_plano.descricao')
@@ -54,6 +50,7 @@ class FundoCulturaSerializer(hal_serializers.HalModelSerializer):
         fields = ('cnpj_fundo_cultura','lei_fundo_cultura',
                   'situacao_lei_plano')
 
+# Plano Cultural
 class PlanoCulturaSerializer(hal_serializers.HalModelSerializer):
     situacao_lei_plano = serializers.ReadOnlyField(
             source = 'situacao_lei_plano.descricao')
@@ -110,7 +107,12 @@ class MunicipioSerializer(hal_serializers.HalModelSerializer):
 
     # Retornando a lista de conselheiros do ConselhoCultural
     def get_conselho(self, obj):
-        conselheiros = obj.usuario.plano_trabalho.conselho_cultural.conselheiro_set.filter(conselho_id=obj.usuario.plano_trabalho.conselho_cultural)
+        conselho = obj.usuario.plano_trabalho.conselho_cultural
+
+        if conselho is None:
+            return None
+            
+        conselheiros = conselho.conselheiro_set.filter(conselho_id=conselho)
         lista = list(range(len(conselheiros)))
 
         for i in range(len(conselheiros)):
@@ -118,7 +120,8 @@ class MunicipioSerializer(hal_serializers.HalModelSerializer):
                 serializer = ConselheiroSerializer(conselheiros[i])
                 lista[i] = serializer.data
                 break
-        return  ({str('conselheiros'):lista})
+
+        return  ({'conselheiros': lista})
 
     # Retorna o plano de trabalho do municipio
     def get_plano_trabalho(self,obj):
@@ -147,6 +150,7 @@ class MunicipioSerializer(hal_serializers.HalModelSerializer):
 
         return serializer.data 
 
+    # Estrutura dados no objeto governo
     def get_governo(self,obj):
         governo = Governo(nome_prefeito=obj.nome_prefeito,
                 email_institucional_prefeito=obj.email_institucional_prefeito,
@@ -184,26 +188,7 @@ class Governo(object):
         self.nome_prefeito = nome_prefeito
         self.email_institucional_prefeito = email_institucional_prefeito
         self.termo_posse_prefeito = termo_posse_prefeito
-
-class Componentes(object):
-    def __init__(self, lei_sistema_cultura, relatorio_atividades_gestor, ata_conselho_cultural, 
-                 lei_fundo_cultura, lei_plano_cultura):
-        self.lei_sistema_cultura = lei_sistema_cultura
-        self.relatorio_atividades_gestor = relatorio_atividades_gestor
-        self.ata_conselho_cultural = ata_conselho_culturalr
-        self.lei_fundo_cultura = lei_fundo_cultura
-        self.lei_plano_cultura = lei_plano_cultura
-
-class Conselheiro(object):
-    def __init__(self, nome, segmento, email, situacao, data_cadastro, data_situacao, conselho):
-        self.nome = nome
-        self.segmento = segmento
-        self.email = email
-        self.situacao = situacao
-        self.data_cadastro = data_cadastro
-        self.data_situacao = data_situacao
-        self.conselho = conselho        
-        
+       
 # Serializers das classes de estruturação de adesoes
 class LocalizacaoSerializer(serializers.Serializer):
     estado = UfSerializer() 
@@ -227,4 +212,3 @@ class GovernoSerializer(serializers.Serializer):
     nome_prefeito = serializers.CharField()
     email_institucional_prefeito = serializers.CharField()
     termo_posse_prefeito = serializers.FileField()
-    
