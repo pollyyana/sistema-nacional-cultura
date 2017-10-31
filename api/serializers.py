@@ -1,4 +1,5 @@
 from rest_framework import serializers
+
 from drf_hal_json import serializers as hal_serializers
 from adesao.models import Municipio, Uf, Cidade, Usuario
 from planotrabalho.models import (PlanoTrabalho, CriacaoSistema, OrgaoGestor,
@@ -119,17 +120,14 @@ class MunicipioSerializer(hal_serializers.HalModelSerializer):
                 break
         return  ({str('conselheiros'):lista})
 
-    # TODO: Arrumar context de retorno, atualmente usando uma função de test,
-    # que retorna uma URL errada
+    # Retorna o plano de trabalho do municipio
     def get_plano_trabalho(self,obj):
-        factory = APIRequestFactory()
-        request = factory.get('/')
-
-        serializer_context = {
-                   'request': Request(request),
-                  }
         plano_trabalho = obj.usuario.plano_trabalho
-        serializer = PlanoTrabalhoSerializer(instance=plano_trabalho,context=serializer_context)
+
+        # Request Context
+        context = {}
+        context['request'] = self.context['request']
+        serializer = PlanoTrabalhoSerializer(instance=plano_trabalho,context=context)
         
         return serializer.data
 
