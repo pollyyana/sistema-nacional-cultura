@@ -107,12 +107,13 @@ class MunicipioSerializer(hal_serializers.HalModelSerializer):
 
     # Retornando a lista de conselheiros do ConselhoCultural
     def get_conselho(self, obj):
-        conselho = obj.usuario.plano_trabalho.conselho_cultural
 
-        if conselho is None:
+        try:
+            conselho = obj.usuario.plano_trabalho.conselho_cultural
+            conselheiros = conselho.conselheiro_set.filter(conselho_id=conselho)
+        except AttributeError:
             return None
-            
-        conselheiros = conselho.conselheiro_set.filter(conselho_id=conselho)
+
         lista = list(range(len(conselheiros)))
 
         for i in range(len(conselheiros)):
