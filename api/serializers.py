@@ -81,7 +81,7 @@ class UsuarioSerializer(hal_serializers.HalModelSerializer):
     class Meta:
         model = Usuario
         fields = ('responsavel','estado_processo',
-                  'data_publicacao_acordo','municipio','plano_trabalho')
+                  'data_publicacao_acordo','plano_trabalho')
     
 # Cidade        
 class CidadeSerializer(serializers.ModelSerializer):
