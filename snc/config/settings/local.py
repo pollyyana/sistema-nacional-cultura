@@ -86,7 +86,7 @@ LOCAL_APPS = (
 INSTALLED_APPS = DEFAULT_APPS + THIRD_PARTY_APPS + LOCAL_APPS
 
 REST_FRAMEWORK = {
-    'DEFAULT_PAGINATION_CLASS': 'drf_hal_json.pagination.HalPageNumberPagination',
+    'DEFAULT_PAGINATION_CLASS': 'api.pagination.HalLimitOffsetPagination',
     'PAGE_SIZE': 1,
     'DEFAULT_PARSER_CLASSES': ('drf_hal_json.parsers.JsonHalParser',),
     'DEFAULT_RENDERER_CLASSES': (
