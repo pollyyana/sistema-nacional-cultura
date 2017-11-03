@@ -16,6 +16,8 @@ class  MunicipioList(hal_views.HalCreateModelMixin,generics.ListAPIView):
     queryset = Municipio.objects.filter().order_by('-id')
     serializer_class = MunicipioSerializer
     
+#    filter_backends = (DjangoFilterBackend,)
+#    filter_fields = ('governo',)
 
 # Retorna um municipio especificado pela pk
 class MunicipioDetail(generics.RetrieveAPIView):

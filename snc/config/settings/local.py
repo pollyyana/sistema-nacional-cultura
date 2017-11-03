@@ -26,7 +26,7 @@ SECRET_KEY = 's()bs57t5!cc-x9vt(uj&gupcm7qujam9v$ifamf(dg=)8+pjb'
 DEBUG = True
 
 ALLOWED_HOSTS = [
-    '.cultura.gov.br'
+    '.cultura.gov.br','10.1.20.164',
     ]
 SITE_ID = 1
 
@@ -68,8 +68,8 @@ THIRD_PARTY_APPS = (
     'ckeditor',
     'piwik',
     'clever_selects',
-    'rest_framework',
     'django_filters',
+    'rest_framework',
     'rest_framework_swagger',
     'drf_hal_json' 
     )
@@ -87,7 +87,9 @@ INSTALLED_APPS = DEFAULT_APPS + THIRD_PARTY_APPS + LOCAL_APPS
 
 REST_FRAMEWORK = {
     'DEFAULT_PAGINATION_CLASS': 'api.pagination.HalLimitOffsetPagination',
-    'PAGE_SIZE': 1,
+    'PAGE_SIZE': 10,
+    'DEFAULT_FILTER_BACKENDS': ('django_filters.rest_framework.DjangoFilterBackend',),
+
     'DEFAULT_PARSER_CLASSES': ('drf_hal_json.parsers.JsonHalParser',),
     'DEFAULT_RENDERER_CLASSES': (
         'drf_hal_json.renderers.JsonHalRenderer',
