@@ -127,9 +127,14 @@ class MunicipioSerializer(hal_serializers.HalModelSerializer):
     # Retorna o plano de trabalho do municipio
     def get_plano_trabalho(self,obj):
 
+        # Checa se existe usuário atrelado ao muncipio
         try: 
             plano_trabalho = obj.usuario.plano_trabalho
         except Usuario.DoesNotExist:
+            return None
+
+        # Checa se o usuario tem um plano de trabalho válido
+        if(plano_trabalho is None):
             return None
 
         # Request Context
