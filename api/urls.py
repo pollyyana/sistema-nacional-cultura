@@ -8,14 +8,12 @@ schema_view = get_swagger_view(title='Dados SNC')
 urlpatterns = [
     url(r'^$', schema_view),
 
-    url(r'^adesoes/$', views.MunicipioList.as_view()),
-    url(r'^adesoes/(?P<pk>[0-9]+)/$', views.MunicipioDetail.as_view(), name='municipio-detail'),
+    url(r'^sistemadeculturalocal/$', views.MunicipioList.as_view()),
+    url(r'^sistemadeculturalocal/(?P<pk>[0-9]+)/$', views.MunicipioDetail.as_view(), name='municipio-detail'),
+
     
-    url(r'^usuarios/$', views.UsuarioList.as_view()),
-    url(r'^usuarios/(?P<pk>[0-9]+)/$', views.UsuarioDetail.as_view(), name='usuario-detail'),
-    
-    url(r'^planostrabalho/$', views.PlanoTrabalhoList.as_view()),
-    url(r'^planostrabalho/(?P<pk>[0-9]+)/$', views.PlanoTrabalhoDetail.as_view(), name='planotrabalho-detail'),
+    url(r'^acoesplanotrabalho/$', views.PlanoTrabalhoList.as_view()),
+    url(r'^acoesplanotrabalho/(?P<pk>[0-9]+)/$', views.PlanoTrabalhoDetail.as_view(), name='planotrabalho-detail'),
 ]
 
 urlpatterns = format_suffix_patterns(urlpatterns)
