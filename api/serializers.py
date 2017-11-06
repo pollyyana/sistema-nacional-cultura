@@ -10,29 +10,29 @@ import json
 
 # Criacao do Sistema 
 class CriacaoSistemaSerializer(hal_serializers.HalModelSerializer):
-    situacao_lei_sistema = serializers.ReadOnlyField(
+    situacao = serializers.ReadOnlyField(
             source = 'situacao_lei_sistema.descricao')
     class Meta:
         model = CriacaoSistema
-        fields = ('lei_sistema_cultura', 'situacao_lei_sistema')
+        fields = ('lei_sistema_cultura', 'situacao')
 
 # Orgão gestor
 class OrgaoGestorSerializer(hal_serializers.HalModelSerializer):
-    situacao_relatorio_secretaria = serializers.ReadOnlyField(
-            source = 'situacao_relatorio_secretaria.descricao')
+    situacao = serializers.ReadOnlyField(source = 'situacao_relatorio_secretaria.descricao')
+
     class Meta:
         model = OrgaoGestor
         fields = ('relatorio_atividade_secretaria',
-                  'situacao_relatorio_secretaria')
+                  'situacao')
 
 # Conselho Cultural
 class ConselhoCulturalSerializer(hal_serializers.HalModelSerializer):
-    situacao_ata = serializers.ReadOnlyField(
+    situacao = serializers.ReadOnlyField(
             source = 'situacao_ata.descricao')
 
     class Meta:
         model = ConselhoCultural
-        fields = ('ata_regimento_aprovado','situacao_ata')
+        fields = ('ata_regimento_aprovado','situacao')
 
 # Conselheiro
 class ConselheiroSerializer(hal_serializers.HalModelSerializer):
@@ -43,35 +43,60 @@ class ConselheiroSerializer(hal_serializers.HalModelSerializer):
 
 # Fundo cultural
 class FundoCulturaSerializer(hal_serializers.HalModelSerializer):
-    situacao_lei_plano = serializers.ReadOnlyField(
+    situacao = serializers.ReadOnlyField(
             source = 'situacao_lei_plano.descricao')
     class Meta:
         model = FundoCultura
         fields = ('cnpj_fundo_cultura','lei_fundo_cultura',
-                  'situacao_lei_plano')
+                  'situacao')
 
 # Plano Cultural
 class PlanoCulturaSerializer(hal_serializers.HalModelSerializer):
-    situacao_lei_plano = serializers.ReadOnlyField(
+    situacao = serializers.ReadOnlyField(
             source = 'situacao_lei_plano.descricao')
     class Meta:
         model = PlanoCultura
         fields = ('relatorio_diretrizes_aprovadas', 'minuta_preparada',
                   'ata_reuniao_aprovacao_plano', 'ata_votacao_projeto_lei',
-                  'lei_plano_cultura','situacao_lei_plano')
+                  'lei_plano_cultura','situacao')
 
 # Plano de Trabalho
 class PlanoTrabalhoSerializer(hal_serializers.HalModelSerializer):
-    criacao_sistema = CriacaoSistemaSerializer()
-    orgao_gestor = OrgaoGestorSerializer()
-    conselho_cultural = ConselhoCulturalSerializer()
-    fundo_cultura = FundoCulturaSerializer()
-    plano_cultura = PlanoCulturaSerializer()
+#    criacao_sistema = CriacaoSistemaSerializer()
+
+    criacao_lei_sistema_cultura = serializers.SerializerMethodField(source= 'criacao_sistema')
+    criacao_orgao_gestor = serializers.SerializerMethodField(source= 'orgao_gestor')
+    criacao_plano_cultura = serializers.SerializerMethodField(source= 'plano_cultura')
+    criacao_fundo_cultura = serializers.SerializerMethodField(source= 'fundo_cultura')
+    criacao_conselho_cultural = serializers.SerializerMethodField(source= 'conselho_cultural')
+#    conselho_cultural = ConselhoCulturalSerializer()
+#    fundo_cultura = FundoCulturaSerializer()
+#    plano_cultura = PlanoCulturaSerializer()
 
     class Meta:
         model = PlanoTrabalho
-        fields = ('criacao_sistema','orgao_gestor','conselho_cultural',
-                  'fundo_cultura','plano_cultura')
+        fields = ('self','criacao_lei_sistema_cultura','criacao_orgao_gestor','criacao_conselho_cultural',
+                  'criacao_fundo_cultura','criacao_plano_cultura')
+
+    def get_criacao_orgao_gestor(self, obj):
+        serializer = OrgaoGestorSerializer(obj.orgao_gestor)
+        return serializer.data
+
+    def get_criacao_plano_cultura(self, obj):
+        serializer = PlanoCulturaSerializer(obj.plano_cultura)
+        return serializer.data
+
+    def get_criacao_fundo_cultura(self, obj):
+        serializer = FundoCulturaSerializer(obj.fundo_cultura)
+        return serializer.data
+
+    def get_criacao_lei_sistema_cultura(self, obj):
+        serializer = CriacaoSistemaSerializer(obj.criacao_sistema)
+        return serializer.data
+
+    def get_criacao_conselho_cultural(self, obj):
+        serializer = CriacaoSistemaSerializer(obj.conselho_cultural)
+        return serializer.data
 
 # Usuario
 class UsuarioSerializer(hal_serializers.HalModelSerializer):
@@ -98,12 +123,12 @@ class UfSerializer(serializers.ModelSerializer):
 class MunicipioSerializer(hal_serializers.HalModelSerializer):
     ente_federado = serializers.SerializerMethodField() 
     governo = serializers.SerializerMethodField()
-    plano_trabalho = serializers.SerializerMethodField()
+    acoes_plano_trabalho = serializers.SerializerMethodField()
     conselho = serializers.SerializerMethodField()
     
     class Meta:
         model = Municipio
-        fields = ('self','ente_federado','governo','endereco_eletronico','plano_trabalho','conselho')
+        fields = ('self','ente_federado','governo','endereco_eletronico','acoes_plano_trabalho','conselho')
 
     # Retornando a lista de conselheiros do ConselhoCultural
     def get_conselho(self, obj):
@@ -125,7 +150,7 @@ class MunicipioSerializer(hal_serializers.HalModelSerializer):
         return  ({'conselheiros': lista})
 
     # Retorna o plano de trabalho do municipio
-    def get_plano_trabalho(self,obj):
+    def get_acoes_plano_trabalho(self,obj):
 
         # Checa se existe usuário atrelado ao muncipio
         try: 
