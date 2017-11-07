@@ -72,7 +72,8 @@ THIRD_PARTY_APPS = (
     'django_filters',
     'drf_hal_json',
     'rest_framework_swagger',
-    'rest_framework_xml'
+    'rest_framework_xml',
+    'rest_framework_csv',
     
     )
 
@@ -93,10 +94,10 @@ REST_FRAMEWORK = {
     'DEFAULT_FILTER_BACKENDS': ('django_filters.rest_framework.DjangoFilterBackend',),
     'DEFAULT_PARSER_CLASSES':
         ('rest_framework_xml.parsers.XMLParser',),
-#        ('drf_hal_json.parsers.JsonHalParser',),
     'DEFAULT_RENDERER_CLASSES': (
         'drf_hal_json.renderers.JsonHalRenderer',
         'rest_framework_xml.renderers.XMLRenderer',
+        'rest_framework_csv.renderers.CSVRenderer',
 #        'rest_framework.renderers.BrowsableAPIRenderer',
     ),
 
