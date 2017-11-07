@@ -62,16 +62,11 @@ class PlanoCulturaSerializer(hal_serializers.HalModelSerializer):
 
 # Plano de Trabalho
 class PlanoTrabalhoSerializer(hal_serializers.HalModelSerializer):
-#    criacao_sistema = CriacaoSistemaSerializer()
-
     criacao_lei_sistema_cultura = serializers.SerializerMethodField(source= 'criacao_sistema')
     criacao_orgao_gestor = serializers.SerializerMethodField(source= 'orgao_gestor')
     criacao_plano_cultura = serializers.SerializerMethodField(source= 'plano_cultura')
     criacao_fundo_cultura = serializers.SerializerMethodField(source= 'fundo_cultura')
     criacao_conselho_cultural = serializers.SerializerMethodField(source= 'conselho_cultural')
-#    conselho_cultural = ConselhoCulturalSerializer()
-#    fundo_cultura = FundoCulturaSerializer()
-#    plano_cultura = PlanoCulturaSerializer()
 
     class Meta:
         model = PlanoTrabalho
@@ -79,24 +74,39 @@ class PlanoTrabalhoSerializer(hal_serializers.HalModelSerializer):
                   'criacao_fundo_cultura','criacao_plano_cultura')
 
     def get_criacao_orgao_gestor(self, obj):
-        serializer = OrgaoGestorSerializer(obj.orgao_gestor)
-        return serializer.data
+        if obj.orgao_gestor is not None:
+            serializer = OrgaoGestorSerializer(obj.orgao_gestor)
+            return serializer.data
+        else:
+            return None
 
     def get_criacao_plano_cultura(self, obj):
-        serializer = PlanoCulturaSerializer(obj.plano_cultura)
-        return serializer.data
+        if obj.plano_cultura is not None:
+            serializer = PlanoCulturaSerializer(obj.plano_cultura)
+            return serializer.data
+        else:
+            return None
 
     def get_criacao_fundo_cultura(self, obj):
-        serializer = FundoCulturaSerializer(obj.fundo_cultura)
-        return serializer.data
+        if obj.fundo_cultura is not None:
+            serializer = FundoCulturaSerializer(obj.fundo_cultura)
+            return serializer.data
+        else:
+            return None
 
     def get_criacao_lei_sistema_cultura(self, obj):
-        serializer = CriacaoSistemaSerializer(obj.criacao_sistema)
-        return serializer.data
+        if obj.criacao_sistema is not None:
+            serializer = CriacaoSistemaSerializer(obj.criacao_sistema)
+            return serializer.data
+        else:
+            return None
 
     def get_criacao_conselho_cultural(self, obj):
-        serializer = CriacaoSistemaSerializer(obj.conselho_cultural)
-        return serializer.data
+        if obj.conselho_cultural is not None:
+            serializer = CriacaoSistemaSerializer(obj.conselho_cultural)
+            return serializer.data
+        else:
+            return None
 
 # Usuario
 class UsuarioSerializer(hal_serializers.HalModelSerializer):
