@@ -72,6 +72,7 @@ THIRD_PARTY_APPS = (
     'django_filters',
     'drf_hal_json',
     'rest_framework_swagger',
+    'rest_framework_xml'
     
     )
 
@@ -90,10 +91,13 @@ REST_FRAMEWORK = {
     'DEFAULT_PAGINATION_CLASS': 'api.pagination.HalLimitOffsetPagination',
     'PAGE_SIZE': 10,
     'DEFAULT_FILTER_BACKENDS': ('django_filters.rest_framework.DjangoFilterBackend',),
-    'DEFAULT_PARSER_CLASSES': ('drf_hal_json.parsers.JsonHalParser',),
+    'DEFAULT_PARSER_CLASSES':
+        ('rest_framework_xml.parsers.XMLParser',),
+#        ('drf_hal_json.parsers.JsonHalParser',),
     'DEFAULT_RENDERER_CLASSES': (
         'drf_hal_json.renderers.JsonHalRenderer',
-        'rest_framework.renderers.BrowsableAPIRenderer',
+        'rest_framework_xml.renderers.XMLRenderer',
+#        'rest_framework.renderers.BrowsableAPIRenderer',
     ),
 
     'URL_FIELD_NAME': 'self',
