@@ -1,0 +1,17 @@
+{
+    "swagger": "2.0",
+    "info": {
+      "description": "Essa é uma API aberta para acesso aos dados do portal [**SNC.**](http://snc.cultura.gov.br/adesao/consultar/) \n\nSNC é um sistema que faz a gestão das políticas públicas de cultura, em regime de colaboração entre União, estados, municípios e a sociedade civil.",
+      "version": "0.1-beta",
+      "title": "SNC API"
+    },
+    "host": "localhost:8000",
+    "basePath": "/v1",
+    "schemes": [
+      "http"
+    ],
+    "produces": [
+      "application/json",
+      "application/xml",
+      "text/csv"
+    ],
