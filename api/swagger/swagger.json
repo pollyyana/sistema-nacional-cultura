@@ -57,6 +57,53 @@
           }
         }
       }
+    },
+    "/acoesplanotrabalho/{id}/": {
+      "get": {
+        "tags": [
+          "acoesplanotrabalho: Dados relativos ao Plano de Trabalho"
+        ],
+        "summary": "Busca um único Plano de Trabalho",
+        "operationId": "planodetrabalho_detail",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "description": "Id do Plano de Trabalho",
+            "type": "integer"
+          },
+          {
+            "name": "format",
+            "required": false,
+            "in": "query",
+            "description": "Formato de Retorno",
+            "type": "string",
+            "enum": [
+              "json",
+              "xml",
+              "csv"
+            ]
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Operação bem-sucedida",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/PlanoDeTrabalhoDetail"
+              }
+            }
+          },
+          "404": {
+            "description": "Ações de Plano de Trabalho com esses parâmetros não encontrados",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        }
+      }
     }
   },
   "definitions": {
@@ -65,6 +112,25 @@
       "properties": {
         "id": {
           "type": "integer"
+        }
+      }
+    },
+    "PlanoDeTrabalhoDetail": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        }
+      }
+    },
+    "Error": {
+      "type": "object",
+      "properties": {
+        "message": {
+          "type": "string"
+        },
+        "code": {
+          "type": "string"
         }
       }
     }
