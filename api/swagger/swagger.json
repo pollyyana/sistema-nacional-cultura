@@ -104,6 +104,95 @@
           }
         }
       }
+    },
+    "/sistemadeculturalocal/": {
+      "get": {
+        "tags": [
+          "sistemadeculturalocal: Dados relativos ao Sistema de Cultura local"
+        ],
+        "summary": "Busca sistemas de cultura local dado uma combinação de valores diversos de pesquisa",
+        "operationId": "sistemadecultura_list",
+        "parameters": [
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "description": "Número de Sistemas de Cultura a serem retornados",
+            "type": "integer"
+          },
+          {
+            "name": "offset",
+            "in": "query",
+            "description": "Número de paginação de resultados",
+            "required": false,
+            "type": "integer"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Operação bem-sucedida",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/SistemaDeCulturaLocalList"
+              }
+            }
+          },
+          "404": {
+            "description": "Ações do Sistema de Cultura Local com esses parâmetros não encontrados",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        }
+      }
+    },
+    "/sistemadeculturalocal/{id}/": {
+      "get": {
+        "tags": [
+          "sistemadeculturalocal: Dados relativos ao Sistema de Cultura local"
+        ],
+        "summary": "Busca um único Sistema de Cultura",
+        "operationId": "planodetrabalho_detail",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "description": "Id do Sistema de Cultura",
+            "type": "integer"
+          },
+          {
+            "name": "format",
+            "required": false,
+            "in": "query",
+            "description": "Formato de Retorno",
+            "type": "string",
+            "enum": [
+              "json",
+              "xml",
+              "csv"
+            ]
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Operação bem-sucedida",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/SistemaDeCulturaLocalDetail"
+              }
+            }
+          },
+          "404": {
+            "description": "Ações do Sistema de Cultura com esses parâmetros não encontrados",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        }
+      }
     }
   },
   "definitions": {
@@ -116,6 +205,22 @@
       }
     },
     "PlanoDeTrabalhoDetail": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        }
+      }
+    },
+    "SistemaDeCulturaLocalList": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "integer"
+        }
+      }
+    },
+    "SistemaDeCulturaLocalDetail": {
       "type": "object",
       "properties": {
         "id": {
