@@ -157,7 +157,11 @@ class MunicipioSerializer(hal_serializers.HalModelSerializer):
                 lista[i] = serializer.data
                 break
 
-        return  ({'conselheiros': lista})
+        if conselheiros is None:
+            return None
+#
+        else:
+            return  ({'conselheiros': lista})
 
     # Retorna o plano de trabalho do municipio
     def get_acoes_plano_trabalho(self,obj):
