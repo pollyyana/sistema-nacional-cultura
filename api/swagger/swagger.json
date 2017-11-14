@@ -153,7 +153,7 @@
           "sistemadeculturalocal: Dados relativos ao Sistema de Cultura local"
         ],
         "summary": "Busca um único Sistema de Cultura",
-        "operationId": "planodetrabalho_detail",
+        "operationId": "sistemadecultura_detail",
         "parameters": [
           {
             "name": "id",
@@ -223,7 +223,81 @@
     "SistemaDeCulturaLocalDetail": {
       "type": "object",
       "properties": {
-        "id": {
+        "ente_federado": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/EnteFederado"
+          }
+        }
+      }
+    },
+    "EnteFederado": {
+      "type": "object",
+      "properties": {
+        "cnpj": {
+          "type": "string"
+        },
+        "localizacao": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Localizacao"
+          }
+        },
+        "telefones": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Telefones"
+          }
+        }
+      }
+    },
+    "Localizacao": {
+      "type": "object",
+      "properties": {
+        "estado": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Estado"
+          }
+        },
+        "cidade": {
+          "type": "string"
+        },
+        "cep": {
+          "type": "string"
+        },
+        "bairro": {
+          "type": "string"
+        },
+        "endereco": {
+          "type": "string"
+        },
+        "complemento": {
+          "type": "string"
+        }
+      }
+    },
+    "Estado": {
+      "type": "object",
+      "properties": {
+        "codigo_ibge": {
+          "type": "integer"
+        },
+        "sigla": {
+          "type": "string"
+        }
+      }
+    },
+    "Telefones": {
+      "type": "object",
+      "properties": {
+        "telefone_um": {
+          "type": "string"
+        },
+        "telefone_dois": {
+          "type": "string"
+        },
+        "telefone_tres": {
           "type": "string"
         }
       }
