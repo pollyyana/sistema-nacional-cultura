@@ -43,6 +43,12 @@ THIRD_PARTY_APPS = (
     'widget_tweaks',
     'piwik',
     'clever_selects',
+    'rest_framework',
+    'django_filters',
+    'drf_hal_json',
+    'rest_framework_swagger',
+    'rest_framework_xml',
+    'rest_framework_csv',
 )
 
 # Apps specific for this project go here.
@@ -51,10 +57,27 @@ LOCAL_APPS = (
     'gestao',
     'planotrabalho',
     'snc',
+    'api',
 )
 
 # See: https://docs.djangoproject.com/en/dev/ref/settings/#installed-apps
 INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS
+
+REST_FRAMEWORK = {
+    'DEFAULT_PAGINATION_CLASS': 'api.pagination.HalLimitOffsetPagination',
+    'PAGE_SIZE': 10,
+    'DEFAULT_FILTER_BACKENDS': ('django_filters.rest_framework.DjangoFilterBackend',),
+    'DEFAULT_PARSER_CLASSES':
+        ('rest_framework_xml.parsers.XMLParser',),
+    'DEFAULT_RENDERER_CLASSES': (
+        'drf_hal_json.renderers.JsonHalRenderer',
+        'rest_framework_xml.renderers.XMLRenderer',
+        'rest_framework_csv.renderers.CSVRenderer',
+#        'rest_framework.renderers.BrowsableAPIRenderer',
+    ),
+
+    'URL_FIELD_NAME': 'self',
+}
 
 # MIDDLEWARE CONFIGURATION
 # ------------------------------------------------------------------------------
