@@ -70,6 +70,6 @@ urlpatterns = [
     url(r'^exportar/dados.ods', views.exportar_ods, name='exportar_ods'),
     url(r'^exportar/dados.xls', views.exportar_xls, name='exportar_xls'),
 
-    #API Urls
-    url(r'^v1/', include('api.urls')),
+    url(r'^api/', include('api.urls')),
+
     ] + static.static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
