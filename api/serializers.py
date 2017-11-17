@@ -70,7 +70,7 @@ class PlanoTrabalhoSerializer(hal_serializers.HalModelSerializer):
 
     class Meta:
         model = PlanoTrabalho
-        fields = ('self','criacao_lei_sistema_cultura','criacao_orgao_gestor','criacao_conselho_cultural',
+        fields = ('id','self','criacao_lei_sistema_cultura','criacao_orgao_gestor','criacao_conselho_cultural',
                   'criacao_fundo_cultura','criacao_plano_cultura')
 
     def get_criacao_orgao_gestor(self, obj):
@@ -138,7 +138,7 @@ class MunicipioSerializer(hal_serializers.HalModelSerializer):
     
     class Meta:
         model = Municipio
-        fields = ('self','ente_federado','governo','endereco_eletronico','acoes_plano_trabalho','conselho')
+        fields = ('id','self','ente_federado','governo','endereco_eletronico','acoes_plano_trabalho','conselho')
 
     # Retornando a lista de conselheiros do ConselhoCultural
     def get_conselho(self, obj):
