@@ -138,7 +138,7 @@ class MunicipioSerializer(hal_serializers.HalModelSerializer):
     
     class Meta:
         model = Municipio
-        fields = ('self','ente_federado','governo','endereco_eletronico','acoes_plano_trabalho','conselho')
+        fields = ('self','ente_federado','governo','acoes_plano_trabalho','conselho')
 
     # Retornando a lista de conselheiros do ConselhoCultural
     def get_conselho(self, obj):
@@ -190,7 +190,7 @@ class MunicipioSerializer(hal_serializers.HalModelSerializer):
         telefones = Telefones(telefone_um=obj.telefone_um, telefone_dois=obj.telefone_dois,
                 telefone_tres=obj.telefone_tres) 
         ente_federado = EnteFederado(cnpj_prefeitura=obj.cnpj_prefeitura,localizacao=localizacao,
-                telefones=telefones)
+                endereco_eletronico=obj.endereco_eletronico, telefones=telefones)
         serializer = EnteFederadoSerializer(ente_federado)
 
         return serializer.data 
@@ -207,9 +207,10 @@ class MunicipioSerializer(hal_serializers.HalModelSerializer):
 
 # Classes para estruturar os objetos de adesoes
 class EnteFederado(object):
-    def __init__(self, cnpj_prefeitura, localizacao, telefones):
+    def __init__(self, cnpj_prefeitura, localizacao, endereco_eletronico, telefones):
         self.cnpj_prefeitura = cnpj_prefeitura
         self.localizacao = localizacao
+        self.endereco_eletronico = endereco_eletronico
         self.telefones = telefones
  
 class Localizacao(object):
@@ -252,8 +253,10 @@ class EnteFederadoSerializer(serializers.Serializer):
     cnpj_prefeitura = serializers.CharField()
     localizacao = LocalizacaoSerializer()
     telefones = TelefonesSerializer()
+    endereco_eletronico = serializers.CharField()
 
 class GovernoSerializer(serializers.Serializer):
     nome_prefeito = serializers.CharField()
     email_institucional_prefeito = serializers.CharField()
     termo_posse_prefeito = serializers.FileField()
+
