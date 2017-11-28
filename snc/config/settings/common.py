@@ -98,7 +98,9 @@ MIDDLEWARE_CLASSES = (
     'django_hosts.middleware.HostsResponseMiddleware',
 )
 
+# Habilita cors somente no urls /v1/
 CORS_ORIGIN_ALLOW_ALL = True
+CORS_URLS_REGEX = r'^/v1/.*$'
 
 # MIGRATIONS CONFIGURATION
 # ------------------------------------------------------------------------------
