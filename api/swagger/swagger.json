@@ -1,109 +1,249 @@
 {
   "swagger": "2.0",
   "info": {
-    "description": "Essa é uma API aberta para acesso aos dados do portal [**SNC.**](http://snc.cultura.gov.br/adesao/consultar/) \n\nSNC é um sistema que faz a gestão das políticas públicas de cultura, em regime de colaboração entre União, estados, municípios e a sociedade civil.",
-    "version": "0.1-beta",
-    "title": "SNC API"
+      "description": "Essa é uma API aberta para acesso aos dados do portal [**SNC.**](http://snc.cultura.gov.br/adesao/consultar/)\n\nSNC é um sistema que faz a gestão das políticas públicas de cultura, em regime de colaboração entre União, estados, municípios e a sociedade civil.",
+      "version": "0.1-beta",
+      "title": "SNC API"
   },
-  "host": "localhost:8000",
+  "host": "localhost:8000/",
   "basePath": "/v1",
   "schemes": [
-    "http"
+      "http"
   ],
   "produces": [
-    "application/json",
-    "application/xml",
-    "text/csv"
+      "application/hal+json",
+      "application/xml",
+      "text/csv"
   ],
   "paths": {
-    "/acoesplanotrabalho/": {
-      "get": {
-        "tags": [
-          "acoesplanotrabalho: Dados relativos ao Plano de Trabalho"
-        ],
-        "summary": "Busca planos de trabalho dado uma combinação de valores diversos de pesquisa",
-        "operationId": "planodetrabalho_list",
-        "parameters": [
-          {
-            "name": "limit",
-            "in": "query",
-            "required": false,
-            "description": "Número de Planos de Trabalho a serem retornados",
-            "type": "integer"
-          },
-          {
-            "name": "offset",
-            "in": "query",
-            "description": "Número de paginação de resultados",
-            "required": false,
-            "type": "integer"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Operação bem-sucedida",
-            "schema": {
-              "type": "array",
-              "items": {
-                "$ref": "#/definitions/PlanoDeTrabalhoList"
+      "/acoesplanotrabalho/": {
+          "get": {
+              "tags": [
+                  "acoesplanotrabalho: Dados relativos ao Plano de Trabalho"
+              ],
+              "summary": "Busca planos de trabalho dado uma combinação de valores diversos de pesquisa",
+              "operationId": "planodetrabalho_list",
+              "parameters": [
+                  {
+                      "name": "limit",
+                      "in": "query",
+                      "required": false,
+                      "description": "Número de Planos de Trabalho a serem retornados",
+                      "type": "integer"
+                  },
+                  {
+                      "name": "offset",
+                      "in": "query",
+                      "description": "Número de paginação de resultados",
+                      "required": false,
+                      "type": "integer"
+                  },
+                  {
+                      "name": "format",
+                      "in": "query",
+                      "description": "Formato de retorno",
+                      "required": false,
+                      "type": "string"
+                  }
+              ],
+              "responses": {
+                  "200": {
+                      "description": "Operação bem-sucedida",
+                      "content": {
+                          "application/hal+json": {
+                              "schema": {
+                                  "type": "array",
+                                  "items": {
+                                      "$ref": "#/definitions/PlanoDeTrabalhoList"
+                                  }
+                              }
+                          },
+                          "application/xml": {
+                              "schema": {
+                                  "type": "array",
+                                  "items": {
+                                      "$ref": "#/definitions/PlanoDeTrabalhoList"
+                                  }
+                              }
+                          },
+                          "application/csv": {
+                              "schema": {
+                                  "type": "array",
+                                  "items": {
+                                      "$ref": "#/definitions/PlanoDeTrabalhoList"
+                                  }
+                              }
+                          }
+                      }
+                  },
+                  "404": {
+                      "description": "Ações de Plano de Trabalho com esses parâmetros não encontrados",
+                      "schema": {
+                          "$ref": "#/definitions/Error"
+                      }
+                  }
               }
-            }
-          },
-          "404": {
-            "description": "Ações de Plano de Trabalho com esses parâmetros não encontrados",
-            "schema": {
-              "$ref": "#/definitions/Error"
-            }
           }
-        }
-      }
-    },
-    "/acoesplanotrabalho/{id}/": {
-      "get": {
-        "tags": [
-          "acoesplanotrabalho: Dados relativos ao Plano de Trabalho"
-        ],
-        "summary": "Busca um único Plano de Trabalho",
-        "operationId": "planodetrabalho_detail",
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "description": "Id do Plano de Trabalho",
-            "type": "integer"
-          },
-          {
-            "name": "format",
-            "required": false,
-            "in": "query",
-            "description": "Formato de Retorno",
-            "type": "string",
-            "enum": [
-              "json",
-              "xml",
-              "csv"
-            ]
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Operação bem-sucedida",
-            "schema": {
-              "type": "array",
-              "items": {
-                "$ref": "#/definitions/PlanoDeTrabalhoDetail"
+      },
+      "/acoesplanotrabalho/{id}/": {
+          "get": {
+              "tags": [
+                  "acoesplanotrabalho: Dados relativos ao Plano de Trabalho"
+              ],
+              "summary": "Busca um único Plano de Trabalho",
+              "operationId": "planodetrabalho_detail",
+              "parameters": [
+                  {
+                      "name": "id",
+                      "in": "path",
+                      "required": true,
+                      "description": "Id do Plano de Trabalho",
+                      "type": "integer"
+                  },
+                  {
+                      "name": "format",
+                      "required": false,
+                      "in": "query",
+                      "description": "Formato de Retorno",
+                      "type": "string",
+                      "enum": [
+                          "json",
+                          "xml",
+                          "csv"
+                      ]
+                  }
+              ],
+              "responses": {
+                  "200": {
+                      "description": "Operação bem-sucedida",
+                      "schema": {
+                          "type": "array",
+                          "items": {
+                              "$ref": "#/definitions/PlanoDeTrabalhoDetail"
+                          }
+                      }
+                  },
+                  "404": {
+                      "description": "Ações de Plano de Trabalho com esses parâmetros não encontrados",
+                      "schema": {
+                          "$ref": "#/definitions/Error"
+                      }
+                  }
               }
-            }
-          },
-          "404": {
-            "description": "Ações de Plano de Trabalho com esses parâmetros não encontrados",
-            "schema": {
-              "$ref": "#/definitions/Error"
-            }
           }
-        }
+      },
+      "/sistemadeculturalocal/": {
+          "get": {
+              "tags": [
+                  "sistemadeculturalocal: Dados relativos ao Sistema de Cultura local"
+              ],
+              "summary": "Busca sistemas de cultura local dado uma combinação de valores diversos de pesquisa",
+              "operationId": "sistemadecultura_list",
+              "parameters": [
+                  {
+                      "name": "limit",
+                      "in": "query",
+                      "required": false,
+                      "description": "Número de Sistemas de Cultura a serem retornados",
+                      "type": "integer"
+                  },
+                  {
+                      "name": "offset",
+                      "in": "query",
+                      "description": "Número de paginação de resultados",
+                      "required": false,
+                      "type": "integer"
+                  }
+              ],
+              "responses": {
+                  "200": {
+                      "description": "Operação bem-sucedida",
+                      "schema": {
+                          "type": "array",
+                          "items": {
+                              "$ref": "#/definitions/SistemaDeCulturaLocalList"
+                          }
+                      }
+                  },
+                  "404": {
+                      "description": "Ações do Sistema de Cultura Local com esses parâmetros não encontrados",
+                      "schema": {
+                          "$ref": "#/definitions/Error"
+                      }
+                  }
+              }
+          }
+      },
+      "/sistemadeculturalocal/{id}/": {
+          "get": {
+              "tags": [
+                  "sistemadeculturalocal: Dados relativos ao Sistema de Cultura local"
+              ],
+              "summary": "Busca um único Sistema de Cultura",
+              "operationId": "sistemadecultura_detail",
+              "parameters": [
+                  {
+                      "name": "id",
+                      "in": "path",
+                      "required": true,
+                      "description": "Id do Sistema de Cultura",
+                      "type": "integer"
+                  },
+                  {
+                      "name": "format",
+                      "required": false,
+                      "in": "query",
+                      "description": "Formato de Retorno",
+                      "type": "string",
+                      "enum": [
+                          "json",
+                          "xml",
+                          "csv"
+                      ]
+                  }
+              ],
+              "responses": {
+                  "200": {
+                      "description": "Operação bem-sucedida",
+                      "schema": {
+                          "type": "array",
+                          "items": {
+                              "$ref": "#/definitions/SistemaDeCulturaLocalDetail"
+                          }
+                      },
+                      "headers": {
+                          "X-Rate-Limit-Limit": {
+                              "description": "Número de requisições permitidas no período",
+                              "type": "integer"
+                          },
+                          "X-Rate-Limit-Remaining": {
+                              "description": "Número de requisições restantes na janela de limite atual",
+                              "type": "integer"
+                          },
+                          "X-Rate-Limit-Reset": {
+                              "description": "Tempo para que a janela de limite resete em segundos UTC epoch",
+                              "type": "integer"
+                          },
+                          "Retry-After": {
+                              "description": "Segundos para tentar novamente ou a data http quando a janela de limite será resetada",
+                              "type": "integer"
+                          },
+                          "X-Total-Count": {
+                              "description": "Número total de objetos que atendem seu critério de busca",
+                              "type": "integer"
+                          }
+                      }
+                  },
+                  "404": {
+                      "description": "Ações do Sistema de Cultura com esses parâmetros não encontrados",
+                      "schema": {
+                          "$ref": "#/definitions/Error"
+                      }
+                  }
+              }
+          }
       }
+<<<<<<< HEAD
     }
   },
   "definitions": {
@@ -132,7 +272,126 @@
         "code": {
           "type": "string"
         }
+=======
+  },
+  "definitions": {
+      "PlanoDeTrabalhoList": {
+          "type": "object",
+          "properties": {
+              "id": {
+                  "type": "integer"
+              }
+          }
+      },
+      "PlanoDeTrabalhoDetail": {
+          "type": "object",
+          "properties": {
+              "id": {
+                  "type": "string"
+              }
+          }
+      },
+      "SistemaDeCulturaLocalList": {
+          "type": "object",
+          "properties": {
+              "id": {
+                  "type": "integer"
+              }
+          }
+      },
+      "SistemaDeCulturaLocalDetail": {
+          "type": "object",
+          "properties": {
+              "ente_federado": {
+                  "type": "array",
+                  "items": {
+                      "$ref": "#/definitions/EnteFederado"
+                  }
+              }
+          }
+      },
+      "EnteFederado": {
+          "type": "object",
+          "properties": {
+              "cnpj": {
+                  "type": "string"
+              },
+              "localizacao": {
+                  "type": "array",
+                  "items": {
+                      "$ref": "#/definitions/Localizacao"
+                  }
+              },
+              "telefones": {
+                  "type": "array",
+                  "items": {
+                      "$ref": "#/definitions/Telefones"
+                  }
+              }
+          }
+      },
+      "Localizacao": {
+          "type": "object",
+          "properties": {
+              "estado": {
+                  "type": "array",
+                  "items": {
+                      "$ref": "#/definitions/Estado"
+                  }
+              },
+              "cidade": {
+                  "type": "string"
+              },
+              "cep": {
+                  "type": "string"
+              },
+              "bairro": {
+                  "type": "string"
+              },
+              "endereco": {
+                  "type": "string"
+              },
+              "complemento": {
+                  "type": "string"
+              }
+          }
+      },
+      "Estado": {
+          "type": "object",
+          "properties": {
+              "codigo_ibge": {
+                  "type": "integer"
+              },
+              "sigla": {
+                  "type": "string"
+              }
+          }
+      },
+      "Telefones": {
+          "type": "object",
+          "properties": {
+              "telefone_um": {
+                  "type": "string"
+              },
+              "telefone_dois": {
+                  "type": "string"
+              },
+              "telefone_tres": {
+                  "type": "string"
+              }
+          }
+      },
+      "Error": {
+          "type": "object",
+          "properties": {
+              "message": {
+                  "type": "string"
+              },
+              "code": {
+                  "type": "string"
+              }
+          }
+>>>>>>> 3f58403... [UPDATE] Atualização do arquivo swagger e mudanças na local.py
       }
-    }
   }
 }

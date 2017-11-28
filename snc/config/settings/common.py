@@ -50,6 +50,7 @@ THIRD_PARTY_APPS = (
     'rest_framework_xml',
     'rest_framework_csv',
     'django_hosts',
+    'corsheaders',
 )
 
 # Apps specific for this project go here.
@@ -90,11 +91,16 @@ MIDDLEWARE_CLASSES = (
     'django_hosts.middleware.HostsRequestMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django_hosts.middleware.HostsResponseMiddleware',
 )
+
+# Habilita cors somente no urls /v1/
+CORS_ORIGIN_ALLOW_ALL = True
+CORS_URLS_REGEX = r'^/v1/.*$'
 
 # MIGRATIONS CONFIGURATION
 # ------------------------------------------------------------------------------
