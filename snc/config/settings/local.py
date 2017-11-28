@@ -51,15 +51,3 @@ CACHES = {
 
 # Your local stuff: Below this line define 3rd party library settings
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'dbsnc',
-        
-        'USER': 'postgres',
-        'PASSWORD': '123456',
-            
-        'HOST': 'localhost',
-        'PORT': '5432',    
-    }
-}
