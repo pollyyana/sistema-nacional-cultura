@@ -243,36 +243,6 @@
               }
           }
       }
-<<<<<<< HEAD
-    }
-  },
-  "definitions": {
-    "PlanoDeTrabalhoList": {
-      "type": "object",
-      "properties": {
-        "id": {
-          "type": "integer"
-        }
-      }
-    },
-    "PlanoDeTrabalhoDetail": {
-      "type": "object",
-      "properties": {
-        "id": {
-          "type": "string"
-        }
-      }
-    },
-    "Error": {
-      "type": "object",
-      "properties": {
-        "message": {
-          "type": "string"
-        },
-        "code": {
-          "type": "string"
-        }
-=======
   },
   "definitions": {
       "PlanoDeTrabalhoList": {
@@ -391,7 +361,6 @@
                   "type": "string"
               }
           }
->>>>>>> 3f58403... [UPDATE] Atualização do arquivo swagger e mudanças na local.py
       }
   }
 }
