@@ -5,7 +5,7 @@
       "version": "0.1-beta",
       "title": "SNC API"
   },
-  "host": "localhost:8000/",
+  "host": "api.localhost:8000",
   "basePath": "/v1",
   "schemes": [
       "http"
