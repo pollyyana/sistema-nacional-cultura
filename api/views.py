@@ -1,9 +1,13 @@
 from rest_framework import generics
+from django.shortcuts import render
 from django_filters.rest_framework import DjangoFilterBackend
 from planotrabalho.models import PlanoTrabalho 
 from adesao.models import Municipio, Cidade, Usuario
 from api.serializers import MunicipioSerializer, UsuarioSerializer, PlanoTrabalhoSerializer
 
+# Swagger index page.
+def swagger_index(request):
+    return render(request, 'swagger/index.html')
 
 # MUNICIPIOS
 # Lista todos os municipios

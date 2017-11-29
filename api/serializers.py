@@ -70,7 +70,7 @@ class PlanoTrabalhoSerializer(hal_serializers.HalModelSerializer):
 
     class Meta:
         model = PlanoTrabalho
-        fields = ('self','criacao_lei_sistema_cultura','criacao_orgao_gestor','criacao_conselho_cultural',
+        fields = ('id','self','criacao_lei_sistema_cultura','criacao_orgao_gestor','criacao_conselho_cultural',
                   'criacao_fundo_cultura','criacao_plano_cultura')
 
     def get_criacao_orgao_gestor(self, obj):
@@ -133,12 +133,12 @@ class UfSerializer(serializers.ModelSerializer):
 class MunicipioSerializer(hal_serializers.HalModelSerializer):
     ente_federado = serializers.SerializerMethodField() 
     governo = serializers.SerializerMethodField()
-    acoes_plano_trabalho = serializers.SerializerMethodField()
     conselho = serializers.SerializerMethodField()
+    _embedded = serializers.SerializerMethodField(method_name='get_embedded')
     
     class Meta:
         model = Municipio
-        fields = ('self','ente_federado','governo','acoes_plano_trabalho','conselho')
+        fields = ('id','self','_embedded','ente_federado','governo','conselho')
 
     # Retornando a lista de conselheiros do ConselhoCultural
     def get_conselho(self, obj):
@@ -157,7 +157,18 @@ class MunicipioSerializer(hal_serializers.HalModelSerializer):
                 lista[i] = serializer.data
                 break
 
-        return  ({'conselheiros': lista})
+        if conselheiros is None:
+            return None
+
+        else:
+            return  ({'conselheiros': lista})
+
+    # Retorna recursos embedded seguinto o padrão hal
+    def get_embedded(self,obj):
+        embedded = ({'acoes_plano_trabalho':self.get_acoes_plano_trabalho(obj=obj)})
+
+        return embedded
+
 
     # Retorna o plano de trabalho do municipio
     def get_acoes_plano_trabalho(self,obj):
@@ -176,13 +187,9 @@ class MunicipioSerializer(hal_serializers.HalModelSerializer):
         context = {}
         context['request'] = self.context['request']
         serializer = PlanoTrabalhoSerializer(instance=plano_trabalho,context=context)
-        
-        return serializer.data
 
-    def get_componentes(self,obj):
-        serializer = PlanoTrabalhoSerializer(obj.usuario.plano_trabalho)
-        return serializer.data
-    
+        return serializer.data 
+
     # Estrutura dados no objeto ente_federado
     def get_ente_federado(self,obj):
         localizacao = Localizacao(estado=obj.estado, cidade=obj.cidade,
