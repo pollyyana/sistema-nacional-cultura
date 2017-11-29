@@ -45,7 +45,6 @@ THIRD_PARTY_APPS = (
     'rest_framework',
     'django_filters',
     'drf_hal_json',
-    'rest_framework_swagger',
     'rest_framework_xml',
     'rest_framework_csv',
     'django_hosts',

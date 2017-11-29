@@ -1,5 +1,4 @@
 from django.conf.urls import url
-from rest_framework_swagger.views import get_swagger_view
 from rest_framework.urlpatterns import format_suffix_patterns
 from snc.urls import *
 from api import views
