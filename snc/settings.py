@@ -8,13 +8,19 @@ https://docs.djangoproject.com/en/dev/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/dev/ref/settings/
 """
-from __future__ import absolute_import, unicode_literals
+# from __future__ import absolute_import, unicode_literals
 
 import environ
 
-ROOT_DIR = environ.Path(__file__) - 3  # (/a/b/myfile.py - 3 = /)
 
 env = environ.Env()
+env.read_env()
+
+ROOT_DIR = environ.Path(__file__) - 2  # (/a/b/myfile.py - 3 = /)
+
+# DEBUG
+# See: https://docs.djangoproject.com/en/dev/ref/settings/#debug
+DEBUG = env("DEBUG")
 
 # SECRET CONFIGURATION
 # See: https://docs.djangoproject.com/en/dev/ref/settings/#secret-key
@@ -108,10 +114,6 @@ CORS_URLS_REGEX = r'^/v1/.*$'
 # MIGRATION_MODULES = {
 #     'sites': 'sistema-nacional-cultura.contrib.sites.migrations'
 # }
-
-# DEBUG
-# See: https://docs.djangoproject.com/en/dev/ref/settings/#debug
-DEBUG = env.bool("DJANGO_DEBUG", False)
 
 # FIXTURE CONFIGURATION
 # ------------------------------------------------------------------------------
