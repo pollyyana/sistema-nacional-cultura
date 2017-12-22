@@ -65,10 +65,13 @@ def test_entidades_principais_sistema_cultura_local(client):
 
     request = client.get(url, HTTP_HOST=host_request, content_type="application/hal+json")
 
-    entidades = ["governo","ente_federado", "conselho", "_embedded","situacao_adesao"]
+    entidades = set(["governo","ente_federado", "conselho",
+        "_embedded","situacao_adesao","_links","id"])
 
     for entidade in entidades:
         assert entidade in request.data
+
+    assert entidades.symmetric_difference(request.data) == set()
 
 
 def test_campos_do_objeto_governo_ao_retornar_sistema_cultura_local(client):
@@ -182,3 +185,23 @@ def test_acoesplanotrabalho_retorna_para_id_valido(client):
 
     assert request.status_code == status.HTTP_200_OK
     assert request.data["id"] == plano.id
+
+
+def test_campos_acoesplanotrabalho(client):
+
+    plano = mommy.make('PlanoTrabalho')
+
+    url = '/v1/acoesplanotrabalho/{}/'.format(plano.id)
+    host_request = 'api'
+
+    request = client.get(url, HTTP_HOST=host_request,
+            content_type="application/hal+json")
+
+    campos = set(["criacao_lei_sistema_cultura","criacao_orgao_gestor",
+        "criacao_plano_cultura","criacao_fundo_cultura","criacao_conselho_cultural",
+        "_links","id"])
+
+    for campo in campos:
+        assert campo in request.data
+
+    assert campos.symmetric_difference(request.data) == set()
