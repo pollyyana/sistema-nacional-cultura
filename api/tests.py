@@ -134,3 +134,51 @@ def test_campos_do_objeto_conselho_ao_retornar_sistema_cultura_local(client):
     campos = set(["conselheiros"])
 
     assert campos.issubset(request.data["conselho"])
+
+
+def test_planotrabalho_list_endpoint_returning_200_OK(client):
+
+    url = '/v1/acoesplanotrabalho/'
+    host_request = 'api'
+
+    request = client.get(url, HTTP_HOST=host_request)
+
+    assert request.status_code == status.HTTP_200_OK
+
+
+def test_planotrabalho_list_retorna_lista_com_10(client):
+
+    planos = mommy.make('PlanoTrabalho',13)
+    url = '/v1/acoesplanotrabalho/'
+    host_request = 'api'
+
+    request = client.get(url, HTTP_HOST=host_request,
+            content_type="application/hal+json")
+
+    assert isinstance(request.data["_embedded"]["items"], list) 
+    assert len(request.data["_embedded"]["items"]) == 10
+
+
+def test_acoesplanotrabalho_retorna_404_para_id_nao_valido(client):
+
+    url = '/v1/acoesplanotrabalho/55/'
+    host_request = 'api'
+
+    request = client.get(url, HTTP_HOST=host_request,
+            content_type="application/hal+json")
+
+    assert request.status_code == status.HTTP_404_NOT_FOUND
+
+
+def test_acoesplanotrabalho_retorna_para_id_valido(client):
+
+    plano = mommy.make('PlanoTrabalho')
+
+    url = '/v1/acoesplanotrabalho/{}/'.format(plano.id)
+    host_request = 'api'
+
+    request = client.get(url, HTTP_HOST=host_request,
+            content_type="application/hal+json")
+
+    assert request.status_code == status.HTTP_200_OK
+    assert request.data["id"] == plano.id
