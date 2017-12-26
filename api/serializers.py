@@ -67,11 +67,28 @@ class PlanoTrabalhoSerializer(hal_serializers.HalModelSerializer):
     criacao_plano_cultura = serializers.SerializerMethodField(source= 'plano_cultura')
     criacao_fundo_cultura = serializers.SerializerMethodField(source= 'fundo_cultura')
     criacao_conselho_cultural = serializers.SerializerMethodField(source= 'conselho_cultural')
+    _embedded = serializers.SerializerMethodField(method_name='get_embedded')
 
     class Meta:
         model = PlanoTrabalho
         fields = ('id','self','criacao_lei_sistema_cultura','criacao_orgao_gestor','criacao_conselho_cultural',
-                  'criacao_fundo_cultura','criacao_plano_cultura')
+                  'criacao_fundo_cultura','criacao_plano_cultura','_embedded')
+
+
+    def get_sistema_cultura_local(self, obj):
+        if obj.usuario.municipio is not None:
+            context = {}
+            context['request'] = self.context['request']
+            serializer = MunicipioLinkSerializer(obj.usuario.municipio, context=context)
+            return serializer.data
+        else:
+            return None
+
+    # Retorna recursos embedded seguinto o padrão hal
+    def get_embedded(self,obj):
+        embedded = ({'sistema_cultura_local':self.get_sistema_cultura_local(obj=obj)})
+
+        return embedded
 
     def get_criacao_orgao_gestor(self, obj):
         if obj.orgao_gestor is not None:
@@ -128,6 +145,12 @@ class UfSerializer(serializers.ModelSerializer):
     class Meta:
         model = Uf 
         fields = ('codigo_ibge', 'sigla')
+
+class MunicipioLinkSerializer(hal_serializers.HalModelSerializer):
+
+    class Meta:
+        model = Municipio
+        fields = ('self',)
 
 # Municipio
 class MunicipioSerializer(hal_serializers.HalModelSerializer):
