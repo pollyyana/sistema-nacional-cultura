@@ -76,6 +76,12 @@ class PlanoTrabalhoSerializer(hal_serializers.HalModelSerializer):
 
 
     def get_sistema_cultura_local(self, obj):
+
+        try: 
+            plano_trabalho = obj.usuario
+        except Usuario.DoesNotExist:
+            return None
+
         if obj.usuario.municipio is not None:
             context = {}
             context['request'] = self.context['request']
@@ -84,9 +90,10 @@ class PlanoTrabalhoSerializer(hal_serializers.HalModelSerializer):
         else:
             return None
 
-    # Retorna recursos embedded seguinto o padrão hal
+    # Retorna recursos embedded seguindo o padrão hal
     def get_embedded(self,obj):
-        embedded = ({'sistema_cultura_local':self.get_sistema_cultura_local(obj=obj)})
+        municipio = self.get_sistema_cultura_local(obj=obj)
+        embedded = ({'sistema_cultura_local':municipio})
 
         return embedded
 
@@ -187,7 +194,7 @@ class MunicipioSerializer(hal_serializers.HalModelSerializer):
         else:
             return  ({'conselheiros': lista})
 
-    # Retorna recursos embedded seguinto o padrão hal
+    # Retorna recursos embedded seguindo o padrão hal
     def get_embedded(self,obj):
         embedded = ({'acoes_plano_trabalho':self.get_acoes_plano_trabalho(obj=obj)})
 
