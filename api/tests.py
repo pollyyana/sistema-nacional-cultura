@@ -282,3 +282,30 @@ def test_objeto_criacao_conselho_cultural_acoesplanotrabalho(client):
 
     assert campos.symmetric_difference(request.data["criacao_conselho_cultural"]) == set()
 
+
+def test_retorno_maximo_de_100_objetos_sistema_de_cultura(client):
+
+    municipio = mommy.make('Municipio',150)
+    limit_param = 'limit=150'
+
+    url = '/v1/sistemadeculturalocal/?{}'.format(limit_param)
+    host_request = 'api'
+
+    request = client.get(url, HTTP_HOST=host_request,
+            content_type="application/hal+json")
+
+    assert len(request.data["_embedded"]["items"]) == 100
+
+
+def test_retorno_maximo_de_100_objetos_acoes_plano_trabalho(client):
+
+    municipio = mommy.make('PlanoTrabalho',150)
+    limit_param = 'limit=150'
+
+    url = '/v1/acoesplanotrabalho/?{}'.format(limit_param)
+    host_request = 'api'
+
+    request = client.get(url, HTTP_HOST=host_request,
+            content_type="application/hal+json")
+
+    assert len(request.data["_embedded"]["items"]) == 100
