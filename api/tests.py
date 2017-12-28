@@ -1,4 +1,5 @@
 import pytest
+import random
 
 from rest_framework import status
 
@@ -332,3 +333,123 @@ def test_pesquisa_por_estado_sigla_em_sistema_de_cultura(client):
 
     for municipio in request.data["_embedded"]["items"]:
         assert municipio["ente_federado"]["localizacao"]["estado"]["sigla"] == municipios[0].estado.sigla
+
+
+def test_pesquisa_por_situacao_adesao_1_em_sistema_de_cultura(client):
+
+    municipios = mommy.make('Municipio',50)
+    estados_processo = ['1','2','3','4','5','6']
+
+    for municipio in municipios:
+        mommy.make('Usuario', municipio=municipio,
+                estado_processo=random.choice(estados_processo))
+
+    situacao_adesao_param = '?situacao_adesao=1'
+
+    url = url_sistemadeculturalocal + situacao_adesao_param
+
+    request = client.get(url, HTTP_HOST=host_request,
+            content_type="application/hal+json")
+
+    for municipio in request.data["_embedded"]["items"]:
+        assert municipio["situacao_adesao"]["situacao_adesao"] == 'Aguardando envio da documentação' 
+
+
+def test_pesquisa_por_situacao_adesao_2_em_sistema_de_cultura(client):
+
+    municipios = mommy.make('Municipio',50)
+    estados_processo = ['1','2','3','4','5','6']
+
+    for municipio in municipios:
+        mommy.make('Usuario', municipio=municipio,
+                estado_processo=random.choice(estados_processo))
+
+    situacao_adesao_param = '?situacao_adesao=2'
+
+    url = url_sistemadeculturalocal + situacao_adesao_param
+
+    request = client.get(url, HTTP_HOST=host_request,
+            content_type="application/hal+json")
+
+    for municipio in request.data["_embedded"]["items"]:
+        assert municipio["situacao_adesao"]["situacao_adesao"] == 'Documentação Recebida - Aguarda Análise' 
+
+
+def test_pesquisa_por_situacao_adesao_3_em_sistema_de_cultura(client):
+
+    municipios = mommy.make('Municipio',50)
+    estados_processo = ['1','2','3','4','5','6']
+
+    for municipio in municipios:
+        mommy.make('Usuario', municipio=municipio,
+                estado_processo=random.choice(estados_processo))
+
+    situacao_adesao_param = '?situacao_adesao=3'
+
+    url = url_sistemadeculturalocal + situacao_adesao_param
+
+    request = client.get(url, HTTP_HOST=host_request,
+            content_type="application/hal+json")
+
+    for municipio in request.data["_embedded"]["items"]:
+        assert municipio["situacao_adesao"]["situacao_adesao"] == 'Diligência Documental' 
+
+
+def test_pesquisa_por_situacao_adesao_4_em_sistema_de_cultura(client):
+
+    municipios = mommy.make('Municipio',50)
+    estados_processo = ['1','2','3','4','5','6']
+
+    for municipio in municipios:
+        mommy.make('Usuario', municipio=municipio,
+                estado_processo=random.choice(estados_processo))
+
+    situacao_adesao_param = '?situacao_adesao=4'
+
+    url = url_sistemadeculturalocal + situacao_adesao_param
+
+    request = client.get(url, HTTP_HOST=host_request,
+            content_type="application/hal+json")
+
+    for municipio in request.data["_embedded"]["items"]:
+        assert municipio["situacao_adesao"]["situacao_adesao"] == 'Encaminhado para assinatura do Secretário SAI' 
+
+
+def test_pesquisa_por_situacao_adesao_5_em_sistema_de_cultura(client):
+
+    municipios = mommy.make('Municipio',50)
+    estados_processo = ['1','2','3','4','5','6']
+
+    for municipio in municipios:
+        mommy.make('Usuario', municipio=municipio,
+                estado_processo=random.choice(estados_processo))
+
+    situacao_adesao_param = '?situacao_adesao=5'
+
+    url = url_sistemadeculturalocal + situacao_adesao_param
+
+    request = client.get(url, HTTP_HOST=host_request,
+            content_type="application/hal+json")
+
+    for municipio in request.data["_embedded"]["items"]:
+        assert municipio["situacao_adesao"]["situacao_adesao"] == 'Aguarda Publicação no DOU' 
+
+
+def test_pesquisa_por_situacao_adesao_6_em_sistema_de_cultura(client):
+
+    municipios = mommy.make('Municipio',50)
+    estados_processo = ['1','2','3','4','5','6']
+
+    for municipio in municipios:
+        mommy.make('Usuario', municipio=municipio,
+                estado_processo=random.choice(estados_processo))
+
+    situacao_adesao_param = '?situacao_adesao=6'
+
+    url = url_sistemadeculturalocal + situacao_adesao_param
+
+    request = client.get(url, HTTP_HOST=host_request,
+            content_type="application/hal+json")
+
+    for municipio in request.data["_embedded"]["items"]:
+        assert municipio["situacao_adesao"]["situacao_adesao"] == 'Publicado no DOU' 
