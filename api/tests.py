@@ -287,3 +287,48 @@ def test_retorno_maximo_de_100_objetos_acoes_plano_trabalho(client):
     assert len(request.data["_embedded"]["items"]) == 100
 
 
+def test_pesquisa_por_cnpj_prefeitura_em_sistema_de_cultura(client):
+
+    municipio = mommy.make('Municipio',50)
+    cnpj_param = '?cnpj_prefeitura={}'.format(municipio[0].cnpj_prefeitura)
+
+    url = url_sistemadeculturalocal + cnpj_param
+
+    request = client.get(url, HTTP_HOST=host_request,
+            content_type="application/hal+json")
+
+    assert len(request.data["_embedded"]["items"]) == 1
+    assert request.data["_embedded"]["items"][0]["ente_federado"]["cnpj_prefeitura"] == municipio[0].cnpj_prefeitura
+
+
+def test_pesquisa_por_nome_municipio_em_sistema_de_cultura(client):
+
+    cidades = mommy.make('Cidade',50)
+
+    for cidade in cidades:
+         mommy.make('Municipio',cidade=cidade)
+
+    nome_municipio_param = '?nome_municipio={}'.format(cidades[0].nome_municipio)
+
+    url = url_sistemadeculturalocal + nome_municipio_param
+
+    request = client.get(url, HTTP_HOST=host_request,
+            content_type="application/hal+json")
+
+    assert len(request.data["_embedded"]["items"]) == 1
+    assert request.data["_embedded"]["items"][0]["ente_federado"]["localizacao"]["cidade"]["nome_municipio"] == cidades[0].nome_municipio
+
+
+def test_pesquisa_por_estado_sigla_em_sistema_de_cultura(client):
+
+    municipios = mommy.make('Municipio',50)
+
+    estado_sigla_param = '?estado_sigla={}'.format(municipios[0].estado.sigla)
+
+    url = url_sistemadeculturalocal + estado_sigla_param
+
+    request = client.get(url, HTTP_HOST=host_request,
+            content_type="application/hal+json")
+
+    for municipio in request.data["_embedded"]["items"]:
+        assert municipio["ente_federado"]["localizacao"]["estado"]["sigla"] == municipios[0].estado.sigla
