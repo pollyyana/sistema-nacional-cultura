@@ -67,11 +67,35 @@ class PlanoTrabalhoSerializer(hal_serializers.HalModelSerializer):
     criacao_plano_cultura = serializers.SerializerMethodField(source= 'plano_cultura')
     criacao_fundo_cultura = serializers.SerializerMethodField(source= 'fundo_cultura')
     criacao_conselho_cultural = serializers.SerializerMethodField(source= 'conselho_cultural')
+    _embedded = serializers.SerializerMethodField(method_name='get_embedded')
 
     class Meta:
         model = PlanoTrabalho
         fields = ('id','self','criacao_lei_sistema_cultura','criacao_orgao_gestor','criacao_conselho_cultural',
-                  'criacao_fundo_cultura','criacao_plano_cultura')
+                  'criacao_fundo_cultura','criacao_plano_cultura','_embedded')
+
+
+    def get_sistema_cultura_local(self, obj):
+
+        try: 
+            plano_trabalho = obj.usuario
+        except Usuario.DoesNotExist:
+            return None
+
+        if obj.usuario.municipio is not None:
+            context = {}
+            context['request'] = self.context['request']
+            serializer = MunicipioLinkSerializer(obj.usuario.municipio, context=context)
+            return serializer.data
+        else:
+            return None
+
+    # Retorna recursos embedded seguindo o padrão hal
+    def get_embedded(self,obj):
+        municipio = self.get_sistema_cultura_local(obj=obj)
+        embedded = ({'sistema_cultura_local':municipio})
+
+        return embedded
 
     def get_criacao_orgao_gestor(self, obj):
         if obj.orgao_gestor is not None:
@@ -129,6 +153,12 @@ class UfSerializer(serializers.ModelSerializer):
         model = Uf 
         fields = ('codigo_ibge', 'sigla')
 
+class MunicipioLinkSerializer(hal_serializers.HalModelSerializer):
+
+    class Meta:
+        model = Municipio
+        fields = ('self',)
+
 # Municipio
 class MunicipioSerializer(hal_serializers.HalModelSerializer):
     ente_federado = serializers.SerializerMethodField() 
@@ -164,7 +194,7 @@ class MunicipioSerializer(hal_serializers.HalModelSerializer):
         else:
             return  ({'conselheiros': lista})
 
-    # Retorna recursos embedded seguinto o padrão hal
+    # Retorna recursos embedded seguindo o padrão hal
     def get_embedded(self,obj):
         embedded = ({'acoes_plano_trabalho':self.get_acoes_plano_trabalho(obj=obj)})
 
