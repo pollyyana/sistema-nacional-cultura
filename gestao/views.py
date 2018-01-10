@@ -143,7 +143,7 @@ class AcompanharAdesao(ListView):
         situacao = self.request.GET.get('situacao', None)
         ente_federado = self.request.GET.get('municipio', None)
 
-        if situacao in ('1', '2', '3', '4', '5', '6'):
+        if situacao in ('0', '1', '2', '3', '4', '5', '6'):
             return Municipio.objects.filter(usuario__estado_processo=situacao)
 
         if ente_federado:
@@ -155,7 +155,7 @@ class AcompanharAdesao(ListView):
 
             return municipio | estado
 
-        return Municipio.objects.filter(usuario__estado_processo__range=('1', '5'))
+        return Municipio.objects.all()
 
 
 # Acompanhamento dos planos de trabalho
