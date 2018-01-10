@@ -42,8 +42,9 @@ def test_404_recupera_ID_sistema_cultura_local(client):
 def test_recupera_ID_param_sistema_cultura_local(client):
 
     municipio = mommy.make('Municipio')
+    municipio_id = '{}/'.format(municipio.id)
 
-    url = url_sistemadeculturalocal + str(municipio.id) + '/'
+    url = url_sistemadeculturalocal + municipio_id
 
 
     request = client.get(url, HTTP_HOST=host_request,
@@ -56,8 +57,9 @@ def test_recupera_ID_param_sistema_cultura_local(client):
 def test_entidades_principais_sistema_cultura_local(client):
 
     municipio = mommy.make('Municipio')
+    municipio_id = '{}/'.format(municipio.id)
 
-    url = url_sistemadeculturalocal + str(municipio.id) + '/'
+    url = url_sistemadeculturalocal + municipio_id
 
     request = client.get(url, HTTP_HOST=host_request, content_type="application/hal+json")
 
@@ -70,8 +72,9 @@ def test_entidades_principais_sistema_cultura_local(client):
 def test_campos_do_objeto_governo_ao_retornar_sistema_cultura_local(client):
 
     municipio = mommy.make('Municipio')
+    municipio_id = '{}/'.format(municipio.id)
 
-    url = url_sistemadeculturalocal + str(municipio.id) + '/'
+    url = url_sistemadeculturalocal + municipio_id
 
     request = client.get(url, HTTP_HOST=host_request,
                          content_type="application/hal+json")
@@ -85,8 +88,9 @@ def test_campos_do_objeto_governo_ao_retornar_sistema_cultura_local(client):
 def test_campos_do_objeto_ente_federado_ao_retornar_sistema_cultura_local(client):
 
     municipio = mommy.make('Municipio')
+    municipio_id = '{}/'.format(municipio.id)
 
-    url = url_sistemadeculturalocal + str(municipio.id) + '/'
+    url = url_sistemadeculturalocal + municipio_id
 
     request = client.get(url, HTTP_HOST=host_request,
             content_type="application/hal+json")
@@ -99,8 +103,9 @@ def test_campos_do_objeto_ente_federado_ao_retornar_sistema_cultura_local(client
 def test_campos_do_objeto_embedded_ao_retornar_sistema_cultura_local(client):
 
     municipio = mommy.make('Municipio')
+    municipio_id = '{}/'.format(municipio.id)
 
-    url = url_sistemadeculturalocal + str(municipio.id) + '/'
+    url = url_sistemadeculturalocal + municipio_id
 
     request = client.get(url, HTTP_HOST=host_request,
             content_type="application/hal+json")
@@ -117,8 +122,9 @@ def test_campos_do_objeto_conselho_ao_retornar_sistema_cultura_local(client):
     plano_trabalho = mommy.make('PlanoTrabalho',conselho_cultural=conselho_cultural)
     usuario = mommy.make('Usuario',municipio=municipio,plano_trabalho=plano_trabalho)
     conselheiro = mommy.make('Conselheiro',conselho=conselho_cultural)
+    municipio_id = '{}/'.format(municipio.id)
 
-    url = url_sistemadeculturalocal + str(municipio.id) + '/'
+    url = url_sistemadeculturalocal + municipio_id
 
     request = client.get(url, HTTP_HOST=host_request,
             content_type="application/hal+json")
@@ -159,8 +165,9 @@ def test_acoesplanotrabalho_retorna_404_para_id_nao_valido(client):
 def test_acoesplanotrabalho_retorna_para_id_valido(client):
 
     plano_trabalho = mommy.make('PlanoTrabalho')
+    plano_trabalho_id = '{}/'.format(plano_trabalho.id)
 
-    url = url_acoesplanotrabalho + str(plano_trabalho.id) + '/'
+    url = url_acoesplanotrabalho + plano_trabalho_id
 
     request = client.get(url, HTTP_HOST=host_request,
             content_type="application/hal+json")
@@ -172,8 +179,9 @@ def test_acoesplanotrabalho_retorna_para_id_valido(client):
 def test_campos_acoesplanotrabalho(client):
 
     plano_trabalho = mommy.make('PlanoTrabalho')
+    plano_trabalho_id = '{}/'.format(plano_trabalho.id)
 
-    url = url_acoesplanotrabalho + str(plano_trabalho.id) + '/'
+    url = url_acoesplanotrabalho + plano_trabalho_id
 
     request = client.get(url, HTTP_HOST=host_request,
             content_type="application/hal+json")
@@ -187,8 +195,9 @@ def test_campos_acoesplanotrabalho(client):
 def test_objeto_embedded_acoesplanotrabalho(client):
 
     plano_trabalho = mommy.make('PlanoTrabalho')
+    plano_trabalho_id = '{}/'.format(plano_trabalho.id)
 
-    url = url_acoesplanotrabalho + str(plano_trabalho.id) + '/'
+    url = url_acoesplanotrabalho + plano_trabalho_id
 
     request = client.get(url, HTTP_HOST=host_request,
             content_type="application/hal+json")
@@ -202,8 +211,9 @@ def test_objeto_criacao_lei_sistema_cultura_acoesplanotrabalho(client):
 
     criacao_sistema = mommy.make('CriacaoSistema')
     plano_trabalho = mommy.make('PlanoTrabalho',criacao_sistema=criacao_sistema)
+    plano_trabalho_id = '{}/'.format(plano_trabalho.id)
 
-    url = url_acoesplanotrabalho + str(plano_trabalho.id) + '/'
+    url = url_acoesplanotrabalho + plano_trabalho_id
 
     request = client.get(url, HTTP_HOST=host_request,
             content_type="application/hal+json")
@@ -217,8 +227,9 @@ def test_objeto_criacao_orgao_gestor_acoesplanotrabalho(client):
 
     orgao_gestor = mommy.make('OrgaoGestor')
     plano_trabalho = mommy.make('PlanoTrabalho',orgao_gestor=orgao_gestor)
+    plano_trabalho_id = '{}/'.format(plano_trabalho.id)
 
-    url = url_acoesplanotrabalho + str(plano_trabalho.id) + '/'
+    url = url_acoesplanotrabalho + plano_trabalho_id
 
     request = client.get(url, HTTP_HOST=host_request,
             content_type="application/hal+json")
@@ -232,8 +243,9 @@ def test_objeto_criacao_plano_cultura_acoesplanotrabalho(client):
 
     plano_cultura= mommy.make('PlanoCultura')
     plano_trabalho = mommy.make('PlanoTrabalho',plano_cultura=plano_cultura)
+    plano_trabalho_id = '{}/'.format(plano_trabalho.id)
 
-    url = url_acoesplanotrabalho + str(plano_trabalho.id) + '/'
+    url = url_acoesplanotrabalho + plano_trabalho_id
 
     request = client.get(url, HTTP_HOST=host_request,
             content_type="application/hal+json")
@@ -249,8 +261,9 @@ def test_objeto_criacao_fundo_cultura_acoesplanotrabalho(client):
 
     fundo_cultura = mommy.make('FundoCultura')
     plano_trabalho = mommy.make('PlanoTrabalho',fundo_cultura=fundo_cultura)
+    plano_trabalho_id = '{}/'.format(plano_trabalho.id)
 
-    url = url_acoesplanotrabalho + str(plano_trabalho.id) + '/'
+    url = url_acoesplanotrabalho + plano_trabalho_id
 
     request = client.get(url, HTTP_HOST=host_request,
             content_type="application/hal+json")
@@ -264,8 +277,9 @@ def test_objeto_criacao_conselho_cultural_acoesplanotrabalho(client):
 
     conselho_cultural = mommy.make('ConselhoCultural')
     plano_trabalho = mommy.make('PlanoTrabalho',conselho_cultural=conselho_cultural)
+    plano_trabalho_id = '{}/'.format(plano_trabalho.id)
 
-    url = url_acoesplanotrabalho + str(plano_trabalho.id) + '/'
+    url = url_acoesplanotrabalho + plano_trabalho_id
 
     request = client.get(url, HTTP_HOST=host_request,
             content_type="application/hal+json")
