@@ -180,9 +180,22 @@ def test_campos_acoesplanotrabalho(client):
 
     campos = set(["criacao_lei_sistema_cultura","criacao_orgao_gestor",
         "criacao_plano_cultura","criacao_fundo_cultura","criacao_conselho_cultural",
-        "_links","id"])
+        "_links","id","_embedded"])
 
     assert campos.symmetric_difference(request.data) == set()
+
+def test_objeto_embedded_acoesplanotrabalho(client):
+
+    plano_trabalho = mommy.make('PlanoTrabalho')
+
+    url = url_acoesplanotrabalho + str(plano_trabalho.id) + '/'
+
+    request = client.get(url, HTTP_HOST=host_request,
+            content_type="application/hal+json")
+
+    campos = set(["sistema_cultura_local"])
+
+    assert campos.symmetric_difference(request.data["_embedded"]) == set()
 
 
 def test_objeto_criacao_lei_sistema_cultura_acoesplanotrabalho(client):
