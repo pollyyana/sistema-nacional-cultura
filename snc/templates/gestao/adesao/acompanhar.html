@@ -74,6 +74,7 @@
                         <option value="5" {% if municipio.usuario.estado_processo == '5' %}selected{% endif %}>Aguarda Publicação no DOU</option>
                         <option value="6" {% if municipio.usuario.estado_processo == '6' %}selected{% endif %}>Publicado no DOU</option>
                       </select> -->
+                        {% if municipio.usuario.estado_processo == '0' %}Aguardando dados cadastrais{% endif %}
                         {% if municipio.usuario.estado_processo == '1' %}Aguardando envio da documentação{% endif %}
                         {% if municipio.usuario.estado_processo == '2' %}Documentação Recebida - Aguarda Análise{% endif %}
                         {% if municipio.usuario.estado_processo == '3' %}Diligência Documental{% endif %}
@@ -150,6 +151,9 @@
             </div>
             <div class="modal-body">
                 <div class="list-group row">
+                   <a href="/gestao/?situacao=0" class="list-group-item">
+                       Aguardando dados cadastrais
+                   </a>
                    <a href="/gestao/?situacao=1" class="list-group-item">
                        Aguardando envio da documentação
                     </a>
