@@ -28,6 +28,9 @@ DEBUG = env("DEBUG")
 # See: https://docs.djangoproject.com/en/dev/ref/settings/#secret-key
 SECRET_KEY = env("DJANGO_SECRET_KEY", default='CHANGEME!!!')
 
+# Allowed Hosts
+ALLOWED_HOSTS = env.list("ALLOWED_HOSTS", default=['localhost'])
+
 # APP CONFIGURATION
 DJANGO_APPS = (
     # Default Django apps:
