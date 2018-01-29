@@ -15,7 +15,10 @@ import environ
 import raven
 
 
-env = environ.Env()
+env = environ.Env(
+    DEBUG=(bool, False)
+    )
+
 env.read_env()
 
 ROOT_DIR = environ.Path(__file__) - 2  # (/a/b/myfile.py - 3 = /)
