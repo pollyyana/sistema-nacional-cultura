@@ -323,7 +323,7 @@ CKEDITOR_CONFIGS = {
 PIWIK_SITE_ID = 1
 PIWIK_URL = ''
 
-if(DEBUG == 'False'):
+if(DEBUG == False):
     RAVEN_CONFIG = {
         'dsn': env('RAVEN_DSN_URL'),
         # If you are using git, you can also automatically configure the
