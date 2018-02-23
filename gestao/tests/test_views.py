@@ -48,6 +48,19 @@ def login(client):
     return usuario
 
 
+@pytest.fixture
+def login_staff(client):
+    user = User.objects.create(username='staff', is_staff=True)
+    user.set_password('123456')
+
+    user.save()
+    usuario = mommy.make('Usuario', user=user)
+
+    login = client.login(username=user.username, password='123456')
+
+    return usuario
+
+
 def arquivo_componentes(plano_trabalho):
     componentes = (
         'fundo_cultura',
@@ -330,3 +343,11 @@ def test_muda_situacao_arquivo_componente(url, client, situacoes, plano_trabalho
     request = client.post(url.format(id=plano_trabalho.id, componente="orgao_gestor"), data={"classificacao_arquivo": 4, "texto_diligencia": "Não vai rolar"})
 
     assert OrgaoGestor.objects.first().situacao.id == 4
+
+
+def test_retorno_200_para_detalhar_municipio(client, plano_trabalho, login_staff):
+    """ Testa se página de detalhamento do município retorna 200 """
+
+    usuario_id = plano_trabalho.usuario.id
+    request = client.get('/gestao/detalhar/municipio/{}'.format(usuario_id))
+    assert request.status_code == 200 

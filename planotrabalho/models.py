@@ -6,11 +6,6 @@ from django.contrib.contenttypes.fields import GenericRelation
 
 from gestao.models import Diligencia
 
-# SITUACAO_ENVIO = (
-#     (0, 'Em preenchimento'),
-#     (1, 'Avaliando anexo'),
-#     (2, 'Concluída')
-#     )
 SITUACAO_CONSELHEIRO = (
     ('1', 'Habilitado'),
     ('0', 'Desabilitado')

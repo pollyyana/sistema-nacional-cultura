@@ -12,13 +12,6 @@ ARQUIVO_INCOMPLETO = "Arquivo Incompleto"
 ARQUIVO_INCORRETO = "Arquivo Incorreto"
 
 
-CLASSIFICACAO_ARQUIVO = (
-    ("arquivo_danificado", ARQUIVO_DANIFICADO),
-    ("arquivo_incompleto", ARQUIVO_INCOMPLETO),
-    ("arquivo_incorreto", ARQUIVO_INCORRETO),
-)
-
-
 class Diligencia(models.Model):
     texto_diligencia = models.TextField(max_length=200)
     classificacao_arquivo = models.ForeignKey('planotrabalho.SituacoesArquivoPlano')

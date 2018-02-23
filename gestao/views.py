@@ -559,27 +559,6 @@ class Prorrogacao(ListView):
         return usuarios
 
 
-def arquivo_componente(componente):
-    arquivo = None
-
-    if isinstance(componente, CriacaoSistema):
-        arquivo = componente.lei_sistema_cultura
-    elif isinstance(componente, FundoCultura):
-        arquivo = componente.lei_fundo_cultura
-    elif isinstance(componente, ConselhoCultural):
-        arquivo = componente.ata_regimento_aprovado
-    elif isinstance(componente, PlanoCultura):
-        arquivo = componente.lei_plano_cultura
-    elif isinstance(componente, OrgaoGestor):
-       arquivo = componente.relatorio_atividade_secretaria
-    try:
-        assert arquivo
-    except AssertionError:
-        arquivo = None
-
-    return arquivo
-
-
 def diligencia_view(request, pk, componente):
     template_name = 'gestao/diligencia/diligencia.html'
     form = DiligenciaForm()
