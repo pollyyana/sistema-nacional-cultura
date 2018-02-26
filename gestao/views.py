@@ -559,9 +559,9 @@ class Prorrogacao(ListView):
         return usuarios
 
 
-def diligencia_view(request, pk, componente):
+def diligencia_view(request, pk, componente, resultado):
     template_name = 'gestao/diligencia/diligencia.html'
-    form = DiligenciaForm()
+    form = DiligenciaForm(resultado=resultado)
 
     plano_trabalho = get_object_or_404(PlanoTrabalho, pk=pk)
     ente_federado = plano_trabalho.usuario.municipio
@@ -606,7 +606,7 @@ def diligencia_view(request, pk, componente):
     elif request.method == 'POST':
         data = request.POST.dict()
 
-        form = DiligenciaForm(data)
+        form = DiligenciaForm(data=data, resultado=resultado)
 
         form.instance.usuario = request.user.usuario
         form.instance.ente_federado = ente_federado
@@ -614,7 +614,7 @@ def diligencia_view(request, pk, componente):
         form.instance.componente_type = ContentType.objects.get(app_label='planotrabalho',  model=componentes[componente])
 
         if form.is_valid():
-        
+
             diligencia = form.save()
             plano_componente.situacao = diligencia.classificacao_arquivo
             plano_componente.save()
