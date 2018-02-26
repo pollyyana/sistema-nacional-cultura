@@ -140,7 +140,7 @@
             </div>
 
             <div class="list-group-item col-xs-1 text-center">
-                <a href="{% url 'gestao:concluir_etapa' 'criacao_sistema' 'situacao_lei_sistema_id' usuario.id %}"><i class="fa fa-thumbs-up"></i></a>
+                <a href="{% url 'gestao:diligencia_componente' pk=object.plano_trabalho.id componente='criacao_sistema' resultado='1' %}"><i class="fa fa-thumbs-up"></i></a>
             </div>
             {% else %}
             <div class="list-group-item col-xs-2 text-center">
@@ -169,7 +169,7 @@
           </div>
 
           <div class="list-group-item col-xs-1 text-center">
-              <a href="{% url 'gestao:concluir_etapa' 'orgao_gestor' 'situacao_relatorio_secretaria_id' usuario.id %}"><i class="fa fa-thumbs-up"></i></a>
+              <a href="{% url 'gestao:diligencia_componente' pk=object.plano_trabalho.id componente='orgao_gestor' resultado='1' %}"><i class="fa fa-thumbs-up"></i></a>
           </div>
           {% else %}
           <div class="list-group-item col-xs-2 text-center">
@@ -198,7 +198,7 @@
           </div>
 
           <div class="list-group-item col-xs-1 text-center">
-              <a href="{% url 'gestao:concluir_etapa' 'conselho_cultural' 'situacao_ata_id' usuario.id %}"><i class="fa fa-thumbs-up"></i></a>
+              <a href="{% url 'gestao:diligencia_componente' pk=object.plano_trabalho.id componente='conselho_cultural' resultado='1' %}"><i class="fa fa-thumbs-up"></i></a>
           </div>
           {% else %}
           <div class="list-group-item col-xs-2 text-center">
@@ -227,7 +227,7 @@
           </div>
 
           <div class="list-group-item col-xs-1 text-center">
-              <a href="{% url 'gestao:concluir_etapa' 'fundo_cultura' 'situacao_lei_plano_id' usuario.id %}"><i class="fa fa-thumbs-up"></i></a>
+              <a href="{% url 'gestao:diligencia_componente' pk=object.plano_trabalho.id componente='fundo_cultura' resultado='1' %}"><i class="fa fa-thumbs-up"></i></a>
           </div>
           {% else %}
           <div class="list-group-item col-xs-2 text-center">
@@ -258,7 +258,7 @@
           </div>
 
           <div class="list-group-item col-xs-1 text-center">
-              <a href="{% url 'gestao:concluir_etapa' 'plano_cultura' 'situacao_lei_plano_id' usuario.id %}"><i class="fa fa-thumbs-up"></i></a>
+              <a href="{% url 'gestao:diligencia_componente' pk=object.plano_trabalho.id componente='plano_cultura' resultado='1' %}"><i class="fa fa-thumbs-up"></i></a>            
           </div>
           {% else %}
           <div class="list-group-item col-xs-2 text-center">

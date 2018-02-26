@@ -238,3 +238,24 @@ def test_opcao_avaliacao_negativa_documentos_plano_de_trabalho(client, plano_tra
 
     for componente in componentes:
         assert '<a href=\"/gestao/{}/diligencia/{}/{}\">'.format(plano_trabalho.id, componente, "0") in request.rendered_content
+
+
+def test_opcao_avaliacao_positiva_documentos_plano_de_trabalho(client, plano_trabalho, login_staff):
+
+    componentes = (
+        'orgao_gestor',
+        'plano_cultura',
+        'fundo_cultura',
+        'criacao_sistema',
+        'conselho_cultural',
+    )
+
+    usuario = plano_trabalho.usuario
+    usuario.estado_processo = '6'
+    usuario.save()
+    
+    request = client.get('/gestao/detalhar/municipio/{}'.format(usuario.id))
+
+    for componente in componentes:
+        assert '<a href=\"/gestao/{}/diligencia/{}/{}\">'.format(plano_trabalho.id, componente, "1") in request.rendered_content
+        
