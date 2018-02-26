@@ -6,7 +6,12 @@ from django.template.base import TemplateDoesNotExist
 from planotrabalho.models import SituacoesArquivoPlano
 from gestao.forms import DiligenciaForm
 
+from test_views import login
+from test_views import login_staff
+from test_views import plano_trabalho
+
 pytestmark = pytest.mark.django_db
+
 
 @pytest.fixture
 def situacoes():
@@ -18,7 +23,7 @@ def situacoes():
         (3, 'Arquivo aprovado com ressalvas'),
         (4, 'Arquivo danificado'),
         (5, 'Arquivo incompleto'),
-        (6, 'Arquivo incorreto')        
+        (6, 'Arquivo incorreto')
     )
 
     for situacao in situacoes:
@@ -32,8 +37,9 @@ def engine():
     """ Configura a engine de Templates do Django """
 
     engine = Engine.get_default()
-    
+
     return engine
+
 
 @pytest.fixture
 def template(engine):
@@ -66,7 +72,7 @@ def test_botao_acao_cancelar_diligencia_template(template, client):
 
 
 def test_botao_acao_enviar_diligencia_template(template, client):
-    """Testa existencia dos botão de enviar 
+    """Testa existencia dos botão de enviar
     no template de diligência"""
 
     rendered_template = template.render(Context({}))
@@ -87,7 +93,7 @@ def test_informacoes_arquivo_enviado(template, client):
 
     context = Context({'data_envio': '10/08/2017', 'ente_federado': 'Pará'})
     rendered_template = template.render(context)
-    
+
     assert context['data_envio'] in rendered_template
     assert context['ente_federado'] in rendered_template
 
@@ -122,7 +128,7 @@ def test_opcoes_de_classificacao_da_diligencia(template, client, situacoes):
     form = DiligenciaForm()
     context = Context({"classificacoes": opcoes, 'form': form})
     rendered_template = template.render(context)
-    
+
     assert opcoes[0] in rendered_template
     assert opcoes[1] in rendered_template
     assert opcoes[2] in rendered_template
@@ -150,13 +156,13 @@ def test_informacoes_do_historico_de_diligecias_do_componente(template, client):
     """ Testa informações referente ao histórico de diligências do componente. """
 
     diligencias = [
-        {"usuario": {"nome_usuario": "Jaozin Silva"}, "get_classificacao_arquivo_display": "Arquivo Danificado", 
+        {"usuario": {"nome_usuario": "Jaozin Silva"}, "get_classificacao_arquivo_display": "Arquivo Danificado",
             "data_criacao": "10/08/2018", "texto_diligencia": "Arquivo danificado, corrompido"},
 
-        {"usuario": {"nome_usuario": "Pedrin Silva"}, "get_classificacao_arquivo_display": "Arquivo Incompleto", 
+        {"usuario": {"nome_usuario": "Pedrin Silva"}, "get_classificacao_arquivo_display": "Arquivo Incompleto",
             "data_criacao": "10/08/2018", "texto_diligencia": "Arquivo incompleto, informações faltando"},
-        
-        {"usuario": {"nome_usuario": "Luizin Silva"}, "get_classificacao_arquivo_display": "Arquivo Incorreto", 
+
+        {"usuario": {"nome_usuario": "Luizin Silva"}, "get_classificacao_arquivo_display": "Arquivo Incorreto",
             "data_criacao": "10/08/2018", "texto_diligencia": "Arquivo com informações incorretas"}
     ]
 
@@ -174,7 +180,7 @@ def test_formatacao_historico_de_diligencias(template, client):
     """Testa a formatação do bloco de histórico de diligências em uma tag dev"""
 
     rendered_template = template.render(Context({}))
-    
+
     assert "<div class=\"historico_diligencias\">" in rendered_template
 
 
@@ -182,13 +188,13 @@ def test_formatacao_individual_das_diligencias_no_historico(template, client):
     """Testa a formatacao de cada uma das diligências dentro do bloco de Histórico de Diligências."""
 
     diligencias = [
-        {"usuario": {"nome_usuario": "Jaozin Silva" }, "get_classificacao_arquivo_display": "Arquivo Danificado", 
+        {"usuario": {"nome_usuario": "Jaozin Silva" }, "get_classificacao_arquivo_display": "Arquivo Danificado",
             "data_criacao": "10/08/2018", "texto_diligencia": "Arquivo danificado, corrompido"},
 
-        {"usuario": {"nome_usuario": "Pedrin Silva" }, "get_classificacao_arquivo_display": "Arquivo Incompleto", 
+        {"usuario": {"nome_usuario": "Pedrin Silva" }, "get_classificacao_arquivo_display": "Arquivo Incompleto",
             "data_criacao": "10/08/2018", "texto_diligencia": "Arquivo incompleto, informações faltando"},
-        
-        {"usuario": {"nome_usuario": "Luizin Silva" }, "get_classificacao_arquivo_display": "Arquivo Incorreto", 
+
+        {"usuario": {"nome_usuario": "Luizin Silva" }, "get_classificacao_arquivo_display": "Arquivo Incorreto",
             "data_criacao": "10/08/2018", "texto_diligencia": "Arquivo com informações incorretas"}
     ]
 
@@ -203,11 +209,32 @@ def test_formatacao_individual_das_diligencias_no_historico(template, client):
                                                                 resumo=diligencia['texto_diligencia']) in rendered_template
 
 
-def test_renderizacao_js_form_diligencia(template,client):
+def test_renderizacao_js_form_diligencia(template, client):
     """Testa se o javascript do form está sendo renderizado corretamente"""
     form = DiligenciaForm()
-    
+
     context = Context({'form': form})
     rendered_template = template.render(context)
 
     assert "<script type=\"text/javascript\" src=\"/static/ckeditor/ckeditor/ckeditor.js\">" in rendered_template
+
+
+def test_opcao_avaliacao_documentos_plano_de_trabalho(client, plano_trabalho, login_staff):
+    """ Testa se há a opção de avaliar um documento enviado do Plano Trabalho """
+
+    componentes = (
+        'orgao_gestor',
+        'plano_cultura',
+        'fundo_cultura',
+        'criacao_sistema',
+        'conselho_cultural',
+    )
+
+    usuario = plano_trabalho.usuario
+    usuario.estado_processo = '6'
+    usuario.save()
+
+    request = client.get('/gestao/detalhar/municipio/{}'.format(usuario.id))
+
+    for componente in componentes:
+        assert '<a href=\"/gestao/{}/diligencia/{}\">'.format(plano_trabalho.id, componente) in request.rendered_content

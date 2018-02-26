@@ -61,7 +61,7 @@ def login_staff(client):
     return usuario
 
 
-def arquivo_componentes(plano_trabalho):
+def arquivo_componentes(plano_trabalho, situacoes):
     componentes = (
         'fundo_cultura',
         'plano_cultura',
@@ -74,13 +74,14 @@ def arquivo_componentes(plano_trabalho):
     for componente in componentes:
         comp = getattr(plano_trabalho, componente)
         comp.arquivo = arquivo
+        comp.situacao = SituacoesArquivoPlano.objects.get(pk=1)
         comp.save()
 
     return plano_trabalho
 
 
 @pytest.fixture
-def plano_trabalho(login):
+def plano_trabalho(login, situacoes):
     fundo_cultura = mommy.make("FundoCultura")
     plano_cultura = mommy.make("PlanoCultura")
     orgao_gestor = mommy.make("OrgaoGestor")
@@ -97,7 +98,7 @@ def plano_trabalho(login):
     login.plano_trabalho = plano_trabalho
     login.save()
 
-    plano_trabalho = arquivo_componentes(plano_trabalho)
+    plano_trabalho = arquivo_componentes(plano_trabalho, situacoes)
 
     return plano_trabalho
 
