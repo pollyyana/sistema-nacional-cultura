@@ -136,11 +136,11 @@ def test_opcoes_de_classificacao_da_diligencia(template, client, situacoes):
 
 def test_opcoes_em_um_dropdown(template, client):
     """Testa se as Classificações(Motivo) estão presentes dentro de um dropdown."""
-
-    opcoes = ("Arquivo danificado",
-              "Arquivo incompleto",
-              "Arquivo incorreto"
-              )
+    opcoes = [
+            {"description": "Arquivo Danificado", "value": "4"},
+            {"description": "Arquivo Incompleto", "value": "5"},
+            {"description": "Arquivo Incorreto", "value": "6"}
+    ]
 
     form = DiligenciaForm(resultado='0')
     context = Context({"classificacoes": opcoes, 'form': form})
@@ -237,4 +237,4 @@ def test_opcao_avaliacao_negativa_documentos_plano_de_trabalho(client, plano_tra
     request = client.get('/gestao/detalhar/municipio/{}'.format(usuario.id))
 
     for componente in componentes:
-        assert '<a href=\"/gestao/{}/diligencia/{}\">'.format(plano_trabalho.id, componente) in request.rendered_content
+        assert '<a href=\"/gestao/{}/diligencia/{}/{}\">'.format(plano_trabalho.id, componente, "0") in request.rendered_content
