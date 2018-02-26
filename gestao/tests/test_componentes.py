@@ -125,7 +125,7 @@ def test_opcoes_de_classificacao_da_diligencia(template, client, situacoes):
               "Arquivo incorreto"
               )
 
-    form = DiligenciaForm()
+    form = DiligenciaForm(resultado='0')
     context = Context({"classificacoes": opcoes, 'form': form})
     rendered_template = template.render(context)
 
@@ -137,12 +137,12 @@ def test_opcoes_de_classificacao_da_diligencia(template, client, situacoes):
 def test_opcoes_em_um_dropdown(template, client):
     """Testa se as Classificações(Motivo) estão presentes dentro de um dropdown."""
 
-    opcoes = [
-        {"description": "Arquivo Danificado", "value": "arquivo_danificado"},
-        {"description": "Arquivo Incompleto", "value": "arquivo_incompleto"},
-        {"description": "Arquivo Incorreto", "value": "arquivo_incorreto"}
-    ]
-    form = DiligenciaForm()
+    opcoes = ("Arquivo danificado",
+              "Arquivo incompleto",
+              "Arquivo incorreto"
+              )
+
+    form = DiligenciaForm(resultado='0')
     context = Context({"classificacoes": opcoes, 'form': form})
     rendered_template = template.render(context)
 
@@ -211,7 +211,7 @@ def test_formatacao_individual_das_diligencias_no_historico(template, client):
 
 def test_renderizacao_js_form_diligencia(template, client):
     """Testa se o javascript do form está sendo renderizado corretamente"""
-    form = DiligenciaForm()
+    form = DiligenciaForm(resultado='0')
 
     context = Context({'form': form})
     rendered_template = template.render(context)
@@ -219,8 +219,8 @@ def test_renderizacao_js_form_diligencia(template, client):
     assert "<script type=\"text/javascript\" src=\"/static/ckeditor/ckeditor/ckeditor.js\">" in rendered_template
 
 
-def test_opcao_avaliacao_documentos_plano_de_trabalho(client, plano_trabalho, login_staff):
-    """ Testa se há a opção de avaliar um documento enviado do Plano Trabalho """
+def test_opcao_avaliacao_negativa_documentos_plano_de_trabalho(client, plano_trabalho, login_staff):
+    """ Testa se há a opção de avaliar negativamente um documento enviado do Plano Trabalho """
 
     componentes = (
         'orgao_gestor',
