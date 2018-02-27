@@ -582,6 +582,7 @@ def diligencia_view(request, pk, componente, resultado):
         'data_envio': '--/--/----',
         'historico_diligencias': '',
         'form': form,
+        'usuario_id': 0
     }
 
     try:
@@ -592,6 +593,7 @@ def diligencia_view(request, pk, componente, resultado):
 
     if request.method == 'GET':
         context['arquivo'] = plano_componente.arquivo
+        context['usuario_id'] = ente_federado.usuario.id
 
         if ente_federado.cidade:
             context['ente_federado'] = "{} - {}".format(ente_federado.cidade.nome_municipio, ente_federado.estado.sigla)

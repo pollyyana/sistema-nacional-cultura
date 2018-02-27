@@ -192,6 +192,7 @@ def test_valor_context_retornado_na_view(url, client, plano_trabalho):
         'arquivo',
         'data_envio',
         'historico_diligencias',
+        'usuario_id'
     ]
     for context in contexts:
         assert request.context[context] != ''
@@ -369,3 +370,11 @@ def test_retorno_do_form_da_diligencia(url, client, plano_trabalho, situacoes):
 
     assert classificacao_aprova.symmetric_difference(SituacoesArquivoPlano.objects.filter(pk=2)) == set()
     assert classificacao_recusa.symmetric_difference(SituacoesArquivoPlano.objects.filter(id__gte=4, id__lte=6)) == set()
+
+
+def usuario_id_retornado_pelo_context_diligencia(url, client, plano_trabalho):
+    """ Testa se o id do usuário enviado pelo context está correto """
+
+    request = client.get(url.format(id=plano_trabalho.id, componente="orgao_gestor", resultado='0'))
+
+    assert request.context['usuario_id'] == plano_trabalho.usuario.id
