@@ -2,6 +2,7 @@ import pytest
 
 from django.template import Context, Template, Engine
 from django.template.base import TemplateDoesNotExist
+from django.core.urlresolvers import reverse
 
 from planotrabalho.models import SituacoesArquivoPlano
 from gestao.forms import DiligenciaForm
@@ -30,6 +31,21 @@ def situacoes():
         SituacoesArquivoPlano.objects.create(id=situacao[0], descricao=situacao[1])
 
     return SituacoesArquivoPlano.objects.all()
+
+
+@pytest.fixture
+def usuario(plano_trabalho):
+    """ Retorna um usuario associado a um
+    plano de trabalho e um ente_federado """
+
+    return plano_trabalho.usuario
+
+@pytest.fixture
+def context(usuario):
+    """ Retorna um contexto básico necessário para rendereziar o template de diligência """
+
+    context = Context({'usuario_id': usuario.id})
+    return context
 
 
 @pytest.fixture
@@ -62,54 +78,61 @@ def test_existencia_template_diligencia(engine, client):
     assert isinstance(template, Template)
 
 
-def test_botao_acao_cancelar_diligencia_template(template, client):
-    """Testa existencia dos botão de cancelar
-    no template de diligência"""
+def test_retorno_do_botao_cancelar_de_diligencia(client, template, context, usuario):
+    """ Testa se o botão cancelar presente na página de diligência 
+    retorna para a página de detalhe do município correspondente"""
 
-    rendered_template = template.render(Context({}))
+    rendered_template = template.render(context)
 
-    assert "<button class='btn btn-secondary'>Cancelar</button>" in rendered_template
+    url_detalhar = reverse('gestao:detalhar', args=[usuario.id])
+    html_cancelar = "<button href=\"{url_detalhar}\"class=\"btn btn-secondary\">Cancelar</button>".format(url_detalhar=url_detalhar)
+
+    assert html_cancelar in rendered_template
 
 
-def test_botao_acao_enviar_diligencia_template(template, client):
+def test_botao_acao_enviar_diligencia_template(template, client, context):
     """Testa existencia dos botão de enviar
     no template de diligência"""
 
-    rendered_template = template.render(Context({}))
+    rendered_template = template.render(context)
 
     assert "<input class=\"btn btn-primary\" type=\"submit\"></input>" in rendered_template
 
 
-def test_gestao_template(template, client):
+def test_gestao_template(template, client, context):
     """Testa se o template da gestão está sendo carregado"""
 
-    rendered_template = template.render(Context({}))
+    rendered_template = template.render(context)
 
     assert "<!DOCTYPE html>" in rendered_template
 
 
-def test_informacoes_arquivo_enviado(template, client):
+def test_informacoes_arquivo_enviado(template, client, context):
     """Testa se o template exibe as informações do arquivo enviado"""
 
-    context = Context({'data_envio': '10/08/2017', 'ente_federado': 'Pará'})
+    context['data_envio'] = '10/08/2017'
+    context['ente_federado'] = 'Pará'
+
     rendered_template = template.render(context)
 
     assert context['data_envio'] in rendered_template
     assert context['ente_federado'] in rendered_template
 
 
-def test_titulo_bloco_informacoes_arquivo(template, client):
+def test_titulo_bloco_informacoes_arquivo(template, client, context):
     """Testa se o título Informações sobre o Arquivo Enviado está dentre de uma tag de título h2"""
 
-    rendered_template = template.render(Context({}))
+    rendered_template = template.render(context)
 
     assert "<h2>Informações sobre o Arquivo Enviado</h2>" in rendered_template
 
 
-def test_formatacao_informacoes_sobre_arquivo_enviado(template, client):
+def test_formatacao_informacoes_sobre_arquivo_enviado(template, client, context):
     """Testa se cada informação sobre o arquivo enviado está formatada com a tag <p>"""
 
-    context = Context({'nome_arquivo': 'lei_sistema_para.pdf', 'data_envio': '10/08/2017', 'ente_federado': 'Pará'})
+    context['nome_arquivo'] = 'lei_sistema_para.pdf'
+    context['data_envio'] = '10/08/2017'
+    context['ente_federado'] = 'Pará'
     rendered_template = template.render(context)
 
     assert "<p><a href = > Download do arquivo </a></p>" in rendered_template
@@ -117,7 +140,7 @@ def test_formatacao_informacoes_sobre_arquivo_enviado(template, client):
     assert "<p>Ente Federado: {}</p>".format(context['ente_federado']) in rendered_template
 
 
-def test_opcoes_de_classificacao_da_diligencia(template, client, situacoes):
+def test_opcoes_de_classificacao_da_diligencia(template, client, situacoes, context):
     """Testa se a Classificação(Motivo) apresenta as opções conforme a especificação."""
 
     opcoes = ("Arquivo danificado",
@@ -126,7 +149,7 @@ def test_opcoes_de_classificacao_da_diligencia(template, client, situacoes):
               )
 
     form = DiligenciaForm(resultado='0')
-    context = Context({"classificacoes": opcoes, 'form': form})
+    context['form'] = form 
     rendered_template = template.render(context)
 
     assert opcoes[0] in rendered_template
@@ -134,7 +157,7 @@ def test_opcoes_de_classificacao_da_diligencia(template, client, situacoes):
     assert opcoes[2] in rendered_template
 
 
-def test_opcoes_em_um_dropdown(template, client):
+def test_opcoes_em_um_dropdown(template, client, context):
     """Testa se as Classificações(Motivo) estão presentes dentro de um dropdown."""
     opcoes = [
             {"description": "Arquivo Danificado", "value": "4"},
@@ -143,7 +166,7 @@ def test_opcoes_em_um_dropdown(template, client):
     ]
 
     form = DiligenciaForm(resultado='0')
-    context = Context({"classificacoes": opcoes, 'form': form})
+    context['form'] = form 
     rendered_template = template.render(context)
 
     assert "<select id=\"id_classificacao_arquivo\" name=\"classificacao_arquivo\">" in rendered_template
@@ -152,7 +175,7 @@ def test_opcoes_em_um_dropdown(template, client):
     assert "</select>" in rendered_template
 
 
-def test_informacoes_do_historico_de_diligecias_do_componente(template, client):
+def test_informacoes_do_historico_de_diligecias_do_componente(template, client, context):
     """ Testa informações referente ao histórico de diligências do componente. """
 
     diligencias = [
@@ -166,7 +189,7 @@ def test_informacoes_do_historico_de_diligecias_do_componente(template, client):
             "data_criacao": "10/08/2018", "texto_diligencia": "Arquivo com informações incorretas"}
     ]
 
-    context = Context({"historico_diligencias": diligencias})
+    context['historico_diligencias'] = diligencias
     rendered_template = template.render(context)
 
     for diligencia in diligencias:
@@ -176,15 +199,15 @@ def test_informacoes_do_historico_de_diligecias_do_componente(template, client):
         assert diligencia['texto_diligencia'] in rendered_template
 
 
-def test_formatacao_historico_de_diligencias(template, client):
+def test_formatacao_historico_de_diligencias(template, client, context):
     """Testa a formatação do bloco de histórico de diligências em uma tag dev"""
 
-    rendered_template = template.render(Context({}))
+    rendered_template = template.render(context)
 
     assert "<div class=\"historico_diligencias\">" in rendered_template
 
 
-def test_formatacao_individual_das_diligencias_no_historico(template, client):
+def test_formatacao_individual_das_diligencias_no_historico(template, client, context):
     """Testa a formatacao de cada uma das diligências dentro do bloco de Histórico de Diligências."""
 
     diligencias = [
@@ -198,7 +221,7 @@ def test_formatacao_individual_das_diligencias_no_historico(template, client):
             "data_criacao": "10/08/2018", "texto_diligencia": "Arquivo com informações incorretas"}
     ]
 
-    context = Context({"historico_diligencias": diligencias})
+    context['historico_diligencias'] = diligencias
     rendered_template = template.render(context)
 
     for diligencia in diligencias:
@@ -209,11 +232,11 @@ def test_formatacao_individual_das_diligencias_no_historico(template, client):
                                                                 resumo=diligencia['texto_diligencia']) in rendered_template
 
 
-def test_renderizacao_js_form_diligencia(template, client):
+def test_renderizacao_js_form_diligencia(template, client, context):
     """Testa se o javascript do form está sendo renderizado corretamente"""
     form = DiligenciaForm(resultado='0')
 
-    context = Context({'form': form})
+    context['form'] = form
     rendered_template = template.render(context)
 
     assert "<script type=\"text/javascript\" src=\"/static/ckeditor/ckeditor/ckeditor.js\">" in rendered_template

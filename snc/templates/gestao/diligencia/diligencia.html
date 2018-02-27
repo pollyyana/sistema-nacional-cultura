@@ -18,6 +18,6 @@
 	</div>
 
 	<input class="btn btn-primary" type="submit"></input>
-	<button class='btn btn-secondary'>Cancelar</button>
+	<button href="{% url 'gestao:detalhar' pk=usuario_id %}"class="btn btn-secondary">Cancelar</button>
 </form>
 {% endblock %}
