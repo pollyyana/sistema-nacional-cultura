@@ -10,14 +10,31 @@
 	<br>Classificação do Arquivo: {{form.classificacao_arquivo}}
 	{{form.media}}
 
-	<div class="historico_diligencias">
+	<!-- <div class="historico_diligencias">
 		{% for diligencia in historico_diligencias %}
 		<div>Usuário: {{ diligencia.usuario.nome_usuario }}, Motivo: {{ diligencia.get_classificacao_arquivo_display }}, Data: {{ diligencia.data_criacao }}, Resumo: {{diligencia.texto_diligencia | truncatechars:200 | striptags}}
 		</div>
 		{% endfor %}
+	</div> -->
+
+	<div class="card">
+		<div class="card-body">
+			<h5 class="card-title">Histórico de Diligências</h5>
+		{% for diligencia in historico_diligencias %}
+			<ul class="list-group"></ul>
+				<li class="list-group-item"><b>Usuário:</b> {{ diligencia.usuario.nome_usuario }}</li>
+				<li class="list-group-item"><b>Motivo:</b> {{ diligencia.get_classificacao_arquivo_display }}</li>
+				<li class="list-group-item"><b>Data:</b> {{ diligencia.data_criacao }}</li>
+				<li class="list-group-item"><b>Resumo:</b> {{diligencia.texto_diligencia | truncatechars:200 | striptags}}</li>
+			</ul>
+		{% endfor %}
+			
+		</div>
 	</div>
+
 
 	<input class="btn btn-primary" type="submit"></input>
     <a href="{% url 'gestao:detalhar' pk=usuario_id %}" class="btn btn-danger">Cancelar</a>
 </form>
 {% endblock %}
+
