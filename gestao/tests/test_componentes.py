@@ -79,13 +79,13 @@ def test_existencia_template_diligencia(engine, client):
 
 
 def test_retorno_do_botao_cancelar_de_diligencia(client, template, context, usuario):
-    """ Testa se o botão cancelar presente na página de diligência 
+    """ Testa se o botão cancelar presente na página de diligência
     retorna para a página de detalhe do município correspondente"""
 
     rendered_template = template.render(context)
 
     url_detalhar = reverse('gestao:detalhar', args=[usuario.id])
-    html_cancelar = "<button href=\"{url_detalhar}\"class=\"btn btn-secondary\">Cancelar</button>".format(url_detalhar=url_detalhar)
+    html_cancelar = "<a href=\"{url_detalhar}\" class=\"btn btn-danger\">Cancelar</a>".format(url_detalhar=url_detalhar)
 
     assert html_cancelar in rendered_template
 
@@ -149,7 +149,7 @@ def test_opcoes_de_classificacao_da_diligencia(template, client, situacoes, cont
               )
 
     form = DiligenciaForm(resultado='0')
-    context['form'] = form 
+    context['form'] = form
     rendered_template = template.render(context)
 
     assert opcoes[0] in rendered_template
@@ -166,7 +166,7 @@ def test_opcoes_em_um_dropdown(template, client, context):
     ]
 
     form = DiligenciaForm(resultado='0')
-    context['form'] = form 
+    context['form'] = form
     rendered_template = template.render(context)
 
     assert "<select id=\"id_classificacao_arquivo\" name=\"classificacao_arquivo\">" in rendered_template
@@ -276,9 +276,9 @@ def test_opcao_avaliacao_positiva_documentos_plano_de_trabalho(client, plano_tra
     usuario = plano_trabalho.usuario
     usuario.estado_processo = '6'
     usuario.save()
-    
+
     request = client.get('/gestao/detalhar/municipio/{}'.format(usuario.id))
 
     for componente in componentes:
         assert '<a href=\"/gestao/{}/diligencia/{}/{}\">'.format(plano_trabalho.id, componente, "1") in request.rendered_content
-        
+
