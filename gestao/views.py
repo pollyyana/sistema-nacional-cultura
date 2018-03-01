@@ -623,5 +623,6 @@ def diligencia_view(request, pk, componente, resultado):
 
             return redirect('gestao:detalhar', pk=plano_trabalho.usuario.id)
 
-        return HttpResponse(status=400, content=form.errors)
+        context['form'] = form
+        return render(request, template_name, context, status=400)
 
