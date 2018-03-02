@@ -328,13 +328,13 @@ class AlterarSistemaForm(ModelForm):
 
 
 class AlterarFundoForm(ModelForm):
-    lei_fundo_cultura = RestrictedFileField(
+    arquivo = RestrictedFileField(
         content_types=content_types,
         max_upload_size=max_upload_size)
 
     class Meta:
         model = FundoCultura
-        fields = ('lei_fundo_cultura',)
+        fields = ('arquivo',)
 
 
 class AlterarPlanoForm(ModelForm):
