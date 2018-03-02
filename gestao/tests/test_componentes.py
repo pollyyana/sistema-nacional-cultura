@@ -135,7 +135,7 @@ def test_formatacao_informacoes_sobre_arquivo_enviado(template, client, context)
     context['ente_federado'] = 'Pará'
     rendered_template = template.render(context)
 
-    assert "<p><a href = > Download do arquivo </a></p>" in rendered_template
+    assert "<a href = > Download do arquivo </a>" in rendered_template
     assert "<p>Data de Envio do Arquivo: {}</p>".format(context['data_envio']) in rendered_template
     assert "<p>Ente Federado: {}</p>".format(context['ente_federado']) in rendered_template
 
@@ -179,13 +179,13 @@ def test_informacoes_do_historico_de_diligecias_do_componente(template, client, 
     """ Testa informações referente ao histórico de diligências do componente. """
 
     diligencias = [
-        {"usuario": {"nome_usuario": "Jaozin Silva"}, "get_classificacao_arquivo_display": "Arquivo Danificado",
+        {"usuario": {"nome_usuario": "Jaozin Silva" }, "classificacao_arquivo": {"descricao": "Arquivo Danificado"},
             "data_criacao": "10/08/2018", "texto_diligencia": "Arquivo danificado, corrompido"},
 
-        {"usuario": {"nome_usuario": "Pedrin Silva"}, "get_classificacao_arquivo_display": "Arquivo Incompleto",
+        {"usuario": {"nome_usuario": "Pedrin Silva" }, "classificacao_arquivo": {"descricao": "Arquivo incompleto"},
             "data_criacao": "10/08/2018", "texto_diligencia": "Arquivo incompleto, informações faltando"},
 
-        {"usuario": {"nome_usuario": "Luizin Silva"}, "get_classificacao_arquivo_display": "Arquivo Incorreto",
+        {"usuario": {"nome_usuario": "Luizin Silva" }, "classificacao_arquivo": {"descricao": "Arquivo incorreto"},
             "data_criacao": "10/08/2018", "texto_diligencia": "Arquivo com informações incorretas"}
     ]
 
@@ -194,42 +194,43 @@ def test_informacoes_do_historico_de_diligecias_do_componente(template, client, 
 
     for diligencia in diligencias:
         assert diligencia['usuario']["nome_usuario"] in rendered_template
-        assert diligencia['get_classificacao_arquivo_display'] in rendered_template
+        assert diligencia['classificacao_arquivo']['descricao'] in rendered_template
         assert diligencia['data_criacao'] in rendered_template
         assert diligencia['texto_diligencia'] in rendered_template
 
 
 def test_formatacao_historico_de_diligencias(template, client, context):
-    """Testa a formatação do bloco de histórico de diligências em uma tag dev"""
+    """Testa a formatação do bloco de histórico de diligências em uma tag div"""
 
     rendered_template = template.render(context)
 
-    assert "<div class=\"historico_diligencias\">" in rendered_template
+    assert "<div class=\"row panel panel-default\">" in rendered_template
 
 
 def test_formatacao_individual_das_diligencias_no_historico(template, client, context):
     """Testa a formatacao de cada uma das diligências dentro do bloco de Histórico de Diligências."""
 
     diligencias = [
-        {"usuario": {"nome_usuario": "Jaozin Silva" }, "get_classificacao_arquivo_display": "Arquivo Danificado",
+        {"usuario": {"nome_usuario": "Jaozin Silva" }, "classificacao_arquivo": {"descricao": "Arquivo Danificado"},
             "data_criacao": "10/08/2018", "texto_diligencia": "Arquivo danificado, corrompido"},
 
-        {"usuario": {"nome_usuario": "Pedrin Silva" }, "get_classificacao_arquivo_display": "Arquivo Incompleto",
+        {"usuario": {"nome_usuario": "Pedrin Silva" }, "classificacao_arquivo": {"descricao": "Arquivo incompleto"},
             "data_criacao": "10/08/2018", "texto_diligencia": "Arquivo incompleto, informações faltando"},
 
-        {"usuario": {"nome_usuario": "Luizin Silva" }, "get_classificacao_arquivo_display": "Arquivo Incorreto",
+        {"usuario": {"nome_usuario": "Luizin Silva" }, "classificacao_arquivo": {"descricao": "Arquivo incorreto"},
             "data_criacao": "10/08/2018", "texto_diligencia": "Arquivo com informações incorretas"}
     ]
 
     context['historico_diligencias'] = diligencias
     rendered_template = template.render(context)
-
     for diligencia in diligencias:
-        assert "<div>Usuário: {nome}, Motivo: {motivo}, Data: {data}, Resumo: {resumo}".format(
-                                                                nome=diligencia['usuario']["nome_usuario"],
-                                                                motivo=diligencia['get_classificacao_arquivo_display'],
-                                                                data=diligencia['data_criacao'],
-                                                                resumo=diligencia['texto_diligencia']) in rendered_template
+        
+        assert "<li class=\"list-group-item\"><b>Usuário:</b> {nome}</li>".format(nome=diligencia['usuario']["nome_usuario"]) in rendered_template
+        assert "<li class=\"list-group-item\"><b>Motivo:</b> {motivo}</li>".format(motivo=diligencia['classificacao_arquivo']["descricao"]) in rendered_template
+        assert "<li class=\"list-group-item\"><b>Data:</b> {data}</li>".format(data=diligencia['data_criacao']) in rendered_template
+        assert "<li class=\"list-group-item\"><b>Resumo:</b> {resumo}</li>".format(resumo=diligencia["texto_diligencia"]) in rendered_template
+        
+          
 
 
 def test_renderizacao_js_form_diligencia(template, client, context):
