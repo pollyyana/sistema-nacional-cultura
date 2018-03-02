@@ -338,13 +338,13 @@ class AlterarFundoForm(ModelForm):
 
 
 class AlterarPlanoForm(ModelForm):
-    lei_plano_cultura = RestrictedFileField(
+    arquivo = RestrictedFileField(
         content_types=content_types,
         max_upload_size=max_upload_size)
 
     class Meta:
         model = PlanoCultura
-        fields = ('lei_plano_cultura',)
+        fields = ('arquivo',)
 
 
 class AlterarOrgaoForm(ModelForm):
