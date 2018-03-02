@@ -1,11 +1,10 @@
 {% extends 'gestao/base_gestao.html' %} {% block content %}
-<link href="../../../static/css/custom_diligencia.css" type="text/css" rel="stylesheet">
-<div class="row panel panel-default">
+<div class="row panel panel-default" style="background-color: #eee;">
 	<div class="panel-body">
-		<h2>Informações sobre o Arquivo Enviado</h2>
-		<p>Ente Federado: {{ ente_federado }}</p>
-		<p>Data de Envio do Arquivo: {{ data_envio }}</p>
-		<a href = {{arquivo.url}}> Download do arquivo </a> 
+		<h2>Informações sobre o Arquivo Enviado</h2>					
+		<p><b>Ente Federado:</b> {{ ente_federado }}</p>
+		<p><b>Data de Envio do Arquivo:</b> {{ data_envio }}</p>
+		<a href = {{arquivo.url}}> <b>Download do arquivo</b></a> 
 	</div>
 </div>
 
@@ -23,13 +22,13 @@
 </div>
 <br>
 
-<div class="row panel panel-default">
-	<div class="panel-heading" style="background-color: #eee;">
+<div class="row panel panel-default" style="background-color: #eee;">
+	<div class="panel-heading">
 		<h4 class="panel-title">Histórico de Diligências</h4>							
 	</div>
-	
+
 	{% for diligencia in historico_diligencias %}
-	<div class="col-md-4 panel-body">
+	<div class="col-md-12">
 		<ul class="list-group"></ul>
 			<li class="list-group-item"><b>Usuário:</b> {{ diligencia.usuario.nome_usuario }}</li>
 			<li class="list-group-item"><b>Motivo:</b> {{ diligencia.classificacao_arquivo.descricao}}</li>
