@@ -348,13 +348,13 @@ class AlterarPlanoForm(ModelForm):
 
 
 class AlterarOrgaoForm(ModelForm):
-    relatorio_atividade_secretaria = RestrictedFileField(
+    arquivo = RestrictedFileField(
         content_types=content_types,
         max_upload_size=max_upload_size)
 
     class Meta:
         model = OrgaoGestor
-        fields = ('relatorio_atividade_secretaria',)
+        fields = ('arquivo',)
 
 
 class AlterarConselhoForm(ModelForm):

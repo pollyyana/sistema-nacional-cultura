@@ -2,6 +2,7 @@ import pytest
 import datetime
 
 from django.core.urlresolvers import resolve
+from django.core.urlresolvers import reverse
 from django.core.files.uploadedfile import SimpleUploadedFile
 from django.contrib.auth.models import User
 from model_mommy import mommy
@@ -201,7 +202,7 @@ def test_valor_context_retornado_na_view(url, client, plano_trabalho, login_staf
 def test_retorno_400_post_criacao_diligencia(url, client, plano_trabalho, login_staff):
     """ Testa se o status do retorno é 400 para requests sem os parâmetros esperados """
 
-    request = client.post(url.format(id=plano_trabalho.id, componente="orgao_gestor", resultado='0'), 
+    request = client.post(url.format(id=plano_trabalho.id, componente="orgao_gestor", resultado='0'),
                           data={'bla': ''})
 
     assert request.status_code == 400
@@ -212,7 +213,7 @@ def test_retorna_400_POST_classificacao_inexistente(url, rf, plano_trabalho, log
     Testa se o status do retorno é 400 quando feito um POST com a classificao invalida
     de um arquivo.
     """
-    request = rf.post(url.format(id=plano_trabalho.id, componente="orgao_gestor", resultado='0'), 
+    request = rf.post(url.format(id=plano_trabalho.id, componente="orgao_gestor", resultado='0'),
                       data={'classificacao_arquivo': ''})
     user = login_staff.user
     request.user = user
@@ -381,15 +382,30 @@ def usuario_id_retornado_pelo_context_diligencia(url, client, plano_trabalho, lo
 
 
 def test_criacao_diligencia_exclusiva_para_gestor(client, url, plano_trabalho, login):
-    """Testa se ao tentar acessar a url de criação da diligência o usuário 
+    """Testa se ao tentar acessar a url de criação da diligência o usuário
     que não é autorizado é redirecionado para a tela de login"""
 
     url_diligencia = url.format(id=plano_trabalho.id, componente="orgao_gestor", resultado='1')
 
     request = client.get(url_diligencia)
 
-    url_redirect = request.url.split('http://testserver/')    
+    url_redirect = request.url.split('http://testserver/')
     url_login = "admin/login/?next={}".format(url_diligencia)
 
     assert request.status_code == 302
     assert url_redirect[1] == url_login
+
+
+def test_inserir_documentos_orgao_gestor(client, plano_trabalho, login_staff):
+    """ Testa se funcionalidade de inserir documento para orgão gestor na
+    tela de gestão salva no field arquivo """
+
+    arquivo = SimpleUploadedFile("orgao.txt", b"file_content", content_type="text/plain")
+
+    url = reverse('gestao:alterar_orgao', kwargs={'pk': plano_trabalho.orgao_gestor.id})
+
+    client.post(url, data={'arquivo': arquivo})
+
+    name = OrgaoGestor.objects.first().arquivo.name.split('orgaogestor/')[1]
+
+    assert name == arquivo.name
