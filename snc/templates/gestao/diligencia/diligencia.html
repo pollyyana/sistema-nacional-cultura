@@ -22,23 +22,25 @@
 </div>
 <br>
 
-<div class="row panel panel-default" style="background-color: #eee;">
-	<div class="panel-heading">
-		<h4 class="panel-title">Histórico de Diligências</h4>							
-	</div>
+{% if historico_diligencias %}
+	<div class="row panel panel-default" style="background-color: #eee;">
+		<div class="panel-heading">
+			<h4 class="panel-title">Histórico de Diligências</h4>							
+		</div>
 
-	{% for diligencia in historico_diligencias %}
-	<div class="col-md-12">
-		<ul class="list-group"></ul>
-			<li class="list-group-item"><b>Usuário:</b> {{ diligencia.usuario.nome_usuario }}</li>
-			<li class="list-group-item"><b>Motivo:</b> {{ diligencia.classificacao_arquivo.descricao}}</li>
-			<li class="list-group-item"><b>Data:</b> {{ diligencia.data_criacao }}</li>
-			<li class="list-group-item"><b>Resumo:</b> {{diligencia.texto_diligencia | truncatechars:200 | striptags}}</li>
-		</ul>
-	</div>
-	{% endfor %}
+		{% for diligencia in historico_diligencias %}
+		<div class="col-md-12">
+			<ul class="list-group"></ul>
+				<li class="list-group-item"><b>Usuário:</b> {{ diligencia.usuario.nome_usuario }}</li>
+				<li class="list-group-item"><b>Motivo:</b> {{ diligencia.classificacao_arquivo.descricao}}</li>
+				<li class="list-group-item"><b>Data:</b> {{ diligencia.data_criacao }}</li>
+				<li class="list-group-item"><b>Resumo:</b> {{diligencia.texto_diligencia | truncatechars:200 | striptags}}</li>
+			</ul>
+		</div>
+		{% endfor %}
 
-</div>
+	</div>
+{% endif %}
 
 {% endblock %}
 
