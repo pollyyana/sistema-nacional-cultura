@@ -358,10 +358,10 @@ class AlterarOrgaoForm(ModelForm):
 
 
 class AlterarConselhoForm(ModelForm):
-    ata_regimento_aprovado = RestrictedFileField(
+    arquivo = RestrictedFileField(
         content_types=content_types,
         max_upload_size=max_upload_size)
 
     class Meta:
         model = ConselhoCultural
-        fields = ('ata_regimento_aprovado',)
+        fields = ('arquivo',)

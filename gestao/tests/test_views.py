@@ -16,6 +16,7 @@ from planotrabalho.models import OrgaoGestor
 from planotrabalho.models import CriacaoSistema
 from planotrabalho.models import FundoCultura
 from planotrabalho.models import PlanoCultura
+from planotrabalho.models import ConselhoCultural
 from planotrabalho.models import SituacoesArquivoPlano
 
 pytestmark = pytest.mark.django_db
@@ -445,7 +446,7 @@ def test_inserir_documentos_fundo_cultura(client, plano_trabalho, login_staff):
 
 
 def test_inserir_documentos_plano_cultura(client, plano_trabalho, login_staff):
-    """ Testa se funcionalidade de inserir documento para na plano de cultura na
+    """ Testa se funcionalidade de inserir documento para plano de cultura na
     tela de gestão salva no field arquivo """
 
     arquivo = SimpleUploadedFile("plano_cultura.txt", b"file_content", content_type="text/plain")
@@ -455,5 +456,20 @@ def test_inserir_documentos_plano_cultura(client, plano_trabalho, login_staff):
     client.post(url, data={'arquivo': arquivo})
 
     name = PlanoCultura.objects.first().arquivo.name.split('planocultura/')[1]
+
+    assert name == arquivo.name
+
+
+def test_inserir_documentos_conselho_cultural(client, plano_trabalho, login_staff):
+    """ Testa se funcionalidade de inserir documento para conselho cultural na
+    tela de gestão salva no field arquivo """
+
+    arquivo = SimpleUploadedFile("conselho_cultural.txt", b"file_content", content_type="text/plain")
+
+    url = reverse('gestao:alterar_conselho', kwargs={'pk': plano_trabalho.conselho_cultural.id})
+
+    client.post(url, data={'arquivo': arquivo})
+
+    name = ConselhoCultural.objects.first().arquivo.name.split('conselhocultural/')[1]
 
     assert name == arquivo.name
