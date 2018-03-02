@@ -135,9 +135,9 @@ def test_formatacao_informacoes_sobre_arquivo_enviado(template, client, context)
     context['ente_federado'] = 'Pará'
     rendered_template = template.render(context)
 
-    assert "<a href = > Download do arquivo </a>" in rendered_template
-    assert "<p>Data de Envio do Arquivo: {}</p>".format(context['data_envio']) in rendered_template
-    assert "<p>Ente Federado: {}</p>".format(context['ente_federado']) in rendered_template
+    assert "<a href = > <b>Download do arquivo</b></a>" in rendered_template
+    assert "<p><b>Data de Envio do Arquivo:</b> {}</p>".format(context['data_envio']) in rendered_template
+    assert "<p><b>Ente Federado:</b> {}</p>".format(context['ente_federado']) in rendered_template
 
 
 def test_opcoes_de_classificacao_da_diligencia(template, client, situacoes, context):
@@ -204,7 +204,7 @@ def test_formatacao_historico_de_diligencias(template, client, context):
 
     rendered_template = template.render(context)
 
-    assert "<div class=\"row panel panel-default\">" in rendered_template
+    assert "<div class=\"row panel panel-default\" style=\"background-color: #eee;\">" in rendered_template
 
 
 def test_formatacao_individual_das_diligencias_no_historico(template, client, context):
