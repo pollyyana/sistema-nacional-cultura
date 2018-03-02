@@ -1,40 +1,45 @@
 {% extends 'gestao/base_gestao.html' %} {% block content %}
-<h2>Informações sobre o Arquivo Enviado</h2>
-<p>Ente Federado: {{ ente_federado }}</p>
-<p>Data de Envio do Arquivo: {{ data_envio }}</p>
-<p><a href = {{arquivo.url}}> Download do arquivo </a></p>
-
-<form method="POST">
-	{% csrf_token %}
-	{{form.texto_diligencia}}
-	<br>Classificação do Arquivo: {{form.classificacao_arquivo}}
-	{{form.media}}
-
-	<!-- <div class="historico_diligencias">
-		{% for diligencia in historico_diligencias %}
-		<div>Usuário: {{ diligencia.usuario.nome_usuario }}, Motivo: {{ diligencia.get_classificacao_arquivo_display }}, Data: {{ diligencia.data_criacao }}, Resumo: {{diligencia.texto_diligencia | truncatechars:200 | striptags}}
-		</div>
-		{% endfor %}
-	</div> -->
-
-	<div class="card">
-		<div class="card-body">
-			<h5 class="card-title">Histórico de Diligências</h5>
-		{% for diligencia in historico_diligencias %}
-			<ul class="list-group"></ul>
-				<li class="list-group-item"><b>Usuário:</b> {{ diligencia.usuario.nome_usuario }}</li>
-				<li class="list-group-item"><b>Motivo:</b> {{ diligencia.get_classificacao_arquivo_display }}</li>
-				<li class="list-group-item"><b>Data:</b> {{ diligencia.data_criacao }}</li>
-				<li class="list-group-item"><b>Resumo:</b> {{diligencia.texto_diligencia | truncatechars:200 | striptags}}</li>
-			</ul>
-		{% endfor %}
-			
-		</div>
+<link href="../../../static/css/custom_diligencia.css" type="text/css" rel="stylesheet">
+<div class="row panel panel-default">
+	<div class="panel-body">
+		<h2>Informações sobre o Arquivo Enviado</h2>
+		<p>Ente Federado: {{ ente_federado }}</p>
+		<p>Data de Envio do Arquivo: {{ data_envio }}</p>
+		<a href = {{arquivo.url}}> Download do arquivo </a> 
 	</div>
+</div>
 
+<div class="row">
+	<form method="POST">
+		{% csrf_token %}
+		{{form.texto_diligencia}}
+		<br>
+		<b>Classificação do Arquivo:</b> {{form.classificacao_arquivo}}
+		{{form.media}}
+		<br><br>
+		<input class="btn btn-primary" type="submit"></input>			
+		<a href="{% url 'gestao:detalhar' pk=usuario_id %}" class="btn btn-danger">Cancelar</a>			
+	</form>
+</div>
+<br>
 
-	<input class="btn btn-primary" type="submit"></input>
-    <a href="{% url 'gestao:detalhar' pk=usuario_id %}" class="btn btn-danger">Cancelar</a>
-</form>
+<div class="row panel panel-default">
+	<div class="panel-heading" style="background-color: #eee;">
+		<h4 class="panel-title">Histórico de Diligências</h4>							
+	</div>
+	
+	{% for diligencia in historico_diligencias %}
+	<div class="col-md-4 panel-body">
+		<ul class="list-group"></ul>
+			<li class="list-group-item"><b>Usuário:</b> {{ diligencia.usuario.nome_usuario }}</li>
+			<li class="list-group-item"><b>Motivo:</b> {{ diligencia.classificacao_arquivo.descricao}}</li>
+			<li class="list-group-item"><b>Data:</b> {{ diligencia.data_criacao }}</li>
+			<li class="list-group-item"><b>Resumo:</b> {{diligencia.texto_diligencia | truncatechars:200 | striptags}}</li>
+		</ul>
+	</div>
+	{% endfor %}
+
+</div>
+
 {% endblock %}
 
