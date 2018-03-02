@@ -318,13 +318,13 @@ class AlterarDocumentosEnteFederadoForm(ModelForm):
 
 
 class AlterarSistemaForm(ModelForm):
-    lei_sistema_cultura = RestrictedFileField(
+    arquivo = RestrictedFileField(
         content_types=content_types,
         max_upload_size=max_upload_size)
 
     class Meta:
         model = CriacaoSistema
-        fields = ('lei_sistema_cultura',)
+        fields = ('arquivo',)
 
 
 class AlterarFundoForm(ModelForm):

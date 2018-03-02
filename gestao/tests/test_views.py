@@ -13,6 +13,7 @@ from gestao.forms import DiligenciaForm
 from gestao.models import Diligencia
 from adesao.models import Municipio
 from planotrabalho.models import OrgaoGestor
+from planotrabalho.models import CriacaoSistema
 from planotrabalho.models import SituacoesArquivoPlano
 
 pytestmark = pytest.mark.django_db
@@ -407,5 +408,20 @@ def test_inserir_documentos_orgao_gestor(client, plano_trabalho, login_staff):
     client.post(url, data={'arquivo': arquivo})
 
     name = OrgaoGestor.objects.first().arquivo.name.split('orgaogestor/')[1]
+
+    assert name == arquivo.name
+
+
+def test_inserir_documentos_criacao_sistema(client, plano_trabalho, login_staff):
+    """ Testa se funcionalidade de inserir documento para sistema de culutra na
+    tela de gestão salva no field arquivo """
+
+    arquivo = SimpleUploadedFile("sistema_cultura.txt", b"file_content", content_type="text/plain")
+
+    url = reverse('gestao:alterar_sistema', kwargs={'pk': plano_trabalho.criacao_sistema.id})
+
+    client.post(url, data={'arquivo': arquivo})
+
+    name = CriacaoSistema.objects.first().arquivo.name.split('criacaosistema/')[1]
 
     assert name == arquivo.name
