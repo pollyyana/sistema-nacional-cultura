@@ -199,14 +199,6 @@ def test_informacoes_do_historico_de_diligecias_do_componente(template, client, 
         assert diligencia['texto_diligencia'] in rendered_template
 
 
-def test_formatacao_historico_de_diligencias(template, client, context):
-    """Testa a formatação do bloco de histórico de diligências em uma tag div"""
-
-    rendered_template = template.render(context)
-
-    assert "<div class=\"row panel panel-default\" style=\"background-color: #eee;\">" in rendered_template
-
-
 def test_formatacao_individual_das_diligencias_no_historico(template, client, context):
     """Testa a formatacao de cada uma das diligências dentro do bloco de Histórico de Diligências."""
 
@@ -225,10 +217,10 @@ def test_formatacao_individual_das_diligencias_no_historico(template, client, co
     rendered_template = template.render(context)
     for diligencia in diligencias:
         
-        assert "<li class=\"list-group-item\"><b>Usuário:</b> {nome}</li>".format(nome=diligencia['usuario']["nome_usuario"]) in rendered_template
-        assert "<li class=\"list-group-item\"><b>Motivo:</b> {motivo}</li>".format(motivo=diligencia['classificacao_arquivo']["descricao"]) in rendered_template
-        assert "<li class=\"list-group-item\"><b>Data:</b> {data}</li>".format(data=diligencia['data_criacao']) in rendered_template
-        assert "<li class=\"list-group-item\"><b>Resumo:</b> {resumo}</li>".format(resumo=diligencia["texto_diligencia"]) in rendered_template
+        assert "<li class=\"list-group-item\" style=\"border: 1px solid #b3b5b6\"><b>Usuário:</b> {nome}</li>".format(nome=diligencia['usuario']["nome_usuario"]) in rendered_template
+        assert "<li class=\"list-group-item\" style=\"border: 1px solid #b3b5b6\"><b>Motivo:</b> {motivo}</li>".format(motivo=diligencia['classificacao_arquivo']["descricao"]) in rendered_template
+        assert "<li class=\"list-group-item\" style=\"border: 1px solid #b3b5b6\"><b>Data:</b> {data}</li>".format(data=diligencia['data_criacao']) in rendered_template
+        assert "<li class=\"list-group-item\" style=\"border: 1px solid #b3b5b6\"><b>Resumo:</b> {resumo}</li>".format(resumo=diligencia["texto_diligencia"]) in rendered_template
         
           
 
