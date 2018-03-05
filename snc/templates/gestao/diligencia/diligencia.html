@@ -1,7 +1,7 @@
 {% extends 'gestao/base_gestao.html' %} {% block content %}
 <div class="row panel panel-default" style="background-color: #eee;">
 	<div class="panel-body">
-		<h2>Informações sobre o Arquivo Enviado</h2>					
+		<h2>Informações sobre o Arquivo Enviado</h2>				
 		<p><b>Ente Federado:</b> {{ ente_federado }}</p>
 		<p><b>Data de Envio do Arquivo:</b> {{ data_envio }}</p>
 		<a href = {{arquivo.url}}> <b>Download do arquivo</b></a> 
@@ -31,10 +31,10 @@
 		{% for diligencia in historico_diligencias %}
 		<div class="col-md-12">
 			<ul class="list-group"></ul>
-				<li class="list-group-item"><b>Usuário:</b> {{ diligencia.usuario.nome_usuario }}</li>
-				<li class="list-group-item"><b>Motivo:</b> {{ diligencia.classificacao_arquivo.descricao}}</li>
-				<li class="list-group-item"><b>Data:</b> {{ diligencia.data_criacao }}</li>
-				<li class="list-group-item"><b>Resumo:</b> {{diligencia.texto_diligencia | truncatechars:200 | striptags | safe}}</li>
+				<li class="list-group-item" style="border: 1px solid #b3b5b6"><b>Usuário:</b> {{ diligencia.usuario.nome_usuario }}</li>
+				<li class="list-group-item" style="border: 1px solid #b3b5b6"><b>Motivo:</b> {{ diligencia.classificacao_arquivo.descricao}}</li>
+				<li class="list-group-item" style="border: 1px solid #b3b5b6"><b>Data:</b> {{ diligencia.data_criacao }}</li>
+				<li class="list-group-item" style="border: 1px solid #b3b5b6"><b>Resumo:</b> {{diligencia.texto_diligencia | truncatechars:200 | striptags | safe}}</li>
 			</ul>
 		</div>
 		{% endfor %}
@@ -43,4 +43,3 @@
 {% endif %}
 
 {% endblock %}
-
