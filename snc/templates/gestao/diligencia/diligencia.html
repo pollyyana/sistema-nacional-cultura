@@ -23,9 +23,9 @@
 <br>
 
 {% if historico_diligencias %}
-	<div class="row panel panel-default" style="background-color: #eee;">
+	<div class="row panel panel-info">
 		<div class="panel-heading">
-			<h4 class="panel-title">Histórico de Diligências</h4>							
+			Histórico de Diligências						
 		</div>
 
 		{% for diligencia in historico_diligencias %}
@@ -34,7 +34,7 @@
 				<li class="list-group-item"><b>Usuário:</b> {{ diligencia.usuario.nome_usuario }}</li>
 				<li class="list-group-item"><b>Motivo:</b> {{ diligencia.classificacao_arquivo.descricao}}</li>
 				<li class="list-group-item"><b>Data:</b> {{ diligencia.data_criacao }}</li>
-				<li class="list-group-item"><b>Resumo:</b> {{diligencia.texto_diligencia | truncatechars:200 | striptags}}</li>
+				<li class="list-group-item"><b>Resumo:</b> {{diligencia.texto_diligencia | truncatechars:200 | striptags | safe}}</li>
 			</ul>
 		</div>
 		{% endfor %}
