@@ -584,12 +584,12 @@ def diligencia_view(request, pk, componente, resultado):
         'form': form,
         'usuario_id': 0
     }
-
-    try:
-        plano_componente = getattr(plano_trabalho, componente)
-        assert plano_componente
-    except (AssertionError, AttributeError):
-        return HttpResponseNotFound()
+    
+        try:
+            plano_componente = getattr(plano_trabalho, componente)
+            assert plano_componente
+        except (AssertionError, AttributeError):
+            return HttpResponseNotFound()
 
     if request.method == 'GET':
         context['arquivo'] = plano_componente.arquivo
@@ -626,3 +626,58 @@ def diligencia_view(request, pk, componente, resultado):
         context['form'] = form
         return render(request, template_name, context, status=400)
 
+
+def diligencia_view(request, pk, componente, resultado):
+    template_name = 'gestao/diligencia/diligencia.html'
+    form = DiligenciaForm(resultado=resultado)
+
+    plano_trabalho = get_object_or_404(PlanoTrabalho, pk=pk)
+    ente_federado = plano_trabalho.usuario.municipio
+
+
+    """Chaves são os componentes esperados pela url, o valor é a model que cada um representa """
+    componentes = {
+        'plano_trabalho': 'planotrabalho',
+    }
+
+    context = {
+        'ente_federado': ente_federado,
+        'data_envio': '--/--/----',
+        'historico_diligencias': '',
+        'form': form,
+        'usuario_id': 0
+    }
+    
+    if request.method == 'GET':
+        context['usuario_id'] = ente_federado.usuario.id
+
+        if ente_federado.cidade:
+            context['ente_federado'] = "{} - {}".format(ente_federado.cidade.nome_municipio, ente_federado.estado.sigla)
+        else:
+            context['ente_federado'] = ente_federado.estado.sigla
+
+        historico_diligencias = plano_componente.diligencias.all().order_by('-data_criacao')
+        context['historico_diligencias'] = historico_diligencias[:3]
+
+        return render(request, template_name, context=context)
+
+    elif request.method == 'POST':
+        data = request.POST.dict()
+
+        form = DiligenciaForm(data=data, resultado=resultado)
+
+        form.instance.usuario = request.user.usuario
+        form.instance.ente_federado = ente_federado
+        form.instance.componente_id = plano_componente.id
+        form.instance.componente_type = ContentType.objects.get(app_label='planotrabalho',  model=componentes[componente])
+
+        if form.is_valid():
+
+            diligencia = form.save()
+            plano_componente.situacao = diligencia.classificacao_arquivo
+            plano_componente.save()
+
+            return redirect('gestao:detalhar', pk=plano_trabalho.usuario.id)
+
+        context['form'] = form
+        return render(request, template_name, context, status=400)
