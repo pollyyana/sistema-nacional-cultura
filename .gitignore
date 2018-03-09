@@ -8,7 +8,6 @@
 .pydevproject
 *.mo
 *.sqlite
-*migrations*
 *settings_*
 
 # ignore pycharm files
