@@ -148,7 +148,7 @@ def test_opcoes_de_classificacao_da_diligencia(template, client, situacoes, cont
               "Arquivo incorreto"
               )
 
-    form = DiligenciaForm(resultado='0')
+    form = DiligenciaForm(resultado='0', componente='1')
     context['form'] = form
     rendered_template = template.render(context)
 
@@ -165,7 +165,7 @@ def test_opcoes_em_um_dropdown(template, client, context):
             {"description": "Arquivo Incorreto", "value": "6"}
     ]
 
-    form = DiligenciaForm(resultado='0')
+    form = DiligenciaForm(resultado='0', componente='1')
     context['form'] = form
     rendered_template = template.render(context)
 
@@ -227,7 +227,7 @@ def test_formatacao_individual_das_diligencias_no_historico(template, client, co
 
 def test_renderizacao_js_form_diligencia(template, client, context):
     """Testa se o javascript do form está sendo renderizado corretamente"""
-    form = DiligenciaForm(resultado='0')
+    form = DiligenciaForm(resultado='0', componente='1')
 
     context['form'] = form
     rendered_template = template.render(context)

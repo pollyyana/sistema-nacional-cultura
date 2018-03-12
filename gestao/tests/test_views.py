@@ -483,7 +483,7 @@ def test_retorna_200_para_diligencia_geral(client, url, plano_trabalho, login_st
 def test_salvar_informacoes_no_banco_diligencia_geral(url, client, plano_trabalho, login_staff, situacoes):
     """Testa se as informacoes validadas pelo form estao sendo salvas no banco"""
 
-    response = client.post(url.format(id=plano_trabalho.id, componente="plano_trabalho", resultado='0'),
+    response = client.post(url.format(id=plano_trabalho.id, componente="plano_trabalho", resultado='1'),
                            data={'classificacao_arquivo': '4',
                                  'texto_diligencia': 'bla'})
     diligencia = Diligencia.objects.first()
