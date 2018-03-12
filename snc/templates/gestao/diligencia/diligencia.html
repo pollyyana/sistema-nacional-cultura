@@ -13,10 +13,20 @@
 
 <div id="painel-diligencia" class="row panel panel-default">
 	<div class="panel-body">
-		<h2>Informações sobre o Arquivo Enviado</h2>				
-		<p><b>Ente Federado:</b> {{ ente_federado }}</p>
-		<p><b>Data de Envio do Arquivo:</b> {{ data_envio }}</p>
-		<a href = {{arquivo.url}}> <b>Download do arquivo</b></a> 
+		{% if componente == plano_trabalho %}
+			<h2>Informações sobre o Plano Trabalho</h2>
+			<p><b>Ente Federado:</b> {{ ente_federado }}</p>
+			<p><b>Criação Sistema: </b> {{ situacao_lei }}</p>
+			<p><b>Fundo Cultura: </b> {{ situacao_fundo }}</p>
+			<p><b>Orgao Gestor: </b> {{ situacao_orgao }}</p>
+			<p><b>Plano Cultura: </b> {{ situacao_plano }}</p>
+		
+		{% else %}				
+			<h2>Informações sobre o Arquivo Enviado</h2>
+			<p><b>Ente Federado:</b> {{ ente_federado }}</p>		
+			<p><b>Data de Envio do Arquivo:</b> {{ data_envio }}</p>
+			<a href = {{arquivo.url}}> <b>Download do arquivo</b></a> 
+		{% endif %}
 	</div>
 </div>
 
