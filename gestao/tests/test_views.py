@@ -7,7 +7,6 @@ from django.core.files.uploadedfile import SimpleUploadedFile
 from django.contrib.auth.models import User
 from model_mommy import mommy
 
-from gestao.views import diligencia_view
 from gestao.forms import DiligenciaForm
 
 from gestao.models import Diligencia
@@ -18,6 +17,7 @@ from planotrabalho.models import FundoCultura
 from planotrabalho.models import PlanoCultura
 from planotrabalho.models import ConselhoCultural
 from planotrabalho.models import SituacoesArquivoPlano
+from planotrabalho.models import PlanoTrabalho 
 
 pytestmark = pytest.mark.django_db
 
@@ -212,19 +212,17 @@ def test_retorno_400_post_criacao_diligencia(url, client, plano_trabalho, login_
     assert request.status_code == 400
 
 
-def test_retorna_400_POST_classificacao_inexistente(url, rf, plano_trabalho, login_staff):
+def test_retorna_400_POST_classificacao_inexistente(url, client, plano_trabalho, login_staff):
     """
     Testa se o status do retorno é 400 quando feito um POST com a classificao invalida
     de um arquivo.
     """
-    request = rf.post(url.format(id=plano_trabalho.id, componente="orgao_gestor", resultado='0'),
+    request = client.post(url.format(id=plano_trabalho.id, componente="orgao_gestor", resultado='0'),
                       data={'classificacao_arquivo': ''})
     user = login_staff.user
     request.user = user
 
-    response = diligencia_view(request, plano_trabalho.id, "orgao_gestor", "0")
-
-    assert response.status_code == 400
+    assert request.status_code == 400
 
 
 def test_form_diligencia_utlizado_na_diligencia_view(url, client, plano_trabalho, login_staff):
@@ -286,7 +284,6 @@ def test_salvar_informacoes_no_banco(url, client, plano_trabalho, login_staff, s
                            data={'classificacao_arquivo': '4',
                                  'texto_diligencia': 'bla'})
     diligencia = Diligencia.objects.first()
-
     assert Diligencia.objects.count() == 1
     assert diligencia.texto_diligencia == 'bla'
     assert diligencia.classificacao_arquivo.id == 4
@@ -372,6 +369,7 @@ def test_retorno_do_form_da_diligencia(url, client, plano_trabalho, situacoes, l
 
     classificacao_aprova = set(request_aprova.context['form'].fields['classificacao_arquivo'].queryset)
     classificacao_recusa = set(request_recusa.context['form'].fields['classificacao_arquivo'].queryset)
+
 
     assert classificacao_aprova.symmetric_difference(SituacoesArquivoPlano.objects.filter(pk=2)) == set()
     assert classificacao_recusa.symmetric_difference(SituacoesArquivoPlano.objects.filter(id__gte=4, id__lte=6)) == set()
@@ -473,3 +471,36 @@ def test_inserir_documentos_conselho_cultural(client, plano_trabalho, login_staf
     name = ConselhoCultural.objects.first().arquivo.name.split('conselhocultural/')[1]
 
     assert name == arquivo.name
+
+
+def test_retorna_200_para_diligencia_geral(client, url, plano_trabalho, login_staff):
+    """ Testa se retonar 200 ao dar um get na diligencia geral """
+    request = client.get(url.format(id=plano_trabalho.id, componente='plano_trabalho', resultado=1))
+
+    assert request.status_code == 200
+
+
+def test_salvar_informacoes_no_banco_diligencia_geral(url, client, plano_trabalho, login_staff, situacoes):
+    """Testa se as informacoes validadas pelo form estao sendo salvas no banco"""
+
+    response = client.post(url.format(id=plano_trabalho.id, componente="plano_trabalho", resultado='0'),
+                           data={'classificacao_arquivo': '4',
+                                 'texto_diligencia': 'bla'})
+    diligencia = Diligencia.objects.first()
+    assert Diligencia.objects.count() == 1
+    assert diligencia.texto_diligencia == 'bla'
+    assert diligencia.classificacao_arquivo.id == 4
+    assert isinstance(diligencia.componente, PlanoTrabalho)
+
+
+def test_redirecionamento_de_pagina_apos_POST_diligencia_geral(url, client, plano_trabalho, login_staff, situacoes):
+    """ Testa se há o redirecionamento de página após o POST da diligência """
+
+    request = client.post(url.format(id=plano_trabalho.id, componente="plano_trabalho", resultado='0'),
+                          data={"classificacao_arquivo": "4", "texto_diligencia": 'Ta errado cara'})
+    url_redirect = request.url.split('http://testserver/')
+
+    assert url_redirect[1] == 'gestao/detalhar/municipio/{}'.format(plano_trabalho.usuario.id)
+    assert request.status_code == 302
+
+

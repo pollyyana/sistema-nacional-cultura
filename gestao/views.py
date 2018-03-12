@@ -1,10 +1,10 @@
 from django.shortcuts import redirect, render, get_object_or_404
-from django.http import Http404, JsonResponse, HttpResponse, HttpResponseNotFound
+from django.http import Http404, JsonResponse, HttpResponseRedirect, HttpResponseNotFound
 from django.db.models import Q
 from django.contrib.auth.models import User
 from django.core.urlresolvers import reverse_lazy
-from django.views.generic import ListView, DetailView
-from django.views.generic.edit import FormView, UpdateView
+from django.views.generic import ListView, DetailView, CreateView
+from django.views.generic.edit import FormView, UpdateView, FormMixin
 from django.contrib.contenttypes.models import ContentType
 
 from adesao.models import Usuario, Cidade, Municipio, Historico
@@ -559,125 +559,121 @@ class Prorrogacao(ListView):
         return usuarios
 
 
-def diligencia_view(request, pk, componente, resultado):
+class DiligenciaView(CreateView):
     template_name = 'gestao/diligencia/diligencia.html'
-    form = DiligenciaForm(resultado=resultado)
+    form_class = DiligenciaForm
 
-    plano_trabalho = get_object_or_404(PlanoTrabalho, pk=pk)
-    ente_federado = plano_trabalho.usuario.municipio
-
-
-    """Chaves são os componentes esperados pela url, o valor é a model que cada um representa """
     componentes = {
         'fundo_cultura': 'fundocultura',
         'orgao_gestor': 'orgaogestor',
         'conselho_cultural': 'conselhocultural',
         'plano_cultura': 'planocultura',
         'criacao_sistema': 'criacaosistema',
-    }
-
-    context = {
-        'ente_federado': ente_federado,
-        'arquivo': '',
-        'data_envio': '--/--/----',
-        'historico_diligencias': '',
-        'form': form,
-        'usuario_id': 0
-    }
-    
-        try:
-            plano_componente = getattr(plano_trabalho, componente)
-            assert plano_componente
-        except (AssertionError, AttributeError):
-            return HttpResponseNotFound()
-
-    if request.method == 'GET':
-        context['arquivo'] = plano_componente.arquivo
-        context['usuario_id'] = ente_federado.usuario.id
-
-        if ente_federado.cidade:
-            context['ente_federado'] = "{} - {}".format(ente_federado.cidade.nome_municipio, ente_federado.estado.sigla)
-        else:
-            context['ente_federado'] = ente_federado.estado.sigla
-
-        historico_diligencias = plano_componente.diligencias.all().order_by('-data_criacao')
-        context['historico_diligencias'] = historico_diligencias[:3]
-
-        return render(request, template_name, context=context)
-
-    elif request.method == 'POST':
-        data = request.POST.dict()
-
-        form = DiligenciaForm(data=data, resultado=resultado)
-
-        form.instance.usuario = request.user.usuario
-        form.instance.ente_federado = ente_federado
-        form.instance.componente_id = plano_componente.id
-        form.instance.componente_type = ContentType.objects.get(app_label='planotrabalho',  model=componentes[componente])
-
-        if form.is_valid():
-
-            diligencia = form.save()
-            plano_componente.situacao = diligencia.classificacao_arquivo
-            plano_componente.save()
-
-            return redirect('gestao:detalhar', pk=plano_trabalho.usuario.id)
-
-        context['form'] = form
-        return render(request, template_name, context, status=400)
-
-
-def diligencia_view(request, pk, componente, resultado):
-    template_name = 'gestao/diligencia/diligencia.html'
-    form = DiligenciaForm(resultado=resultado)
-
-    plano_trabalho = get_object_or_404(PlanoTrabalho, pk=pk)
-    ente_federado = plano_trabalho.usuario.municipio
-
-
-    """Chaves são os componentes esperados pela url, o valor é a model que cada um representa """
-    componentes = {
         'plano_trabalho': 'planotrabalho',
     }
 
-    context = {
-        'ente_federado': ente_federado,
-        'data_envio': '--/--/----',
-        'historico_diligencias': '',
-        'form': form,
-        'usuario_id': 0
-    }
-    
-    if request.method == 'GET':
-        context['usuario_id'] = ente_federado.usuario.id
+    def get_success_url(self):
+        usuario = self.get_plano_trabalho().usuario
+        return reverse_lazy('gestao:detalhar', kwargs={'pk': usuario.id})
+
+    def get_plano_trabalho(self):
+        return get_object_or_404(PlanoTrabalho, pk=int(self.kwargs['pk']))
+
+    def get_ente_federado(self):
+        plano_trabalho = self.get_plano_trabalho()
+        return plano_trabalho.usuario.municipio
+
+    def get_form(self):
+        form_class = super().get_form_class()
+
+        return form_class(resultado=self.kwargs['resultado'], **self.get_form_kwargs())
+
+    def get_componente(self):
+        """ Retonar o componente baseado no argumento passado pela url"""
+        plano_trabalho = self.get_plano_trabalho()
+        plano_componente = None
+
+        if(self.kwargs['componente'] != 'plano_trabalho'):
+            try:
+                plano_componente = getattr(plano_trabalho,
+                                           self.kwargs['componente'])
+                assert plano_componente
+            except(AssertionError, AttributeError):
+                raise Http404('Componente não existe')
+        else:
+            plano_componente = plano_trabalho
+
+        return plano_componente
+
+    def get_ente_ferado_name(self):
+        ente_federado = self.get_ente_federado()
+        name = None
 
         if ente_federado.cidade:
-            context['ente_federado'] = "{} - {}".format(ente_federado.cidade.nome_municipio, ente_federado.estado.sigla)
+            name = "{} - {}".format(ente_federado.cidade.nome_municipio,
+                                    ente_federado.estado.sigla)
+
         else:
-            context['ente_federado'] = ente_federado.estado.sigla
+            name = ente_federado.estado.sigla
+
+        return name
+
+    def get_historico_diligencias(self):
+        plano_componente = self.get_componente()
 
         historico_diligencias = plano_componente.diligencias.all().order_by('-data_criacao')
-        context['historico_diligencias'] = historico_diligencias[:3]
 
-        return render(request, template_name, context=context)
+        return historico_diligencias[:3]
 
-    elif request.method == 'POST':
-        data = request.POST.dict()
+    def get_context_data(self, form=None, **kwargs):
+        context = {}
+        plano_componente = self.get_componente()
+        ente_federado = self.get_ente_federado()
 
-        form = DiligenciaForm(data=data, resultado=resultado)
+        if form is None:
+            form = self.get_form()
 
-        form.instance.usuario = request.user.usuario
-        form.instance.ente_federado = ente_federado
-        form.instance.componente_id = plano_componente.id
-        form.instance.componente_type = ContentType.objects.get(app_label='planotrabalho',  model=componentes[componente])
-
-        if form.is_valid():
-
-            diligencia = form.save()
-            plano_componente.situacao = diligencia.classificacao_arquivo
-            plano_componente.save()
-
-            return redirect('gestao:detalhar', pk=plano_trabalho.usuario.id)
+        if not (isinstance(plano_componente, PlanoTrabalho)):
+            context['arquivo'] = plano_componente.arquivo
 
         context['form'] = form
-        return render(request, template_name, context, status=400)
+        context['ente_federado'] = self.get_ente_ferado_name()
+        context['historico_diligencias'] = self.get_historico_diligencias()
+        context['usuario_id'] = ente_federado.usuario.id
+        context['data_envio'] = "--/--/----"
+
+        return context
+
+    def form_valid(self, form):
+        plano_componente = self.get_componente()
+        self.object = form.save()
+
+        plano_componente.situacao = self.object.classificacao_arquivo
+        plano_componente.save()
+
+        return HttpResponseRedirect(self.get_success_url())
+
+    def form_invalid(self, form):
+        return self.render_to_response(self.get_context_data(form=form), status=400)
+
+    def post(self, request, *args, **kwargs):
+        plano_componente = self.get_componente()
+        form = self.get_form()
+
+        form.instance.usuario = request.user.usuario
+        form.instance.ente_federado = self.get_ente_federado()
+        form.instance.componente_id = plano_componente.id
+        form.instance.componente_type = ContentType.objects.get(app_label='planotrabalho', model=self.componentes[self.kwargs['componente']])
+
+        if form.is_valid():
+            return self.form_valid(form)
+        else:
+            return self.form_invalid(form)
+
+
+
+
+
+
+
+
