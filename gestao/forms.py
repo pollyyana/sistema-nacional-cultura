@@ -173,15 +173,19 @@ class AlterarSituacao(ModelForm):
 class DiligenciaForm(ModelForm):
     texto_diligencia = forms.CharField(widget=CKEditorWidget())
 
-    def __init__(self, resultado, *args, **kwargs):
+    def __init__(self, resultado, componente, *args, **kwargs):
         """ Form da diligência recebe como parâmetro o resultado, que serve
         para diferenciar diligência de aprovação e reprovação """
 
         super(DiligenciaForm, self).__init__(*args, **kwargs)
-        if resultado == '1':
+
+        if resultado == '1' and componente != 'plano_trabalho':
             self.fields['classificacao_arquivo'].queryset = SituacoesArquivoPlano.objects.filter(pk=2)
-        elif resultado == '0':
+        elif resultado == '0' and componente != 'plano_trabalho':
             self.fields['classificacao_arquivo'].queryset = SituacoesArquivoPlano.objects.filter(id__gte=4, id__lte=6)
+
+        elif componente == 'plano_trabalho':
+            self.fields['classificacao_arquivo'].queryset = SituacoesArquivoPlano.objects.filter(id__gte=2, id__lte=6)
 
     class Meta:
         model = Diligencia

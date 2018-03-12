@@ -586,7 +586,7 @@ class DiligenciaView(CreateView):
     def get_form(self):
         form_class = super().get_form_class()
 
-        return form_class(resultado=self.kwargs['resultado'], **self.get_form_kwargs())
+        return form_class(resultado=self.kwargs['resultado'], componente=self.kwargs['componente'], **self.get_form_kwargs())
 
     def get_componente(self):
         """ Retonar o componente baseado no argumento passado pela url"""
