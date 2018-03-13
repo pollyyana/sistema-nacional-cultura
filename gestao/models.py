@@ -21,6 +21,7 @@ class Diligencia(models.Model):
     componente_id = models.PositiveIntegerField()
     componente = GenericForeignKey('componente_type', 'componente_id')
     usuario = models.ForeignKey(Usuario)
+    tipo_diligencia = models.TextField(max_length=12)
 
     def __str__(self):
         return str(self.id)
