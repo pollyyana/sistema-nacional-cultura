@@ -110,34 +110,11 @@ def test_gestao_template(template, client, context):
 def test_informacoes_arquivo_enviado(template, client, context):
     """Testa se o template exibe as informações do arquivo enviado"""
 
-    context['data_envio'] = '10/08/2017'
     context['ente_federado'] = 'Pará'
 
     rendered_template = template.render(context)
 
-    assert context['data_envio'] in rendered_template
     assert context['ente_federado'] in rendered_template
-
-
-def test_titulo_bloco_informacoes_arquivo(template, client, context):
-    """Testa se o título Informações sobre o Arquivo Enviado está dentre de uma tag de título h2"""
-
-    rendered_template = template.render(context)
-
-    assert "<h2>Informações sobre o Arquivo Enviado</h2>" in rendered_template
-
-
-def test_formatacao_informacoes_sobre_arquivo_enviado(template, client, context):
-    """Testa se cada informação sobre o arquivo enviado está formatada com a tag <p>"""
-
-    context['nome_arquivo'] = 'lei_sistema_para.pdf'
-    context['data_envio'] = '10/08/2017'
-    context['ente_federado'] = 'Pará'
-    rendered_template = template.render(context)
-
-    assert "<a href = > <b>Download do arquivo</b></a>" in rendered_template
-    assert "<p><b>Data de Envio do Arquivo:</b> {}</p>".format(context['data_envio']) in rendered_template
-    assert "<p><b>Ente Federado:</b> {}</p>".format(context['ente_federado']) in rendered_template
 
 
 def test_opcoes_de_classificacao_da_diligencia(template, client, situacoes, context):
@@ -275,3 +252,19 @@ def test_opcao_avaliacao_positiva_documentos_plano_de_trabalho(client, plano_tra
     for componente in componentes:
         assert '<a href=\"/gestao/{}/diligencia/{}/{}\">'.format(plano_trabalho.id, componente, "1") in request.rendered_content
 
+
+def test_informacoes_diligencia_componente(plano_trabalho, client, login_staff):
+    """ Testa se a linha de download do arquivo é renderizada, visto que só deve ser renderizada quando a diligência é por componente """
+
+    request = client.get('/gestao/{}/diligencia/{}/{}'.format(plano_trabalho.id, "orgao_gestor", "1"))
+
+    assert "<h2>Informações sobre o Arquivo Enviado</h2>" in request.rendered_content
+    assert "<b>Download do arquivo</b>" in request.rendered_content
+    
+
+def test_informacoes_diligencia_geral(plano_trabalho, client, login_staff):
+    """ Testa se linha de informações sobre o Plano Trabalho é renderizada, visto que só deve ser renderizada quando a diligência é geral. """
+    
+    request = client.get('/gestao/{}/diligencia/{}/{}'.format(plano_trabalho.id, "plano_trabalho", "1"))
+    
+    assert "<h2>Informações sobre o Plano Trabalho</h2>" in request.rendered_content

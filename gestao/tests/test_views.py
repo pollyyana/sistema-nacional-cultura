@@ -182,8 +182,8 @@ def test_existencia_do_contexto_view(url, client, plano_trabalho, login_staff):
     ]
 
     request = client.get(url.format(id=plano_trabalho.id, componente="conselho_cultural", resultado='0'))
-
-    for context in contexts:
+    
+    for context in contexts:        
         assert context in request.context
 
 
@@ -228,8 +228,7 @@ def test_retorna_400_POST_classificacao_inexistente(url, client, plano_trabalho,
 def test_form_diligencia_utlizado_na_diligencia_view(url, client, plano_trabalho, login_staff):
     """Testa que existe um form no context da diligência view """
 
-    request = client.get(url.format(id=plano_trabalho.id, componente="orgao_gestor", resultado='0'))
-
+    request = client.get(url.format(id=plano_trabalho.id, componente="plano_trabalho", resultado='0'))
     assert request.context['form']
 
 
@@ -469,7 +468,6 @@ def test_inserir_documentos_conselho_cultural(client, plano_trabalho, login_staf
     client.post(url, data={'arquivo': arquivo})
 
     name = ConselhoCultural.objects.first().arquivo.name.split('conselhocultural/')[1]
-
     assert name == arquivo.name
 
 
@@ -496,7 +494,7 @@ def test_salvar_informacoes_no_banco_diligencia_geral(url, client, plano_trabalh
 def test_redirecionamento_de_pagina_apos_POST_diligencia_geral(url, client, plano_trabalho, login_staff, situacoes):
     """ Testa se há o redirecionamento de página após o POST da diligência """
 
-    request = client.post(url.format(id=plano_trabalho.id, componente="plano_trabalho", resultado='0'),
+    request = client.post(url.format(id=plano_trabalho.id, componente="plano_trabalho", resultado='1'),
                           data={"classificacao_arquivo": "4", "texto_diligencia": 'Ta errado cara'})
     url_redirect = request.url.split('http://testserver/')
 
