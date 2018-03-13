@@ -9,6 +9,12 @@
 	#lista-diligencia{
 		margin-bottom: 2rem;
 	}
+	.glyphicon.glyphicon-remove {
+		color: #d9534f;
+	}
+	.glyphicon.glyphicon-ok {
+		color: #337ab7;
+	}
 </style>
 
 <div id="painel-diligencia" class="row panel panel-default">
@@ -16,19 +22,54 @@
 		{% if componente == plano_trabalho %}
 			<h2>Informações sobre o Plano Trabalho</h2>
 			<p><b>Ente Federado:</b> {{ ente_federado }}</p>
-			<p><b>Criação Sistema: </b> {{ situacao_lei }}</p>
-			<p><b>Fundo Cultura: </b> {{ situacao_fundo }}</p>
-			<p><b>Orgao Gestor: </b> {{ situacao_orgao }}</p>
-			<p><b>Plano Cultura: </b> {{ situacao_plano }}</p>
-		
+
+			<p><b>Criação Sistema: </b> {{ situacao_lei }} 
+				{% if situacao_lei != 'Concluída' %}
+					<i class="glyphicon glyphicon-remove"></i>
+				{% else %}
+					<i class="glyphicon glyphicon-ok"></i>		
+				{% endif %}		
+			</p>
+			<p><b>Fundo Cultura: </b> {{ situacao_fundo }}
+				{% if situacao_fundo != 'Concluída' %}
+				<i class="glyphicon glyphicon-remove"></i>
+				{% else %}
+				<i class="glyphicon glyphicon-ok"></i>		
+				{% endif %}
+			</p>
+			<p><b>Conselho Cultural: </b> {{ situacao_conselho }} 
+				{% if situacao_conselho != 'Concluída' %}
+					<i class="glyphicon glyphicon-remove"></i>
+				{% else %}
+					<i class="glyphicon glyphicon-ok"></i>		
+				{% endif %}		
+			</p>				
+			<p><b>Orgao Gestor: </b> {{ situacao_orgao }}
+				{% if situacao_orgao != 'Concluída' %}
+					<i class="glyphicon glyphicon-remove"></i>
+				{% else %}
+					<i class="glyphicon glyphicon-ok"></i>		
+				{% endif %}
+			</p>
+			<p><b>Plano Cultura: </b> {{ situacao_plano }}
+				{% if situacao_plano != 'Concluída' %}
+					<i class="glyphicon glyphicon-remove"></i>
+				{% else %}
+					<i class="glyphicon glyphicon-ok"></i>		
+				{% endif %}
+			</p>								
+				
 		{% else %}				
+
 			<h2>Informações sobre o Arquivo Enviado</h2>
 			<p><b>Ente Federado:</b> {{ ente_federado }}</p>		
 			<p><b>Data de Envio do Arquivo:</b> {{ data_envio }}</p>
 			<a href = {{arquivo.url}}> <b>Download do arquivo</b></a> 
+
 		{% endif %}
 	</div>
 </div>
+
 
 <div class="row">
 	<form method="POST">
