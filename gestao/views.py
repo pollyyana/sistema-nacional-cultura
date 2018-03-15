@@ -629,6 +629,7 @@ class DiligenciaView(CreateView):
         context = {}
         plano_componente = self.get_componente()
         ente_federado = self.get_ente_federado()
+        get_plano_trabalho = self.get_plano_trabalho()
 
         if form is None:
             form = self.get_form()
@@ -636,12 +637,13 @@ class DiligenciaView(CreateView):
         if not (isinstance(plano_componente, PlanoTrabalho)):
             context['arquivo'] = plano_componente.arquivo
         
-        context['situacao_lei'] = self.get_plano_trabalho().criacao_sistema.situacao.descricao
-        context['situacao_orgao'] = self.get_plano_trabalho().orgao_gestor.situacao.descricao
-        context['situacao_fundo'] = self.get_plano_trabalho().fundo_cultura.situacao.descricao
-        context['situacao_plano'] = self.get_plano_trabalho().plano_cultura.situacao.descricao
-        context['situacao_conselho'] = self.get_plano_trabalho().conselho_cultural.situacao.descricao
-    
+        if get_plano_trabalho.criacao_sistema and get_plano_trabalho.orgao_gestor and get_plano_trabalho.fundo_cultura and get_plano_trabalho.plano_cultura and get_plano_trabalho.conselho_cultural:
+            context['situacao_lei'] = self.get_plano_trabalho().criacao_sistema.situacao.descricao
+            context['situacao_orgao'] = self.get_plano_trabalho().orgao_gestor.situacao.descricao
+            context['situacao_fundo'] = self.get_plano_trabalho().fundo_cultura.situacao.descricao
+            context['situacao_plano'] = self.get_plano_trabalho().plano_cultura.situacao.descricao
+            context['situacao_conselho'] = self.get_plano_trabalho().conselho_cultural.situacao.descricao
+
         context['form'] = form
         context['ente_federado'] = self.get_ente_ferado_name()
         context['historico_diligencias'] = self.get_historico_diligencias()

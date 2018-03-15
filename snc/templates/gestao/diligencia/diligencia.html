@@ -19,46 +19,50 @@
 
 <div id="painel-diligencia" class="row panel panel-default">
 	<div class="panel-body">
-		{% if componente == plano_trabalho %}
+		{% if componente == plano_trabalho  %}
 			<h2>Informações sobre o Plano Trabalho</h2>
 			<p><b>Ente Federado:</b> {{ ente_federado }}</p>
 
-			<p><b>Criação Sistema: </b> {{ situacao_lei }} 
-				{% if situacao_lei != 'Concluída' %}
+			{% if plano_trabalho.criacao_sistema %}
+				<p><b>Criação Sistema: </b> {{ situacao_lei }} 
+					{% if situacao_lei != 'Concluída' %}
+						<i class="glyphicon glyphicon-remove"></i>
+					{% else %}
+						<i class="glyphicon glyphicon-ok"></i>		
+					{% endif %}		
+				</p>
+				<p><b>Fundo Cultura: </b> {{ situacao_fundo }}
+					{% if situacao_fundo != 'Concluída' %}
 					<i class="glyphicon glyphicon-remove"></i>
-				{% else %}
+					{% else %}
 					<i class="glyphicon glyphicon-ok"></i>		
-				{% endif %}		
-			</p>
-			<p><b>Fundo Cultura: </b> {{ situacao_fundo }}
-				{% if situacao_fundo != 'Concluída' %}
-				<i class="glyphicon glyphicon-remove"></i>
-				{% else %}
-				<i class="glyphicon glyphicon-ok"></i>		
-				{% endif %}
-			</p>
-			<p><b>Conselho Cultural: </b> {{ situacao_conselho }} 
-				{% if situacao_conselho != 'Concluída' %}
-					<i class="glyphicon glyphicon-remove"></i>
-				{% else %}
-					<i class="glyphicon glyphicon-ok"></i>		
-				{% endif %}		
-			</p>				
-			<p><b>Orgao Gestor: </b> {{ situacao_orgao }}
-				{% if situacao_orgao != 'Concluída' %}
-					<i class="glyphicon glyphicon-remove"></i>
-				{% else %}
-					<i class="glyphicon glyphicon-ok"></i>		
-				{% endif %}
-			</p>
-			<p><b>Plano Cultura: </b> {{ situacao_plano }}
-				{% if situacao_plano != 'Concluída' %}
-					<i class="glyphicon glyphicon-remove"></i>
-				{% else %}
-					<i class="glyphicon glyphicon-ok"></i>		
-				{% endif %}
-			</p>								
-				
+					{% endif %}
+				</p>
+				<p><b>Conselho Cultural: </b> {{ situacao_conselho }} 
+					{% if situacao_conselho != 'Concluída' %}
+						<i class="glyphicon glyphicon-remove"></i>
+					{% else %}
+						<i class="glyphicon glyphicon-ok"></i>		
+					{% endif %}		
+				</p>				
+				<p><b>Orgao Gestor: </b> {{ situacao_orgao }}
+					{% if situacao_orgao != 'Concluída' %}
+						<i class="glyphicon glyphicon-remove"></i>
+					{% else %}
+						<i class="glyphicon glyphicon-ok"></i>		
+					{% endif %}
+				</p>
+				<p><b>Plano Cultura: </b> {{ situacao_plano }}
+					{% if situacao_plano != 'Concluída' %}
+						<i class="glyphicon glyphicon-remove"></i>
+					{% else %}
+						<i class="glyphicon glyphicon-ok"></i>		
+					{% endif %}
+				</p>								
+			{% else %}
+				<p><b>Observação: </b>Não há arquivos relacionados aos componentes deste Ente Federado.</p>	
+			{% endif %}
+
 		{% else %}				
 
 			<h2>Informações sobre o Arquivo Enviado</h2>
@@ -76,7 +80,13 @@
 		{% csrf_token %}
 		{{form.texto_diligencia}}
 		<br>
-		<b>Classificação do Arquivo:</b> {{form.classificacao_arquivo}}
+		
+		{% if componente == plano_trabalho %}
+		<b>Classificação do Plano Trabalho:</b> {{form.classificacao_arquivo}}
+		{% else %}
+			<b>Classificação do Arquivo:</b> {{form.classificacao_arquivo}}
+		{% endif %}
+
 		{{form.media}}
 		<br><br>
 		<input class="btn btn-primary" type="submit"></input>			
