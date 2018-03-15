@@ -502,3 +502,14 @@ def test_redirecionamento_de_pagina_apos_POST_diligencia_geral(url, client, plan
     assert request.status_code == 302
 
 
+def test_salvar_informacoes_no_banco_diligencia_geral(url, client, plano_trabalho, login_staff):
+    """Testa se as informacoes validadas pelo form estao sendo salvas no banco na diligencia geral"""
+
+    response = client.post(url.format(id=plano_trabalho.id, componente="plano_trabalho", resultado='1'),
+                           data={'classificacao_arquivo': '4',
+                                 'texto_diligencia': 'bla'})
+    diligencia = Diligencia.objects.first()
+    assert Diligencia.objects.count() == 1
+    assert diligencia.texto_diligencia == 'bla'
+    assert diligencia.classificacao_arquivo.id == 4
+    assert isinstance(diligencia.componente, PlanoTrabalho)
