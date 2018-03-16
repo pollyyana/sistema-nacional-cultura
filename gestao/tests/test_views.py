@@ -17,7 +17,7 @@ from planotrabalho.models import FundoCultura
 from planotrabalho.models import PlanoCultura
 from planotrabalho.models import ConselhoCultural
 from planotrabalho.models import SituacoesArquivoPlano
-from planotrabalho.models import PlanoTrabalho 
+from planotrabalho.models import PlanoTrabalho
 
 pytestmark = pytest.mark.django_db
 
@@ -182,8 +182,8 @@ def test_existencia_do_contexto_view(url, client, plano_trabalho, login_staff):
     ]
 
     request = client.get(url.format(id=plano_trabalho.id, componente="conselho_cultural", resultado='0'))
-    
-    for context in contexts:        
+
+    for context in contexts:
         assert context in request.context
 
 
@@ -491,7 +491,7 @@ def test_salvar_informacoes_no_banco_diligencia_geral(url, client, plano_trabalh
     assert isinstance(diligencia.componente, PlanoTrabalho)
 
 
-def test_redirecionamento_de_pagina_apos_POST_diligencia_geral(url, client, plano_trabalho, login_staff, situacoes):
+def test_redirecionamento_de_pagina_apos_POST_diligencia_geral(url, client, plano_trabalho, login_staff):
     """ Testa se há o redirecionamento de página após o POST da diligência """
 
     request = client.post(url.format(id=plano_trabalho.id, componente="plano_trabalho", resultado='1'),
@@ -502,7 +502,7 @@ def test_redirecionamento_de_pagina_apos_POST_diligencia_geral(url, client, plan
     assert request.status_code == 302
 
 
-def test_salvar_informacoes_no_banco_diligencia_geral(url, client, plano_trabalho, login_staff):
+def test_salvar_informacoes_no_banco_diligencia_geral(url, client, plano_trabalho, login_staff, situacoes):
     """Testa se as informacoes validadas pelo form estao sendo salvas no banco na diligencia geral"""
 
     response = client.post(url.format(id=plano_trabalho.id, componente="plano_trabalho", resultado='1'),
@@ -513,3 +513,17 @@ def test_salvar_informacoes_no_banco_diligencia_geral(url, client, plano_trabalh
     assert diligencia.texto_diligencia == 'bla'
     assert diligencia.classificacao_arquivo.id == 4
     assert isinstance(diligencia.componente, PlanoTrabalho)
+
+
+def test_situacoes_componentes_diligencia(url, client, plano_trabalho, login_staff, situacoes):
+    """ Testa as informações referentes aos componentes do
+    plano de trabalho na diligência geral """
+
+    response = client.get(url.format(id=plano_trabalho.id, componente="plano_trabalho", resultado="1"))
+    situacoes = response.context['situacoes']
+
+    assert situacoes['lei_sistema'] == plano_trabalho.criacao_sistema.situacao.descricao
+    assert situacoes['orgao_gestor'] == plano_trabalho.orgao_gestor.situacao.descricao
+    assert situacoes['fundo_cultura'] == plano_trabalho.fundo_cultura.situacao.descricao
+    assert situacoes['conselho_cultural'] == plano_trabalho.conselho_cultural.situacao.descricao
+    assert situacoes['plano_cultura'] == plano_trabalho.plano_cultura.situacao.descricao

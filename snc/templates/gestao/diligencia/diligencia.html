@@ -25,36 +25,36 @@
 			<p><b>Ente Federado:</b> {{ ente_federado }}</p>
 
 			{% if plano_trabalho.criacao_sistema %}
-				<p><b>Criação Sistema: </b> {{ situacao_lei }} 
-					{% if situacao_lei != 'Concluída' %}
+				<p><b>Criação Sistema: </b> {{ situacoes.lei_sistema }} 
+					{% if situacoes.lei_sistema != 'Concluída' %}
 						<i class="glyphicon glyphicon-remove"></i>
 					{% else %}
 						<i class="glyphicon glyphicon-ok"></i>		
 					{% endif %}		
 				</p>
-				<p><b>Fundo Cultura: </b> {{ situacao_fundo }}
-					{% if situacao_fundo != 'Concluída' %}
+				<p><b>Fundo Cultura: </b> {{ situacoes.fundo_cultura }}
+					{% if situacoes.fundo_cultura != 'Concluída' %}
 					<i class="glyphicon glyphicon-remove"></i>
 					{% else %}
 					<i class="glyphicon glyphicon-ok"></i>		
 					{% endif %}
 				</p>
-				<p><b>Conselho Cultural: </b> {{ situacao_conselho }} 
-					{% if situacao_conselho != 'Concluída' %}
+				<p><b>Conselho Cultural: </b> {{ situacoes.conselho_cultural }} 
+					{% if situacoes.conselho_cultural != 'Concluída' %}
 						<i class="glyphicon glyphicon-remove"></i>
 					{% else %}
 						<i class="glyphicon glyphicon-ok"></i>		
 					{% endif %}		
 				</p>				
-				<p><b>Orgao Gestor: </b> {{ situacao_orgao }}
-					{% if situacao_orgao != 'Concluída' %}
+				<p><b>Orgao Gestor: </b> {{ situacoes.orgao_gestor }}
+					{% if situacoes.orgao_gestor != 'Concluída' %}
 						<i class="glyphicon glyphicon-remove"></i>
 					{% else %}
 						<i class="glyphicon glyphicon-ok"></i>		
 					{% endif %}
 				</p>
-				<p><b>Plano Cultura: </b> {{ situacao_plano }}
-					{% if situacao_plano != 'Concluída' %}
+				<p><b>Plano Cultura: </b> {{ situacoes.plano_cultura }}
+					{% if situacoes.plano_cultura != 'Concluída' %}
 						<i class="glyphicon glyphicon-remove"></i>
 					{% else %}
 						<i class="glyphicon glyphicon-ok"></i>		

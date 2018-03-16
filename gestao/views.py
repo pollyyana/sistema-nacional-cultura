@@ -625,24 +625,30 @@ class DiligenciaView(CreateView):
 
         return historico_diligencias[:3]
 
+    def get_situacao_componentes(self):
+        situacoes = {}
+        plano_trabalho = self.get_plano_trabalho()
+
+        situacoes['lei_sistema'] = plano_trabalho.criacao_sistema.situacao.descricao
+        situacoes['orgao_gestor'] = plano_trabalho.orgao_gestor.situacao.descricao
+        situacoes['fundo_cultura'] = plano_trabalho.fundo_cultura.situacao.descricao
+        situacoes['plano_cultura'] = plano_trabalho.plano_cultura.situacao.descricao
+        situacoes['conselho_cultural'] = plano_trabalho.conselho_cultural.situacao.descricao
+
+        return situacoes
+
     def get_context_data(self, form=None, **kwargs):
         context = {}
         plano_componente = self.get_componente()
         ente_federado = self.get_ente_federado()
-        get_plano_trabalho = self.get_plano_trabalho()
 
         if form is None:
             form = self.get_form()
 
-        if not (isinstance(plano_componente, PlanoTrabalho)):
+        if (isinstance(plano_componente, PlanoTrabalho)):
+            context['situacoes'] = self.get_situacao_componentes()
+        else:
             context['arquivo'] = plano_componente.arquivo
-        
-        if get_plano_trabalho.criacao_sistema and get_plano_trabalho.orgao_gestor and get_plano_trabalho.fundo_cultura and get_plano_trabalho.plano_cultura and get_plano_trabalho.conselho_cultural:
-            context['situacao_lei'] = self.get_plano_trabalho().criacao_sistema.situacao.descricao
-            context['situacao_orgao'] = self.get_plano_trabalho().orgao_gestor.situacao.descricao
-            context['situacao_fundo'] = self.get_plano_trabalho().fundo_cultura.situacao.descricao
-            context['situacao_plano'] = self.get_plano_trabalho().plano_cultura.situacao.descricao
-            context['situacao_conselho'] = self.get_plano_trabalho().conselho_cultural.situacao.descricao
 
         context['form'] = form
         context['ente_federado'] = self.get_ente_ferado_name()
@@ -675,12 +681,12 @@ class DiligenciaView(CreateView):
         form.instance.ente_federado = self.get_ente_federado()
         form.instance.componente_id = plano_componente.id
         form.instance.componente_type = ContentType.objects.get(app_label='planotrabalho', model=self.componentes[self.kwargs['componente']])
-        
+
         if plano_componente.id == plano_trabalho.id:
             form.instance.tipo_diligencia = 'Geral'
         else:
             form.instance.tipo_diligencia = 'Componente'
-        
+
         if form.is_valid():
             return self.form_valid(form)
         else:
