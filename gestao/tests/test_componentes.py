@@ -125,7 +125,7 @@ def test_opcoes_de_classificacao_da_diligencia(template, client, situacoes, cont
               "Arquivo incorreto"
               )
 
-    form = DiligenciaForm(resultado='0', componente='1')
+    form = DiligenciaForm(resultado='0', componente='orgao_gestor')
     context['form'] = form
     rendered_template = template.render(context)
 
@@ -142,7 +142,7 @@ def test_opcoes_em_um_dropdown(template, client, context):
             {"description": "Arquivo Incorreto", "value": "6"}
     ]
 
-    form = DiligenciaForm(resultado='0', componente='1')
+    form = DiligenciaForm(resultado='0', componente='orgao_gestor')
     context['form'] = form
     rendered_template = template.render(context)
 
@@ -193,13 +193,13 @@ def test_formatacao_individual_das_diligencias_no_historico(template, client, co
     context['historico_diligencias'] = diligencias
     rendered_template = template.render(context)
     for diligencia in diligencias:
-        
+
         assert "<li class=\"list-group-item\" style=\"border: 1px solid #b3b5b6\"><b>Usuário:</b> {nome}</li>".format(nome=diligencia['usuario']["nome_usuario"]) in rendered_template
         assert "<li class=\"list-group-item\" style=\"border: 1px solid #b3b5b6\"><b>Motivo:</b> {motivo}</li>".format(motivo=diligencia['classificacao_arquivo']["descricao"]) in rendered_template
         assert "<li class=\"list-group-item\" style=\"border: 1px solid #b3b5b6\"><b>Data:</b> {data}</li>".format(data=diligencia['data_criacao']) in rendered_template
         assert "<li class=\"list-group-item\" style=\"border: 1px solid #b3b5b6\"><b>Resumo:</b> {resumo}</li>".format(resumo=diligencia["texto_diligencia"]) in rendered_template
-        
-         
+
+
 def test_renderizacao_js_form_diligencia(template, client, context):
     """Testa se o javascript do form está sendo renderizado corretamente"""
     form = DiligenciaForm(resultado='0', componente='1')
@@ -258,10 +258,10 @@ def test_informacoes_diligencia_componente(plano_trabalho, client, login_staff):
 
     assert "<h2>Informações sobre o Arquivo Enviado</h2>" in request.rendered_content
     assert "<b>Download do arquivo</b>" in request.rendered_content
-    
+
 
 def test_informacoes_diligencia_geral(plano_trabalho, client, login_staff):
     """ Testa se linha de informações sobre o Plano Trabalho é renderizada, visto que só deve ser renderizada quando a diligência é geral. """
     request = client.get('/gestao/{}/diligencia/{}/{}'.format(plano_trabalho.id, "plano_trabalho", "1"))
-    
+
     assert "<h2>Informações sobre o Plano Trabalho</h2>" in request.rendered_content

@@ -1,16 +1,18 @@
+from threading import Thread
+
 from django.shortcuts import redirect, render, get_object_or_404
-from django.http import Http404, JsonResponse, HttpResponseRedirect, HttpResponseNotFound
+from django.http import Http404, JsonResponse, HttpResponseRedirect
 from django.db.models import Q
 from django.contrib.auth.models import User
 from django.core.urlresolvers import reverse_lazy
 from django.views.generic import ListView, DetailView, CreateView
-from django.views.generic.edit import FormView, UpdateView, FormMixin
+from django.views.generic.edit import FormView, UpdateView
 from django.contrib.contenttypes.models import ContentType
+from django.core.mail import send_mail
 
 from adesao.models import Usuario, Cidade, Municipio, Historico
 from planotrabalho.models import PlanoTrabalho, CriacaoSistema, PlanoCultura, FundoCultura, OrgaoGestor, ConselhoCultural, SituacoesArquivoPlano
 from gestao.utils import enviar_email_aprovacao_plano
-from gestao.models import Diligencia
 
 from .forms import AlterarSituacao, DiligenciaForm, AlterarDocumentosEnteFederadoForm
 from .forms import AlterarCadastradorForm, AlterarUsuarioForm, AlterarOrgaoForm
@@ -574,6 +576,19 @@ class DiligenciaView(CreateView):
 
     def get_success_url(self):
         usuario = self.get_plano_trabalho().usuario
+        if(isinstance(self.get_componente(), PlanoTrabalho)):
+            Thread(target=send_mail, args=(
+                'MINISTÉRIO DA CULTURA - SNC - DILIGÊNCIA PLANO DE TRABALHO',
+                'Prezado Cadastrador,\n' +
+                'Uma diligência referente ao Plano de Trabalho do ente federado ' + self.get_ente_ferado_name() +
+                ' acabou de ser realizada.\n' +
+                'O corpo da mensagem é: ' + self.object.texto_diligencia + '\n' +
+                'Atenciosamente,\n\n' +
+                'Equipe SNC\nMinistério da Cultura',
+                'naoresponda@cultura.gov.br',
+                [usuario.user.email],),
+                kwargs={'fail_silently': 'False', }
+                ).start()
         return reverse_lazy('gestao:detalhar', kwargs={'pk': usuario.id})
 
     def get_plano_trabalho(self):

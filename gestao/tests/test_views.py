@@ -5,6 +5,7 @@ from django.core.urlresolvers import resolve
 from django.core.urlresolvers import reverse
 from django.core.files.uploadedfile import SimpleUploadedFile
 from django.contrib.auth.models import User
+from django.core import mail
 from model_mommy import mommy
 
 from gestao.forms import DiligenciaForm
@@ -482,12 +483,10 @@ def test_salvar_informacoes_no_banco_diligencia_geral(url, client, plano_trabalh
     """Testa se as informacoes validadas pelo form estao sendo salvas no banco"""
 
     response = client.post(url.format(id=plano_trabalho.id, componente="plano_trabalho", resultado='1'),
-                           data={'classificacao_arquivo': '4',
-                                 'texto_diligencia': 'bla'})
+                           data={'texto_diligencia': 'bla'})
     diligencia = Diligencia.objects.first()
     assert Diligencia.objects.count() == 1
     assert diligencia.texto_diligencia == 'bla'
-    assert diligencia.classificacao_arquivo.id == 4
     assert isinstance(diligencia.componente, PlanoTrabalho)
 
 
@@ -500,19 +499,6 @@ def test_redirecionamento_de_pagina_apos_POST_diligencia_geral(url, client, plan
 
     assert url_redirect[1] == 'gestao/detalhar/municipio/{}'.format(plano_trabalho.usuario.id)
     assert request.status_code == 302
-
-
-def test_salvar_informacoes_no_banco_diligencia_geral(url, client, plano_trabalho, login_staff, situacoes):
-    """Testa se as informacoes validadas pelo form estao sendo salvas no banco na diligencia geral"""
-
-    response = client.post(url.format(id=plano_trabalho.id, componente="plano_trabalho", resultado='0'),
-                           data={'classificacao_arquivo': '4',
-                                 'texto_diligencia': 'bla'})
-    diligencia = Diligencia.objects.first()
-    assert Diligencia.objects.count() == 1
-    assert diligencia.texto_diligencia == 'bla'
-    assert diligencia.classificacao_arquivo.id == 4
-    assert isinstance(diligencia.componente, PlanoTrabalho)
 
 
 def test_situacoes_componentes_diligencia(url, client, plano_trabalho, login_staff, situacoes):
@@ -533,7 +519,7 @@ def test_tipo_diligencia_geral(url, client, plano_trabalho, login_staff):
     """ Testa tipo da dilgência para diligência geral """
 
     request = client.post(url.format(id=plano_trabalho.id, componente="plano_trabalho", resultado='0'),
-                          data={"classificacao_arquivo": "4", "texto_diligencia": 'Ta errado cara'})
+                          data={"texto_diligencia": 'Ta errado cara'})
 
     assert Diligencia.objects.first().tipo_diligencia == 'geral'
 
@@ -545,3 +531,13 @@ def test_tipo_diligencia_componente(url, client, plano_trabalho, login_staff):
                           data={"classificacao_arquivo": "4", "texto_diligencia": 'Ta errado cara'})
 
     assert Diligencia.objects.first().tipo_diligencia == 'componente'
+
+
+def test_envio_email_diligencia_geral(url, client, plano_trabalho, situacoes, login_staff):
+    """ Testa envio do email para diligência geral """
+
+    request = client.post(url.format(id=plano_trabalho.id, componente="plano_trabalho", resultado='0'),
+                          data={"texto_diligencia": 'Ta errado cara'})
+
+    assert len(mail.outbox) == 1
+
