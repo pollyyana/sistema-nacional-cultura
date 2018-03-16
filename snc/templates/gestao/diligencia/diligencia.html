@@ -82,9 +82,7 @@
 		{{form.texto_diligencia}}
 		<br>
 
-		{% if componente == plano_trabalho %}
-		<b>Classificação do Plano Trabalho:</b> {{form.classificacao_arquivo}}
-		{% else %}
+		{% if componente != plano_trabalho %}
 			<b>Classificação do Arquivo:</b> {{form.classificacao_arquivo}}
 		{% endif %}
 

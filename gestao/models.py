@@ -14,7 +14,7 @@ TIPOS_DILIGENCIA = (
 
 class Diligencia(models.Model):
     texto_diligencia = models.TextField(max_length=200)
-    classificacao_arquivo = models.ForeignKey('planotrabalho.SituacoesArquivoPlano')
+    classificacao_arquivo = models.ForeignKey('planotrabalho.SituacoesArquivoPlano', null=True, blank=True)
     data_criacao = models.DateField(default=datetime.date.today)
     ente_federado = models.ForeignKey(Municipio)
     componente_type = models.ForeignKey(ContentType)

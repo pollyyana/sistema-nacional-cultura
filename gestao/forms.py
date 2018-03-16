@@ -185,7 +185,7 @@ class DiligenciaForm(ModelForm):
             self.fields['classificacao_arquivo'].queryset = SituacoesArquivoPlano.objects.filter(id__gte=4, id__lte=6)
 
         elif componente == 'plano_trabalho':
-            self.fields['classificacao_arquivo'].queryset = SituacoesArquivoPlano.objects.filter(id__gte=2, id__lte=6)
+            self.fields.pop('classificacao_arquivo')
 
     class Meta:
         model = Diligencia
