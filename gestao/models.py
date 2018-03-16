@@ -4,12 +4,12 @@ from django.db import models
 from django.contrib.contenttypes.fields import GenericForeignKey
 from django.contrib.contenttypes.models import ContentType
 
-from adesao.models import Municipio 
+from adesao.models import Municipio
 from adesao.models import Usuario
 
-ARQUIVO_DANIFICADO = "Arquivo Danificado"
-ARQUIVO_INCOMPLETO = "Arquivo Incompleto"
-ARQUIVO_INCORRETO = "Arquivo Incorreto"
+TIPOS_DILIGENCIA = (
+    ('geral', 'Geral do plano de trabalho'),
+    ('componente', 'Específica de um componente'),)
 
 
 class Diligencia(models.Model):
@@ -21,7 +21,9 @@ class Diligencia(models.Model):
     componente_id = models.PositiveIntegerField()
     componente = GenericForeignKey('componente_type', 'componente_id')
     usuario = models.ForeignKey(Usuario)
-    tipo_diligencia = models.TextField(max_length=12)
+    tipo_diligencia = models.CharField(
+            max_length=10,
+            choices=TIPOS_DILIGENCIA)
 
     def __str__(self):
         return str(self.id)

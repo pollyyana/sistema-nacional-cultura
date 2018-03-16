@@ -25,51 +25,51 @@
 			<p><b>Ente Federado:</b> {{ ente_federado }}</p>
 
 			{% if plano_trabalho.criacao_sistema %}
-				<p><b>Criação Sistema: </b> {{ situacoes.lei_sistema }} 
+				<p><b>Criação Sistema: </b> {{ situacoes.lei_sistema }}
 					{% if situacoes.lei_sistema != 'Concluída' %}
 						<i class="glyphicon glyphicon-remove"></i>
 					{% else %}
-						<i class="glyphicon glyphicon-ok"></i>		
-					{% endif %}		
+						<i class="glyphicon glyphicon-ok"></i>
+					{% endif %}
 				</p>
 				<p><b>Fundo Cultura: </b> {{ situacoes.fundo_cultura }}
 					{% if situacoes.fundo_cultura != 'Concluída' %}
 					<i class="glyphicon glyphicon-remove"></i>
 					{% else %}
-					<i class="glyphicon glyphicon-ok"></i>		
+					<i class="glyphicon glyphicon-ok"></i>
 					{% endif %}
 				</p>
-				<p><b>Conselho Cultural: </b> {{ situacoes.conselho_cultural }} 
+				<p><b>Conselho Cultural: </b> {{ situacoes.conselho_cultural }}
 					{% if situacoes.conselho_cultural != 'Concluída' %}
 						<i class="glyphicon glyphicon-remove"></i>
 					{% else %}
-						<i class="glyphicon glyphicon-ok"></i>		
-					{% endif %}		
-				</p>				
+						<i class="glyphicon glyphicon-ok"></i>
+					{% endif %}
+				</p>
 				<p><b>Orgao Gestor: </b> {{ situacoes.orgao_gestor }}
 					{% if situacoes.orgao_gestor != 'Concluída' %}
 						<i class="glyphicon glyphicon-remove"></i>
 					{% else %}
-						<i class="glyphicon glyphicon-ok"></i>		
+						<i class="glyphicon glyphicon-ok"></i>
 					{% endif %}
 				</p>
 				<p><b>Plano Cultura: </b> {{ situacoes.plano_cultura }}
 					{% if situacoes.plano_cultura != 'Concluída' %}
 						<i class="glyphicon glyphicon-remove"></i>
 					{% else %}
-						<i class="glyphicon glyphicon-ok"></i>		
+						<i class="glyphicon glyphicon-ok"></i>
 					{% endif %}
-				</p>								
+				</p>
 			{% else %}
-				<p><b>Observação: </b>Não há arquivos relacionados aos componentes deste Ente Federado.</p>	
+				<p><b>Observação: </b>Não há arquivos relacionados aos componentes deste Ente Federado.</p>
 			{% endif %}
 
-		{% else %}				
+		{% else %}
 
 			<h2>Informações sobre o Arquivo Enviado</h2>
-			<p><b>Ente Federado:</b> {{ ente_federado }}</p>		
+			<p><b>Ente Federado:</b> {{ ente_federado }}</p>
 			<p><b>Data de Envio do Arquivo:</b> {{ data_envio }}</p>
-			<a href = {{arquivo.url}}> <b>Download do arquivo</b></a> 
+			<a href = {{arquivo.url}}> <b>Download do arquivo</b></a>
 
 		{% endif %}
 	</div>
@@ -81,7 +81,7 @@
 		{% csrf_token %}
 		{{form.texto_diligencia}}
 		<br>
-		
+
 		{% if componente == plano_trabalho %}
 		<b>Classificação do Plano Trabalho:</b> {{form.classificacao_arquivo}}
 		{% else %}
@@ -90,8 +90,8 @@
 
 		{{form.media}}
 		<br><br>
-		<input class="btn btn-primary" type="submit"></input>			
-		<a href="{% url 'gestao:detalhar' pk=usuario_id %}" class="btn btn-danger">Cancelar</a>			
+		<input class="btn btn-primary" type="submit"></input>
+		<a href="{% url 'gestao:detalhar' pk=usuario_id %}" class="btn btn-danger">Cancelar</a>
 	</form>
 </div>
 <br>
@@ -99,17 +99,17 @@
 {% if historico_diligencias %}
 	<div class="row panel panel-info">
 		<div class="panel-heading">
-			Histórico de Diligências						
+			Histórico de Diligências
 		</div>
 
 		{% for diligencia in historico_diligencias %}
 		<div id="lista-diligencia" class="col-md-12">
 			<ul class="list-group"></ul>
 				<li class="list-group-item" style="border: 1px solid #b3b5b6"><b>Usuário:</b> {{ diligencia.usuario.nome_usuario }}</li>
-				<li class="list-group-item" style="border: 1px solid #b3b5b6"><b>Motivo:</b> {{ diligencia.classificacao_arquivo.descricao}}</li>
+				<li class="list-group-item" style="border: 1px solid #b3b5b6"><b>Motivo:</b> {{ diligencia.classificacao_arquivo.descricao }}</li>
 				<li class="list-group-item" style="border: 1px solid #b3b5b6"><b>Data:</b> {{ diligencia.data_criacao }}</li>
 				<li class="list-group-item" style="border: 1px solid #b3b5b6"><b>Resumo:</b> {{diligencia.texto_diligencia | truncatechars:150 | striptags | safe}}</li>
-				<li class="list-group-item" style="border: 1px solid #b3b5b6"><b>Tipo da Diligência:</b> {{diligencia.tipo_diligencia }}</li>				
+				<li class="list-group-item" style="border: 1px solid #b3b5b6"><b>Tipo da Diligência:</b> {{diligencia.get_tipo_diligencia_display }}</li>
 			</ul>
 		</div>
 		{% endfor %}

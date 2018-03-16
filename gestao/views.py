@@ -673,19 +673,18 @@ class DiligenciaView(CreateView):
         return self.render_to_response(self.get_context_data(form=form), status=400)
 
     def post(self, request, *args, **kwargs):
-        plano_trabalho = self.get_plano_trabalho()
         plano_componente = self.get_componente()
         form = self.get_form()
+
+        if(isinstance(plano_componente, PlanoTrabalho)):
+            form.instance.tipo_diligencia = 'geral'
+        else:
+            form.instance.tipo_diligencia = 'componente'
 
         form.instance.usuario = request.user.usuario
         form.instance.ente_federado = self.get_ente_federado()
         form.instance.componente_id = plano_componente.id
         form.instance.componente_type = ContentType.objects.get(app_label='planotrabalho', model=self.componentes[self.kwargs['componente']])
-
-        if plano_componente.id == plano_trabalho.id:
-            form.instance.tipo_diligencia = 'Geral'
-        else:
-            form.instance.tipo_diligencia = 'Componente'
 
         if form.is_valid():
             return self.form_valid(form)

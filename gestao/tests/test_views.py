@@ -505,7 +505,7 @@ def test_redirecionamento_de_pagina_apos_POST_diligencia_geral(url, client, plan
 def test_salvar_informacoes_no_banco_diligencia_geral(url, client, plano_trabalho, login_staff, situacoes):
     """Testa se as informacoes validadas pelo form estao sendo salvas no banco na diligencia geral"""
 
-    response = client.post(url.format(id=plano_trabalho.id, componente="plano_trabalho", resultado='1'),
+    response = client.post(url.format(id=plano_trabalho.id, componente="plano_trabalho", resultado='0'),
                            data={'classificacao_arquivo': '4',
                                  'texto_diligencia': 'bla'})
     diligencia = Diligencia.objects.first()
@@ -527,3 +527,21 @@ def test_situacoes_componentes_diligencia(url, client, plano_trabalho, login_sta
     assert situacoes['fundo_cultura'] == plano_trabalho.fundo_cultura.situacao.descricao
     assert situacoes['conselho_cultural'] == plano_trabalho.conselho_cultural.situacao.descricao
     assert situacoes['plano_cultura'] == plano_trabalho.plano_cultura.situacao.descricao
+
+
+def test_tipo_diligencia_geral(url, client, plano_trabalho, login_staff):
+    """ Testa tipo da dilgência para diligência geral """
+
+    request = client.post(url.format(id=plano_trabalho.id, componente="plano_trabalho", resultado='0'),
+                          data={"classificacao_arquivo": "4", "texto_diligencia": 'Ta errado cara'})
+
+    assert Diligencia.objects.first().tipo_diligencia == 'geral'
+
+
+def test_tipo_diligencia_componente(url, client, plano_trabalho, login_staff):
+    """ Testa tipo da dilgência para diligência específica de um componente"""
+
+    request = client.post(url.format(id=plano_trabalho.id, componente="orgao_gestor", resultado='0'),
+                          data={"classificacao_arquivo": "4", "texto_diligencia": 'Ta errado cara'})
+
+    assert Diligencia.objects.first().tipo_diligencia == 'componente'
