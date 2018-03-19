@@ -117,7 +117,7 @@ def test_informacoes_arquivo_enviado(template, client, context):
     assert context['ente_federado'] in rendered_template
 
 
-def test_opcoes_de_classificacao_da_diligencia(template, client, situacoes, context):
+def test_opcoes_de_classificacao_da_diligencia(template, client, plano_trabalho, situacoes, context):
     """Testa se a Classificação(Motivo) apresenta as opções conforme a especificação."""
 
     opcoes = ("Arquivo danificado",
@@ -127,6 +127,7 @@ def test_opcoes_de_classificacao_da_diligencia(template, client, situacoes, cont
 
     form = DiligenciaForm(resultado='0', componente='orgao_gestor')
     context['form'] = form
+    context['plano_trabalho'] = plano_trabalho
     rendered_template = template.render(context)
 
     assert opcoes[0] in rendered_template
@@ -134,7 +135,7 @@ def test_opcoes_de_classificacao_da_diligencia(template, client, situacoes, cont
     assert opcoes[2] in rendered_template
 
 
-def test_opcoes_em_um_dropdown(template, client, context):
+def test_opcoes_em_um_dropdown(template, client, plano_trabalho, context):
     """Testa se as Classificações(Motivo) estão presentes dentro de um dropdown."""
     opcoes = [
             {"description": "Arquivo Danificado", "value": "4"},
@@ -144,6 +145,7 @@ def test_opcoes_em_um_dropdown(template, client, context):
 
     form = DiligenciaForm(resultado='0', componente='orgao_gestor')
     context['form'] = form
+    context['plano_trabalho'] = plano_trabalho
     rendered_template = template.render(context)
 
     assert "<select id=\"id_classificacao_arquivo\" name=\"classificacao_arquivo\">" in rendered_template

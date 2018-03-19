@@ -326,7 +326,7 @@ def test_exibicao_historico_diligencia(url, client, plano_trabalho, login_staff)
     """Testa se o histórico de diligências é retornado pelo contexto"""
 
     diligencia = mommy.make('Diligencia', _quantity=4, componente=plano_trabalho.orgao_gestor)
-    diligencias = plano_trabalho.orgao_gestor.diligencias.all().order_by('-data_criacao')[:3]
+    diligencias = plano_trabalho.orgao_gestor.diligencias.all().order_by('-data_criacao').order_by('-id')[:3]
 
     request = client.get(url.format(id=plano_trabalho.id, componente="orgao_gestor", resultado='0'))
     diferenca_listas = set(diligencias).symmetric_difference(set(request.context['historico_diligencias']))
