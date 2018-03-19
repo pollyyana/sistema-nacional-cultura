@@ -8,8 +8,8 @@ from adesao.models import Municipio
 from adesao.models import Usuario
 
 TIPOS_DILIGENCIA = (
-    ('geral', 'Geral do plano de trabalho'),
-    ('componente', 'Específica de um componente'),)
+    ('geral', 'Geral'),
+    ('componente', 'Específica'),)
 
 
 class Diligencia(models.Model):

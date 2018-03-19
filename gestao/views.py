@@ -643,7 +643,7 @@ class DiligenciaView(CreateView):
     def get_historico_diligencias(self):
         plano_componente = self.get_componente()
 
-        historico_diligencias = plano_componente.diligencias.all().order_by('-data_criacao')
+        historico_diligencias = plano_componente.diligencias.all().order_by('-data_criacao').order_by('-id')
 
         return historico_diligencias[:3]
 
