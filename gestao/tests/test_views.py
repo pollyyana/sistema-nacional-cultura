@@ -536,8 +536,10 @@ def test_tipo_diligencia_componente(url, client, plano_trabalho, login_staff):
 def test_envio_email_diligencia_geral(url, client, plano_trabalho, situacoes, login_staff):
     """ Testa envio do email para diligência geral """
 
-    request = client.post(url.format(id=plano_trabalho.id, componente="plano_trabalho", resultado='0'),
+    request = client.post(url.format(id=plano_trabalho.id, componente="plano_trabalho", resultado='1'),
                           data={"texto_diligencia": 'Ta errado cara'})
+
+    redirect_url = client.get(request.url)
 
     assert len(mail.outbox) == 1
 
