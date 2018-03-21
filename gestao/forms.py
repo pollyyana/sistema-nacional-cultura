@@ -9,6 +9,8 @@ from django.template.defaultfilters import filesizeformat
 from adesao.models import Usuario, Historico, Uf, Municipio
 from planotrabalho.models import PlanoTrabalho, CriacaoSistema, FundoCultura
 from planotrabalho.models import PlanoCultura, OrgaoGestor, ConselhoCultural
+from planotrabalho.models import SituacoesArquivoPlano
+from gestao.models import Diligencia
 
 from .utils import enviar_email_alteracao_situacao
 
@@ -168,24 +170,26 @@ class AlterarSituacao(ModelForm):
         fields = ('estado_processo', 'data_publicacao_acordo')
 
 
-class DiligenciaForm(forms.Form):
-    diligencia = forms.CharField(required=False, widget=CKEditorWidget())
+class DiligenciaForm(ModelForm):
+    texto_diligencia = forms.CharField(widget=CKEditorWidget())
 
-    def __init__(self, *args, **kwargs):
-        self.usuario = kwargs.pop('usuario', None)
+    def __init__(self, resultado, componente, *args, **kwargs):
+        """ Form da diligência recebe como parâmetro o resultado, que serve
+        para diferenciar diligência de aprovação e reprovação """
+
         super(DiligenciaForm, self).__init__(*args, **kwargs)
 
-    def save(self, commit=True):
-        subject = '[Sistema Nacional de Cultura] Diligência em anexo'
-        Thread(target=send_mail, args=(
-            subject,
-            self.cleaned_data['diligencia'],
-            'naoresponda@cultura.gov.br',
-            [self.usuario.user.email],),
-            kwargs={
-                'fail_silently': 'False',
-                'html_message': self.cleaned_data['diligencia']}
-            ).start()
+        if resultado == '1' and componente != 'plano_trabalho':
+            self.fields['classificacao_arquivo'].queryset = SituacoesArquivoPlano.objects.filter(pk=2)
+        elif resultado == '0' and componente != 'plano_trabalho':
+            self.fields['classificacao_arquivo'].queryset = SituacoesArquivoPlano.objects.filter(id__gte=4, id__lte=6)
+
+        elif componente == 'plano_trabalho':
+            self.fields.pop('classificacao_arquivo')
+
+    class Meta:
+        model = Diligencia
+        fields = ('texto_diligencia', 'classificacao_arquivo')
 
 
 class AlterarCadastradorForm(ChainedChoicesForm):
@@ -318,50 +322,50 @@ class AlterarDocumentosEnteFederadoForm(ModelForm):
 
 
 class AlterarSistemaForm(ModelForm):
-    lei_sistema_cultura = RestrictedFileField(
+    arquivo = RestrictedFileField(
         content_types=content_types,
         max_upload_size=max_upload_size)
 
     class Meta:
         model = CriacaoSistema
-        fields = ('lei_sistema_cultura',)
+        fields = ('arquivo',)
 
 
 class AlterarFundoForm(ModelForm):
-    lei_fundo_cultura = RestrictedFileField(
+    arquivo = RestrictedFileField(
         content_types=content_types,
         max_upload_size=max_upload_size)
 
     class Meta:
         model = FundoCultura
-        fields = ('lei_fundo_cultura',)
+        fields = ('arquivo',)
 
 
 class AlterarPlanoForm(ModelForm):
-    lei_plano_cultura = RestrictedFileField(
+    arquivo = RestrictedFileField(
         content_types=content_types,
         max_upload_size=max_upload_size)
 
     class Meta:
         model = PlanoCultura
-        fields = ('lei_plano_cultura',)
+        fields = ('arquivo',)
 
 
 class AlterarOrgaoForm(ModelForm):
-    relatorio_atividade_secretaria = RestrictedFileField(
+    arquivo = RestrictedFileField(
         content_types=content_types,
         max_upload_size=max_upload_size)
 
     class Meta:
         model = OrgaoGestor
-        fields = ('relatorio_atividade_secretaria',)
+        fields = ('arquivo',)
 
 
 class AlterarConselhoForm(ModelForm):
-    ata_regimento_aprovado = RestrictedFileField(
+    arquivo = RestrictedFileField(
         content_types=content_types,
         max_upload_size=max_upload_size)
 
     class Meta:
         model = ConselhoCultural
-        fields = ('ata_regimento_aprovado',)
+        fields = ('arquivo',)

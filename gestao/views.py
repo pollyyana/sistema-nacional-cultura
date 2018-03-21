@@ -1,13 +1,17 @@
-from django.shortcuts import redirect, render
-from django.http import Http404, JsonResponse
+from threading import Thread
+
+from django.shortcuts import redirect, render, get_object_or_404
+from django.http import Http404, JsonResponse, HttpResponseRedirect
 from django.db.models import Q
 from django.contrib.auth.models import User
 from django.core.urlresolvers import reverse_lazy
-from django.views.generic import ListView, DetailView
+from django.views.generic import ListView, DetailView, CreateView
 from django.views.generic.edit import FormView, UpdateView
+from django.contrib.contenttypes.models import ContentType
+from django.core.mail import send_mail
 
 from adesao.models import Usuario, Cidade, Municipio, Historico
-from planotrabalho.models import CriacaoSistema, PlanoCultura, FundoCultura, OrgaoGestor, ConselhoCultural, SituacoesArquivoPlano
+from planotrabalho.models import PlanoTrabalho, CriacaoSistema, PlanoCultura, FundoCultura, OrgaoGestor, ConselhoCultural, SituacoesArquivoPlano
 from gestao.utils import enviar_email_aprovacao_plano
 
 from .forms import AlterarSituacao, DiligenciaForm, AlterarDocumentosEnteFederadoForm
@@ -555,3 +559,164 @@ class Prorrogacao(ListView):
             usuarios = usuarios.filter(
                 municipio__cidade__nome_municipio__icontains=q)
         return usuarios
+
+
+class DiligenciaView(CreateView):
+    template_name = 'gestao/diligencia/diligencia.html'
+    form_class = DiligenciaForm
+
+    componentes = {
+        'fundo_cultura': 'fundocultura',
+        'orgao_gestor': 'orgaogestor',
+        'conselho_cultural': 'conselhocultural',
+        'plano_cultura': 'planocultura',
+        'criacao_sistema': 'criacaosistema',
+        'plano_trabalho': 'planotrabalho',
+    }
+
+    def get_success_url(self):
+        usuario = self.get_plano_trabalho().usuario
+        situacoes = self.get_situacao_componentes()
+        if(isinstance(self.get_componente(), PlanoTrabalho)):
+            Thread(target=send_mail, args=(
+                'MINISTÉRIO DA CULTURA - SNC - DILIGÊNCIA PLANO DE TRABALHO',
+                'Prezado Cadastrador,\n' +
+                'Uma diligência referente ao Plano de Trabalho do ente federado ' + self.get_ente_ferado_name() +
+                ' acabou de ser realizada.\n' +
+                'O corpo da mensagem é: ' + self.object.texto_diligencia + '\n' +
+                'As situações dos arquivos enviados de cada componente são: \n' +
+                'Lei de Criação do Sistema de Cultura: ' + situacoes['lei_sistema'] + ';\n' +
+                'Órgão Gestor: ' + situacoes['orgao_gestor'] + ';\n' +
+                'Conselho de Política Cultural: ' + situacoes['conselho_cultural'] + ';\n' +
+                'Fundo de Cultura: ' + situacoes['fundo_cultura'] + ';\n' +
+                'Plano de Cultura: ' + situacoes['plano_cultura'] + '.\n\n' +
+                'Atenciosamente,\n\n' +
+                'Equipe SNC\nMinistério da Cultura',
+                'naoresponda@cultura.gov.br',
+                [usuario.user.email],),
+                kwargs={'fail_silently': 'False', }
+                ).start()
+        return reverse_lazy('gestao:detalhar', kwargs={'pk': usuario.id})
+
+    def get_plano_trabalho(self):
+        return get_object_or_404(PlanoTrabalho, pk=int(self.kwargs['pk']))
+
+    def get_ente_federado(self):
+        plano_trabalho = self.get_plano_trabalho()
+        return plano_trabalho.usuario.municipio
+
+    def get_form(self):
+        form_class = super().get_form_class()
+
+        return form_class(resultado=self.kwargs['resultado'], componente=self.kwargs['componente'], **self.get_form_kwargs())
+
+    def get_componente(self):
+        """ Retonar o componente baseado no argumento passado pela url"""
+        plano_trabalho = self.get_plano_trabalho()
+        plano_componente = None
+
+        if(self.kwargs['componente'] != 'plano_trabalho'):
+            try:
+                plano_componente = getattr(plano_trabalho,
+                                           self.kwargs['componente'])
+                assert plano_componente
+            except(AssertionError, AttributeError):
+                raise Http404('Componente não existe')
+        else:
+            plano_componente = plano_trabalho
+
+        return plano_componente
+
+    def get_ente_ferado_name(self):
+        ente_federado = self.get_ente_federado()
+        name = None
+
+        if ente_federado.cidade:
+            name = "{} - {}".format(ente_federado.cidade.nome_municipio,
+                                    ente_federado.estado.sigla)
+
+        else:
+            name = ente_federado.estado.sigla
+
+        return name
+
+    def get_historico_diligencias(self):
+        plano_componente = self.get_componente()
+
+        historico_diligencias = plano_componente.diligencias.all().order_by('-data_criacao').order_by('-id')
+
+        return historico_diligencias[:3]
+
+    def get_situacao_componentes(self):
+        situacoes = {}
+        plano_trabalho = self.get_plano_trabalho()
+
+        situacoes['lei_sistema'] = plano_trabalho.criacao_sistema.situacao.descricao
+        situacoes['orgao_gestor'] = plano_trabalho.orgao_gestor.situacao.descricao
+        situacoes['fundo_cultura'] = plano_trabalho.fundo_cultura.situacao.descricao
+        situacoes['plano_cultura'] = plano_trabalho.plano_cultura.situacao.descricao
+        situacoes['conselho_cultural'] = plano_trabalho.conselho_cultural.situacao.descricao
+
+        return situacoes
+
+    def get_context_data(self, form=None, **kwargs):
+        context = {}
+        plano_componente = self.get_componente()
+        ente_federado = self.get_ente_federado()
+
+        if form is None:
+            form = self.get_form()
+
+        if (isinstance(plano_componente, PlanoTrabalho)):
+            context['situacoes'] = self.get_situacao_componentes()
+        else:
+            context['arquivo'] = plano_componente.arquivo
+
+        context['form'] = form
+        context['ente_federado'] = self.get_ente_ferado_name()
+        context['historico_diligencias'] = self.get_historico_diligencias()
+        context['usuario_id'] = ente_federado.usuario.id
+        context['data_envio'] = "--/--/----"
+        context['componente'] = plano_componente
+        context['plano_trabalho'] = self.get_plano_trabalho()
+
+        return context
+
+    def form_valid(self, form):
+        plano_componente = self.get_componente()
+        self.object = form.save()
+
+        plano_componente.situacao = self.object.classificacao_arquivo
+        plano_componente.save()
+
+        return HttpResponseRedirect(self.get_success_url())
+
+    def form_invalid(self, form):
+        return self.render_to_response(self.get_context_data(form=form), status=400)
+
+    def post(self, request, *args, **kwargs):
+        plano_componente = self.get_componente()
+        form = self.get_form()
+
+        if(isinstance(plano_componente, PlanoTrabalho)):
+            form.instance.tipo_diligencia = 'geral'
+        else:
+            form.instance.tipo_diligencia = 'componente'
+
+        form.instance.usuario = request.user.usuario
+        form.instance.ente_federado = self.get_ente_federado()
+        form.instance.componente_id = plano_componente.id
+        form.instance.componente_type = ContentType.objects.get(app_label='planotrabalho', model=self.componentes[self.kwargs['componente']])
+
+        if form.is_valid():
+            return self.form_valid(form)
+        else:
+            return self.form_invalid(form)
+
+
+
+
+
+
+
+
