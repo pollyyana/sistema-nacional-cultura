@@ -56,7 +56,7 @@ THIRD_PARTY_APPS = (
     'django_extensions',
     'ckeditor',
     'widget_tweaks',
-    'piwik',
+    # 'piwik',
     'clever_selects',
     'rest_framework',
     'django_filters',
@@ -317,8 +317,8 @@ CKEDITOR_CONFIGS = {
     },
 }
 
-PIWIK_SITE_ID = 1
-PIWIK_URL = ''
+# PIWIK_SITE_ID = 1
+# PIWIK_URL = ''
 
 if(DEBUG == 'False'):
     RAVEN_CONFIG = {
