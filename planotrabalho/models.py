@@ -26,7 +26,10 @@ def upload_to_componente(instance, filename):
 
 class ArquivoComponente(models.Model):
     arquivo = models.FileField(upload_to=upload_to_componente, null=True, blank=True)
-    situacao = models.ForeignKey('SituacoesArquivoPlano', related_name='%(class)s_situacao', default=0)
+    situacao = models.ForeignKey('SituacoesArquivoPlano',
+                                 on_delete=models.CASCADE,
+                                 related_name='%(class)s_situacao',
+                                 default=0)
     data_envio = models.DateField(default=datetime.date.today)
 
     class Meta:
@@ -36,22 +39,27 @@ class ArquivoComponente(models.Model):
 class PlanoTrabalho(models.Model):
     criacao_sistema = models.OneToOneField(
         'CriacaoSistema',
+        on_delete=models.CASCADE,
         blank=True,
         null=True)
     orgao_gestor = models.OneToOneField(
         'OrgaoGestor',
+        on_delete=models.CASCADE,
         blank=True,
         null=True)
     conselho_cultural = models.OneToOneField(
         'ConselhoCultural',
+        on_delete=models.CASCADE,
         blank=True,
         null=True)
     fundo_cultura = models.OneToOneField(
         'FundoCultura',
+        on_delete=models.CASCADE,
         blank=True,
         null=True)
     plano_cultura = models.OneToOneField(
         'PlanoCultura',
+        on_delete=models.CASCADE,
         blank=True,
         null=True)
     diligencias = GenericRelation(Diligencia, content_type_field="componente_type",
@@ -154,7 +162,7 @@ class Conselheiro(models.Model):
         default=1)
     data_cadastro = models.DateField(blank=True, null=True)
     data_situacao = models.DateField(blank=True, null=True)
-    conselho = models.ForeignKey('ConselhoCultural')
+    conselho = models.ForeignKey('ConselhoCultural', on_delete=models.CASCADE)
 
 
 class SituacoesArquivoPlano(models.Model):
