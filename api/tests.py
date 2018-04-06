@@ -112,10 +112,10 @@ def test_campos_do_objeto_embedded_ao_retornar_sistema_cultura_local(client):
 def test_campos_do_objeto_conselho_ao_retornar_sistema_cultura_local(client):
 
     municipio = mommy.make('Municipio')
-    conselho_cultural= mommy.make('ConselhoCultural')
-    plano_trabalho = mommy.make('PlanoTrabalho',conselho_cultural=conselho_cultural)
-    usuario = mommy.make('Usuario',municipio=municipio,plano_trabalho=plano_trabalho)
-    conselheiro = mommy.make('Conselheiro',conselho=conselho_cultural)
+    conselho_cultural = mommy.make('ConselhoCultural')
+    plano_trabalho = mommy.make('PlanoTrabalho', conselho_cultural=conselho_cultural)
+    mommy.make('Usuario', municipio=municipio, plano_trabalho=plano_trabalho)
+    mommy.make('Conselheiro', conselho=conselho_cultural)
     municipio_id = '{}/'.format(municipio.id)
 
     url = url_sistemadeculturalocal + municipio_id
@@ -141,7 +141,7 @@ def test_planotrabalho_list_retorna_lista_com_10(client):
     request = client.get(url_acoesplanotrabalho,
             content_type="application/hal+json")
 
-    assert isinstance(request.data["_embedded"]["items"], list) 
+    assert isinstance(request.data["_embedded"]["items"], list)
     assert len(request.data["_embedded"]["items"]) == 10
 
 
@@ -273,6 +273,42 @@ def test_objeto_criacao_conselho_cultural_acoesplanotrabalho(client):
     assert campos.symmetric_difference(request.data["criacao_conselho_cultural"]) == set()
 
 
+def test_objeto_conselheiros_sistema_de_cultura(client):
+
+    municipio = mommy.make('Municipio')
+    conselho_cultural = mommy.make('ConselhoCultural')
+    plano_trabalho = mommy.make('PlanoTrabalho', conselho_cultural=conselho_cultural)
+    mommy.make('Usuario', municipio=municipio, plano_trabalho=plano_trabalho)
+    mommy.make('Conselheiro', conselho=conselho_cultural)
+    sistema_id = '{}/'.format(municipio.id)
+
+    url = url_sistemadeculturalocal + sistema_id
+
+    request = client.get(url, content_type="application/hal+json")
+
+    campos = set(["segmento", "situacao", "data_cadastro", "email", "data_situacao", "nome"])
+
+    assert campos.symmetric_difference(request.data["conselho"]["conselheiros"][0]) == set()
+
+
+def test_retorno_situacao_conselheiro(client):
+
+    municipio = mommy.make('Municipio')
+    conselho_cultural = mommy.make('ConselhoCultural')
+    plano_trabalho = mommy.make('PlanoTrabalho', conselho_cultural=conselho_cultural)
+    mommy.make('Usuario', municipio=municipio, plano_trabalho=plano_trabalho)
+    mommy.make('Conselheiro', conselho=conselho_cultural, situacao="1")
+    sistema_id = '{}/'.format(municipio.id)
+
+    url = url_sistemadeculturalocal + sistema_id
+
+    request = client.get(url, content_type="application/hal+json")
+
+    situacao = request.data["conselho"]["conselheiros"][0]["situacao"]
+
+    assert situacao == "Habilitado"
+
+
 def test_retorno_maximo_de_100_objetos_sistema_de_cultura(client):
 
     municipio = mommy.make('Municipio',150)
@@ -357,7 +393,7 @@ def test_pesquisa_por_situacao_adesao_1_em_sistema_de_cultura(client):
     request = client.get(url, content_type="application/hal+json")
 
     for municipio in request.data["_embedded"]["items"]:
-        assert municipio["situacao_adesao"]["situacao_adesao"] == 'Aguardando envio da documentação' 
+        assert municipio["situacao_adesao"]["situacao_adesao"] == 'Aguardando envio da documentação'
 
 
 def test_pesquisa_por_situacao_adesao_2_em_sistema_de_cultura(client):
@@ -376,7 +412,7 @@ def test_pesquisa_por_situacao_adesao_2_em_sistema_de_cultura(client):
     request = client.get(url, content_type="application/hal+json")
 
     for municipio in request.data["_embedded"]["items"]:
-        assert municipio["situacao_adesao"]["situacao_adesao"] == 'Documentação Recebida - Aguarda Análise' 
+        assert municipio["situacao_adesao"]["situacao_adesao"] == 'Documentação Recebida - Aguarda Análise'
 
 
 def test_pesquisa_por_situacao_adesao_3_em_sistema_de_cultura(client):
@@ -395,7 +431,7 @@ def test_pesquisa_por_situacao_adesao_3_em_sistema_de_cultura(client):
     request = client.get(url, content_type="application/hal+json")
 
     for municipio in request.data["_embedded"]["items"]:
-        assert municipio["situacao_adesao"]["situacao_adesao"] == 'Diligência Documental' 
+        assert municipio["situacao_adesao"]["situacao_adesao"] == 'Diligência Documental'
 
 
 def test_pesquisa_por_situacao_adesao_4_em_sistema_de_cultura(client):
@@ -414,7 +450,7 @@ def test_pesquisa_por_situacao_adesao_4_em_sistema_de_cultura(client):
     request = client.get(url, content_type="application/hal+json")
 
     for municipio in request.data["_embedded"]["items"]:
-        assert municipio["situacao_adesao"]["situacao_adesao"] == 'Encaminhado para assinatura do Secretário SAI' 
+        assert municipio["situacao_adesao"]["situacao_adesao"] == 'Encaminhado para assinatura do Secretário SAI'
 
 
 def test_pesquisa_por_situacao_adesao_5_em_sistema_de_cultura(client):
@@ -433,7 +469,7 @@ def test_pesquisa_por_situacao_adesao_5_em_sistema_de_cultura(client):
     request = client.get(url, content_type="application/hal+json")
 
     for municipio in request.data["_embedded"]["items"]:
-        assert municipio["situacao_adesao"]["situacao_adesao"] == 'Aguarda Publicação no DOU' 
+        assert municipio["situacao_adesao"]["situacao_adesao"] == 'Aguarda Publicação no DOU'
 
 
 def test_pesquisa_por_situacao_adesao_6_em_sistema_de_cultura(client):
@@ -452,4 +488,4 @@ def test_pesquisa_por_situacao_adesao_6_em_sistema_de_cultura(client):
     request = client.get(url, content_type="application/hal+json")
 
     for municipio in request.data["_embedded"]["items"]:
-        assert municipio["situacao_adesao"]["situacao_adesao"] == 'Publicado no DOU' 
+        assert municipio["situacao_adesao"]["situacao_adesao"] == 'Publicado no DOU'

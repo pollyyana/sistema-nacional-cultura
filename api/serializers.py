@@ -36,9 +36,14 @@ class ConselhoCulturalSerializer(hal_serializers.HalModelSerializer):
 
 # Conselheiro
 class ConselheiroSerializer(hal_serializers.HalModelSerializer):
+    situacao = serializers.SerializerMethodField(source='situacao')
+
     class Meta:
         model = Conselheiro
-        fields = ['nome','segmento','email','situacao', 'data_cadastro', 'data_situacao']
+        fields = ['nome', 'segmento', 'email', 'situacao', 'data_cadastro', 'data_situacao']
+
+    def get_situacao(self, obj):
+        return obj.get_situacao_display()
 
 
 # Fundo cultural
