@@ -169,12 +169,13 @@ class MunicipioSerializer(hal_serializers.HalModelSerializer):
     conselho = serializers.SerializerMethodField()
     _embedded = serializers.SerializerMethodField(method_name='get_embedded')
     situacao_adesao = serializers.SerializerMethodField()
+    data_adesao = serializers.DateField(source='usuario.data_publicacao_acordo')
     self = HalHyperlinkedIdentityField(view_name='api:municipio-detail')
 
     class Meta:
         model = Municipio
         fields = ('id', 'self', '_embedded', 'ente_federado', 'governo',
-                  'conselho', 'situacao_adesao',)
+                  'conselho', 'situacao_adesao', 'data_adesao')
 
     def get_conselho(self, obj):
 

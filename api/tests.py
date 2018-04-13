@@ -1,5 +1,6 @@
 import pytest
 import random
+import datetime
 
 from rest_framework import status
 
@@ -32,7 +33,8 @@ def plano_trabalho():
 @pytest.fixture
 def sistema_de_cultura(plano_trabalho):
     municipio = mommy.make('Municipio')
-    mommy.make('Usuario', municipio=municipio, plano_trabalho=plano_trabalho)
+    mommy.make('Usuario', municipio=municipio, plano_trabalho=plano_trabalho,
+               data_publicacao_acordo=datetime.date.today())
 
     return municipio
 
@@ -83,7 +85,8 @@ def test_entidades_principais_sistema_cultura_local(client, sistema_de_cultura):
     request = client.get(url, content_type="application/hal+json")
 
     entidades = set(["governo", "ente_federado", "conselho",
-                     "_embedded", "situacao_adesao", "_links", "id"])
+                     "_embedded", "situacao_adesao", "data_adesao",
+                     "_links", "id"])
 
     assert entidades.symmetric_difference(request.data) == set()
 
@@ -286,6 +289,20 @@ def test_retorno_situacao_conselheiro(client, sistema_de_cultura):
     situacao = request.data["conselho"]["conselheiros"][0]["situacao"]
 
     assert situacao == "Habilitado"
+
+
+def test_retorno_data_adesao_sistema_de_cultura(client, sistema_de_cultura):
+
+    sistema_id = '{}/'.format(sistema_de_cultura.id)
+    url = url_sistemadeculturalocal + sistema_id
+
+    request = client.get(url, content_type="application/hal+json")
+
+    assert request.data["data_adesao"]
+    assert request.data["data_adesao"] == str(sistema_de_cultura.usuario.data_publicacao_acordo)
+
+
+""" Testes de requisições com parâmetros """
 
 
 def test_retorno_maximo_de_100_objetos_sistema_de_cultura(client):
