@@ -9,10 +9,14 @@ class MunicipioFilter(filters.FilterSet):
     nome_municipio = filters.CharFilter(name='cidade__nome_municipio')
     situacao_adesao = filters.CharFilter(name='usuario__estado_processo',
                                          lookup_expr='istartswith')
+    data_adesao = filters.DateFilter(name='usuario__data_publicacao_acordo')
+    data_adesao_min = filters.DateFilter(name='usuario__data_publicacao_acordo', lookup_expr=('gte'))
+    data_adesao_max = filters.DateFilter(name='usuario__data_publicacao_acordo', lookup_expr=('lte'))
 
     class Meta:
         model = Municipio
-        fields = {'id', 'cnpj_prefeitura'}
+        fields = {'id', 'cnpj_prefeitura', 'data_adesao',
+                  'data_adesao_min', 'data_adesao_max'}
 
 
 class PlanoTrabalhoFilter(filters.FilterSet):

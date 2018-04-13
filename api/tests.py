@@ -479,3 +479,41 @@ def test_pesquisa_por_situacao_adesao_6_em_sistema_de_cultura(client):
 
     for municipio in request.data["_embedded"]["items"]:
         assert municipio["situacao_adesao"]["situacao_adesao"] == 'Publicado no DOU'
+
+
+def test_pesquisa_data_adesao_sistema_de_cultura(client, sistema_de_cultura):
+    mommy.make('Municipio', 50)
+
+    data_param = '?data_adesao={}'.format(sistema_de_cultura.usuario.data_publicacao_acordo)
+    url = url_sistemadeculturalocal + data_param
+
+    request = client.get(url, content_type="application/hal+json")
+
+    assert len(request.data["_embedded"]["items"]) == 1
+    assert request.data["_embedded"]["items"][0]["data_adesao"] == str(sistema_de_cultura.usuario.data_publicacao_acordo)
+
+
+def test_pesquisa_range_data_adesao_sistema_de_cultura(client, sistema_de_cultura):
+    municipios = mommy.make('Municipio', 50)
+    old_date = datetime.date.today() - datetime.timedelta(2)
+    actual_date = sistema_de_cultura.usuario.data_publicacao_acordo
+
+    mommy.make('Usuario', municipio=municipios[0],
+               data_publicacao_acordo=old_date)
+
+    mommy.make('Usuario', municipio=municipios[1],
+               data_publicacao_acordo=actual_date + datetime.timedelta(4))
+
+    mommy.make('Usuario', municipio=municipios[2],
+               data_publicacao_acordo=actual_date + datetime.timedelta(5))
+
+    data_range_param = '?data_adesao_min={}&data_adesao_max={}'.format(old_date, actual_date)
+    url = url_sistemadeculturalocal + data_range_param
+
+    request = client.get(url, content_type="application/hal+json")
+
+    data = request.data["_embedded"]["items"]
+
+    assert len(data) == 2
+    assert data[0]["data_adesao"] == str(old_date)
+    assert data[1]["data_adesao"] == str(actual_date)
