@@ -539,7 +539,7 @@ def test_pesquisa_range_data_adesao_sistema_de_cultura(client, sistema_de_cultur
     assert data[1]["data_adesao"] == str(actual_date)
 
 
-""" Testa requisição do tipo OPTIONS no sistema de cultura local"""
+""" Testa requisição do tipo OPTIONS """
 
 
 def test_200_options_sistema_de_cultura(client):
@@ -558,4 +558,14 @@ def test_choices_ente_federado_sistema_de_cultura(client):
 
     assert request.data['ente_federado']['situacao_adesao']['choices'] == situacoes_list
 
+
+def test_choices_situacao_acoes_plano_trabalho(client, situacoes):
+    request = client.options(url_acoesplanotrabalho)
+
+    situacoes_list = []
+
+    for situacao in situacoes:
+        situacoes_list.append({'id': situacao.id, 'description': situacao.descricao})
+
+    assert request.data['situacao']['choices'] == situacoes_list
 
