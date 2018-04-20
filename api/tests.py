@@ -7,11 +7,13 @@ from model_mommy import mommy
 
 from planotrabalho.models import SituacoesArquivoPlano
 from adesao.models import LISTA_ESTADOS_PROCESSO
+from planotrabalho.forms import SETORIAIS
 
 pytestmark = pytest.mark.django_db
 
 url_sistemadeculturalocal = '/api/v1/sistemadeculturalocal/'
 url_acoesplanotrabalho = '/api/v1/acoesplanotrabalho/'
+
 
 @pytest.fixture
 def situacoes():
@@ -569,3 +571,13 @@ def test_choices_situacao_acoes_plano_trabalho(client, situacoes):
 
     assert request.data['situacao']['choices'] == situacoes_list
 
+
+def test_choices_segmento_conselheiros(client):
+    request = client.options(url_sistemadeculturalocal)
+
+    segments_list = []
+
+    for segmento in SETORIAIS:
+        segments_list.append({'id': segmento[0], 'description': segmento[1]})
+
+    assert request.data['conselho']['segmento']['choices'] == segments_list 
