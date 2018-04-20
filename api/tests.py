@@ -3,13 +3,33 @@ import random
 import datetime
 
 from rest_framework import status
-
 from model_mommy import mommy
+
+from planotrabalho.models import SituacoesArquivoPlano
+from adesao.models import LISTA_ESTADOS_PROCESSO
 
 pytestmark = pytest.mark.django_db
 
 url_sistemadeculturalocal = '/api/v1/sistemadeculturalocal/'
 url_acoesplanotrabalho = '/api/v1/acoesplanotrabalho/'
+
+@pytest.fixture
+def situacoes():
+    """Cria situações dos arquivos do Plano Trabalho enviados no banco de testes"""
+    situacoes = (
+        (0, 'Em preenchimento'),
+        (1, 'Avaliando anexo'),
+        (2, 'Concluída'),
+        (3, 'Arquivo aprovado com ressalvas'),
+        (4, 'Arquivo danificado'),
+        (5, 'Arquivo incompleto'),
+        (6, 'Arquivo incorreto')
+    )
+
+    for situacao in situacoes:
+        SituacoesArquivoPlano.objects.create(id=situacao[0], descricao=situacao[1])
+
+    return SituacoesArquivoPlano.objects.all()
 
 
 @pytest.fixture
@@ -517,3 +537,25 @@ def test_pesquisa_range_data_adesao_sistema_de_cultura(client, sistema_de_cultur
     assert len(data) == 2
     assert data[0]["data_adesao"] == str(old_date)
     assert data[1]["data_adesao"] == str(actual_date)
+
+
+""" Testa requisição do tipo OPTIONS no sistema de cultura local"""
+
+
+def test_200_options_sistema_de_cultura(client):
+    request = client.options(url_sistemadeculturalocal)
+
+    assert request.status_code == 200
+
+
+def test_choices_ente_federado_sistema_de_cultura(client):
+    request = client.options(url_sistemadeculturalocal)
+
+    situacoes_list = []
+
+    for situacao in LISTA_ESTADOS_PROCESSO:
+        situacoes_list.append({'id': situacao[0], 'description': situacao[1]})
+
+    assert request.data['ente_federado']['situacao_adesao']['choices'] == situacoes_list
+
+
