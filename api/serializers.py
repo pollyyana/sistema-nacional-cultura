@@ -15,6 +15,7 @@ from planotrabalho.models import PlanoCultura
 from planotrabalho.models import Conselheiro
 
 
+# Criacao do Sistema
 class CriacaoSistemaSerializer(hal_serializers.HalModelSerializer):
     situacao = serializers.ReadOnlyField(source='situacao_lei_sistema.descricao')
 
@@ -84,7 +85,8 @@ class PlanoTrabalhoSerializer(hal_serializers.HalModelSerializer):
         model = PlanoTrabalho
         fields = ('id', 'self', 'criacao_lei_sistema_cultura',
                   'criacao_orgao_gestor', 'criacao_conselho_cultural',
-                  'criacao_fundo_cultura', 'criacao_plano_cultura', '_embedded')
+                  'criacao_fundo_cultura', 'criacao_plano_cultura', '_embedded'
+                )
 
     def get_sistema_cultura_local(self, obj):
 
@@ -143,6 +145,7 @@ class PlanoTrabalhoSerializer(hal_serializers.HalModelSerializer):
             return None
 
 
+# Cidade
 class CidadeSerializer(serializers.ModelSerializer):
     class Meta:
         model = Cidade
@@ -220,16 +223,11 @@ class MunicipioSerializer(hal_serializers.HalModelSerializer):
 
     def get_ente_federado(self, obj):
         localizacao = Localizacao(estado=obj.estado, cidade=obj.cidade,
-                                  cep=obj.cep, bairro=obj.bairro,
-                                  endereco=obj.endereco,
-                                  complemento=obj.complemento)
-        telefones = Telefones(telefone_um=obj.telefone_um,
-                              telefone_dois=obj.telefone_dois,
-                              telefone_tres=obj.telefone_tres)
-        ente_federado = EnteFederado(cnpj_prefeitura=obj.cnpj_prefeitura,
-                                     localizacao=localizacao,
-                                     endereco_eletronico=obj.endereco_eletronico,
-                                     telefones=telefones)
+                cep=obj.cep, bairro=obj.bairro, endereco=obj.endereco, complemento=obj.complemento)
+        telefones = Telefones(telefone_um=obj.telefone_um, telefone_dois=obj.telefone_dois,
+                telefone_tres=obj.telefone_tres)
+        ente_federado = EnteFederado(cnpj_prefeitura=obj.cnpj_prefeitura,localizacao=localizacao,
+                endereco_eletronico=obj.endereco_eletronico, telefones=telefones)
         serializer = EnteFederadoSerializer(ente_federado)
 
         return serializer.data

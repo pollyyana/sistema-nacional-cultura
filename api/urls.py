@@ -4,6 +4,8 @@ from rest_framework.urlpatterns import format_suffix_patterns
 
 from api import views
 
+app_name = 'api'
+
 urlpatterns = [
     url(r'^$', views.swagger_index, name='swagger-index'),
 

@@ -279,6 +279,8 @@ def test_objeto_criacao_fundo_cultura_acoesplanotrabalho(client, plano_trabalho)
 
 def test_objeto_criacao_conselho_cultural_acoesplanotrabalho(client, plano_trabalho):
 
+    conselho_cultural = mommy.make('ConselhoCultural')
+    plano_trabalho = mommy.make('PlanoTrabalho', conselho_cultural=conselho_cultural)
     plano_trabalho_id = '{}/'.format(plano_trabalho.id)
     url = url_acoesplanotrabalho + plano_trabalho_id
 
