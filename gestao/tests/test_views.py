@@ -2,6 +2,7 @@ import pytest
 import datetime
 
 from django.urls import resolve
+from django.urls import reverse
 from django.core.files.uploadedfile import SimpleUploadedFile
 from django.contrib.auth.models import User
 from django.core import mail
@@ -608,4 +609,3 @@ def test_diligencia_geral_sem_componentes(url, client, plano_trabalho, login_sta
 
     for situacao in request.context['situacoes'].values():
         assert situacao == 'Inexistente'
-
