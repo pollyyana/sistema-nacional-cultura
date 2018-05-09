@@ -585,7 +585,7 @@ class DiligenciaView(CreateView):
                 ' acabou de ser realizada.\n' +
                 'O corpo da mensagem é: ' + self.object.texto_diligencia + '\n' +
                 'As situações dos arquivos enviados de cada componente são: \n' +
-                'Lei de Criação do Sistema de Cultura: ' + situacoes['lei_sistema'] + ';\n' +
+                'Lei de Criação do Sistema de Cultura: ' + situacoes['criacao_sistema'] + ';\n' +
                 'Órgão Gestor: ' + situacoes['orgao_gestor'] + ';\n' +
                 'Conselho de Política Cultural: ' + situacoes['conselho_cultural'] + ';\n' +
                 'Fundo de Cultura: ' + situacoes['fundo_cultura'] + ';\n' +
@@ -647,15 +647,23 @@ class DiligenciaView(CreateView):
 
         return historico_diligencias[:3]
 
+    def get_componente_descricao(self, componente):
+        try:
+            descricao = componente.situacao.descricao
+        except AttributeError:
+            descricao = 'Inexistente'
+
+        return descricao
+
     def get_situacao_componentes(self):
         situacoes = {}
         plano_trabalho = self.get_plano_trabalho()
 
-        situacoes['lei_sistema'] = plano_trabalho.criacao_sistema.situacao.descricao
-        situacoes['orgao_gestor'] = plano_trabalho.orgao_gestor.situacao.descricao
-        situacoes['fundo_cultura'] = plano_trabalho.fundo_cultura.situacao.descricao
-        situacoes['plano_cultura'] = plano_trabalho.plano_cultura.situacao.descricao
-        situacoes['conselho_cultural'] = plano_trabalho.conselho_cultural.situacao.descricao
+        componentes = ["criacao_sistema", "orgao_gestor", "fundo_cultura", "conselho_cultural", "plano_cultura"]
+
+        for componente in componentes:
+            plano_comp = getattr(plano_trabalho, componente)
+            situacoes[componente] = self.get_componente_descricao(plano_comp)
 
         return situacoes
 

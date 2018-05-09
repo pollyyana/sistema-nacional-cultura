@@ -24,45 +24,41 @@
 			<br>
 			<p><b>Ente Federado:</b> {{ ente_federado }}</p>
 
-			{% if plano_trabalho.criacao_sistema %}
-				<p><b>Criação Sistema: </b> {{ situacoes.lei_sistema }}
-					{% if situacoes.lei_sistema != 'Concluída' %}
-						<i class="glyphicon glyphicon-remove"></i>
-					{% else %}
-						<i class="glyphicon glyphicon-ok"></i>
-					{% endif %}
-				</p>
-				<p><b>Fundo Cultura: </b> {{ situacoes.fundo_cultura }}
-					{% if situacoes.fundo_cultura != 'Concluída' %}
-					<i class="glyphicon glyphicon-remove"></i>
-					{% else %}
-					<i class="glyphicon glyphicon-ok"></i>
-					{% endif %}
-				</p>
-				<p><b>Conselho Cultural: </b> {{ situacoes.conselho_cultural }}
-					{% if situacoes.conselho_cultural != 'Concluída' %}
-						<i class="glyphicon glyphicon-remove"></i>
-					{% else %}
-						<i class="glyphicon glyphicon-ok"></i>
-					{% endif %}
-				</p>
-				<p><b>Orgao Gestor: </b> {{ situacoes.orgao_gestor }}
-					{% if situacoes.orgao_gestor != 'Concluída' %}
-						<i class="glyphicon glyphicon-remove"></i>
-					{% else %}
-						<i class="glyphicon glyphicon-ok"></i>
-					{% endif %}
-				</p>
-				<p><b>Plano Cultura: </b> {{ situacoes.plano_cultura }}
-					{% if situacoes.plano_cultura != 'Concluída' %}
-						<i class="glyphicon glyphicon-remove"></i>
-					{% else %}
-						<i class="glyphicon glyphicon-ok"></i>
-					{% endif %}
-				</p>
-			{% else %}
-				<p><b>Observação: </b>Não há arquivos relacionados aos componentes deste Ente Federado.</p>
-			{% endif %}
+            <p><b>Criação Sistema: </b> {{ situacoes.criacao_sistema }}
+                {% if situacoes.criacao_sistema != 'Concluída' %}
+                    <i class="glyphicon glyphicon-remove"></i>
+                {% else %}
+                    <i class="glyphicon glyphicon-ok"></i>
+                {% endif %}
+            </p>
+            <p><b>Fundo Cultura: </b> {{ situacoes.fundo_cultura }}
+                {% if situacoes.fundo_cultura != 'Concluída' %}
+                <i class="glyphicon glyphicon-remove"></i>
+                {% else %}
+                <i class="glyphicon glyphicon-ok"></i>
+                {% endif %}
+            </p>
+            <p><b>Conselho Cultural: </b> {{ situacoes.conselho_cultural }}
+                {% if situacoes.conselho_cultural != 'Concluída' %}
+                    <i class="glyphicon glyphicon-remove"></i>
+                {% else %}
+                    <i class="glyphicon glyphicon-ok"></i>
+                {% endif %}
+            </p>
+            <p><b>Orgao Gestor: </b> {{ situacoes.orgao_gestor }}
+                {% if situacoes.orgao_gestor != 'Concluída' %}
+                    <i class="glyphicon glyphicon-remove"></i>
+                {% else %}
+                    <i class="glyphicon glyphicon-ok"></i>
+                {% endif %}
+            </p>
+            <p><b>Plano Cultura: </b> {{ situacoes.plano_cultura }}
+                {% if situacoes.plano_cultura != 'Concluída' %}
+                    <i class="glyphicon glyphicon-remove"></i>
+                {% else %}
+                    <i class="glyphicon glyphicon-ok"></i>
+                {% endif %}
+            </p>
 
 		{% else %}
 
