@@ -89,7 +89,7 @@ urlpatterns = [
     # UF e Município aninhados
     # url(r'^chain/municipio$', staff_member_required(views.MunicipioChain.as_view()), name='municipio_chain'),
     url(r'^chain/municipio$',
-        staff_member_required(views.MunicipioAutoComplete.as_view()),
+        staff_member_required(views.MunicipioChain.as_view()),
         name='municipio_chain'),
 
     # Inserir de documentos de entes federados
