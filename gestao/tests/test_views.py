@@ -545,11 +545,19 @@ def test_envio_email_diligencia_geral(url, client, plano_trabalho, situacoes, lo
     assert len(mail.outbox) == 1
 
 
-def test_filtra_municipios_form_altera_cadastrador(client):
+def test_filtra_municipios_form_altera_cadastrador(client, login_staff):
     """ Testa se MunicipiosChain está retornando os municipios quando uma UF
     é informada
     """
 
-    url = reverse('gestao:municipio_chain')
+    mg = mommy.make('Uf', sigla='MG')
+    sp = mommy.make('Uf', sigla='SP')
+    mommy.make('Cidade', uf=mg, _quantity=3)
+    mommy.make('Cidade', uf=sp, _quantity=2)
+
+    url = "{url}?q={sigla}".format(
+        url=reverse('gestao:municipio_chain'),
+        sigla='MG')
 
     request = client.get(url)
+    assert len(request.json()['results']) == 3
