@@ -22,7 +22,7 @@ urlpatterns = [
         include('planotrabalho.urls', namespace="planotrabalho")),
 
     url(r'^gestao/', include('gestao.urls', namespace="gestao")),
-    # url(r'^admin/', include(admin.site.urls)),
+    url(r'^admin/', admin.site.urls),
     url(r'^chaining/', include('smart_selects.urls')),
 
     url(r'^password_reset/$',
