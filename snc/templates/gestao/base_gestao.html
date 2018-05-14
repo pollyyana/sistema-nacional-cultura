@@ -9,8 +9,8 @@
 
     <title>Sistema Nacional de Cultura</title>
 
-    {% load staticfiles clever_selects_extras %}
 
+    {% load static %}
     <!-- Bootstrap Core CSS -->
     <link href="{% static 'css/bootstrap.min.css' %}" rel="stylesheet">
     <link href="{% static 'css/jquery-ui.min.css' %}" rel="stylesheet">
@@ -294,8 +294,6 @@
     <script src="{% static 'js/dashboard.js' %}"></script>
     <script src="{% static 'js/jquery-ui.min.js' %}"></script>
     <script src="{% static 'js/datepicker-pt-BR.js' %}"></script>
-
-    {% clever_selects_js_import %}
 
     <script type="text/javascript">
       $(document).ready(function(){
