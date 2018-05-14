@@ -73,7 +73,7 @@ def test_existencia_template_diligencia(engine, client):
     """ Testando existência do template para criação da diligência"""
 
     try:
-        template = engine.get_template(template_name='gestao/diligencia/diligencia.html', dirs=engine.dirs)
+        template = engine.get_template(template_name='gestao/diligencia/diligencia.html')
     except TemplateDoesNotExist:
         template = ''
 
