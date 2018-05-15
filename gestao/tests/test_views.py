@@ -26,25 +26,6 @@ pytestmark = pytest.mark.django_db
 
 
 @pytest.fixture
-def situacoes():
-    """Cria situações dos arquivos do Plano Trabalho enviados no banco de testes"""
-    situacoes = (
-        (0, 'Em preenchimento'),
-        (1, 'Avaliando anexo'),
-        (2, 'Concluída'),
-        (3, 'Arquivo aprovado com ressalvas'),
-        (4, 'Arquivo danificado'),
-        (5, 'Arquivo incompleto'),
-        (6, 'Arquivo incorreto')
-    )
-
-    for situacao in situacoes:
-        SituacoesArquivoPlano.objects.create(id=situacao[0], descricao=situacao[1])
-
-    return SituacoesArquivoPlano.objects.all()
-
-
-@pytest.fixture
 def login(client):
     user = User.objects.create(username='teste')
     user.set_password('123456')
@@ -69,7 +50,7 @@ def login_staff(client):
     return usuario
 
 
-def arquivo_componentes(plano_trabalho, situacoes):
+def arquivo_componentes(plano_trabalho):
     componentes = (
         'fundo_cultura',
         'plano_cultura',
@@ -89,7 +70,7 @@ def arquivo_componentes(plano_trabalho, situacoes):
 
 
 @pytest.fixture
-def plano_trabalho(login, situacoes):
+def plano_trabalho(login):
     fundo_cultura = mommy.make("FundoCultura")
     plano_cultura = mommy.make("PlanoCultura")
     orgao_gestor = mommy.make("OrgaoGestor")
@@ -106,7 +87,7 @@ def plano_trabalho(login, situacoes):
     login.plano_trabalho = plano_trabalho
     login.save()
 
-    plano_trabalho = arquivo_componentes(plano_trabalho, situacoes)
+    plano_trabalho = arquivo_componentes(plano_trabalho)
 
     return plano_trabalho
 
@@ -279,7 +260,7 @@ def test_ente_federado_retornado_na_diligencia(url, client, plano_trabalho, logi
     assert request.context['ente_federado'] == plano_trabalho.usuario.municipio.estado.sigla
 
 
-def test_salvar_informacoes_no_banco(url, client, plano_trabalho, login_staff, situacoes):
+def test_salvar_informacoes_no_banco(url, client, plano_trabalho, login_staff):
     """Testa se as informacoes validadas pelo form estao sendo salvas no banco"""
 
     response = client.post(url.format(id=plano_trabalho.id, componente="orgao_gestor", resultado='0'),
@@ -292,14 +273,14 @@ def test_salvar_informacoes_no_banco(url, client, plano_trabalho, login_staff, s
     assert isinstance(diligencia.componente, OrgaoGestor)
 
 
-def test_redirecionamento_de_pagina_apos_POST(url, client, plano_trabalho, login_staff, situacoes):
+def test_redirecionamento_de_pagina_apos_POST(url, client, plano_trabalho, login_staff):
     """ Testa se há o redirecionamento de página após o POST da diligência """
 
     request = client.post(url.format(id=plano_trabalho.id, componente="orgao_gestor", resultado='0'),
                           data={"classificacao_arquivo": "4", "texto_diligencia": 'Ta errado cara'})
     url_redirect = request.url.split('http://testserver/')
 
-    assert url_redirect[1] == 'gestao/detalhar/municipio/{}'.format(plano_trabalho.usuario.id)
+    assert url_redirect[0] == '/gestao/detalhar/municipio/{}'.format(plano_trabalho.usuario.id)
     assert request.status_code == 302
 
 
@@ -335,7 +316,7 @@ def test_exibicao_historico_diligencia(url, client, plano_trabalho, login_staff)
     assert diferenca_listas == set()
 
 
-def test_captura_nome_usuario_logado_na_diligencia(url, client, plano_trabalho, login_staff, situacoes):
+def test_captura_nome_usuario_logado_na_diligencia(url, client, plano_trabalho, login_staff):
     """
         Testa se o nome do usuario logado é capturado assim que uma diligencia for feita
     """
@@ -347,7 +328,7 @@ def test_captura_nome_usuario_logado_na_diligencia(url, client, plano_trabalho, 
     assert diligencia.usuario == login_staff
 
 
-def test_muda_situacao_arquivo_componente(url, client, situacoes, plano_trabalho, login_staff):
+def test_muda_situacao_arquivo_componente(url, client, plano_trabalho, login_staff):
     """ Testa se ao realizar o post da diligência a situação do arquivo do componente é alterada """
 
     request = client.post(url.format(id=plano_trabalho.id, componente="orgao_gestor", resultado='0'), data={"classificacao_arquivo": 4, "texto_diligencia": "Não vai rolar"})
@@ -411,7 +392,7 @@ def test_retorno_200_para_detalhar_municipio(client, plano_trabalho, login_staff
     assert request.status_code == 200
 
 
-def test_retorno_do_form_da_diligencia(url, client, plano_trabalho, situacoes, login_staff):
+def test_retorno_do_form_da_diligencia(url, client, plano_trabalho, login_staff):
     """ Testa se form retornado no contexto tem as opções corretas dependendo do tipo de resultado"""
 
     request_aprova = client.get(url.format(id=plano_trabalho.id, componente='orgao_gestor', resultado=1))
@@ -529,7 +510,7 @@ def test_retorna_200_para_diligencia_geral(client, url, plano_trabalho, login_st
     assert request.status_code == 200
 
 
-def test_salvar_informacoes_no_banco_diligencia_geral(url, client, plano_trabalho, login_staff, situacoes):
+def test_salvar_informacoes_no_banco_diligencia_geral(url, client, plano_trabalho, login_staff):
     """Testa se as informacoes validadas pelo form estao sendo salvas no banco"""
 
     response = client.post(url.format(id=plano_trabalho.id, componente="plano_trabalho", resultado='1'),
@@ -551,7 +532,7 @@ def test_redirecionamento_de_pagina_apos_POST_diligencia_geral(url, client, plan
     assert request.status_code == 302
 
 
-def test_situacoes_componentes_diligencia(url, client, plano_trabalho, login_staff, situacoes):
+def test_situacoes_componentes_diligencia(url, client, plano_trabalho, login_staff):
     """ Testa as informações referentes aos componentes do
     plano de trabalho na diligência geral """
 
@@ -583,7 +564,7 @@ def test_tipo_diligencia_componente(url, client, plano_trabalho, login_staff):
     assert Diligencia.objects.first().tipo_diligencia == 'componente'
 
 
-def test_envio_email_diligencia_geral(url, client, plano_trabalho, situacoes, login_staff):
+def test_envio_email_diligencia_geral(url, client, plano_trabalho, login_staff):
     """ Testa envio do email para diligência geral """
 
     request = client.post(url.format(id=plano_trabalho.id, componente="plano_trabalho", resultado='1'),
