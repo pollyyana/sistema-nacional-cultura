@@ -64,7 +64,7 @@ def template(engine):
     """ Injeta o template 'gestao/diligencia/diligencia.html' como um objeto Template
         pronto para ser usado."""
 
-    template = engine.get_template(template_name='gestao/diligencia/diligencia.html', dirs=engine.dirs)
+    template = engine.get_template(template_name='gestao/diligencia/diligencia.html')
 
     return template
 
@@ -150,7 +150,8 @@ def test_opcoes_em_um_dropdown(template, client, plano_trabalho, context):
     context['plano_trabalho'] = plano_trabalho
     rendered_template = template.render(context)
 
-    assert "<select id=\"id_classificacao_arquivo\" name=\"classificacao_arquivo\">" in rendered_template
+    # __import__('ipdb').set_trace()
+    assert "<select name=\"classificacao_arquivo\" id=\"id_classificacao_arquivo\">" in rendered_template
     for opcao in opcoes:
         assert "<option value=\"{value}\">{description}</option>".format(value=opcao['value'], description=opcao['description'])
     assert "</select>" in rendered_template
