@@ -423,10 +423,10 @@ def test_criacao_diligencia_exclusiva_para_gestor(client, url, plano_trabalho, l
     request = client.get(url_diligencia)
 
     url_redirect = request.url.split('http://testserver/')
-    url_login = "admin/login/?next={}".format(url_diligencia)
+    url_login = "/admin/login/?next={}".format(url_diligencia)
 
     assert request.status_code == 302
-    assert url_redirect[1] == url_login
+    assert url_redirect[0] == url_login
 
 
 def test_inserir_documentos_orgao_gestor(client, plano_trabalho, login_staff):
@@ -528,7 +528,7 @@ def test_redirecionamento_de_pagina_apos_POST_diligencia_geral(url, client, plan
                           data={"classificacao_arquivo": "4", "texto_diligencia": 'Ta errado cara'})
     url_redirect = request.url.split('http://testserver/')
 
-    assert url_redirect[1] == 'gestao/detalhar/municipio/{}'.format(plano_trabalho.usuario.id)
+    assert url_redirect[0] == '/gestao/detalhar/municipio/{}'.format(plano_trabalho.usuario.id)
     assert request.status_code == 302
 
 
