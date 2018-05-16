@@ -1,6 +1,5 @@
 from threading import Thread
 
-from django.conf import settings
 from django.contrib.contenttypes.models import ContentType
 from django.core.mail import send_mail
 
@@ -25,6 +24,8 @@ from django.views.generic.edit import UpdateView
 
 from django.urls import reverse_lazy
 
+from dal import autocomplete
+
 from adesao.models import Usuario
 from adesao.models import Cidade
 from adesao.models import Municipio
@@ -39,8 +40,18 @@ from planotrabalho.models import ConselhoCultural
 from planotrabalho.models import SituacoesArquivoPlano
 
 from gestao.utils import enviar_email_aprovacao_plano
-from adesao.models import Usuario, Cidade, Municipio, Historico
-from planotrabalho.models import PlanoTrabalho, CriacaoSistema, PlanoCultura, FundoCultura, OrgaoGestor, ConselhoCultural, SituacoesArquivoPlano
+
+from adesao.models import Usuario
+from adesao.models import Cidade
+from adesao.models import Municipio
+from adesao.models import Historico
+
+from planotrabalho.models import CriacaoSistema
+from planotrabalho.models import PlanoCultura
+from planotrabalho.models import FundoCultura
+from planotrabalho.models import OrgaoGestor
+from planotrabalho.models import ConselhoCultural
+from planotrabalho.models import SituacoesArquivoPlano
 
 from .forms import AlterarSituacao, DiligenciaForm, AlterarDocumentosEnteFederadoForm, InserirSEI
 from .forms import AlterarCadastradorForm, AlterarUsuarioForm, AlterarOrgaoForm
@@ -55,10 +66,8 @@ from .forms import AlterarPlanoForm
 from .forms import AlterarConselhoForm
 from .forms import AlterarSistemaForm
 
-from dal import autocomplete
+
 # Acompanhamento das adesões
-
-
 class AlterarCadastrador(FormView):
     """AlterarCadastrador
     Altera o cadastrador de um Municipio aderido
@@ -88,8 +97,8 @@ class AlterarCadastradorEstado(FormView):
 class MunicipioChain(autocomplete.Select2QuerySetView):
     def get_queryset(self):
         choices = Cidade.objects\
-            .value_list('pk', 'nome_municipio')\
-            .filter(uf=self.parent_value)
+            .filter(uf__sigla=self.q)\
+            .values_list('pk', 'nome_municipio', named=True)
         return choices
 
 
