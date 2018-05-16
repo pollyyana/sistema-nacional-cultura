@@ -28,7 +28,7 @@ def test_campo_classificao_arquivo_no_form_diligencia(client):
     """ Testa a existência do campo referente a seleção para a classificação do arquivo """
 
     form = DiligenciaForm(resultado='0', componente='1')
-    assert "<select id=\"id_classificacao_arquivo\" name=\"classificacao_arquivo\"" in form.as_p()
+    assert "<select name=\"classificacao_arquivo\" id=\"id_classificacao_arquivo\"" in form.as_p()
 
 
 def test_uso_ck_widget_no_texto_diligencia(client):

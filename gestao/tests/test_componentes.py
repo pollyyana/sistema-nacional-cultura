@@ -119,7 +119,7 @@ def test_informacoes_arquivo_enviado(template, client, context):
     assert context['ente_federado'] in rendered_template
 
 
-def test_opcoes_de_classificacao_da_diligencia(template, client, plano_trabalho, situacoes, context):
+def test_opcoes_de_classificacao_da_diligencia(template, client, plano_trabalho, context):
     """Testa se a Classificação(Motivo) apresenta as opções conforme a especificação."""
 
     opcoes = ("Arquivo danificado",
