@@ -605,13 +605,17 @@ def test_choices_ente_federado_sistema_de_cultura(client):
     assert request.data['ente_federado']['situacao_adesao']['choices'] == situacoes_list
 
 
-def test_choices_situacao_acoes_plano_trabalho(client, situacoes):
+def test_choices_situacao_acoes_plano_trabalho(client):
     request = client.options(url_acoesplanotrabalho)
 
     situacoes_list = []
 
+    situacoes = SituacoesArquivoPlano.objects.all()
+
     for situacao in situacoes:
-        situacoes_list.append({'id': situacao.id, 'description': situacao.descricao})
+        situacoes_list.append(
+            {'id': situacao.id, 'description': situacao.descricao}
+            )
 
     assert request.data['situacao']['choices'] == situacoes_list
 
