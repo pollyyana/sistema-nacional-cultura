@@ -17,25 +17,6 @@ url_acoesplanotrabalho = '/api/v1/acoesplanotrabalho/'
 
 
 @pytest.fixture
-def situacoes():
-    """Cria situações dos arquivos do Plano Trabalho enviados no banco de testes"""
-    situacoes = (
-        (0, 'Em preenchimento'),
-        (1, 'Avaliando anexo'),
-        (2, 'Concluída'),
-        (3, 'Arquivo aprovado com ressalvas'),
-        (4, 'Arquivo danificado'),
-        (5, 'Arquivo incompleto'),
-        (6, 'Arquivo incorreto')
-    )
-
-    for situacao in situacoes:
-        SituacoesArquivoPlano.objects.create(id=situacao[0], descricao=situacao[1])
-
-    return SituacoesArquivoPlano.objects.all()
-
-
-@pytest.fixture
 def plano_trabalho():
     conselho_cultural = mommy.make('ConselhoCultural')
     fundo_cultura = mommy.make('FundoCultura')
