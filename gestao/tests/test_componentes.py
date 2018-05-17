@@ -6,7 +6,6 @@ from django.template import Template
 from django.template import TemplateDoesNotExist
 from django.urls import reverse
 
-from planotrabalho.models import SituacoesArquivoPlano
 from gestao.forms import DiligenciaForm
 
 from test_views import login
@@ -14,25 +13,6 @@ from test_views import login_staff
 from test_views import plano_trabalho
 
 pytestmark = pytest.mark.django_db
-
-
-@pytest.fixture
-def situacoes():
-    """Cria situações dos arquivos do Plano Trabalho enviados no banco de testes"""
-    situacoes = (
-        (0, 'Em preenchimento'),
-        (1, 'Avaliando anexo'),
-        (2, 'Concluída'),
-        (3, 'Arquivo aprovado com ressalvas'),
-        (4, 'Arquivo danificado'),
-        (5, 'Arquivo incompleto'),
-        (6, 'Arquivo incorreto')
-    )
-
-    for situacao in situacoes:
-        SituacoesArquivoPlano.objects.create(id=situacao[0], descricao=situacao[1])
-
-    return SituacoesArquivoPlano.objects.all()
 
 
 @pytest.fixture
