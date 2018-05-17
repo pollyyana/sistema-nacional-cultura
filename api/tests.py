@@ -18,11 +18,13 @@ url_acoesplanotrabalho = '/api/v1/acoesplanotrabalho/'
 
 @pytest.fixture
 def plano_trabalho():
-    conselho_cultural = mommy.make('ConselhoCultural')
-    fundo_cultura = mommy.make('FundoCultura')
-    plano_cultura = mommy.make('PlanoCultura')
-    lei_sistema = mommy.make('CriacaoSistema')
-    orgao_gestor = mommy.make('OrgaoGestor')
+
+    situacao = SituacoesArquivoPlano.objects.first()
+    conselho_cultural = mommy.make('ConselhoCultural', situacao_ata=situacao)
+    fundo_cultura = mommy.make('FundoCultura', situacao_lei_plano=situacao)
+    plano_cultura = mommy.make('PlanoCultura', situacao_lei_plano=situacao)
+    lei_sistema = mommy.make('CriacaoSistema', situacao_lei_sistema=situacao)
+    orgao_gestor = mommy.make('OrgaoGestor', situacao_relatorio_secretaria=situacao)
     mommy.make('Conselheiro', conselho=conselho_cultural)
     plano_trabalho = mommy.make('PlanoTrabalho',
                                 conselho_cultural=conselho_cultural,
@@ -260,7 +262,8 @@ def test_objeto_criacao_fundo_cultura_acoesplanotrabalho(client, plano_trabalho)
 
 def test_objeto_criacao_conselho_cultural_acoesplanotrabalho(client, plano_trabalho):
 
-    conselho_cultural = mommy.make('ConselhoCultural')
+    situacao = SituacoesArquivoPlano.objects.first()
+    conselho_cultural = mommy.make('ConselhoCultural', situacao_ata=situacao)
     plano_trabalho = mommy.make('PlanoTrabalho', conselho_cultural=conselho_cultural)
     plano_trabalho_id = '{}/'.format(plano_trabalho.id)
     url = url_acoesplanotrabalho + plano_trabalho_id
