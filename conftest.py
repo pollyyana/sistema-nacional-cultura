@@ -1,7 +1,7 @@
 import pytest
 
 
-@pytest.fixture(scope='session')
+@pytest.fixture(autouse=True, scope='session')
 def situacoes(django_db_setup, django_db_blocker):
     """
     Cria situações dos arquivos do Plano Trabalho enviados no banco de testes
