@@ -24,6 +24,9 @@ def situacoes(django_db_setup, django_db_blocker):
         for situacao in situacoes:
             SituacoesArquivoPlano.objects.create(id=situacao[0], descricao=situacao[1])
 
-        return SituacoesArquivoPlano.objects.all()
+        yield
+
+        SituacoesArquivoPlano.objects.all().delete()
+
 
 
