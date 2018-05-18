@@ -6,11 +6,8 @@ from django.template import Template
 from django.template import TemplateDoesNotExist
 from django.urls import reverse
 
+from planotrabalho.models import PlanoTrabalho
 from gestao.forms import DiligenciaForm
-
-from test_views import login
-from test_views import login_staff
-from test_views import plano_trabalho
 
 pytestmark = pytest.mark.django_db
 
@@ -20,6 +17,7 @@ def usuario(plano_trabalho):
     """ Retorna um usuario associado a um
     plano de trabalho e um ente_federado """
 
+    plano_trabalho = PlanoTrabalho.objects.first()
     return plano_trabalho.usuario
 
 @pytest.fixture
@@ -107,6 +105,7 @@ def test_opcoes_de_classificacao_da_diligencia(template, client, plano_trabalho,
               "Arquivo incorreto"
               )
 
+    plano_trabalho = PlanoTrabalho.objects.first()
     form = DiligenciaForm(resultado='0', componente='orgao_gestor')
     context['form'] = form
     context['plano_trabalho'] = plano_trabalho
@@ -125,6 +124,7 @@ def test_opcoes_em_um_dropdown(template, client, plano_trabalho, context):
             {"description": "Arquivo Incorreto", "value": "6"}
     ]
 
+    plano_trabalho = PlanoTrabalho.objects.first()
     form = DiligenciaForm(resultado='0', componente='orgao_gestor')
     context['form'] = form
     context['plano_trabalho'] = plano_trabalho
@@ -206,6 +206,8 @@ def test_opcao_avaliacao_negativa_documentos_plano_de_trabalho(client, plano_tra
         'conselho_cultural',
     )
 
+    plano_trabalho = PlanoTrabalho.objects.first()
+
     usuario = plano_trabalho.usuario
     usuario.estado_processo = '6'
     usuario.save()
@@ -226,6 +228,7 @@ def test_opcao_avaliacao_positiva_documentos_plano_de_trabalho(client, plano_tra
         'conselho_cultural',
     )
 
+    plano_trabalho = PlanoTrabalho.objects.first()
     usuario = plano_trabalho.usuario
     usuario.estado_processo = '6'
     usuario.save()
@@ -237,16 +240,27 @@ def test_opcao_avaliacao_positiva_documentos_plano_de_trabalho(client, plano_tra
 
 
 def test_informacoes_diligencia_componente(plano_trabalho, client, login_staff):
-    """ Testa se a linha de download do arquivo é renderizada, visto que só deve ser renderizada quando a diligência é por componente """
+    """
+    Testa se a linha de download do arquivo é renderizada, visto que
+    só deve ser renderizada quando a diligência é por componente
+    """
 
-    request = client.get('/gestao/{}/diligencia/{}/{}'.format(plano_trabalho.id, "orgao_gestor", "1"))
+    plano_trabalho = PlanoTrabalho.objects.first()
+    request = client.get('/gestao/{}/diligencia/{}/{}'.format(
+        plano_trabalho.id, "orgao_gestor", "1"))
 
     assert "<h2>Informações sobre o Arquivo Enviado</h2>" in request.rendered_content
     assert "<b>Download do arquivo</b>" in request.rendered_content
 
 
 def test_informacoes_diligencia_geral(plano_trabalho, client, login_staff):
-    """ Testa se linha de informações sobre o Plano Trabalho é renderizada, visto que só deve ser renderizada quando a diligência é geral. """
-    request = client.get('/gestao/{}/diligencia/{}/{}'.format(plano_trabalho.id, "plano_trabalho", "1"))
+    """
+    Testa se linha de informações sobre o Plano Trabalho é renderizada,
+    visto que só deve ser renderizada quando a diligência é geral.
+    """
+
+    plano_trabalho = PlanoTrabalho.objects.first()
+    request = client.get('/gestao/{}/diligencia/{}/{}'.format(
+        plano_trabalho.id, "plano_trabalho", "1"))
 
     assert "<h2>Informações sobre o Plano Trabalho</h2>" in request.rendered_content
