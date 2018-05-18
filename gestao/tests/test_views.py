@@ -508,7 +508,7 @@ def test_situacoes_componentes_diligencia(url, client, plano_trabalho, login_sta
     response = client.get(url.format(id=plano_trabalho.id, componente="plano_trabalho", resultado="1"))
     situacoes = response.context['situacoes']
 
-    assert situacoes['lei_sistema'] == plano_trabalho.criacao_sistema.situacao.descricao
+    assert situacoes['criacao_sistema'] == plano_trabalho.criacao_sistema.situacao.descricao
     assert situacoes['orgao_gestor'] == plano_trabalho.orgao_gestor.situacao.descricao
     assert situacoes['fundo_cultura'] == plano_trabalho.fundo_cultura.situacao.descricao
     assert situacoes['conselho_cultural'] == plano_trabalho.conselho_cultural.situacao.descricao
@@ -542,4 +542,21 @@ def test_envio_email_diligencia_geral(url, client, plano_trabalho, situacoes, lo
     redirect_url = client.get(request.url)
 
     assert len(mail.outbox) == 1
+
+
+def test_diligencia_geral_sem_componentes(url, client, plano_trabalho, login_staff):
+    """ Testa se ao fazer a diligência geral de um ente federado
+    sem componentes retorne componente inexistente"""
+
+    plano_trabalho.criacao_sistema = None
+    plano_trabalho.orgao_gestor = None
+    plano_trabalho.plano_cultura = None
+    plano_trabalho.fundo_cultura = None
+    plano_trabalho.conselho_cultural = None
+    plano_trabalho.save()
+
+    request = client.get(url.format(id=plano_trabalho.id, componente="plano_trabalho", resultado="1"))
+
+    for situacao in request.context['situacoes'].values():
+        assert situacao == 'Inexistente'
 
