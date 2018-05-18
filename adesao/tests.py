@@ -11,7 +11,8 @@ from .models import Municipio
 
 pytestmark = pytest.mark.django_db
 
-def testa_envio_email_em_nova_adesao(client):
+
+def test_envio_email_em_nova_adesao(client):
     user = User.objects.create(username='teste')
     user.set_password('123456')
     user.save()
@@ -56,7 +57,7 @@ def testa_envio_email_em_nova_adesao(client):
             'Equipe SNC\nMinistério da Cultura')
 
 
-def testa_envio_email_em_esqueceu_senha(client):
+def test_envio_email_em_esqueceu_senha(client):
     site = mommy.make('Site', name="SNC", domain="snc.cultura.gov.br")
 
     user = User.objects.create(username='teste',email='test@email.com')
@@ -69,7 +70,7 @@ def testa_envio_email_em_esqueceu_senha(client):
     assert len(mail.outbox) == 1
 
 
-def testa_template_em_esqueceu_senha(client):
+def test_template_em_esqueceu_senha(client):
 
     response = client.get('/password_reset/')
 
