@@ -14,6 +14,7 @@ from gestao.forms import DiligenciaForm
 from gestao.models import Diligencia
 from adesao.models import Municipio
 from adesao.models import Usuario
+
 from planotrabalho.models import OrgaoGestor
 from planotrabalho.models import CriacaoSistema
 from planotrabalho.models import FundoCultura
@@ -26,77 +27,16 @@ pytestmark = pytest.mark.django_db
 
 
 @pytest.fixture
-def login(client):
-    user = User.objects.create(username='teste')
-    user.set_password('123456')
-    user.save()
-    usuario = mommy.make('Usuario', user=user)
-
-    login = client.login(username=user.username, password='123456')
-
-    return usuario
-
-
-@pytest.fixture
-def login_staff(client):
-    user = User.objects.create(username='staff', is_staff=True)
-    user.set_password('123456')
-
-    user.save()
-    usuario = mommy.make('Usuario', user=user)
-
-    login = client.login(username=user.username, password='123456')
-
-    return usuario
-
-
-def arquivo_componentes(plano_trabalho):
-    componentes = (
-        'fundo_cultura',
-        'plano_cultura',
-        'criacao_sistema',
-        'orgao_gestor',
-        'conselho_cultural'
-        )
-
-    arquivo = SimpleUploadedFile("lei.txt", b"file_content", content_type="text/plain")
-    for componente in componentes:
-        comp = getattr(plano_trabalho, componente)
-        comp.arquivo = arquivo
-        comp.situacao = SituacoesArquivoPlano.objects.get(pk=1)
-        comp.save()
-
-    return plano_trabalho
-
-
-@pytest.fixture
-def plano_trabalho(login):
-    fundo_cultura = mommy.make("FundoCultura")
-    plano_cultura = mommy.make("PlanoCultura")
-    orgao_gestor = mommy.make("OrgaoGestor")
-    conselho_cultural = mommy.make("ConselhoCultural")
-    lei_sistema = mommy.make("CriacaoSistema")
-
-    ente_federado = mommy.make('Municipio')
-
-    plano_trabalho = mommy.make("PlanoTrabalho", fundo_cultura=fundo_cultura,
-                                plano_cultura=plano_cultura, orgao_gestor=orgao_gestor,
-                                conselho_cultural=conselho_cultural, criacao_sistema=lei_sistema)
-
-    login.municipio = ente_federado
-    login.plano_trabalho = plano_trabalho
-    login.save()
-
-    plano_trabalho = arquivo_componentes(plano_trabalho)
-
-    return plano_trabalho
-
-
-@pytest.fixture
 def url():
     """Retorna uma string contendo a URL preparada para ser formatada."""
 
     return "/gestao/{id}/diligencia/{componente}/{resultado}"
+
+
+@pytest.fixture
+def plano_trabalho(plano_trabalho):
+
+    return PlanoTrabalho.objects.first()
 
 
 def test_url_diligencia_retorna_200(url, client, plano_trabalho, login_staff):
@@ -299,6 +239,7 @@ def test_arquivo_enviado_salvo_no_diretorio_do_componente(url, client, plano_tra
     diretório especifico dentro da pasta do ente federado."""
 
     arquivo = plano_trabalho.fundo_cultura.arquivo
+    login = Usuario.objects.first()
 
     assert arquivo.url == '/media/{id}/docs/{componente}/{arquivo}'.format(id=login.municipio.id,
                                                                           componente=plano_trabalho.fundo_cultura._meta.object_name.lower(),
