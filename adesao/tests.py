@@ -20,11 +20,11 @@ def test_index_page(client):
     assert response.status_code == 200
 
 
-# def test_home_page(client, login):
-#     url = reverse('adesao:home')
-#     response = client.get(url)
+def test_home_page(client, login):
+    url = reverse('adesao:home')
+    response = client.get(url)
 
-#     assert response.status_code == 200
+    assert response.status_code == 200
 
 
 def test_envio_email_em_nova_adesao(client):
