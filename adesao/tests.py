@@ -4,6 +4,7 @@ from django.contrib.auth.models import User
 from django.core.files.uploadedfile import SimpleUploadedFile
 from django.core import mail
 from django.conf import settings
+from django.shortcuts import reverse
 
 from model_mommy import mommy
 
@@ -12,16 +13,30 @@ from .models import Municipio
 pytestmark = pytest.mark.django_db
 
 
+def test_index_page(client):
+    url = reverse('adesao:index')
+    response = client.get(url)
+
+    assert response.status_code == 200
+
+
+# def test_home_page(client, login):
+#     url = reverse('adesao:home')
+#     response = client.get(url)
+
+#     assert response.status_code == 200
+
+
 def test_envio_email_em_nova_adesao(client):
     user = User.objects.create(username='teste')
     user.set_password('123456')
     user.save()
-    usuario = mommy.make('Usuario',user=user)
+    usuario = mommy.make('Usuario', user=user)
 
     estado = mommy.make('Uf')
     cidade = mommy.make('Cidade')
 
-    login = client.login(username=user.username,password='123456')
+    client.login(username=user.username, password='123456')
 
     response = client.post('/adesao/municipio/cadastrar/0/', {'estado':estado.codigo_ibge,'cidade':cidade.id,
         'cnpj_prefeitura':'95.876.554/0001-63', 'cpf_prefeito':'381.390.630-29','uf': estado,
@@ -35,7 +50,7 @@ def test_envio_email_em_nova_adesao(client):
         })
 
     # Acessa a url de sucesso após o cadastro para fazer o envio do email
-    success_url = client.get(response.url)
+    client.get(response.url)
 
     municipio = Municipio.objects.last()
 
@@ -58,14 +73,14 @@ def test_envio_email_em_nova_adesao(client):
 
 
 def test_envio_email_em_esqueceu_senha(client):
-    site = mommy.make('Site', name="SNC", domain="snc.cultura.gov.br")
+    mommy.make('Site', name="SNC", domain="snc.cultura.gov.br")
 
     user = User.objects.create(username='teste',email='test@email.com')
     user.set_password('123456')
     user.save()
-    usuario = mommy.make('Usuario',user=user)
+    usuario = mommy.make('Usuario', user=user)
 
-    response = client.post('/password_reset/',{'email': usuario.user.email})
+    client.post('/password_reset/', {'email': usuario.user.email})
 
     assert len(mail.outbox) == 1
 
@@ -77,4 +92,4 @@ def test_template_em_esqueceu_senha(client):
     assert response.template_name[0] == 'registration/password_reset_form.html'
 
     # Pelo fato de o template padrão do django ter esse mesmo nome fizemos uma validação a mais
-    assert "Sistema Nacional de Cultura"  in response.rendered_content
+    assert "Sistema Nacional de Cultura" in response.rendered_content
