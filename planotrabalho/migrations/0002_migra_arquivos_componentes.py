@@ -67,7 +67,7 @@ def migra_arquivo_plano_cultura(apps, schema_editor):
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('planotrabalho', '0002_auto_20180321_1002'),
+        ('planotrabalho', '0001_initial'),
     ]
 
     operations = [
