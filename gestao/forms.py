@@ -3,16 +3,21 @@ from django.forms import ModelForm
 from django.contrib.auth.models import User
 from django.template.defaultfilters import filesizeformat
 
-
-from adesao.models import Usuario, Historico, Uf, Municipio
-from planotrabalho.models import PlanoTrabalho, CriacaoSistema, FundoCultura
-from planotrabalho.models import PlanoCultura, OrgaoGestor, ConselhoCultural
-from planotrabalho.models import SituacoesArquivoPlano
-from gestao.models import Diligencia
-
 from dal import autocomplete
 
 from ckeditor.widgets import CKEditorWidget
+
+from adesao.models import Usuario
+from adesao.models import Historico
+from adesao.models import Cidade
+from adesao.models import Uf
+from adesao.models import Municipio
+
+from planotrabalho.models import PlanoTrabalho, CriacaoSistema, FundoCultura
+from planotrabalho.models import PlanoCultura, OrgaoGestor, ConselhoCultural
+from planotrabalho.models import SituacoesArquivoPlano
+
+from gestao.models import Diligencia
 
 from .utils import enviar_email_alteracao_situacao
 
@@ -196,15 +201,25 @@ class DiligenciaForm(ModelForm):
         fields = ('texto_diligencia', 'classificacao_arquivo')
 
 
-# class AlterarCadastradorForm(ChainedChoicesForm):
-#     cpf_usuario = forms.CharField(max_length=11)
-#     uf = forms.ModelChoiceField(queryset=Uf.objects.all())
-#     municipio = ChainedChoiceField(
+class AlterarCadastradorForm(forms.Form):
+    cpf_usuario = forms.CharField(max_length=11)
+    uf = forms.ModelChoiceField(queryset=Uf.objects.all())
+    # municipio = forms.ModelChoiceField(queryset=Cidade.objects.all())
+    municipio = forms.ModelChoiceField(
+        queryset=Cidade.objects.all(),
+        widget=autocomplete.ModelSelect2(url='gestao:municipio_chain',
+                                         forward=['uf']
+                                        )
+        )
+    data_publicacao_acordo = forms.DateField(required=False)
+
+    class Meta:
+        fields = ('cpf_usuario', 'uf', 'municipio', 'data_publicacao_acordo')
+    # municipio = ChainedChoiceField(
 #         parent_field='uf',
 #         ajax_url='/gestao/chain/municipio',
 #         empty_label='-- Município --',
 #         required=False)
-#     data_publicacao_acordo = forms.DateField(required=False)
 
 #     def clean_cpf_usuario(self):
 #         cpf_usuario = self.cleaned_data['cpf_usuario']

@@ -57,7 +57,7 @@ from .forms import AlterarSituacao, DiligenciaForm, AlterarDocumentosEnteFederad
 from .forms import AlterarCadastradorForm, AlterarUsuarioForm, AlterarOrgaoForm
 from .forms import AlterarFundoForm, AlterarPlanoForm, AlterarConselhoForm, AlterarSistemaForm
 
-# from .forms import AlterarCadastradorForm
+from .forms import AlterarCadastradorForm
 from .forms import AlterarUsuarioForm
 from .forms import AlterarOrgaoForm
 
@@ -73,7 +73,7 @@ class AlterarCadastrador(FormView):
     Altera o cadastrador de um Municipio aderido
     """
     template_name = 'gestao/alterar_cadastrador.html'
-    # form_class = AlterarCadastradorForm
+    form_class = AlterarCadastradorForm
     success_url = reverse_lazy('gestao:acompanhar_adesao')
 
     def form_valid(self, form):
