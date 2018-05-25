@@ -69,3 +69,54 @@ def test_fields_form_diligencia(client):
     fields = ('texto_diligencia', 'classificacao_arquivo')
 
     assert set(form.Meta.fields).issuperset(set(fields))
+
+
+@pytest.mark.xfail(strict=True)
+def test_form_altera_cadastrador(client):
+    """
+    Testa a existencia de um formulário para alterar o cadastrador de uma
+    adesão.
+    """
+
+    with pytest.raises(ImportError) as exception:
+        from gestao.forms import AlterarCadastradorForm
+
+
+def test_campos_form_altera_cadastrador(client):
+    """
+    Testa a presença dos campos "CPF", "uf", e "Municipio" no formulário para
+    alterar o cadastrador de uma adesão.
+    """
+
+    from gestao.forms import AlterarCadastradorForm
+
+    form = AlterarCadastradorForm()
+    fields = ("cpf_usuario", "uf", "municipio", "data_publicacao_acordo")
+
+    assert set(form.Meta.fields) == set(fields)
+
+
+# def test_campos_form_retona_todas_uf(client):
+#     """
+#     Testa se o campo UF retorna todas as UF do país.
+#     """
+
+#     from gestao.forms import AlterarCadastradorForm
+
+#     form = AlterarCadastradorForm()
+
+#     __import__('ipdb').set_trace()
+
+def test_aaaaa(rf):
+
+    from gestao.views import AlterarCadastrador
+    from model_mommy import mommy
+
+    from django.urls import reverse
+
+
+    mg = mommy.make('Uf', sigla_uf='MG')
+
+    url = reverse('gestao:municipio_chain')
+    request = rf.get(url)
+    __import__('ipdb').set_trace()
