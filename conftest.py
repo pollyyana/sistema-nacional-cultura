@@ -42,7 +42,7 @@ def login(client):
     """
 
     User = get_user_model()
-    user = User.objects.create(username='teste')
+    user = User.objects.create(username='teste', email='user@mail.com')
     user.set_password('123456')
     user.save()
     usuario = mommy.make('Usuario', user=user)
@@ -63,7 +63,8 @@ def login_staff(client):
     """
 
     User = get_user_model()
-    user = User.objects.create(username='staff', is_staff=True)
+    user = User.objects.create(username='staff', is_staff=True,
+                               email='staff@mail.com')
     user.set_password('123456')
 
     user.save()

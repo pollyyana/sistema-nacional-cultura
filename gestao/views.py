@@ -633,28 +633,27 @@ class DiligenciaView(CreateView):
         'plano_trabalho': 'planotrabalho',
     }
 
-    def get_success_url(self):
+    def send_email_diligencia(self):
         usuario = self.get_plano_trabalho().usuario
         situacoes = self.get_situacao_componentes()
-        if(isinstance(self.get_componente(), PlanoTrabalho)):
-            Thread(target=send_mail, args=(
-                'MINISTÉRIO DA CULTURA - SNC - DILIGÊNCIA PLANO DE TRABALHO',
-                'Prezado Cadastrador,\n' +
-                'Uma diligência referente ao Plano de Trabalho do ente federado ' + self.get_ente_ferado_name() +
-                ' acabou de ser realizada.\n' +
-                'O corpo da mensagem é: ' + self.object.texto_diligencia + '\n' +
-                'As situações dos arquivos enviados de cada componente são: \n' +
-                'Lei de Criação do Sistema de Cultura: ' + situacoes['criacao_sistema'] + ';\n' +
-                'Órgão Gestor: ' + situacoes['orgao_gestor'] + ';\n' +
-                'Conselho de Política Cultural: ' + situacoes['conselho_cultural'] + ';\n' +
-                'Fundo de Cultura: ' + situacoes['fundo_cultura'] + ';\n' +
-                'Plano de Cultura: ' + situacoes['plano_cultura'] + '.\n\n' +
-                'Atenciosamente,\n\n' +
-                'Equipe SNC\nMinistério da Cultura',
-                'naoresponda@cultura.gov.br',
-                [usuario.user.email],),
-                kwargs={'fail_silently': 'False', }
-                ).start()
+        send_mail('MINISTÉRIO DA CULTURA - SNC - DILIGÊNCIA PLANO DE TRABALHO',
+                  'Prezado Cadastrador,\n' +
+                  'Uma diligência referente ao Plano de Trabalho do ente federado ' + self.get_ente_ferado_name() +
+                  ' acabou de ser realizada.\n' +
+                  'O corpo da mensagem é: ' + self.object.texto_diligencia + '\n' +
+                  'As situações dos arquivos enviados de cada componente são: \n' +
+                  'Lei de Criação do Sistema de Cultura: ' + situacoes['lei_sistema'] + ';\n' +
+                  'Órgão Gestor: ' + situacoes['orgao_gestor'] + ';\n' +
+                  'Conselho de Política Cultural: ' + situacoes['conselho_cultural'] + ';\n' +
+                  'Fundo de Cultura: ' + situacoes['fundo_cultura'] + ';\n' +
+                  'Plano de Cultura: ' + situacoes['plano_cultura'] + '.\n\n' +
+                  'Atenciosamente,\n\n' +
+                  'Equipe SNC\nMinistério da Cultura',
+                  'naoresponda@cultura.gov.br',
+                  [usuario.user.email], fail_silently=False)
+
+    def get_success_url(self):
+        usuario = self.get_plano_trabalho().usuario
         return reverse_lazy('gestao:detalhar', kwargs={'pk': usuario.id})
 
     def get_plano_trabalho(self):
@@ -755,6 +754,9 @@ class DiligenciaView(CreateView):
 
         plano_componente.situacao = self.object.classificacao_arquivo
         plano_componente.save()
+
+        if(isinstance(self.get_componente(), PlanoTrabalho)):
+            self.send_email_diligencia()
 
         return HttpResponseRedirect(self.get_success_url())
 
