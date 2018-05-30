@@ -94,29 +94,3 @@ def test_campos_form_altera_cadastrador(client):
     fields = ("cpf_usuario", "uf", "municipio", "data_publicacao_acordo")
 
     assert set(form.Meta.fields) == set(fields)
-
-
-# def test_campos_form_retona_todas_uf(client):
-#     """
-#     Testa se o campo UF retorna todas as UF do país.
-#     """
-
-#     from gestao.forms import AlterarCadastradorForm
-
-#     form = AlterarCadastradorForm()
-
-#     __import__('ipdb').set_trace()
-
-def test_aaaaa(rf):
-
-    from gestao.views import AlterarCadastrador
-    from model_mommy import mommy
-
-    from django.urls import reverse
-
-
-    mg = mommy.make('Uf', sigla_uf='MG')
-
-    url = reverse('gestao:municipio_chain')
-    request = rf.get(url)
-    __import__('ipdb').set_trace()
