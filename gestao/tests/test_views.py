@@ -23,6 +23,9 @@ from planotrabalho.models import ConselhoCultural
 from planotrabalho.models import SituacoesArquivoPlano
 from planotrabalho.models import PlanoTrabalho
 
+from gestao.views import AlterarCadastrador
+
+
 pytestmark = pytest.mark.django_db
 
 
@@ -547,3 +550,21 @@ def test_filtra_municipios_form_altera_cadastrador(client, login_staff):
 
     request = client.get(url)
     assert len(request.json()['results']) == 3
+
+
+def test_renderiza_lista_uf_form_altera_cadastrador(rf, login_staff):
+    """
+    Testa se o formulário de AlterarCadastrador está renderizando as UFs
+    corretamente.
+    """
+
+    ufs = mommy.make('Uf', _quantity=5)
+
+    url = reverse('gestao:alterar_cadastrador')
+    request = rf.get(url)
+
+    view = AlterarCadastrador.as_view()(request)
+    view.render()
+
+    for uf in ufs:
+        assert uf.sigla in str(view.content)
