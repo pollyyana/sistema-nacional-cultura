@@ -1,0 +1,14 @@
+version: "2" 
+plugins:
+  duplication:
+    enabled: true
+    config:
+      languages:
+      - python
+  radon:
+    enabled: true
+    config:
+      threshold: "A"
+ratings:
+  paths:
+  - "**.py"
