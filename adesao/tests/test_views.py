@@ -8,7 +8,7 @@ from django.shortcuts import reverse
 
 from model_mommy import mommy
 
-from .models import Municipio
+from adesao.models import Municipio
 
 pytestmark = pytest.mark.django_db
 
