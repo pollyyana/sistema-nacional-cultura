@@ -181,4 +181,9 @@ class Historico(models.Model):
 
 
 class SistemaCultura(models.Model):
-    pass
+    """
+    Entidade que representa um Sistema de Cultura
+    """
+
+    cadastrador = models.ForeignKey("Usuario", on_delete=models.DO_NOTHING, null=True)
+    cidade = models.ForeignKey("Cidade", on_delete=models.DO_NOTHING, null=True)
