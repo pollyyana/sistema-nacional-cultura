@@ -178,3 +178,7 @@ class Historico(models.Model):
     data_alteracao = models.DateTimeField(auto_now_add=True)
     arquivo = models.FileField(upload_to='historico', blank=True, null=True)
     descricao = models.TextField(blank=True, null=True)
+
+
+class SistemaCultura(models.Model):
+    pass
