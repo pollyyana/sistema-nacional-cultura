@@ -14,3 +14,10 @@ def test_atributo_cadastrador_de_um_SistemaCultura():
     sistema = SistemaCultura()
 
     assert sistema._meta.get_field('cadastrador')
+
+
+def test_atributo_cidade_de_um_SistemaCultura():
+
+    sistema = SistemaCultura()
+
+    assert sistema._meta.get_field('cidade')
