@@ -21,3 +21,10 @@ def test_atributo_cidade_de_um_SistemaCultura():
     sistema = SistemaCultura()
 
     assert sistema._meta.get_field('cidade')
+
+
+def test_atributo_uf_de_um_SistemaCultura():
+
+    sistema = SistemaCultura()
+
+    assert sistema._meta.get_field('uf')
