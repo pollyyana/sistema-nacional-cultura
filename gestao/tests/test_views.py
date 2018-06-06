@@ -641,27 +641,3 @@ def test_renderiza_lista_uf_form_altera_cadastrador(rf, login_staff):
     for uf in ufs:
         assert uf.sigla in str(view.content)
 
-
-def test_submete_mudanca_de_cadastrador(rf, login_staff, plano_trabalho):
-    """
-    Testa se ao submeter o formulário de mudanca de cadastrador, os registros
-    corretos são gerados
-    """
-
-    url = reverse("gestao:alterar_cadastrador")
-
-    uf = mommy.make("Uf", sigla="MG")
-    cidade = mommy.make("Cidade", uf=uf, nome_municipio="Uberaba")
-    municipio = mommy.make("Municipio", cidade=cidade, estado=uf)
-    usuario = mommy.make("Usuario", user__username="12312312312")
-    plano_trabalho = PlanoTrabalho.objects.first()
-
-    plano_trabalho.usuario.municipio = municipio
-    plano_trabalho.usuario.save()
-
-    data = {"cpf_usuario": usuario.user.username, "uf": uf.pk, "municipio": cidade.pk}
-    request = rf.post(url, data)
-    AlterarCadastrador.as_view()(request)
-
-    municipio1 = Municipio.objects.get(pk=municipio.pk)
-    assert municipio1.usuario == usuario
