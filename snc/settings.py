@@ -150,15 +150,9 @@ MANAGERS = ADMINS
 # DATABASE CONFIGURATION
 # See: https://docs.djangoproject.com/en/dev/ref/settings/#databases
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'dbsnc',
-        'USER': 'dbsnc',
-        'PASSWORD': 'dbsnc',
-        'HOST': 'db',
-        'PORT': 5432 
-    }
+    'default': env.db("DATABASE_URL", default="postgres://postgres:postgres123@localhost/dbsnc"),
 }
+
 DATABASES['default']['ATOMIC_REQUESTS'] = True
 
 
