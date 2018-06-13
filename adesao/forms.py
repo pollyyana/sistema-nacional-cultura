@@ -5,6 +5,8 @@ from django.utils.crypto import get_random_string
 from django.forms import ModelForm
 from django.template.defaultfilters import filesizeformat
 
+from dal import autocomplete
+
 from .models import Usuario, Municipio, Responsavel, Secretario
 from .utils import validar_cpf, validar_cnpj, limpar_mascara
 import re
@@ -152,6 +154,8 @@ class CadastrarMunicipioForm(ModelForm):
     class Meta:
         model = Municipio
         fields = '__all__'
+        widgets = {'cidade': autocomplete.ModelSelect2(url='gestao:cidade_chain', forward=['estado']),
+                   'estado': autocomplete.ModelSelect2(url='gestao:uf_chain')}
 
 
 class CadastrarSecretarioForm(ModelForm):
