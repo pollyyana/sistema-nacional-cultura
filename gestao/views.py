@@ -43,6 +43,7 @@ from gestao.utils import enviar_email_aprovacao_plano
 
 from adesao.models import Usuario
 from adesao.models import Cidade
+from adesao.models import Uf
 from adesao.models import Municipio
 from adesao.models import Historico
 
@@ -94,11 +95,21 @@ class AlterarCadastradorEstado(FormView):
         return super(AlterarCadastradorEstado, self).form_valid(form)
 
 
-class MunicipioChain(autocomplete.Select2QuerySetView):
+class CidadeChain(autocomplete.Select2QuerySetView):
     def get_queryset(self):
+        """ Filtra todas as cidade de uma determinada UF """
         choices = Cidade.objects\
             .filter(uf__sigla=self.q)\
             .values_list('pk', 'nome_municipio', named=True)
+        return choices
+
+
+class UfChain(autocomplete.Select2QuerySetView):
+    def get_queryset(self):
+        """ Filtra todas as uf passando nome ou sigla """
+        choices = Uf.objects.filter(
+                    Q(sigla__iexact=self.q) | Q(nome_uf__icontains=self.q)
+                ).values_list('pk', 'sigla', named=True)
         return choices
 
 
