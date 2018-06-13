@@ -1,4 +1,5 @@
 import datetime
+import json
 import pytest
 
 from django.urls import resolve
@@ -621,6 +622,23 @@ def test_filtro_cidades_por_uf(client):
 
     url = "{url}?q={sigla}".format(url=reverse("gestao:cidade_chain"), sigla="MG")
 
+    request = client.get(url)
+    assert len(request.json()["results"]) == 3
+
+
+def test_filtro_cidades_por_uf_pk(client):
+    """ Testa se CidadeChain está retornando os municipios quando a pk de uma UF
+    é informada
+    """
+
+    Uf.objects.all().delete()
+    mg = mommy.make("Uf", sigla="MG")
+    sp = mommy.make("Uf", sigla="SP")
+    mommy.make("Cidade", uf=mg, _quantity=3)
+    mommy.make("Cidade", uf=sp, _quantity=2)
+
+    q = json.dumps({'estado': mg.pk})
+    url = "{url}?forward={q}".format(url=reverse("gestao:cidade_chain"), q=q)
     request = client.get(url)
     assert len(request.json()["results"]) == 3
 
