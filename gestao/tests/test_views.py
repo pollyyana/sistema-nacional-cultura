@@ -11,7 +11,7 @@ from model_mommy import mommy
 from gestao.forms import DiligenciaForm
 
 from gestao.models import Diligencia
-from adesao.models import Municipio
+from adesao.models import Uf
 from adesao.models import Usuario
 
 from planotrabalho.models import OrgaoGestor
@@ -673,20 +673,45 @@ def test_diligencia_geral_sem_componentes(url, client, plano_trabalho, login_sta
         assert situacao == 'Inexistente'
 
 
-def test_filtra_municipios_form_altera_cadastrador(client, login_staff):
-    """ Testa se MunicipiosChain está retornando os municipios quando uma UF
+def test_filtro_cidades_por_uf(client):
+    """ Testa se CidadeChain está retornando os municipios quando uma UF
     é informada
     """
 
+    Uf.objects.all().delete()
     mg = mommy.make("Uf", sigla="MG")
     sp = mommy.make("Uf", sigla="SP")
     mommy.make("Cidade", uf=mg, _quantity=3)
     mommy.make("Cidade", uf=sp, _quantity=2)
 
-    url = "{url}?q={sigla}".format(url=reverse("gestao:municipio_chain"), sigla="MG")
+    url = "{url}?q={sigla}".format(url=reverse("gestao:cidade_chain"), sigla="MG")
 
     request = client.get(url)
     assert len(request.json()["results"]) == 3
+
+
+def test_filtra_ufs_por_sigla(client):
+    """ Testa se UfChain retorna a UF correta ao passar a sigla """
+
+    mommy.make("Uf", sigla="MG", nome_uf="Minas Gerais")
+    mommy.make("Uf", sigla="PA", nome_uf="Pará")
+    mommy.make("Uf", sigla="BA", nome_uf="Bahia")
+
+    url = "{url}?q={param}".format(url=reverse("gestao:uf_chain"), param="MG")
+
+    request = client.get(url)
+    assert len(request.json()["results"]) == 1
+
+
+def test_filtra_ufs_por_nome(client):
+    """ Testa se UfChain retorna a UF correta ao passar o nome"""
+
+    mommy.make("Uf", sigla="MG", nome_uf="Minas Gerais")
+    mommy.make("Uf", _quantity=10)
+
+    url = "{url}?q={param}".format(url=reverse("gestao:uf_chain"), param="Minas")
+    request = client.get(url)
+    assert len(request.json()["results"]) == 1
 
 
 def test_renderiza_lista_uf_form_altera_cadastrador(rf, login_staff):
