@@ -665,22 +665,3 @@ def test_filtra_ufs_por_nome(client):
     url = "{url}?q={param}".format(url=reverse("gestao:uf_chain"), param="Minas")
     request = client.get(url)
     assert len(request.json()["results"]) == 1
-
-
-def test_renderiza_lista_uf_form_altera_cadastrador(rf, login_staff):
-    """
-    Testa se o formulário de AlterarCadastrador está renderizando as UFs
-    corretamente.
-    """
-
-    ufs = mommy.make("Uf", _quantity=5)
-
-    url = reverse("gestao:alterar_cadastrador")
-    request = rf.get(url)
-
-    view = AlterarCadastrador.as_view()(request)
-    view.render()
-
-    for uf in ufs:
-        assert uf.sigla in str(view.content)
-
