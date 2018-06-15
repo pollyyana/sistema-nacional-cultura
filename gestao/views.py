@@ -98,6 +98,7 @@ class AlterarCadastradorEstado(FormView):
 class CidadeChain(autocomplete.Select2QuerySetView):
     def get_queryset(self):
         """ Filtra todas as cidade de uma determinada UF """
+
         uf_pk = self.forwarded.get('estado', None)
         if uf_pk:
             choices = Cidade.objects\
@@ -109,14 +110,27 @@ class CidadeChain(autocomplete.Select2QuerySetView):
                 .values_list('pk', 'nome_municipio', named=True)
         return choices
 
+    def get_result_label(self, item):
+        return item.nome_municipio
+
+    def get_selected_result_label(self, item):
+        return item.nome_municipio
+
 
 class UfChain(autocomplete.Select2QuerySetView):
     def get_queryset(self):
         """ Filtra todas as uf passando nome ou sigla """
+
         choices = Uf.objects.filter(
                     Q(sigla__iexact=self.q) | Q(nome_uf__icontains=self.q)
                 ).values_list('pk', 'sigla', named=True)
         return choices
+
+    def get_result_label(self, item):
+        return item.sigla
+
+    def get_selected_result_label(self, item):
+        return item.sigla
 
 
 def alterar_situacao(request, id):
