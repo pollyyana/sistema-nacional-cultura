@@ -203,18 +203,17 @@ class DiligenciaForm(ModelForm):
 
 class AlterarCadastradorForm(forms.Form):
     cpf_usuario = forms.CharField(max_length=11)
-    uf = forms.ModelChoiceField(queryset=Uf.objects.all())
-    # municipio = forms.ModelChoiceField(queryset=Cidade.objects.all())
+    estado = forms.ModelChoiceField(queryset=Uf.objects.all(),
+                                    widget=autocomplete.ModelSelect2(url='gestao:uf_chain'))
     municipio = forms.ModelChoiceField(
         queryset=Cidade.objects.all(),
         widget=autocomplete.ModelSelect2(url='gestao:cidade_chain',
-                                         forward=['uf']
-                                        )
+                                         forward=['estado'])
         )
     data_publicacao_acordo = forms.DateField(required=False)
 
     class Meta:
-        fields = ('cpf_usuario', 'uf', 'municipio', 'data_publicacao_acordo')
+        fields = ('cpf_usuario', 'estado', 'municipio', 'data_publicacao_acordo')
     # municipio = ChainedChoiceField(
 #         parent_field='uf',
 #         ajax_url='/gestao/chain/municipio',

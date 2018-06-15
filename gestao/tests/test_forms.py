@@ -1,11 +1,14 @@
 import pytest
 from django.forms import ModelForm
+from django.shortcuts import reverse
 
 from gestao.forms import DiligenciaForm, InserirSEI
 from gestao.models import Diligencia
 
 from ckeditor.widgets import CKEditorWidget
+from dal.autocomplete import ModelSelect2
 
+from gestao.forms import AlterarCadastradorForm
 
 pytestmark = pytest.mark.django_db
 
@@ -100,9 +103,50 @@ def test_campos_form_altera_cadastrador(client):
     alterar o cadastrador de uma adesão.
     """
 
-    from gestao.forms import AlterarCadastradorForm
-
     form = AlterarCadastradorForm()
-    fields = ("cpf_usuario", "uf", "municipio", "data_publicacao_acordo")
+    fields = ("cpf_usuario", "estado", "municipio", "data_publicacao_acordo")
 
     assert set(form.Meta.fields) == set(fields)
+
+
+def test_widget_estado_form_alterar_cadastrador(client):
+    """
+    Testa o uso do widget ModelSelect2 na campo estado no form de
+    alterar cadastrador
+    """
+
+    form = AlterarCadastradorForm()
+    assert isinstance(form['estado'].field.widget, ModelSelect2)
+
+
+def test_url_widget_estado_form_alterar_cadastrador(client):
+    """
+    Testa url usada pelo widget ModelSelect2 no campo estado no form
+    de alterar cadastrador
+    """
+
+    form = AlterarCadastradorForm()
+    uf_url = reverse('gestao:uf_chain')
+
+    assert form['estado'].field.widget.url == uf_url
+
+
+def test_widget_municipio_form_alterar_cadastrador(client):
+    """
+    Testa o uso do widget ModelSelect2 no campo municipio no form de
+    alterar cadastrador
+    """
+
+    form = AlterarCadastradorForm()
+    assert isinstance(form['municipio'].field.widget, ModelSelect2)
+
+
+def test_url_widget_municipio_form_alterar_cadastrador(client):
+    """
+    Testa url usada pelo widget ModelSelect2 no campo municipio no
+    form de alterar cadastrador
+    """
+
+    form = AlterarCadastradorForm()
+    municipio_url = reverse('gestao:cidade_chain')
+    assert form['municipio'].field.widget.url == municipio_url
