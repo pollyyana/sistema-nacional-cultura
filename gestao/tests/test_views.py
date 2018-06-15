@@ -646,22 +646,26 @@ def test_filtro_cidades_por_uf_pk(client):
 def test_filtra_ufs_por_sigla(client):
     """ Testa se UfChain retorna a UF correta ao passar a sigla """
 
-    mommy.make("Uf", sigla="MG", nome_uf="Minas Gerais")
+    mg = mommy.make("Uf", sigla="MG", nome_uf="Minas Gerais")
     mommy.make("Uf", sigla="PA", nome_uf="Pará")
     mommy.make("Uf", sigla="BA", nome_uf="Bahia")
 
-    url = "{url}?q={param}".format(url=reverse("gestao:uf_chain"), param="MG")
+    url = "{url}?q={param}".format(url=reverse("gestao:uf_chain"), param=mg.sigla)
 
     request = client.get(url)
+
     assert len(request.json()["results"]) == 1
+    assert request.json()["results"][0]['text'] == mg.sigla
 
 
 def test_filtra_ufs_por_nome(client):
     """ Testa se UfChain retorna a UF correta ao passar o nome"""
 
-    mommy.make("Uf", sigla="MG", nome_uf="Minas Gerais")
+    mg = mommy.make("Uf", sigla="MG", nome_uf="Minas Gerais")
     mommy.make("Uf", _quantity=10)
 
     url = "{url}?q={param}".format(url=reverse("gestao:uf_chain"), param="Minas")
     request = client.get(url)
+
     assert len(request.json()["results"]) == 1
+    assert request.json()["results"][0]['text'] == mg.sigla
