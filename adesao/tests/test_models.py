@@ -38,11 +38,7 @@ def test_atributo_uf_de_um_SistemaCultura():
     assert sistema._meta.get_field('uf')
 
 
-""" TODO: Corrigir os dois testes referentes a alteração de cadastrador
-da model SistemaCultura, ao utilizar a fixture plano_trabalho, os outros
-testes da aplicação ficam com erro """
-
-def test_alterar_cadastrador_SistemaCultura():
+def test_alterar_cadastrador_SistemaCultura(plano_trabalho):
     """ Testa método alterar_cadastrador da model SistemaCultura"""
 
     cadastrador_atual = Usuario.objects.first()
@@ -62,8 +58,11 @@ def test_alterar_cadastrador_SistemaCultura():
         cadastrador_atual.data_publicacao_acordo
     assert sistema.cadastrador.estado_processo == cadastrador_atual.estado_processo
 
+    sistema.delete()
+    user.delete()
 
-def test_limpa_cadastrador_alterado_SistemaCultura():
+
+def test_limpa_cadastrador_alterado_SistemaCultura(plano_trabalho):
     """ Testa método para limpar referências de um cadastrador para os outos
     componentes do sistema de adesão """
 
