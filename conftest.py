@@ -45,13 +45,16 @@ def login(client):
     user = User.objects.create(username='teste', email='user@mail.com')
     user.set_password('123456')
     user.save()
-    usuario = mommy.make('Usuario', user=user)
+    usuario = mommy.make('Usuario', user=user,
+                         _fill_optional=['secretario', 'responsavel'])
 
     login = client.login(username=user.username, password='123456')
 
     yield
 
     client.logout()
+    usuario.secretario.delete()
+    usuario.responsavel.delete()
     usuario.delete()
     user.delete()
 

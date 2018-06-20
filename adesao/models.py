@@ -185,9 +185,9 @@ class SistemaCultura(models.Model):
     Entidade que representa um Sistema de Cultura
     """
 
-    cadastrador = models.ForeignKey("Usuario", on_delete=models.DO_NOTHING, null=True)
-    cidade = models.ForeignKey("Cidade", on_delete=models.DO_NOTHING, null=True)
-    uf = models.ForeignKey("Uf", on_delete=models.DO_NOTHING, null=True)
+    cadastrador = models.ForeignKey("Usuario", on_delete=models.SET_NULL, null=True)
+    cidade = models.ForeignKey("Cidade", on_delete=models.SET_NULL, null=True)
+    uf = models.ForeignKey("Uf", on_delete=models.SET_NULL, null=True)
 
     def limpa_cadastrador_alterado(self, cadastrador):
         """
@@ -198,10 +198,12 @@ class SistemaCultura(models.Model):
         cadastrador.municipio = None
         cadastrador.responsavel = None
         cadastrador.secretario = None
+        cadastrador.user.is_active = False
+        cadastrador.user.save()
 
         return cadastrador.save()
 
-    def alterar_cadastrador(self, cadastrador_novo, cadastrador_atual):
+    def alterar_cadastrador(self):
         """
         Altera cadastrador de um ente federado fazendo as alterações necessárias
         nas models associadas ao cadastrador, gerando uma nova versão do sistema cultura
@@ -212,8 +214,8 @@ class SistemaCultura(models.Model):
             ente_federado = Municipio.objects.get(estado=self.uf)
 
         cadastrador_atual = ente_federado.usuario
-        # cadastrador_novo = Usuario.objects.get(pk=self.cadastrador.pk)
-        import ipdb;ipdb.set_trace()
+        cadastrador_novo = self.cadastrador
+
         cadastrador_novo.plano_trabalho = cadastrador_atual.plano_trabalho
         cadastrador_novo.municipio = ente_federado
         cadastrador_novo.secretario = cadastrador_atual.secretario
@@ -224,4 +226,4 @@ class SistemaCultura(models.Model):
         self.limpa_cadastrador_alterado(cadastrador_atual)
         cadastrador_novo.save()
 
-        return 
+        return self.save()
