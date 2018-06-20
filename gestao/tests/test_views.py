@@ -646,6 +646,7 @@ def test_filtro_cidades_por_uf_pk(client):
 def test_filtra_ufs_por_sigla(client):
     """ Testa se UfChain retorna a UF correta ao passar a sigla """
 
+    Uf.objects.all().delete()
     mg = mommy.make("Uf", sigla="MG", nome_uf="Minas Gerais")
     mommy.make("Uf", sigla="PA", nome_uf="Pará")
     mommy.make("Uf", sigla="BA", nome_uf="Bahia")
@@ -661,6 +662,7 @@ def test_filtra_ufs_por_sigla(client):
 def test_filtra_ufs_por_nome(client):
     """ Testa se UfChain retorna a UF correta ao passar o nome"""
 
+    Uf.objects.all().delete()
     mg = mommy.make("Uf", sigla="MG", nome_uf="Minas Gerais")
     mommy.make("Uf", _quantity=10)
 
