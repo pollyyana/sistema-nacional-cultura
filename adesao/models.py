@@ -56,7 +56,7 @@ class Municipio(models.Model):
         verbose_name='CNPJ')
     rg_prefeito = models.CharField(max_length=50, verbose_name='RG')
     orgao_expeditor_rg = models.CharField(max_length=50)
-    estado_expeditor = models.ForeignKey('Uf', 
+    estado_expeditor = models.ForeignKey('Uf',
                                          related_name='estado_expeditor',
                                          on_delete=models.CASCADE)
     endereco = models.CharField(max_length=255)
@@ -186,3 +186,40 @@ class SistemaCultura(models.Model):
     cadastrador = models.ForeignKey("Usuario", on_delete=models.DO_NOTHING, null=True)
     cidade = models.ForeignKey("Cidade", on_delete=models.DO_NOTHING, null=True)
     uf = models.ForeignKey("Uf", on_delete=models.DO_NOTHING, null=True)
+
+    def limpa_cadastrador_alterado(self, cadastrador):
+        """
+        Remove referência do cadastrador alterado para as tabelas PlanoTrabalho,
+        Secretario, Reponsavel e Municipio
+        """
+        cadastrador.plano_trabalho = None
+        cadastrador.municipio = None
+        cadastrador.responsavel = None
+        cadastrador.secretario = None
+
+        return cadastrador.save()
+
+    def alterar_cadastrador(self, cadastrador_novo, cadastrador_atual):
+        """
+        Altera cadastrador de um ente federado fazendo as alterações necessárias
+        nas models associadas ao cadastrador, gerando uma nova versão do sistema cultura
+        """
+        if self.cidade:
+            ente_federado = Municipio.objects.get(cidade=self.cidade)
+        else:
+            ente_federado = Municipio.objects.get(estado=self.uf)
+
+        cadastrador_atual = ente_federado.usuario
+        # cadastrador_novo = Usuario.objects.get(pk=self.cadastrador.pk)
+        import ipdb;ipdb.set_trace()
+        cadastrador_novo.plano_trabalho = cadastrador_atual.plano_trabalho
+        cadastrador_novo.municipio = ente_federado
+        cadastrador_novo.secretario = cadastrador_atual.secretario
+        cadastrador_novo.responsavel = cadastrador_atual.responsavel
+        cadastrador_novo.data_publicacao_acordo = cadastrador_atual.\
+                                                    data_publicacao_acordo
+        cadastrador_novo.estado_processo = cadastrador_atual.estado_processo
+        self.limpa_cadastrador_alterado(cadastrador_atual)
+        cadastrador_novo.save()
+
+        return 
