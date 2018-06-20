@@ -129,3 +129,4 @@ def plano_trabalho(login):
     lei_sistema.delete()
     orgao_gestor.delete()
     conselheiro.delete()
+    ente_federado.delete()
