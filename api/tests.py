@@ -309,7 +309,7 @@ def test_retorno_data_adesao_sistema_de_cultura(client, plano_trabalho):
 
 def test_retorno_maximo_de_100_objetos_sistema_de_cultura(client):
 
-    mommy.make('Municipio', 150)
+    mommy.make('Municipio', _quantity=110)
     limit_param = '?limit=150'
 
     url = url_sistemadeculturalocal + limit_param
@@ -321,7 +321,7 @@ def test_retorno_maximo_de_100_objetos_sistema_de_cultura(client):
 
 def test_retorno_maximo_de_100_objetos_acoes_plano_trabalho(client):
 
-    mommy.make('PlanoTrabalho', 150)
+    mommy.make('PlanoTrabalho', _quantity=101)
     limit_param = '?limit=150'
 
     url = url_acoesplanotrabalho + limit_param
@@ -333,7 +333,7 @@ def test_retorno_maximo_de_100_objetos_acoes_plano_trabalho(client):
 
 def test_pesquisa_por_cnpj_prefeitura_em_sistema_de_cultura(client):
 
-    municipio = mommy.make('Municipio', 50)
+    municipio = mommy.make('Municipio', _quantity=2)
     cnpj_param = '?cnpj_prefeitura={}'.format(municipio[0].cnpj_prefeitura)
 
     url = url_sistemadeculturalocal + cnpj_param
@@ -346,7 +346,7 @@ def test_pesquisa_por_cnpj_prefeitura_em_sistema_de_cultura(client):
 
 def test_pesquisa_por_nome_municipio_em_sistema_de_cultura(client):
 
-    cidades = mommy.make('Cidade', 50)
+    cidades = mommy.make('Cidade', _quantity=2)
 
     for cidade in cidades:
         mommy.make('Municipio', cidade=cidade)
@@ -396,7 +396,7 @@ def test_pesquisa_por_nome_municipio_em_sistema_de_cultura_letras_minusculas(cli
 
 def test_pesquisa_por_estado_sigla_em_sistema_de_cultura(client):
 
-    municipios = mommy.make('Municipio', 50)
+    municipios = mommy.make('Municipio', _quantity=2)
 
     estado_sigla_param = '?estado_sigla={}'.format(municipios[0].estado.sigla)
 
@@ -437,7 +437,7 @@ def test_pesquisa_por_estado_sigla_maiuscula_em_sistema_de_cultura(client):
 
 def test_pesquisa_por_situacao_adesao_1_em_sistema_de_cultura(client):
 
-    municipios = mommy.make('Municipio', 50)
+    municipios = mommy.make('Municipio', _quantity=2)
     estados_processo = ['1', '2', '3', '4', '5', '6']
 
     for municipio in municipios:
@@ -455,7 +455,7 @@ def test_pesquisa_por_situacao_adesao_1_em_sistema_de_cultura(client):
 
 def test_pesquisa_por_situacao_adesao_2_em_sistema_de_cultura(client):
 
-    municipios = mommy.make('Municipio', 50)
+    municipios = mommy.make('Municipio', _quantity=2)
     estados_processo = ['1', '2', '3', '4', '5', '6']
 
     for municipio in municipios:
@@ -473,7 +473,7 @@ def test_pesquisa_por_situacao_adesao_2_em_sistema_de_cultura(client):
 
 def test_pesquisa_por_situacao_adesao_3_em_sistema_de_cultura(client):
 
-    municipios = mommy.make('Municipio', 50)
+    municipios = mommy.make('Municipio', _quantity=2)
     estados_processo = ['1', '2', '3', '4', '5', '6']
 
     for municipio in municipios:
@@ -491,7 +491,7 @@ def test_pesquisa_por_situacao_adesao_3_em_sistema_de_cultura(client):
 
 def test_pesquisa_por_situacao_adesao_4_em_sistema_de_cultura(client):
 
-    municipios = mommy.make('Municipio', 50)
+    municipios = mommy.make('Municipio', _quantity=2)
     estados_processo = ['1', '2', '3', '4', '5', '6']
 
     for municipio in municipios:
@@ -509,7 +509,7 @@ def test_pesquisa_por_situacao_adesao_4_em_sistema_de_cultura(client):
 
 def test_pesquisa_por_situacao_adesao_5_em_sistema_de_cultura(client):
 
-    municipios = mommy.make('Municipio', 50)
+    municipios = mommy.make('Municipio', _quantity=2)
     estados_processo = ['1', '2', '3', '4', '5', '6']
 
     for municipio in municipios:
@@ -527,7 +527,7 @@ def test_pesquisa_por_situacao_adesao_5_em_sistema_de_cultura(client):
 
 def test_pesquisa_por_situacao_adesao_6_em_sistema_de_cultura(client):
 
-    municipios = mommy.make('Municipio', 50)
+    municipios = mommy.make('Municipio', _quantity=5)
     estados_processo = ['1', '2', '3', '4', '5', '6']
 
     for municipio in municipios:
@@ -544,7 +544,7 @@ def test_pesquisa_por_situacao_adesao_6_em_sistema_de_cultura(client):
 
 
 def test_pesquisa_data_adesao_sistema_de_cultura(client, plano_trabalho):
-    mommy.make('Municipio', 50)
+    mommy.make('Municipio', _quantity=5)
     sistema_de_cultura = Municipio.objects.first()
 
     data_param = '?data_adesao={}'.format(sistema_de_cultura.usuario.data_publicacao_acordo)
@@ -557,7 +557,7 @@ def test_pesquisa_data_adesao_sistema_de_cultura(client, plano_trabalho):
 
 
 def test_pesquisa_range_data_adesao_sistema_de_cultura(client, plano_trabalho):
-    municipios = mommy.make('Municipio', 50)
+    municipios = mommy.make('Municipio', _quantity=3)
     sistema_de_cultura = Municipio.objects.first()
     old_date = datetime.date.today() - datetime.timedelta(2)
     actual_date = sistema_de_cultura.usuario.data_publicacao_acordo
