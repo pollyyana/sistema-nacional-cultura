@@ -658,7 +658,7 @@ class DiligenciaView(CreateView):
 
         send_mail('MINISTÉRIO DA CULTURA - SNC - DILIGÊNCIA PLANO DE TRABALHO',
                   'Prezado Cadastrador,\n' +
-                  'Uma diligência referente ao Plano de Trabalho do ente federado ' + self.get_ente_ferado_name() +
+                  'Uma diligência referente ao Plano de Trabalho do ente federado ' + self.get_ente_federado_name() +
                   ' acabou de ser realizada.\n' +
                   'O corpo da mensagem é: ' + self.object.texto_diligencia + '\n' +
                   'As situações dos arquivos enviados de cada componente são: \n' +
@@ -705,7 +705,7 @@ class DiligenciaView(CreateView):
 
         return plano_componente
 
-    def get_ente_ferado_name(self):
+    def get_ente_federado_name(self):
         ente_federado = self.get_ente_federado()
         name = None
 
@@ -751,7 +751,7 @@ class DiligenciaView(CreateView):
             context['arquivo'] = plano_componente.arquivo
 
         context['form'] = form
-        context['ente_federado'] = self.get_ente_ferado_name()
+        context['ente_federado'] = self.get_ente_federado_name()
         context['historico_diligencias'] = self.get_historico_diligencias()
         context['usuario_id'] = ente_federado.usuario.id
         context['data_envio'] = "--/--/----"
