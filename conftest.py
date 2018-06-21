@@ -120,7 +120,7 @@ def plano_trabalho(login):
         comp.situacao = SituacoesArquivoPlano.objects.get(pk=1)
         comp.save()
 
-    yield
+    yield plano_trabalho
 
     plano_trabalho.delete()
     conselho_cultural.delete()
