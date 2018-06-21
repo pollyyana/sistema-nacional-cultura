@@ -171,12 +171,6 @@
             ],
             "version": "==2.0"
         },
-        "django-smart-selects": {
-            "hashes": [
-                "sha256:207025ebdbd66d2db94849e619e4898acba4544a334cff4a4541286afa36e300"
-            ],
-            "version": "==1.5.4"
-        },
         "django-widget-tweaks": {
             "hashes": [
                 "sha256:b85e673c235510b83b265af6e6eaea59a241c8f532ef1fa237bb183d162f2271"
