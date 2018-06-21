@@ -36,12 +36,6 @@ def url():
     return "/gestao/{id}/diligencia/{componente}/{resultado}"
 
 
-@pytest.fixture
-def plano_trabalho(plano_trabalho):
-
-    return PlanoTrabalho.objects.first()
-
-
 def test_url_diligencia_retorna_200(url, client, plano_trabalho, login_staff):
     """
     Testa se há url referente à página de diligências.
@@ -218,11 +212,13 @@ def test_obj_ente_federado(url, client, plano_trabalho, login_staff):
         url.format(id=plano_trabalho.id, componente="orgao_gestor", resultado="0")
     )
 
+    ente_federado = "{} - {}".format(
+        plano_trabalho.usuario.municipio.cidade.nome_municipio,
+        plano_trabalho.usuario.municipio.estado.sigla,
+        )
+
     assert isinstance(request.context["ente_federado"], str)
-    assert (
-        request.context["ente_federado"]
-        == plano_trabalho.usuario.municipio.estado.sigla
-    )
+    assert request.context["ente_federado"] == ente_federado
 
 
 def test_404_para_plano_trabalho_invalido_diligencia(url, client, login_staff):
@@ -244,10 +240,11 @@ def test_ente_federado_retornado_na_diligencia(
         url.format(id=plano_trabalho.id, componente="conselho_cultural", resultado="0")
     )
 
-    assert (
-        request.context["ente_federado"]
-        == plano_trabalho.usuario.municipio.estado.sigla
-    )
+    ente_federado = "{} - {}".format(
+        plano_trabalho.usuario.municipio.cidade.nome_municipio,
+        plano_trabalho.usuario.municipio.estado.sigla
+        )
+    assert request.context["ente_federado"] == ente_federado
 
 
 def test_salvar_informacoes_no_banco(url, client, plano_trabalho, login_staff):
