@@ -23,7 +23,6 @@ urlpatterns = [
 
     url(r'^gestao/', include('gestao.urls', namespace="gestao")),
     url(r'^admin/', admin.site.urls),
-    url(r'^chaining/', include('smart_selects.urls')),
 
     url(r'^password_reset/$',
         PasswordResetView.as_view(),
