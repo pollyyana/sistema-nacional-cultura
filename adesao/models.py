@@ -1,9 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
 
-from smart_selects.db_fields import ChainedForeignKey
-
-
 LISTA_ESTADOS_PROCESSO = (
     ('0', 'Aguardando preenchimento dos dados cadastrais'),
     ('1', 'Aguardando envio da documentação'),
@@ -64,15 +61,7 @@ class Municipio(models.Model):
     cep = models.CharField(max_length=10)
     bairro = models.CharField(max_length=50)
     estado = models.ForeignKey('Uf', on_delete=models.CASCADE)
-    cidade = ChainedForeignKey(
-        Cidade,
-        chained_field='estado',
-        chained_model_field='uf',
-        show_all=False,
-        auto_choose=False,
-        blank=True,
-        null=True
-    )
+    cidade = models.ForeignKey('Cidade', on_delete=models.CASCADE)
     telefone_um = models.CharField(max_length=100)
     telefone_dois = models.CharField(max_length=25, blank=True)
     telefone_tres = models.CharField(max_length=25, blank=True)

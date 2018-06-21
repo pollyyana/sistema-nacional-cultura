@@ -3,8 +3,6 @@
 from django.conf import settings
 from django.db import migrations, models
 import django.db.models.deletion
-import smart_selects.db_fields
-
 
 class Migration(migrations.Migration):
 
@@ -62,7 +60,6 @@ class Migration(migrations.Migration):
                 ('termo_posse_prefeito', models.FileField(blank=True, max_length=255, null=True, upload_to='termo_posse')),
                 ('rg_copia_prefeito', models.FileField(blank=True, max_length=255, null=True, upload_to='rg_copia')),
                 ('cpf_copia_prefeito', models.FileField(blank=True, max_length=255, null=True, upload_to='cpf_copia')),
-                ('cidade', smart_selects.db_fields.ChainedForeignKey(blank=True, chained_field='estado', chained_model_field='uf', null=True, on_delete=django.db.models.deletion.CASCADE, to='adesao.Cidade')),
             ],
         ),
         migrations.CreateModel(
@@ -139,6 +136,11 @@ class Migration(migrations.Migration):
             model_name='municipio',
             name='estado',
             field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='adesao.Uf'),
+        ),
+        migrations.AddField(
+            model_name='municipio',
+            name='cidade',
+            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='adesao.Cidade'),
         ),
         migrations.AddField(
             model_name='municipio',
