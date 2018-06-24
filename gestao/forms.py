@@ -167,7 +167,7 @@ class AlterarSituacao(ModelForm):
 
     class Meta:
         model = Usuario
-        fields = ('estado_processo', 'data_publicacao_acordo')
+        fields = ('estado_processo', 'data_publicacao_acordo', 'link_publicacao_acordo')
 
 
 class DiligenciaForm(ModelForm):
