@@ -74,7 +74,6 @@ class CriacaoSistema(ArquivoComponente):
         null=True)
     diligencias = GenericRelation(Diligencia, content_type_field="componente_type",
                                   object_id_field="componente_id")
-    situacao_lei_sistema = models.ForeignKey('SituacoesArquivoPlano')
 
 
 class OrgaoGestor(ArquivoComponente):
@@ -85,7 +84,6 @@ class OrgaoGestor(ArquivoComponente):
         null=True)
     diligencias = GenericRelation(Diligencia, content_type_field="componente_type",
                                   object_id_field="componente_id")
-    situacao_relatorio_secretaria = models.ForeignKey('SituacoesArquivoPlano')
 
 
 class ConselhoCultural(ArquivoComponente):
@@ -96,7 +94,6 @@ class ConselhoCultural(ArquivoComponente):
         null=True)
     diligencias = GenericRelation(Diligencia, content_type_field="componente_type",
                                   object_id_field="componente_id")
-    situacao_ata = models.ForeignKey('SituacoesArquivoPlano')
 
 
 class FundoCultura(ArquivoComponente):
@@ -113,7 +110,6 @@ class FundoCultura(ArquivoComponente):
         null=True)
     diligencias = GenericRelation(Diligencia, content_type_field="componente_type",
                                   object_id_field="componente_id")
-    situacao_lei_plano = models.ForeignKey('SituacoesArquivoPlano')
 
 
 class PlanoCultura(ArquivoComponente):
@@ -144,7 +140,6 @@ class PlanoCultura(ArquivoComponente):
         null=True)
     diligencias = GenericRelation(Diligencia, content_type_field="componente_type",
                                   object_id_field="componente_id")
-    situacao_lei_plano = models.ForeignKey('SituacoesArquivoPlano')
 
 
 class Conselheiro(models.Model):

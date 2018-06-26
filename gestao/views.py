@@ -354,6 +354,7 @@ class DetalharUsuario(DetailView):
 
             elif situacao == '6':
                 context['dado_situacao'] = context['usuario'].data_publicacao_acordo.strftime('%d/%m/%Y')
+                context['link_publicacao'] = context['usuario'].link_publicacao_acordo
         except:
             pass
         return context
