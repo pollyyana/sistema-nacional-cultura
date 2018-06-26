@@ -5,8 +5,8 @@ from adesao.models import Municipio
 
 
 class MunicipioFilter(filters.FilterSet):
-    estado_sigla = filters.CharFilter(name='estado__sigla')
-    nome_municipio = filters.CharFilter(name='cidade__nome_municipio')
+    estado_sigla = filters.CharFilter(name='estado__sigla', lookup_expr='iexact')
+    nome_municipio = filters.CharFilter(name='cidade__nome_municipio', lookup_expr='iexact')
     situacao_adesao = filters.CharFilter(name='usuario__estado_processo',
                                          lookup_expr='istartswith')
     data_adesao = filters.DateFilter(name='usuario__data_publicacao_acordo')

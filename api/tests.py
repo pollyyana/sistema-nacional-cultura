@@ -381,6 +381,39 @@ def test_pesquisa_por_nome_municipio_em_sistema_de_cultura(client):
     assert len(request.data["_embedded"]["items"]) == 1
     assert request.data["_embedded"]["items"][0]["ente_federado"]["localizacao"]["cidade"]["nome_municipio"] == cidades[0].nome_municipio
 
+def test_pesquisa_por_nome_municipio_em_sistema_de_cultura_letras_maiusculas(client):
+
+    cidades = mommy.make('Cidade', _quantity=2)
+
+    for cidade in cidades:
+        mommy.make('Municipio', cidade=cidade)
+
+    nome_municipio_maiusculo = cidades[0].nome_municipio.upper()
+    nome_municipio_param = '?nome_municipio={}'.format(nome_municipio_maiusculo)
+
+    url = url_sistemadeculturalocal + nome_municipio_param
+
+    request = client.get(url, content_type="application/hal+json")
+
+    assert len(request.data["_embedded"]["items"]) == 1
+    assert request.data["_embedded"]["items"][0]["ente_federado"]["localizacao"]["cidade"]["nome_municipio"] == cidades[0].nome_municipio
+
+def test_pesquisa_por_nome_municipio_em_sistema_de_cultura_letras_minusculas(client):
+
+    cidades = mommy.make('Cidade', _quantity=2)
+
+    for cidade in cidades:
+        mommy.make('Municipio', cidade=cidade)
+
+    nome_municipio_minusculo = cidades[0].nome_municipio.lower()
+    nome_municipio_param = '?nome_municipio={}'.format(nome_municipio_minusculo)
+
+    url = url_sistemadeculturalocal + nome_municipio_param
+
+    request = client.get(url, content_type="application/hal+json")
+
+    assert len(request.data["_embedded"]["items"]) == 1
+    assert request.data["_embedded"]["items"][0]["ente_federado"]["localizacao"]["cidade"]["nome_municipio"] == cidades[0].nome_municipio
 
 def test_pesquisa_por_estado_sigla_em_sistema_de_cultura(client):
 
@@ -395,6 +428,33 @@ def test_pesquisa_por_estado_sigla_em_sistema_de_cultura(client):
     for municipio in request.data["_embedded"]["items"]:
         assert municipio["ente_federado"]["localizacao"]["estado"]["sigla"] == municipios[0].estado.sigla
 
+def test_pesquisa_por_estado_sigla_minuscula_em_sistema_de_cultura(client):
+
+    municipios = mommy.make('Municipio', _quantity=2)
+
+    estado_sigla_minuscula = municipios[0].estado.sigla.lower()
+    estado_sigla_param = '?estado_sigla={}'.format(estado_sigla_minuscula)
+
+    url = url_sistemadeculturalocal + estado_sigla_param
+
+    request = client.get(url, content_type="application/hal+json")
+
+    for municipio in request.data["_embedded"]["items"]:
+        assert municipio["ente_federado"]["localizacao"]["estado"]["sigla"] == municipios[0].estado.sigla
+
+def test_pesquisa_por_estado_sigla_maiuscula_em_sistema_de_cultura(client):
+
+    municipios = mommy.make('Municipio', _quantity=2)
+
+    estado_sigla_maiuscula = municipios[0].estado.sigla.upper()
+    estado_sigla_param = '?estado_sigla={}'.format(estado_sigla_maiuscula)
+
+    url = url_sistemadeculturalocal + estado_sigla_param
+
+    request = client.get(url, content_type="application/hal+json")
+
+    for municipio in request.data["_embedded"]["items"]:
+        assert municipio["ente_federado"]["localizacao"]["estado"]["sigla"] == municipios[0].estado.sigla
 
 def test_pesquisa_por_situacao_adesao_1_em_sistema_de_cultura(client):
 
