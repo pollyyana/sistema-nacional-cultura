@@ -16,7 +16,7 @@ from planotrabalho.models import Conselheiro
 
 
 class CriacaoSistemaSerializer(hal_serializers.HalModelSerializer):
-    situacao = serializers.ReadOnlyField(source='situacao_lei_sistema.descricao')
+    situacao = serializers.ReadOnlyField(source='situacao.descricao')
 
     class Meta:
         model = CriacaoSistema
@@ -24,7 +24,7 @@ class CriacaoSistemaSerializer(hal_serializers.HalModelSerializer):
 
 
 class OrgaoGestorSerializer(hal_serializers.HalModelSerializer):
-    situacao = serializers.ReadOnlyField(source='situacao_relatorio_secretaria.descricao')
+    situacao = serializers.ReadOnlyField(source='situacao.descricao')
 
     class Meta:
         model = OrgaoGestor
@@ -33,7 +33,7 @@ class OrgaoGestorSerializer(hal_serializers.HalModelSerializer):
 
 
 class ConselhoCulturalSerializer(hal_serializers.HalModelSerializer):
-    situacao = serializers.ReadOnlyField(source='situacao_ata.descricao')
+    situacao = serializers.ReadOnlyField(source='situacao.descricao')
 
     class Meta:
         model = ConselhoCultural
@@ -53,7 +53,7 @@ class ConselheiroSerializer(hal_serializers.HalModelSerializer):
 
 
 class FundoCulturaSerializer(hal_serializers.HalModelSerializer):
-    situacao = serializers.ReadOnlyField(source='situacao_lei_plano.descricao')
+    situacao = serializers.ReadOnlyField(source='situacao.descricao')
 
     class Meta:
         model = FundoCultura
@@ -62,7 +62,7 @@ class FundoCulturaSerializer(hal_serializers.HalModelSerializer):
 
 
 class PlanoCulturaSerializer(hal_serializers.HalModelSerializer):
-    situacao = serializers.ReadOnlyField(source='situacao_lei_plano.descricao')
+    situacao = serializers.ReadOnlyField(source='situacao.descricao')
 
     class Meta:
         model = PlanoCultura

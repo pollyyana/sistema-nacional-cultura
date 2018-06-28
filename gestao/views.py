@@ -14,7 +14,7 @@ from adesao.models import Usuario, Cidade, Municipio, Historico
 from planotrabalho.models import PlanoTrabalho, CriacaoSistema, PlanoCultura, FundoCultura, OrgaoGestor, ConselhoCultural, SituacoesArquivoPlano
 from gestao.utils import enviar_email_aprovacao_plano
 
-from .forms import AlterarSituacao, DiligenciaForm, AlterarDocumentosEnteFederadoForm
+from .forms import AlterarSituacao, DiligenciaForm, AlterarDocumentosEnteFederadoForm, InserirSEI
 from .forms import AlterarCadastradorForm, AlterarUsuarioForm, AlterarOrgaoForm
 from .forms import AlterarFundoForm, AlterarPlanoForm, AlterarConselhoForm, AlterarSistemaForm
 
@@ -80,6 +80,15 @@ def alterar_situacao(request, id):
 
     return redirect('gestao:detalhar', pk=id)
 
+def inserir_sei(request, id):
+    if request.method == "POST":
+        form = InserirSEI(
+            request.POST,
+            instance=Usuario.objects.get(id=id))
+        if form.is_valid():
+            form.save()
+
+    return redirect('gestao:detalhar', pk=id)
 
 def ajax_cadastrador_cpf(request):
     if request.method == "POST":
@@ -337,6 +346,8 @@ class DetalharUsuario(DetailView):
     def get_context_data(self, **kwargs):
         context = super(DetalharUsuario, self).get_context_data(**kwargs)
         situacao = context['usuario'].estado_processo
+        context['processo_sei'] = context['usuario'].processo_sei
+
         try:
 
             if situacao == '3':
@@ -354,6 +365,7 @@ class DetalharUsuario(DetailView):
 
             elif situacao == '6':
                 context['dado_situacao'] = context['usuario'].data_publicacao_acordo.strftime('%d/%m/%Y')
+                context['link_publicacao'] = context['usuario'].link_publicacao_acordo
         except:
             pass
         return context
