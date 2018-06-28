@@ -12,6 +12,7 @@ from gestao.forms import DiligenciaForm
 
 from gestao.models import Diligencia
 from adesao.models import Municipio
+from adesao.models import Usuario
 from planotrabalho.models import OrgaoGestor
 from planotrabalho.models import CriacaoSistema
 from planotrabalho.models import FundoCultura
@@ -352,6 +353,15 @@ def test_muda_situacao_arquivo_componente(url, client, situacoes, plano_trabalho
 
     assert OrgaoGestor.objects.first().situacao.id == 4
 
+def test_insere_sei(client, login_staff):
+    """ Testa se ao realizar o post da diligência a situação do arquivo do componente é alterada """
+    user = Usuario.objects.first()
+
+    url = reverse('gestao:inserir_sei', kwargs={'id': user.id})
+
+    client.post(url, data={'processo_sei': '123456'})
+
+    assert Usuario.objects.first().processo_sei == "123456"
 
 def test_retorno_200_para_detalhar_municipio(client, plano_trabalho, login_staff):
     """ Testa se página de detalhamento do município retorna 200 """
