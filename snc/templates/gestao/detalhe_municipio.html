@@ -48,6 +48,14 @@
                     <p><strong>Endereço:</strong> {{ object.municipio.endereco }}</p>
                     <p><strong>Complemento:</strong> {{ object.municipio.complemento }}</p>
                     <p><strong>Bairro:</strong> {{ object.municipio.bairro }}</p>
+                    {% if object.processo_sei %}
+                      <p>
+                        <strong>Processo SEI:</strong> 
+                          {% if object.processo_sei %}
+                            {{object.processo_sei}}
+                          {% endif %}
+                      </p>
+                    {% endif %}
                     {% if object.data_publicacao_acordo %}
                       <p>
                         <strong>Publicação no DOU:</strong> 
@@ -330,6 +338,31 @@
                       <div class="row">
                           <div class="col-md-12">
                             <button type="submit" class="btn btn-primary btn-xs" title="Alterar Situação" >Salvar</button>
+                            <a href="{% url 'gestao:detalhar' object.id %}" class="btn btn-default btn-xs" value="Cancelar" >Cancelar</a>
+                          </div>
+                      </div>
+                  </div>
+
+              </div>
+          </form>
+        </div>
+    </div>
+
+    <div class="col-md-6">
+        <div class="panel panel-info">
+          <div class="panel-heading">
+            Número do Processo SEI
+          </div>
+          <form name="form" action="{% url 'gestao:inserir_sei' object.id %}" method="post">
+              <div class="panel-body ">
+                  {% csrf_token %}
+                  <div class="list-group-item col-md-8 text-center">
+                      <div class="form-group">
+                         <input type="text" id="processo_sei" name="processo_sei" class="form-control" placeholder="Número do Processo SEI" value="{% if object.estado_processo == '6' and processo_sei %} {{processo_sei}} {% endif %}"></input>
+                      </div>
+                      <div class="row">
+                          <div class="col-md-12">
+                            <button type="submit" class="btn btn-primary btn-xs" title="Inserir SEI" >Salvar</button>
                             <a href="{% url 'gestao:detalhar' object.id %}" class="btn btn-default btn-xs" value="Cancelar" >Cancelar</a>
                           </div>
                       </div>

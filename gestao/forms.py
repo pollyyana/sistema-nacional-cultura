@@ -63,6 +63,13 @@ class RestrictedFileField(forms.FileField):
 
         return data
 
+class InserirSEI(ModelForm):
+    processo_sei = forms.CharField(max_length="50", required=False)
+    
+    class Meta:
+        model = Usuario
+        fields = ('processo_sei',)
+
 
 class AlterarSituacao(ModelForm):
     justificativa = forms.CharField(required=False)
