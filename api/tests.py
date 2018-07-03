@@ -4,9 +4,10 @@ import datetime
 
 from rest_framework import status
 from model_mommy import mommy
+from model_mommy.recipe import seq
 
 from planotrabalho.models import SituacoesArquivoPlano
-from planotrabalho.models import PlanoTrabalho 
+from planotrabalho.models import PlanoTrabalho
 from adesao.models import Municipio
 from adesao.models import LISTA_ESTADOS_PROCESSO
 from planotrabalho.forms import SETORIAIS
@@ -309,7 +310,7 @@ def test_retorno_data_adesao_sistema_de_cultura(client, plano_trabalho):
 
 def test_retorno_maximo_de_100_objetos_sistema_de_cultura(client):
 
-    mommy.make('Municipio', _quantity=110)
+    mommy.make('Municipio', cidade__codigo_ibge=seq(10), _quantity=110)
     limit_param = '?limit=150'
 
     url = url_sistemadeculturalocal + limit_param
