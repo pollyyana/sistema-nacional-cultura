@@ -23,7 +23,7 @@ def test_campo_processo_sei_form(client):
     Testa existência do processo_sei no form
     """
     form = InserirSEI()
-    assert "<input id=\"id_processo_sei\" maxlength=\"50\" name=\"processo_sei\" type=\"text\"" in form.as_p()
+    assert "id=\"id_processo_sei\"" in form.as_p()
 
 def test_existencia_form_diligencia(client):
 
