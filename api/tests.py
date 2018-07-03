@@ -253,7 +253,7 @@ def test_objeto_criacao_conselho_cultural_acoesplanotrabalho(client, plano_traba
 
     plano_trabalho = PlanoTrabalho.objects.first()
     situacao = SituacoesArquivoPlano.objects.first()
-    conselho_cultural = mommy.make('ConselhoCultural', situacao_ata=situacao)
+    conselho_cultural = mommy.make('ConselhoCultural', situacao=situacao)
     plano_trabalho = mommy.make('PlanoTrabalho', conselho_cultural=conselho_cultural)
     plano_trabalho_id = '{}/'.format(plano_trabalho.id)
     url = url_acoesplanotrabalho + plano_trabalho_id
@@ -267,7 +267,7 @@ def test_objeto_criacao_conselho_cultural_acoesplanotrabalho(client, plano_traba
 
 def test_objeto_conselheiros_sistema_de_cultura(client, plano_trabalho):
 
-    sistema_de_cultura = Municipio.objects.first()
+    sistema_de_cultura = plano_trabalho.usuario.municipio
     sistema_id = '{}/'.format(sistema_de_cultura.id)
     url = url_sistemadeculturalocal + sistema_id
 
