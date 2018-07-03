@@ -86,11 +86,11 @@ def plano_trabalho(login):
 
     usuario = login
     situacao = SituacoesArquivoPlano.objects.first()
-    conselho_cultural = mommy.make('ConselhoCultural', situacao_ata=situacao)
-    fundo_cultura = mommy.make('FundoCultura', situacao_lei_plano=situacao)
-    plano_cultura = mommy.make('PlanoCultura', situacao_lei_plano=situacao)
-    lei_sistema = mommy.make('CriacaoSistema', situacao_lei_sistema=situacao)
-    orgao_gestor = mommy.make('OrgaoGestor', situacao_relatorio_secretaria=situacao)
+    conselho_cultural = mommy.make('ConselhoCultural')
+    fundo_cultura = mommy.make('FundoCultura')
+    plano_cultura = mommy.make('PlanoCultura')
+    lei_sistema = mommy.make('CriacaoSistema')
+    orgao_gestor = mommy.make('OrgaoGestor')
     conselheiro = mommy.make('Conselheiro', conselho=conselho_cultural)
     plano_trabalho = mommy.make('PlanoTrabalho',
                                 conselho_cultural=conselho_cultural,
