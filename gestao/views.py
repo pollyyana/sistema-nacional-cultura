@@ -673,7 +673,7 @@ class DiligenciaView(CreateView):
                   ' acabou de ser realizada.\n' +
                   'O corpo da mensagem é: ' + self.object.texto_diligencia + '\n' +
                   'As situações dos arquivos enviados de cada componente são: \n' +
-                  'Lei de Criação do Sistema de Cultura: ' + situacoes['lei_sistema'] + ';\n' +
+                  'Lei de Criação do Sistema de Cultura: ' + situacoes['criacao_sistema'] + ';\n' +
                   'Órgão Gestor: ' + situacoes['orgao_gestor'] + ';\n' +
                   'Conselho de Política Cultural: ' + situacoes['conselho_cultural'] + ';\n' +
                   'Fundo de Cultura: ' + situacoes['fundo_cultura'] + ';\n' +

@@ -610,7 +610,7 @@ def test_situacoes_componentes_diligencia(url, client, plano_trabalho, login_sta
     )
     situacoes = response.context["situacoes"]
 
-    assert situacoes["lei_sistema"] == plano_trabalho.criacao_sistema.situacao.descricao
+    assert situacoes["criacao_sistema"] == plano_trabalho.criacao_sistema.situacao.descricao
     assert situacoes["orgao_gestor"] == plano_trabalho.orgao_gestor.situacao.descricao
     assert situacoes["fundo_cultura"] == plano_trabalho.fundo_cultura.situacao.descricao
     assert (
