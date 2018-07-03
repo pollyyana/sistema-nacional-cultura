@@ -1,8 +1,9 @@
 from django.conf.urls import url
 from django.contrib.admin.views.decorators import staff_member_required
-from django.http import HttpResponse
 
 from . import views
+
+app_name = 'gestao'
 
 urlpatterns = [
     # Acompanhar andamento dos processos de adesão
@@ -89,7 +90,13 @@ urlpatterns = [
             login_url='adesao:login'), name='alterar_usuario'),
 
     # UF e Município aninhados
-    url(r'^chain/municipio$', staff_member_required(views.MunicipioChain.as_view()), name='municipio_chain'),
+    url(r'^chain/cidade$',
+        views.CidadeChain.as_view(),
+        name='cidade_chain'),
+
+    url(r'^chain/uf$',
+        views.UfChain.as_view(),
+        name='uf_chain'),
 
     # Inserir de documentos de entes federados
     url(r'^inserir-documentos/ente-federado$',

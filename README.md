@@ -1,5 +1,7 @@
 # Sistema Nacional de Cultura
 [![Build Status](https://travis-ci.org/culturagovbr/sistema-nacional-cultura.svg?branch=master)](https://travis-ci.org/culturagovbr/sistema-nacional-cultura)  
+[![Maintainability](https://api.codeclimate.com/v1/badges/b820f182e3e161f417a3/maintainability)](https://codeclimate.com/github/culturagovbr/sistema-nacional-cultura/maintainability)
+[![Test Coverage](https://api.codeclimate.com/v1/badges/b820f182e3e161f417a3/test_coverage)](https://codeclimate.com/github/culturagovbr/sistema-nacional-cultura/test_coverage)
 
 O Sistema Nacional de Cultura é um modelo de gestão e promoção de políticas públicas de cultura que pressupõe a ação conjunta dos entes da federação (governos federal, estadual e municipal) para democratização do setor. (http://pt.wikipedia.org/wiki/Sistema_Nacional_de_Cultura)
 
@@ -94,4 +96,26 @@ As dependencias de pacotes estão no Pipfile.
 12. Execute a aplicação (É preciso ter o ambiente virtual ativado)
     ```
     ./manage.py runserver
+    ```
+
+## Utilizando o docker
+
+1. Execute o serviço do banco de dados em background
+    ```
+    sudo docker-compose up -d db
+    ```
+
+2. Execute o comando migrate para criar a estrutura do banco
+    ```
+    sudo docker-compose run web python /code/manage.py migrate
+    ```
+
+3. Copie os arquivos estaticos do projeto 
+    ```
+    sudo docker-compose run web python /code/manage.py collectstatic
+    ```
+
+4. Execute a aplicação que estará disponível na porta 8000
+    ```
+    sudo docker-compose up web
     ```

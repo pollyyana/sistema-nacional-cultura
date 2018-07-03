@@ -675,3 +675,7 @@ background-color: #CC0000;
 color: #fff;
 background-color: #F28E00;
 }
+
+.select2-results__options > li {
+  display: block;
+}

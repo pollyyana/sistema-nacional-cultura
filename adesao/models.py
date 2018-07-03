@@ -1,8 +1,6 @@
-﻿from django.db import models
+from django.db import models
 from django.contrib.auth.models import User
-
-from smart_selects.db_fields import ChainedForeignKey
-
+from django.utils import timezone
 
 LISTA_ESTADOS_PROCESSO = (
     ('0', 'Aguardando preenchimento dos dados cadastrais'),
@@ -30,7 +28,9 @@ class Uf(models.Model):
 
 class Cidade(models.Model):
     codigo_ibge = models.IntegerField(unique=True)
-    uf = models.ForeignKey('Uf', to_field='codigo_ibge')
+    uf = models.ForeignKey('Uf',
+        to_field='codigo_ibge',
+        on_delete=models.CASCADE)
     nome_municipio = models.CharField(max_length=100)
     lat = models.FloatField()
     lng = models.FloatField()
@@ -54,21 +54,15 @@ class Municipio(models.Model):
         verbose_name='CNPJ')
     rg_prefeito = models.CharField(max_length=50, verbose_name='RG')
     orgao_expeditor_rg = models.CharField(max_length=50)
-    estado_expeditor = models.ForeignKey('Uf', related_name='estado_expeditor')
+    estado_expeditor = models.ForeignKey('Uf',
+                                         related_name='estado_expeditor',
+                                         on_delete=models.CASCADE)
     endereco = models.CharField(max_length=255)
     complemento = models.CharField(max_length=255)
     cep = models.CharField(max_length=10)
     bairro = models.CharField(max_length=50)
-    estado = models.ForeignKey('Uf')
-    cidade = ChainedForeignKey(
-        Cidade,
-        chained_field='estado',
-        chained_model_field='uf',
-        show_all=False,
-        auto_choose=False,
-        blank=True,
-        null=True
-    )
+    estado = models.ForeignKey('Uf', on_delete=models.CASCADE)
+    cidade = models.ForeignKey('Cidade', on_delete=models.CASCADE)
     telefone_um = models.CharField(max_length=100)
     telefone_dois = models.CharField(max_length=25, blank=True)
     telefone_tres = models.CharField(max_length=25, blank=True)
@@ -103,7 +97,7 @@ class Responsavel(models.Model):
         verbose_name='CPF')
     rg_responsavel = models.CharField(max_length=25, verbose_name='RG')
     orgao_expeditor_rg = models.CharField(max_length=50)
-    estado_expeditor = models.ForeignKey('Uf')
+    estado_expeditor = models.ForeignKey('Uf', on_delete=models.CASCADE)
     nome_responsavel = models.CharField(max_length=100)
     cargo_responsavel = models.CharField(max_length=100)
     instituicao_responsavel = models.CharField(max_length=100)
@@ -122,7 +116,7 @@ class Secretario(models.Model):
         verbose_name='CPF')
     rg_secretario = models.CharField(max_length=25, verbose_name='RG')
     orgao_expeditor_rg = models.CharField(max_length=50)
-    estado_expeditor = models.ForeignKey('Uf')
+    estado_expeditor = models.ForeignKey('Uf', on_delete=models.CASCADE)
     nome_secretario = models.CharField(max_length=100)
     cargo_secretario = models.CharField(max_length=100)
     instituicao_secretario = models.CharField(max_length=100)
@@ -136,13 +130,17 @@ class Secretario(models.Model):
 
 
 class Usuario(models.Model):
-    user = models.OneToOneField(User)
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
     nome_usuario = models.CharField(max_length=100)
-    municipio = models.OneToOneField('Municipio', blank=True, null=True)
-    responsavel = models.OneToOneField('Responsavel', blank=True, null=True)
-    secretario = models.OneToOneField('Secretario', blank=True, null=True)
+    municipio = models.OneToOneField('Municipio', on_delete=models.CASCADE,
+                                     blank=True, null=True)
+    responsavel = models.OneToOneField('Responsavel', on_delete=models.CASCADE,
+                                       blank=True, null=True)
+    secretario = models.OneToOneField('Secretario', on_delete=models.CASCADE,
+                                      blank=True, null=True)
     plano_trabalho = models.OneToOneField(
         'planotrabalho.PlanoTrabalho',
+        on_delete=models.CASCADE,
         blank=True,
         null=True)
     estado_processo = models.CharField(
@@ -159,9 +157,47 @@ class Usuario(models.Model):
     def __str__(self):
         return self.user.username
 
+    def limpa_cadastrador(self):
+        """
+        Remove referência do cadastrador alterado para as tabelas PlanoTrabalho,
+        Secretario, Reponsavel e Municipio
+        """
+        self.plano_trabalho = None
+        self.municipio = None
+        self.responsavel = None
+        self.secretario = None
+        self.user.save()
+
+        self.save()
+
+    def transfere_propriedade(self, propriedade, valor):
+        """
+        Transfere um determinado valor para uma propriedade da instancia de
+        Usuario
+        """
+        setattr(self, propriedade, valor)
+
+    def recebe_permissoes_sistema_cultura(self, usuario):
+        """
+        Recebe de um outro usuário o seu PlanoTrabalho, Municipio, Secretario,
+        Responsavel, DataPublicacaoAcordo e EstadoProcesso.
+        """
+
+
+        propriedades = ("plano_trabalho", "municipio", "secretario",
+                        "responsavel", "data_publicacao_acordo",
+                        "estado_processo")
+
+        for propriedade in propriedades:
+            valor = getattr(usuario, propriedade, None)
+            self.transfere_propriedade(propriedade, valor)
+
+        usuario.limpa_cadastrador()
+        self.save()
+
 
 class Historico(models.Model):
-    usuario = models.ForeignKey('Usuario')
+    usuario = models.ForeignKey('Usuario', on_delete=models.CASCADE)
     situacao = models.CharField(
         max_length=1,
         choices=LISTA_ESTADOS_PROCESSO,
@@ -170,3 +206,58 @@ class Historico(models.Model):
     data_alteracao = models.DateTimeField(auto_now_add=True)
     arquivo = models.FileField(upload_to='historico', blank=True, null=True)
     descricao = models.TextField(blank=True, null=True)
+
+
+class SistemaCulturaManager(models.Manager):
+    def ativo(self):
+        return self.latest('data_criacao')
+
+
+class SistemaCultura(models.Model):
+    """
+    Entidade que representa um Sistema de Cultura
+    """
+
+    cadastrador = models.ForeignKey("Usuario", on_delete=models.SET_NULL, null=True)
+    cidade = models.ForeignKey("Cidade", on_delete=models.SET_NULL, null=True)
+    uf = models.ForeignKey("Uf", on_delete=models.SET_NULL, null=True)
+    data_criacao = models.DateTimeField(default=timezone.now)
+    objects = SistemaCulturaManager()
+
+    def compara_valores(self, obj_anterior, propriedade):
+        """
+        Compara os valores de determinada propriedade entre dois objetos.
+        """
+
+        return getattr(obj_anterior, propriedade) == getattr(self, propriedade)
+
+    def save(self, *args, **kwargs):
+        """
+        Salva uma nova instancia de SistemaCultura sempre que alguma informação
+        é alterada.
+        """
+
+        if self.pk:
+            fields = self._meta.fields[1:]
+            anterior = SistemaCultura.objects\
+                    .get(pk=self.pk)
+
+            comparacao = (self.compara_valores(anterior, field.attname) for field in
+                          fields)
+
+            if False in comparacao:
+                self.pk = None
+
+            if not self.compara_valores(anterior, "cadastrador"):
+                self.alterar_cadastrador(anterior.cadastrador)
+
+        super(SistemaCultura, self).save(*args, **kwargs)
+
+    def alterar_cadastrador(self, cadastrador_atual):
+        """
+        Altera cadastrador de um ente federado fazendo as alterações 
+        necessárias nas models associadas ao cadastrador, gerando uma nova
+        versão do sistema cultura
+        """
+        cadastrador = self.cadastrador
+        cadastrador.recebe_permissoes_sistema_cultura(cadastrador_atual)

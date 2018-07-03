@@ -1,0 +1,25 @@
+version: '3'
+
+services:
+  db:
+    image: postgres:10.4
+    environment:
+      - POSTGRES_DB=dbsnc
+      - POSTGRES_USER=dbsnc
+      - POSTGRES_PASSWORD=dbsnc
+    volumes:
+      - postgres_data:/var/lib/postgresql/data/
+  web:
+    build: .
+    environment:
+      - DATABASE_URL=postgres://dbsnc:dbsnc@db/dbsnc
+    command: python /code/manage.py runserver 0.0.0.0:8000
+    volumes:
+      - .:/code
+    ports:
+      - "8000:8000"
+    depends_on:
+      - db
+
+volumes:
+  postgres_data:

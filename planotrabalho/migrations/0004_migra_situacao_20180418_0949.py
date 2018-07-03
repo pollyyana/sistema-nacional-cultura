@@ -62,7 +62,7 @@ def migra_situacao_plano(apps, schema_editor):
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('planotrabalho', '0003_migra_arquivos_componentes'),
+        ('planotrabalho', '0003_recupera_data_envio_arquivos'),
     ]
 
     operations = [
