@@ -20,6 +20,16 @@ def test_index_page(client):
     assert response.status_code == 200
 
 
+def test_incorrect_login_index_page(client):
+    """ Caso o login falhe redireciona para tela inicial com os erros """
+
+    url = reverse('adesao:login')
+    response = client.post(url, data={'username': '', 'password': ''})
+
+    assert response.status_code == 200
+    assert response.context_data['form'].errors
+
+
 def test_home_page(client, login):
     url = reverse('adesao:home')
     response = client.get(url)
