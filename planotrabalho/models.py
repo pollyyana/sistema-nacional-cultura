@@ -11,17 +11,27 @@ SITUACAO_CONSELHEIRO = (
     ('0', 'Desabilitado')
     )
 
-
 def upload_to_componente(instance, filename):
+    name = ''
     ext = slugify(filename.split('.').pop(-1))
     new_name = slugify(filename.rsplit('.', 1)[0])
-    entefederado = instance.planotrabalho.usuario.municipio.id
     componente = instance._meta.object_name.lower()
-    return "{entefederado}/docs/{componente}/{new_name}.{ext}".format(
-        entefederado=entefederado,
-        componente=componente,
-        new_name=new_name,
-        ext=ext)
+    try:
+        entefederado = instance.planotrabalho.usuario.municipio.id
+        name = "{entefederado}/docs/{componente}/{new_name}.{ext}".format(
+            entefederado=entefederado,
+            componente=componente,
+            new_name=new_name,
+            ext=ext)
+    except:
+        plano_id = instance.planotrabalho.id
+        name = "sem_ente_federado/{plano_id}/docs/{componente}/{new_name}.{ext}".format(
+                plano_id=plano_id,
+                componente=componente,
+                new_name=new_name,
+                ext=ext)
+
+    return name
 
 
 class ArquivoComponente(models.Model):
