@@ -87,7 +87,7 @@ class AlterarCadastradorEstado(FormView):
     Altera o cadastrador de um Estado aderido
     """
     template_name = 'gestao/alterar_cadastrador_estado.html'
-    # form_class = AlterarCadastradorForm
+    form_class = AlterarCadastradorForm
     success_url = reverse_lazy('gestao:acompanhar_adesao')
 
     def form_valid(self, form):
