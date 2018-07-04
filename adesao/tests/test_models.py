@@ -132,13 +132,28 @@ def test_manager_usado_SistemaCultura():
     assert isinstance(SistemaCultura.objects.db_manager(), SistemaCulturaManager)
 
 
-def test_retorna_ativo_SistemaCultura():
-    """ Retorna o último Sistema cultura criado sendo ele o ativo """
+def test_retorna_ativo_SistemaCultura_filtrado_por_uf():
+    """ Retorna o último Sistema cultura criado sendo ele o ativo de
+    uma UF específica """
 
     mommy.make('SistemaCultura',
-               data_criacao=datetime(2018, 2, 3, 0, tzinfo=timezone.utc))
-    sistema_ativo = mommy.make('SistemaCultura')
+               data_criacao=datetime(2018, 2, 3, 0, tzinfo=timezone.utc),
+               _fill_optional=['uf'])
+    sistema_ativo = mommy.make('SistemaCultura', _fill_optional=['uf'])
 
-    assert SistemaCultura.objects.ativo() == sistema_ativo
+    assert SistemaCultura.objects.ativo(uf=sistema_ativo.uf) == sistema_ativo
 
     SistemaCultura.objects.all().delete()
+
+
+def test_retorna_ativo_SistemaCultura_filtrado_por_uf_e_cidade():
+    """ Retorna o último Sistema cultura criado sendo ele o ativo de uma
+    UF e cidade específicas """
+
+    mommy.make('SistemaCultura',
+               data_criacao=datetime(2018, 2, 3, 0, tzinfo=timezone.utc),
+               _fill_optional=['uf', 'cidade'])
+    sistema_ativo = mommy.make('SistemaCultura', _fill_optional=['uf', 'cidade'])
+
+    assert SistemaCultura.objects.ativo(
+            uf=sistema_ativo.uf, cidade=sistema_ativo.cidade) == sistema_ativo
