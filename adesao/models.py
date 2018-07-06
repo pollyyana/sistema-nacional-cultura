@@ -62,7 +62,8 @@ class Municipio(models.Model):
     cep = models.CharField(max_length=10)
     bairro = models.CharField(max_length=50)
     estado = models.ForeignKey('Uf', on_delete=models.CASCADE)
-    cidade = models.ForeignKey('Cidade', on_delete=models.CASCADE)
+    cidade = models.ForeignKey('Cidade', on_delete=models.CASCADE,
+                               null=True, blank=True)
     telefone_um = models.CharField(max_length=100)
     telefone_dois = models.CharField(max_length=25, blank=True)
     telefone_tres = models.CharField(max_length=25, blank=True)
