@@ -1,36 +1,15 @@
 import pytest
 
-from django.template import Context, Template, Engine
-from django.template.base import TemplateDoesNotExist
-from django.core.urlresolvers import reverse
+from django.template import Context
+from django.template import Engine
+from django.template import Template
+from django.template import TemplateDoesNotExist
+from django.urls import reverse
 
-from planotrabalho.models import SituacoesArquivoPlano
+from planotrabalho.models import PlanoTrabalho
 from gestao.forms import DiligenciaForm
 
-from test_views import login
-from test_views import login_staff
-from test_views import plano_trabalho
-
 pytestmark = pytest.mark.django_db
-
-
-@pytest.fixture
-def situacoes():
-    """Cria situações dos arquivos do Plano Trabalho enviados no banco de testes"""
-    situacoes = (
-        (0, 'Em preenchimento'),
-        (1, 'Avaliando anexo'),
-        (2, 'Concluída'),
-        (3, 'Arquivo aprovado com ressalvas'),
-        (4, 'Arquivo danificado'),
-        (5, 'Arquivo incompleto'),
-        (6, 'Arquivo incorreto')
-    )
-
-    for situacao in situacoes:
-        SituacoesArquivoPlano.objects.create(id=situacao[0], descricao=situacao[1])
-
-    return SituacoesArquivoPlano.objects.all()
 
 
 @pytest.fixture
@@ -62,7 +41,7 @@ def template(engine):
     """ Injeta o template 'gestao/diligencia/diligencia.html' como um objeto Template
         pronto para ser usado."""
 
-    template = engine.get_template(template_name='gestao/diligencia/diligencia.html', dirs=engine.dirs)
+    template = engine.get_template(template_name='gestao/diligencia/diligencia.html')
 
     return template
 
@@ -71,7 +50,7 @@ def test_existencia_template_diligencia(engine, client):
     """ Testando existência do template para criação da diligência"""
 
     try:
-        template = engine.get_template(template_name='gestao/diligencia/diligencia.html', dirs=engine.dirs)
+        template = engine.get_template(template_name='gestao/diligencia/diligencia.html')
     except TemplateDoesNotExist:
         template = ''
 
@@ -117,7 +96,7 @@ def test_informacoes_arquivo_enviado(template, client, context):
     assert context['ente_federado'] in rendered_template
 
 
-def test_opcoes_de_classificacao_da_diligencia(template, client, plano_trabalho, situacoes, context):
+def test_opcoes_de_classificacao_da_diligencia(template, client, plano_trabalho, context):
     """Testa se a Classificação(Motivo) apresenta as opções conforme a especificação."""
 
     opcoes = ("Arquivo danificado",
@@ -125,6 +104,7 @@ def test_opcoes_de_classificacao_da_diligencia(template, client, plano_trabalho,
               "Arquivo incorreto"
               )
 
+    plano_trabalho = PlanoTrabalho.objects.first()
     form = DiligenciaForm(resultado='0', componente='orgao_gestor')
     context['form'] = form
     context['plano_trabalho'] = plano_trabalho
@@ -143,12 +123,14 @@ def test_opcoes_em_um_dropdown(template, client, plano_trabalho, context):
             {"description": "Arquivo Incorreto", "value": "6"}
     ]
 
+    plano_trabalho = PlanoTrabalho.objects.first()
     form = DiligenciaForm(resultado='0', componente='orgao_gestor')
     context['form'] = form
     context['plano_trabalho'] = plano_trabalho
     rendered_template = template.render(context)
 
-    assert "<select id=\"id_classificacao_arquivo\" name=\"classificacao_arquivo\">" in rendered_template
+    # __import__('ipdb').set_trace()
+    assert "<select name=\"classificacao_arquivo\" id=\"id_classificacao_arquivo\">" in rendered_template
     for opcao in opcoes:
         assert "<option value=\"{value}\">{description}</option>".format(value=opcao['value'], description=opcao['description'])
     assert "</select>" in rendered_template
@@ -223,6 +205,8 @@ def test_opcao_avaliacao_negativa_documentos_plano_de_trabalho(client, plano_tra
         'conselho_cultural',
     )
 
+    plano_trabalho = PlanoTrabalho.objects.first()
+
     usuario = plano_trabalho.usuario
     usuario.estado_processo = '6'
     usuario.save()
@@ -243,6 +227,7 @@ def test_opcao_avaliacao_positiva_documentos_plano_de_trabalho(client, plano_tra
         'conselho_cultural',
     )
 
+    plano_trabalho = PlanoTrabalho.objects.first()
     usuario = plano_trabalho.usuario
     usuario.estado_processo = '6'
     usuario.save()
@@ -254,16 +239,27 @@ def test_opcao_avaliacao_positiva_documentos_plano_de_trabalho(client, plano_tra
 
 
 def test_informacoes_diligencia_componente(plano_trabalho, client, login_staff):
-    """ Testa se a linha de download do arquivo é renderizada, visto que só deve ser renderizada quando a diligência é por componente """
+    """
+    Testa se a linha de download do arquivo é renderizada, visto que
+    só deve ser renderizada quando a diligência é por componente
+    """
 
-    request = client.get('/gestao/{}/diligencia/{}/{}'.format(plano_trabalho.id, "orgao_gestor", "1"))
+    plano_trabalho = PlanoTrabalho.objects.first()
+    request = client.get('/gestao/{}/diligencia/{}/{}'.format(
+        plano_trabalho.id, "orgao_gestor", "1"))
 
     assert "<h2>Informações sobre o Arquivo Enviado</h2>" in request.rendered_content
     assert "<b>Download do arquivo</b>" in request.rendered_content
 
 
 def test_informacoes_diligencia_geral(plano_trabalho, client, login_staff):
-    """ Testa se linha de informações sobre o Plano Trabalho é renderizada, visto que só deve ser renderizada quando a diligência é geral. """
-    request = client.get('/gestao/{}/diligencia/{}/{}'.format(plano_trabalho.id, "plano_trabalho", "1"))
+    """
+    Testa se linha de informações sobre o Plano Trabalho é renderizada,
+    visto que só deve ser renderizada quando a diligência é geral.
+    """
+
+    plano_trabalho = PlanoTrabalho.objects.first()
+    request = client.get('/gestao/{}/diligencia/{}/{}'.format(
+        plano_trabalho.id, "plano_trabalho", "1"))
 
     assert "<h2>Informações sobre o Plano Trabalho</h2>" in request.rendered_content

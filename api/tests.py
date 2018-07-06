@@ -4,8 +4,11 @@ import datetime
 
 from rest_framework import status
 from model_mommy import mommy
+from model_mommy.recipe import seq
 
 from planotrabalho.models import SituacoesArquivoPlano
+from planotrabalho.models import PlanoTrabalho
+from adesao.models import Municipio
 from adesao.models import LISTA_ESTADOS_PROCESSO
 from planotrabalho.forms import SETORIAIS
 from planotrabalho.models import SITUACAO_CONSELHEIRO
@@ -14,43 +17,6 @@ pytestmark = pytest.mark.django_db
 
 url_sistemadeculturalocal = '/api/v1/sistemadeculturalocal/'
 url_acoesplanotrabalho = '/api/v1/acoesplanotrabalho/'
-
-
-@pytest.fixture
-def situacoes():
-    """Cria situações dos arquivos do Plano Trabalho enviados no banco de testes"""
-    situacoes = (
-        (0, 'Em preenchimento'),
-        (1, 'Avaliando anexo'),
-        (2, 'Concluída'),
-        (3, 'Arquivo aprovado com ressalvas'),
-        (4, 'Arquivo danificado'),
-        (5, 'Arquivo incompleto'),
-        (6, 'Arquivo incorreto')
-    )
-
-    for situacao in situacoes:
-        SituacoesArquivoPlano.objects.create(id=situacao[0], descricao=situacao[1])
-
-    return SituacoesArquivoPlano.objects.all()
-
-
-@pytest.fixture
-def plano_trabalho():
-    conselho_cultural = mommy.make('ConselhoCultural')
-    fundo_cultura = mommy.make('FundoCultura')
-    plano_cultura = mommy.make('PlanoCultura')
-    lei_sistema = mommy.make('CriacaoSistema')
-    orgao_gestor = mommy.make('OrgaoGestor')
-    mommy.make('Conselheiro', conselho=conselho_cultural)
-    plano_trabalho = mommy.make('PlanoTrabalho',
-                                conselho_cultural=conselho_cultural,
-                                fundo_cultura=fundo_cultura,
-                                criacao_sistema=lei_sistema,
-                                orgao_gestor=orgao_gestor,
-                                plano_cultura=plano_cultura)
-
-    return plano_trabalho
 
 
 @pytest.fixture
@@ -100,8 +66,9 @@ def test_404_recupera_ID_sistema_cultura_local(client):
     assert request.status_code == status.HTTP_404_NOT_FOUND
 
 
-def test_recupera_ID_param_sistema_cultura_local(client, sistema_de_cultura):
+def test_recupera_ID_param_sistema_cultura_local(client, plano_trabalho):
 
+    sistema_de_cultura = Municipio.objects.first()
     municipio_id = '{}/'.format(sistema_de_cultura.id)
     url = url_sistemadeculturalocal + municipio_id
 
@@ -111,8 +78,9 @@ def test_recupera_ID_param_sistema_cultura_local(client, sistema_de_cultura):
     assert request.data["id"] == sistema_de_cultura.id
 
 
-def test_entidades_principais_sistema_cultura_local(client, sistema_de_cultura):
+def test_entidades_principais_sistema_cultura_local(client, plano_trabalho):
 
+    sistema_de_cultura = Municipio.objects.first()
     municipio_id = '{}/'.format(sistema_de_cultura.id)
     url = url_sistemadeculturalocal + municipio_id
 
@@ -125,8 +93,10 @@ def test_entidades_principais_sistema_cultura_local(client, sistema_de_cultura):
     assert entidades.symmetric_difference(request.data) == set()
 
 
-def test_campos_do_objeto_governo_ao_retornar_sistema_cultura_local(client, sistema_de_cultura):
+def test_campos_do_objeto_governo_ao_retornar_sistema_cultura_local(client,
+                                                                    plano_trabalho):
 
+    sistema_de_cultura = Municipio.objects.first()
     municipio_id = '{}/'.format(sistema_de_cultura.id)
     url = url_sistemadeculturalocal + municipio_id
 
@@ -138,8 +108,9 @@ def test_campos_do_objeto_governo_ao_retornar_sistema_cultura_local(client, sist
     assert campos.symmetric_difference(request.data["governo"]) == set()
 
 
-def test_campos_do_objeto_ente_federado_ao_retornar_sistema_cultura_local(client, sistema_de_cultura):
-
+def test_campos_do_objeto_ente_federado_ao_retornar_sistema_cultura_local(client,
+                                                                          plano_trabalho):
+    sistema_de_cultura = Municipio.objects.first()
     municipio_id = '{}/'.format(sistema_de_cultura.id)
     url = url_sistemadeculturalocal + municipio_id
 
@@ -150,8 +121,10 @@ def test_campos_do_objeto_ente_federado_ao_retornar_sistema_cultura_local(client
     assert campos.symmetric_difference(request.data["ente_federado"]) == set()
 
 
-def test_campos_do_objeto_embedded_ao_retornar_sistema_cultura_local(client, sistema_de_cultura):
+def test_campos_do_objeto_embedded_ao_retornar_sistema_cultura_local(client,
+                                                                     plano_trabalho):
 
+    sistema_de_cultura = Municipio.objects.first()
     municipio_id = '{}/'.format(sistema_de_cultura.id)
     url = url_sistemadeculturalocal + municipio_id
 
@@ -162,8 +135,10 @@ def test_campos_do_objeto_embedded_ao_retornar_sistema_cultura_local(client, sis
     assert campos.symmetric_difference(request.data["_embedded"]) == set()
 
 
-def test_campos_do_objeto_conselho_ao_retornar_sistema_cultura_local(client, sistema_de_cultura):
+def test_campos_do_objeto_conselho_ao_retornar_sistema_cultura_local(client,
+                                                                     plano_trabalho):
 
+    sistema_de_cultura = Municipio.objects.first()
     municipio_id = '{}/'.format(sistema_de_cultura.id)
     url = url_sistemadeculturalocal + municipio_id
 
@@ -203,6 +178,7 @@ def test_acoesplanotrabalho_retorna_404_para_id_nao_valido(client):
 
 def test_acoesplanotrabalho_retorna_para_id_valido(client, plano_trabalho):
 
+    plano_trabalho = PlanoTrabalho.objects.first()
     plano_trabalho_id = '{}/'.format(plano_trabalho.id)
     url = url_acoesplanotrabalho + plano_trabalho_id
 
@@ -214,6 +190,7 @@ def test_acoesplanotrabalho_retorna_para_id_valido(client, plano_trabalho):
 
 def test_campos_acoesplanotrabalho(client, plano_trabalho):
 
+    plano_trabalho = PlanoTrabalho.objects.first()
     plano_trabalho_id = '{}/'.format(plano_trabalho.id)
     url = url_acoesplanotrabalho + plano_trabalho_id
 
@@ -228,6 +205,7 @@ def test_campos_acoesplanotrabalho(client, plano_trabalho):
 
 def test_objeto_embedded_acoesplanotrabalho(client, plano_trabalho):
 
+    plano_trabalho = PlanoTrabalho.objects.first()
     plano_trabalho_id = '{}/'.format(plano_trabalho.id)
     url = url_acoesplanotrabalho + plano_trabalho_id
 
@@ -240,6 +218,7 @@ def test_objeto_embedded_acoesplanotrabalho(client, plano_trabalho):
 
 def test_objeto_criacao_lei_sistema_cultura_acoesplanotrabalho(client, plano_trabalho):
 
+    plano_trabalho = PlanoTrabalho.objects.first()
     plano_trabalho_id = '{}/'.format(plano_trabalho.id)
     url = url_acoesplanotrabalho + plano_trabalho_id
 
@@ -252,6 +231,7 @@ def test_objeto_criacao_lei_sistema_cultura_acoesplanotrabalho(client, plano_tra
 
 def test_objeto_criacao_orgao_gestor_acoesplanotrabalho(client, plano_trabalho):
 
+    plano_trabalho = PlanoTrabalho.objects.first()
     plano_trabalho_id = '{}/'.format(plano_trabalho.id)
     url = url_acoesplanotrabalho + plano_trabalho_id
 
@@ -264,6 +244,7 @@ def test_objeto_criacao_orgao_gestor_acoesplanotrabalho(client, plano_trabalho):
 
 def test_objeto_criacao_plano_cultura_acoesplanotrabalho(client, plano_trabalho):
 
+    plano_trabalho = PlanoTrabalho.objects.first()
     plano_trabalho_id = '{}/'.format(plano_trabalho.id)
     url = url_acoesplanotrabalho + plano_trabalho_id
 
@@ -278,6 +259,7 @@ def test_objeto_criacao_plano_cultura_acoesplanotrabalho(client, plano_trabalho)
 
 def test_objeto_criacao_fundo_cultura_acoesplanotrabalho(client, plano_trabalho):
 
+    plano_trabalho = PlanoTrabalho.objects.first()
     plano_trabalho_id = '{}/'.format(plano_trabalho.id)
     url = url_acoesplanotrabalho + plano_trabalho_id
 
@@ -290,6 +272,10 @@ def test_objeto_criacao_fundo_cultura_acoesplanotrabalho(client, plano_trabalho)
 
 def test_objeto_criacao_conselho_cultural_acoesplanotrabalho(client, plano_trabalho):
 
+    plano_trabalho = PlanoTrabalho.objects.first()
+    situacao = SituacoesArquivoPlano.objects.first()
+    conselho_cultural = mommy.make('ConselhoCultural', situacao=situacao)
+    plano_trabalho = mommy.make('PlanoTrabalho', conselho_cultural=conselho_cultural)
     plano_trabalho_id = '{}/'.format(plano_trabalho.id)
     url = url_acoesplanotrabalho + plano_trabalho_id
 
@@ -300,8 +286,9 @@ def test_objeto_criacao_conselho_cultural_acoesplanotrabalho(client, plano_traba
     assert campos.symmetric_difference(request.data["criacao_conselho_cultural"]) == set()
 
 
-def test_objeto_conselheiros_sistema_de_cultura(client, sistema_de_cultura):
+def test_objeto_conselheiros_sistema_de_cultura(client, plano_trabalho):
 
+    sistema_de_cultura = plano_trabalho.usuario.municipio
     sistema_id = '{}/'.format(sistema_de_cultura.id)
     url = url_sistemadeculturalocal + sistema_id
 
@@ -313,8 +300,9 @@ def test_objeto_conselheiros_sistema_de_cultura(client, sistema_de_cultura):
     assert campos.symmetric_difference(request.data["conselho"]["conselheiros"][0]) == set()
 
 
-def test_retorno_situacao_conselheiro(client, sistema_de_cultura):
+def test_retorno_situacao_conselheiro(client, plano_trabalho):
 
+    sistema_de_cultura = Municipio.objects.first()
     sistema_id = '{}/'.format(sistema_de_cultura.id)
     url = url_sistemadeculturalocal + sistema_id
 
@@ -325,8 +313,9 @@ def test_retorno_situacao_conselheiro(client, sistema_de_cultura):
     assert situacao == "Habilitado"
 
 
-def test_retorno_data_adesao_sistema_de_cultura(client, sistema_de_cultura):
+def test_retorno_data_adesao_sistema_de_cultura(client, plano_trabalho):
 
+    sistema_de_cultura = Municipio.objects.first()
     sistema_id = '{}/'.format(sistema_de_cultura.id)
     url = url_sistemadeculturalocal + sistema_id
 
@@ -341,7 +330,7 @@ def test_retorno_data_adesao_sistema_de_cultura(client, sistema_de_cultura):
 
 def test_retorno_maximo_de_100_objetos_sistema_de_cultura(client):
 
-    mommy.make('Municipio', 150)
+    mommy.make('Municipio', cidade__codigo_ibge=seq(10), _quantity=110)
     limit_param = '?limit=150'
 
     url = url_sistemadeculturalocal + limit_param
@@ -353,7 +342,7 @@ def test_retorno_maximo_de_100_objetos_sistema_de_cultura(client):
 
 def test_retorno_maximo_de_100_objetos_acoes_plano_trabalho(client):
 
-    mommy.make('PlanoTrabalho', 150)
+    mommy.make('PlanoTrabalho', _quantity=101)
     limit_param = '?limit=150'
 
     url = url_acoesplanotrabalho + limit_param
@@ -365,7 +354,7 @@ def test_retorno_maximo_de_100_objetos_acoes_plano_trabalho(client):
 
 def test_pesquisa_por_cnpj_prefeitura_em_sistema_de_cultura(client):
 
-    municipio = mommy.make('Municipio', 50)
+    municipio = mommy.make('Municipio', _quantity=2)
     cnpj_param = '?cnpj_prefeitura={}'.format(municipio[0].cnpj_prefeitura)
 
     url = url_sistemadeculturalocal + cnpj_param
@@ -378,7 +367,7 @@ def test_pesquisa_por_cnpj_prefeitura_em_sistema_de_cultura(client):
 
 def test_pesquisa_por_nome_municipio_em_sistema_de_cultura(client):
 
-    cidades = mommy.make('Cidade', 50)
+    cidades = mommy.make('Cidade', _quantity=2)
 
     for cidade in cidades:
         mommy.make('Municipio', cidade=cidade)
@@ -428,7 +417,7 @@ def test_pesquisa_por_nome_municipio_em_sistema_de_cultura_letras_minusculas(cli
 
 def test_pesquisa_por_estado_sigla_em_sistema_de_cultura(client):
 
-    municipios = mommy.make('Municipio', 50)
+    municipios = mommy.make('Municipio', _quantity=2)
 
     estado_sigla_param = '?estado_sigla={}'.format(municipios[0].estado.sigla)
 
@@ -469,7 +458,7 @@ def test_pesquisa_por_estado_sigla_maiuscula_em_sistema_de_cultura(client):
 
 def test_pesquisa_por_situacao_adesao_1_em_sistema_de_cultura(client):
 
-    municipios = mommy.make('Municipio', 50)
+    municipios = mommy.make('Municipio', _quantity=2)
     estados_processo = ['1', '2', '3', '4', '5', '6']
 
     for municipio in municipios:
@@ -487,7 +476,7 @@ def test_pesquisa_por_situacao_adesao_1_em_sistema_de_cultura(client):
 
 def test_pesquisa_por_situacao_adesao_2_em_sistema_de_cultura(client):
 
-    municipios = mommy.make('Municipio', 50)
+    municipios = mommy.make('Municipio', _quantity=2)
     estados_processo = ['1', '2', '3', '4', '5', '6']
 
     for municipio in municipios:
@@ -505,7 +494,7 @@ def test_pesquisa_por_situacao_adesao_2_em_sistema_de_cultura(client):
 
 def test_pesquisa_por_situacao_adesao_3_em_sistema_de_cultura(client):
 
-    municipios = mommy.make('Municipio', 50)
+    municipios = mommy.make('Municipio', _quantity=2)
     estados_processo = ['1', '2', '3', '4', '5', '6']
 
     for municipio in municipios:
@@ -523,7 +512,7 @@ def test_pesquisa_por_situacao_adesao_3_em_sistema_de_cultura(client):
 
 def test_pesquisa_por_situacao_adesao_4_em_sistema_de_cultura(client):
 
-    municipios = mommy.make('Municipio', 50)
+    municipios = mommy.make('Municipio', _quantity=2)
     estados_processo = ['1', '2', '3', '4', '5', '6']
 
     for municipio in municipios:
@@ -541,7 +530,7 @@ def test_pesquisa_por_situacao_adesao_4_em_sistema_de_cultura(client):
 
 def test_pesquisa_por_situacao_adesao_5_em_sistema_de_cultura(client):
 
-    municipios = mommy.make('Municipio', 50)
+    municipios = mommy.make('Municipio', _quantity=2)
     estados_processo = ['1', '2', '3', '4', '5', '6']
 
     for municipio in municipios:
@@ -559,7 +548,7 @@ def test_pesquisa_por_situacao_adesao_5_em_sistema_de_cultura(client):
 
 def test_pesquisa_por_situacao_adesao_6_em_sistema_de_cultura(client):
 
-    municipios = mommy.make('Municipio', 50)
+    municipios = mommy.make('Municipio', _quantity=5)
     estados_processo = ['1', '2', '3', '4', '5', '6']
 
     for municipio in municipios:
@@ -575,8 +564,9 @@ def test_pesquisa_por_situacao_adesao_6_em_sistema_de_cultura(client):
         assert municipio["situacao_adesao"]["situacao_adesao"] == 'Publicado no DOU'
 
 
-def test_pesquisa_data_adesao_sistema_de_cultura(client, sistema_de_cultura):
-    mommy.make('Municipio', 50)
+def test_pesquisa_data_adesao_sistema_de_cultura(client, plano_trabalho):
+    mommy.make('Municipio', _quantity=5)
+    sistema_de_cultura = Municipio.objects.first()
 
     data_param = '?data_adesao={}'.format(sistema_de_cultura.usuario.data_publicacao_acordo)
     url = url_sistemadeculturalocal + data_param
@@ -587,8 +577,9 @@ def test_pesquisa_data_adesao_sistema_de_cultura(client, sistema_de_cultura):
     assert request.data["_embedded"]["items"][0]["data_adesao"] == str(sistema_de_cultura.usuario.data_publicacao_acordo)
 
 
-def test_pesquisa_range_data_adesao_sistema_de_cultura(client, sistema_de_cultura):
-    municipios = mommy.make('Municipio', 50)
+def test_pesquisa_range_data_adesao_sistema_de_cultura(client, plano_trabalho):
+    municipios = mommy.make('Municipio', _quantity=3)
+    sistema_de_cultura = Municipio.objects.first()
     old_date = datetime.date.today() - datetime.timedelta(2)
     actual_date = sistema_de_cultura.usuario.data_publicacao_acordo
 
@@ -633,13 +624,17 @@ def test_choices_ente_federado_sistema_de_cultura(client):
     assert request.data['ente_federado']['situacao_adesao']['choices'] == situacoes_list
 
 
-def test_choices_situacao_acoes_plano_trabalho(client, situacoes):
+def test_choices_situacao_acoes_plano_trabalho(client):
     request = client.options(url_acoesplanotrabalho)
 
     situacoes_list = []
 
+    situacoes = SituacoesArquivoPlano.objects.all()
+
     for situacao in situacoes:
-        situacoes_list.append({'id': situacao.id, 'description': situacao.descricao})
+        situacoes_list.append(
+            {'id': situacao.id, 'description': situacao.descricao}
+            )
 
     assert request.data['situacao']['choices'] == situacoes_list
 

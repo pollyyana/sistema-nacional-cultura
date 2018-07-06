@@ -1,23 +1,25 @@
-from threading import Thread
 from django import forms
-from django.core.mail import send_mail
 from django.forms import ModelForm
 from django.contrib.auth.models import User
 from django.template.defaultfilters import filesizeformat
 
-
-from adesao.models import Usuario, Historico, Uf, Municipio
-from planotrabalho.models import PlanoTrabalho, CriacaoSistema, FundoCultura
-from planotrabalho.models import PlanoCultura, OrgaoGestor, ConselhoCultural
-from planotrabalho.models import SituacoesArquivoPlano
-from gestao.models import Diligencia
-
-from .utils import enviar_email_alteracao_situacao
+from dal import autocomplete
 
 from ckeditor.widgets import CKEditorWidget
 
-from clever_selects.form_fields import ChainedChoiceField
-from clever_selects.forms import ChainedChoicesForm
+from adesao.models import Usuario
+from adesao.models import Historico
+from adesao.models import Cidade
+from adesao.models import Uf
+from adesao.models import Municipio
+
+from planotrabalho.models import PlanoTrabalho, CriacaoSistema, FundoCultura
+from planotrabalho.models import PlanoCultura, OrgaoGestor, ConselhoCultural
+from planotrabalho.models import SituacoesArquivoPlano
+
+from gestao.models import Diligencia
+
+from .utils import enviar_email_alteracao_situacao
 
 
 content_types = [
@@ -62,6 +64,13 @@ class RestrictedFileField(forms.FileField):
             pass
 
         return data
+
+class InserirSEI(ModelForm):
+    processo_sei = forms.CharField(max_length="50", required=False)
+    
+    class Meta:
+        model = Usuario
+        fields = ('processo_sei',)
 
 
 class AlterarSituacao(ModelForm):
@@ -167,7 +176,7 @@ class AlterarSituacao(ModelForm):
 
     class Meta:
         model = Usuario
-        fields = ('estado_processo', 'data_publicacao_acordo')
+        fields = ('estado_processo', 'data_publicacao_acordo', 'link_publicacao_acordo')
 
 
 class DiligenciaForm(ModelForm):
@@ -192,107 +201,116 @@ class DiligenciaForm(ModelForm):
         fields = ('texto_diligencia', 'classificacao_arquivo')
 
 
-class AlterarCadastradorForm(ChainedChoicesForm):
+class AlterarCadastradorForm(forms.Form):
     cpf_usuario = forms.CharField(max_length=11)
-    uf = forms.ModelChoiceField(queryset=Uf.objects.all())
-    municipio = ChainedChoiceField(
-        parent_field='uf',
-        ajax_url='/gestao/chain/municipio',
-        empty_label='-- Município --',
-        required=False)
+    estado = forms.ModelChoiceField(queryset=Uf.objects.all(),
+                                    widget=autocomplete.ModelSelect2(url='gestao:uf_chain'))
+    municipio = forms.ModelChoiceField(
+        queryset=Cidade.objects.all(),
+        widget=autocomplete.ModelSelect2(url='gestao:cidade_chain',
+                                         forward=['estado'])
+        )
     data_publicacao_acordo = forms.DateField(required=False)
 
-    def clean_cpf_usuario(self):
-        cpf_usuario = self.cleaned_data['cpf_usuario']
+    class Meta:
+        fields = ('cpf_usuario', 'estado', 'municipio', 'data_publicacao_acordo')
+    # municipio = ChainedChoiceField(
+#         parent_field='uf',
+#         ajax_url='/gestao/chain/municipio',
+#         empty_label='-- Município --',
+#         required=False)
 
-        if not Usuario.objects.filter(user__username__iexact=cpf_usuario):
-            raise forms.ValidationError('Cadastrador não encontrado, o usuário efetuou cadastro?')
+#     def clean_cpf_usuario(self):
+#         cpf_usuario = self.cleaned_data['cpf_usuario']
 
-        return cpf_usuario
+#         if not Usuario.objects.filter(user__username__iexact=cpf_usuario):
+#             raise forms.ValidationError('Cadastrador não encontrado, o usuário efetuou cadastro?')
 
-    def clean_municipio(self):
-        municipio = self.cleaned_data['municipio']
-        if not municipio:
-            municipio = None
-        uf = self.cleaned_data['uf']
-        if not Municipio.objects.filter(cidade=municipio, estado=uf):
-            raise forms.ValidationError('Município não cadastrado')
-        return municipio
+#         return cpf_usuario
 
-    def clean(self):
-        super(AlterarCadastradorForm, self).clean()
-        cpf_usuario = self.cleaned_data.get('cpf_usuario', None)
-        municipio = self.cleaned_data.get('municipio', None)
-        uf = self.cleaned_data.get('uf', None)
-        try:
-            user_antigo = Usuario.objects.get(
-                municipio__cidade=municipio, municipio__estado__sigla=uf)
-            user_novo = Usuario.objects.get(user__username__iexact=cpf_usuario)
+#     def clean_municipio(self):
+#         municipio = self.cleaned_data['municipio']
+#         if not municipio:
+#             municipio = None
+#         uf = self.cleaned_data['uf']
+#         if not Municipio.objects.filter(cidade=municipio, estado=uf):
+#             raise forms.ValidationError('Município não cadastrado')
+#         return municipio
 
-            if user_antigo.user.username == user_novo.user.username:
-                raise forms.ValidationError('Cadastrador já se encontra vinculado ao municípío selecionado.')
-            if user_antigo.estado_processo == '6':
-                if not user_antigo.data_publicacao_acordo or not self.cleaned_data.get('data_publicacao_acordo', None):
-                    errormsg = '''Não foi encontrada a data de publicação
-                        do acordo deste município, por favor informe a data'''
-                    municipio = Municipio.objects.get(cidade=municipio, estado__sigla=uf)
-                    if municipio.numero_processo:
-                        errormsg += '. Ela pode ser encontrada no processo de número: ' + municipio.numero_processo
-                    raise forms.ValidationError(errormsg)
-        except:
-                user_antigo = None
-                pass
+#     def clean(self):
+#         super(AlterarCadastradorForm, self).clean()
+#         cpf_usuario = self.cleaned_data.get('cpf_usuario', None)
+#         municipio = self.cleaned_data.get('municipio', None)
+#         uf = self.cleaned_data.get('uf', None)
+#         try:
+#             user_antigo = Usuario.objects.get(
+#                 municipio__cidade=municipio, municipio__estado__sigla=uf)
+#             user_novo = Usuario.objects.get(user__username__iexact=cpf_usuario)
 
-    def save(self, commit=True):
-        cpf_usuario = self.cleaned_data['cpf_usuario']
-        municipio = self.cleaned_data.get('municipio', None)
-        uf = self.cleaned_data['uf']
-        data_publicacao_acordo = self.cleaned_data['data_publicacao_acordo']
-        user_novo = Usuario.objects.get(user__username__iexact=cpf_usuario)
-        try:
-            if municipio:
-                user_antigo = Usuario.objects.get(municipio__cidade=municipio, municipio__estado=uf)
-            else:
-                user_antigo = Usuario.objects.get(municipio__cidade__isnull=True, municipio__estado=uf)
+#             if user_antigo.user.username == user_novo.user.username:
+#                 raise forms.ValidationError('Cadastrador já se encontra vinculado ao municípío selecionado.')
+#             if user_antigo.estado_processo == '6':
+#                 if not user_antigo.data_publicacao_acordo or not self.cleaned_data.get('data_publicacao_acordo', None):
+#                     errormsg = '''Não foi encontrada a data de publicação
+#                         do acordo deste município, por favor informe a data'''
+#                     municipio = Municipio.objects.get(cidade=municipio, estado__sigla=uf)
+#                     if municipio.numero_processo:
+#                         errormsg += '. Ela pode ser encontrada no processo de número: ' + municipio.numero_processo
+#                     raise forms.ValidationError(errormsg)
+#         except:
+#                 user_antigo = None
+#                 pass
 
-            user_novo.municipio = user_antigo.municipio
-            user_antigo.municipio = None
+#     def save(self, commit=True):
+#         cpf_usuario = self.cleaned_data['cpf_usuario']
+#         municipio = self.cleaned_data.get('municipio', None)
+#         uf = self.cleaned_data['uf']
+#         data_publicacao_acordo = self.cleaned_data['data_publicacao_acordo']
+#         user_novo = Usuario.objects.get(user__username__iexact=cpf_usuario)
+#         try:
+#             if municipio:
+#                 user_antigo = Usuario.objects.get(municipio__cidade=municipio, municipio__estado=uf)
+#             else:
+#                 user_antigo = Usuario.objects.get(municipio__cidade__isnull=True, municipio__estado=uf)
 
-            user_novo.responsavel = user_antigo.responsavel
-            user_antigo.responsavel = None
+#             user_novo.municipio = user_antigo.municipio
+#             user_antigo.municipio = None
 
-            user_novo.secretario = user_antigo.secretario
-            user_antigo.secretario = None
+#             user_novo.responsavel = user_antigo.responsavel
+#             user_antigo.responsavel = None
 
-            user_novo.plano_trabalho = user_antigo.plano_trabalho
-            user_antigo.plano_trabalho = None
+#             user_novo.secretario = user_antigo.secretario
+#             user_antigo.secretario = None
 
-            user_antigo.user.is_active = False
-            user_novo.estado_processo = user_antigo.estado_processo
-            user_antigo.estado_processo = '0'
+#             user_novo.plano_trabalho = user_antigo.plano_trabalho
+#             user_antigo.plano_trabalho = None
 
-            user_novo.prazo = user_antigo.prazo
+#             user_antigo.user.is_active = False
+#             user_novo.estado_processo = user_antigo.estado_processo
+#             user_antigo.estado_processo = '0'
 
-            if data_publicacao_acordo:
-                user_novo.data_publicacao_acordo = data_publicacao_acordo
-            else:
-                user_novo.data_publicacao_acordo = user_antigo.data_publicacao_acordo
-        except Usuario.DoesNotExist:
-            if municipio:
-                user_antigo = Municipio.objects.get(cidade=municipio, estado=uf)
-            else:
-                user_antigo = Municipio.objects.get(cidade__isnull=True, estado=uf)
-            planotrabalho = PlanoTrabalho()
-            planotrabalho.save()
+#             user_novo.prazo = user_antigo.prazo
 
-            user_novo.municipio = user_antigo
-            user_novo.data_publicacao_acordo = data_publicacao_acordo
-            user_novo.estado_processo = '0'
-            user_novo.plano_trabalho = planotrabalho
+#             if data_publicacao_acordo:
+#                 user_novo.data_publicacao_acordo = data_publicacao_acordo
+#             else:
+#                 user_novo.data_publicacao_acordo = user_antigo.data_publicacao_acordo
+#         except Usuario.DoesNotExist:
+#             if municipio:
+#                 user_antigo = Municipio.objects.get(cidade=municipio, estado=uf)
+#             else:
+#                 user_antigo = Municipio.objects.get(cidade__isnull=True, estado=uf)
+#             planotrabalho = PlanoTrabalho()
+#             planotrabalho.save()
 
-        if commit:
-            user_antigo.save()
-            user_novo.save()
+#             user_novo.municipio = user_antigo
+#             user_novo.data_publicacao_acordo = data_publicacao_acordo
+#             user_novo.estado_processo = '0'
+#             user_novo.plano_trabalho = planotrabalho
+
+#         if commit:
+#             user_antigo.save()
+#             user_novo.save()
 
 
 class AlterarUsuarioForm(ModelForm):

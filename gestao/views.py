@@ -1,32 +1,78 @@
 from threading import Thread
 
-from django.shortcuts import redirect, render, get_object_or_404
-from django.http import Http404, JsonResponse, HttpResponseRedirect
-from django.db.models import Q
-from django.contrib.auth.models import User
-from django.core.urlresolvers import reverse_lazy
-from django.views.generic import ListView, DetailView, CreateView
-from django.views.generic.edit import FormView, UpdateView
 from django.contrib.contenttypes.models import ContentType
 from django.core.mail import send_mail
 
-from adesao.models import Usuario, Cidade, Municipio, Historico
-from planotrabalho.models import PlanoTrabalho, CriacaoSistema, PlanoCultura, FundoCultura, OrgaoGestor, ConselhoCultural, SituacoesArquivoPlano
+from django.db.models import Q
+
+from django.shortcuts import redirect
+from django.shortcuts import render
+from django.shortcuts import get_object_or_404
+
+from django.http import Http404, JsonResponse, HttpResponseRedirect
+from django.http import JsonResponse
+from django.http import HttpResponseRedirect
+
+from django.contrib.auth.models import User
+
+from django.views.generic import CreateView
+from django.views.generic import DetailView
+from django.views.generic import ListView
+
+from django.views.generic.edit import FormView
+from django.views.generic.edit import UpdateView
+
+from django.urls import reverse_lazy
+
+from dal import autocomplete
+
+from adesao.models import Usuario
+from adesao.models import Cidade
+from adesao.models import Municipio
+from adesao.models import Historico
+
+from planotrabalho.models import PlanoTrabalho
+from planotrabalho.models import CriacaoSistema
+from planotrabalho.models import PlanoCultura
+from planotrabalho.models import FundoCultura
+from planotrabalho.models import OrgaoGestor
+from planotrabalho.models import ConselhoCultural
+from planotrabalho.models import SituacoesArquivoPlano
+
 from gestao.utils import enviar_email_aprovacao_plano
 
-from .forms import AlterarSituacao, DiligenciaForm, AlterarDocumentosEnteFederadoForm
+from adesao.models import Usuario
+from adesao.models import Cidade
+from adesao.models import Uf
+from adesao.models import Municipio
+from adesao.models import Historico
+
+from planotrabalho.models import CriacaoSistema
+from planotrabalho.models import PlanoCultura
+from planotrabalho.models import FundoCultura
+from planotrabalho.models import OrgaoGestor
+from planotrabalho.models import ConselhoCultural
+from planotrabalho.models import SituacoesArquivoPlano
+
+from .forms import AlterarSituacao, DiligenciaForm, AlterarDocumentosEnteFederadoForm, InserirSEI
 from .forms import AlterarCadastradorForm, AlterarUsuarioForm, AlterarOrgaoForm
 from .forms import AlterarFundoForm, AlterarPlanoForm, AlterarConselhoForm, AlterarSistemaForm
 
-from clever_selects.views import ChainedSelectChoicesView
+from .forms import AlterarCadastradorForm
+from .forms import AlterarUsuarioForm
+from .forms import AlterarOrgaoForm
 
-import os
-from django.conf import settings
+from .forms import AlterarFundoForm
+from .forms import AlterarPlanoForm
+from .forms import AlterarConselhoForm
+from .forms import AlterarSistemaForm
 
 
 # Acompanhamento das adesões
-
 class AlterarCadastrador(FormView):
+    """AlterarCadastrador
+    Altera o cadastrador de um Municipio aderido
+    """
     template_name = 'gestao/alterar_cadastrador.html'
     form_class = AlterarCadastradorForm
     success_url = reverse_lazy('gestao:acompanhar_adesao')
@@ -37,8 +83,11 @@ class AlterarCadastrador(FormView):
 
 
 class AlterarCadastradorEstado(FormView):
+    """AlterarCadastradorEstado
+    Altera o cadastrador de um Estado aderido
+    """
     template_name = 'gestao/alterar_cadastrador_estado.html'
-    form_class = AlterarCadastradorForm
+    # form_class = AlterarCadastradorForm
     success_url = reverse_lazy('gestao:acompanhar_adesao')
 
     def form_valid(self, form):
@@ -46,13 +95,42 @@ class AlterarCadastradorEstado(FormView):
         return super(AlterarCadastradorEstado, self).form_valid(form)
 
 
-class MunicipioChain(ChainedSelectChoicesView):
-    def get_choices(self):
-        data = Cidade.objects.filter(uf=self.parent_value)
-        choices = []
-        for cidade in data:
-            choices.append((str(cidade.id), cidade.nome_municipio))
+class CidadeChain(autocomplete.Select2QuerySetView):
+    def get_queryset(self):
+        """ Filtra todas as cidade de uma determinada UF """
+
+        uf_pk = self.forwarded.get('estado', None)
+        if uf_pk:
+            choices = Cidade.objects\
+                .filter(uf__pk=uf_pk)\
+                .values_list('pk', 'nome_municipio', named=True)
+        else:
+            choices = Cidade.objects\
+                .filter(uf__sigla__iexact=self.q)\
+                .values_list('pk', 'nome_municipio', named=True)
         return choices
+
+    def get_result_label(self, item):
+        return item.nome_municipio
+
+    def get_selected_result_label(self, item):
+        return item.nome_municipio
+
+
+class UfChain(autocomplete.Select2QuerySetView):
+    def get_queryset(self):
+        """ Filtra todas as uf passando nome ou sigla """
+
+        choices = Uf.objects.filter(
+                    Q(sigla__iexact=self.q) | Q(nome_uf__icontains=self.q)
+                ).values_list('pk', 'sigla', named=True)
+        return choices
+
+    def get_result_label(self, item):
+        return item.sigla
+
+    def get_selected_result_label(self, item):
+        return item.sigla
 
 
 def alterar_situacao(request, id):
@@ -80,6 +158,15 @@ def alterar_situacao(request, id):
 
     return redirect('gestao:detalhar', pk=id)
 
+def inserir_sei(request, id):
+    if request.method == "POST":
+        form = InserirSEI(
+            request.POST,
+            instance=Usuario.objects.get(id=id))
+        if form.is_valid():
+            form.save()
+
+    return redirect('gestao:detalhar', pk=id)
 
 def ajax_cadastrador_cpf(request):
     if request.method == "POST":
@@ -234,7 +321,7 @@ class AcompanharSistema(ListView):
 
         if anexo == 'lei_sistema_cultura':
             usuarios = usuarios.filter(
-                plano_trabalho__criacao_sistema__situacao_lei_sistema=1)
+                plano_trabalho__criacao_sistema__situacao=1)
             usuarios = usuarios.exclude(
                 plano_trabalho__criacao_sistema__lei_sistema_cultura='')
         else:
@@ -256,7 +343,7 @@ class AcompanharOrgao(ListView):
         usuarios = Usuario.objects.filter(estado_processo='6')
         usuarios = usuarios.exclude(plano_trabalho__orgao_gestor=None)
         usuarios = usuarios.filter(
-            plano_trabalho__orgao_gestor__situacao_relatorio_secretaria=1)
+            plano_trabalho__orgao_gestor__situacao=1)
         usuarios = usuarios.exclude(
             plano_trabalho__orgao_gestor__relatorio_atividade_secretaria='')
         if q:
@@ -274,7 +361,7 @@ class AcompanharConselho(ListView):
         usuarios = Usuario.objects.filter(estado_processo='6')
         usuarios = usuarios.exclude(plano_trabalho__conselho_cultural=None)
         usuarios = usuarios.filter(
-            plano_trabalho__conselho_cultural__situacao_ata=1)
+            plano_trabalho__conselho_cultural__situacao=1)
         usuarios = usuarios.exclude(
             plano_trabalho__conselho_cultural__ata_regimento_aprovado='')
         if q:
@@ -292,7 +379,7 @@ class AcompanharFundo(ListView):
         usuarios = Usuario.objects.filter(estado_processo='6')
         usuarios = usuarios.exclude(plano_trabalho__fundo_cultura=None)
         usuarios = usuarios.filter(
-            plano_trabalho__fundo_cultura__situacao_lei_plano=1)
+            plano_trabalho__fundo_cultura__situacao=1)
         usuarios = usuarios.exclude(
             plano_trabalho__fundo_cultura__lei_fundo_cultura='')
         if q:
@@ -315,7 +402,7 @@ class AcompanharPlano(ListView):
 
         if anexo == 'lei_plano_cultura':
             usuarios = usuarios.filter(
-                plano_trabalho__plano_cultura__situacao_lei_plano=1)
+                plano_trabalho__plano_cultura__situacao=1)
             usuarios = usuarios.exclude(
                 plano_trabalho__plano_cultura__lei_plano_cultura='')
         else:
@@ -337,6 +424,8 @@ class DetalharUsuario(DetailView):
     def get_context_data(self, **kwargs):
         context = super(DetalharUsuario, self).get_context_data(**kwargs)
         situacao = context['usuario'].estado_processo
+        context['processo_sei'] = context['usuario'].processo_sei
+
         try:
 
             if situacao == '3':
@@ -354,6 +443,7 @@ class DetalharUsuario(DetailView):
 
             elif situacao == '6':
                 context['dado_situacao'] = context['usuario'].data_publicacao_acordo.strftime('%d/%m/%Y')
+                context['link_publicacao'] = context['usuario'].link_publicacao_acordo
         except:
             pass
         return context
@@ -574,28 +664,27 @@ class DiligenciaView(CreateView):
         'plano_trabalho': 'planotrabalho',
     }
 
-    def get_success_url(self):
+    def send_email_diligencia(self):
         usuario = self.get_plano_trabalho().usuario
         situacoes = self.get_situacao_componentes()
-        if(isinstance(self.get_componente(), PlanoTrabalho)):
-            Thread(target=send_mail, args=(
-                'MINISTÉRIO DA CULTURA - SNC - DILIGÊNCIA PLANO DE TRABALHO',
-                'Prezado Cadastrador,\n' +
-                'Uma diligência referente ao Plano de Trabalho do ente federado ' + self.get_ente_ferado_name() +
-                ' acabou de ser realizada.\n' +
-                'O corpo da mensagem é: ' + self.object.texto_diligencia + '\n' +
-                'As situações dos arquivos enviados de cada componente são: \n' +
-                'Lei de Criação do Sistema de Cultura: ' + situacoes['criacao_sistema'] + ';\n' +
-                'Órgão Gestor: ' + situacoes['orgao_gestor'] + ';\n' +
-                'Conselho de Política Cultural: ' + situacoes['conselho_cultural'] + ';\n' +
-                'Fundo de Cultura: ' + situacoes['fundo_cultura'] + ';\n' +
-                'Plano de Cultura: ' + situacoes['plano_cultura'] + '.\n\n' +
-                'Atenciosamente,\n\n' +
-                'Equipe SNC\nMinistério da Cultura',
-                'naoresponda@cultura.gov.br',
-                [usuario.user.email],),
-                kwargs={'fail_silently': 'False', }
-                ).start()
+        send_mail('MINISTÉRIO DA CULTURA - SNC - DILIGÊNCIA PLANO DE TRABALHO',
+                  'Prezado Cadastrador,\n' +
+                  'Uma diligência referente ao Plano de Trabalho do ente federado ' + self.get_ente_federado_name() +
+                  ' acabou de ser realizada.\n' +
+                  'O corpo da mensagem é: ' + self.object.texto_diligencia + '\n' +
+                  'As situações dos arquivos enviados de cada componente são: \n' +
+                  'Lei de Criação do Sistema de Cultura: ' + situacoes['criacao_sistema'] + ';\n' +
+                  'Órgão Gestor: ' + situacoes['orgao_gestor'] + ';\n' +
+                  'Conselho de Política Cultural: ' + situacoes['conselho_cultural'] + ';\n' +
+                  'Fundo de Cultura: ' + situacoes['fundo_cultura'] + ';\n' +
+                  'Plano de Cultura: ' + situacoes['plano_cultura'] + '.\n\n' +
+                  'Atenciosamente,\n\n' +
+                  'Equipe SNC\nMinistério da Cultura',
+                  'naoresponda@cultura.gov.br',
+                  [usuario.user.email], fail_silently=False)
+
+    def get_success_url(self):
+        usuario = self.get_plano_trabalho().usuario
         return reverse_lazy('gestao:detalhar', kwargs={'pk': usuario.id})
 
     def get_plano_trabalho(self):
@@ -627,7 +716,7 @@ class DiligenciaView(CreateView):
 
         return plano_componente
 
-    def get_ente_ferado_name(self):
+    def get_ente_federado_name(self):
         ente_federado = self.get_ente_federado()
         name = None
 
@@ -681,7 +770,7 @@ class DiligenciaView(CreateView):
             context['arquivo'] = plano_componente.arquivo
 
         context['form'] = form
-        context['ente_federado'] = self.get_ente_ferado_name()
+        context['ente_federado'] = self.get_ente_federado_name()
         context['historico_diligencias'] = self.get_historico_diligencias()
         context['usuario_id'] = ente_federado.usuario.id
         context['data_envio'] = "--/--/----"
@@ -696,6 +785,9 @@ class DiligenciaView(CreateView):
 
         plano_componente.situacao = self.object.classificacao_arquivo
         plano_componente.save()
+
+        if(isinstance(self.get_componente(), PlanoTrabalho)):
+            self.send_email_diligencia()
 
         return HttpResponseRedirect(self.get_success_url())
 

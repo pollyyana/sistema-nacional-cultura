@@ -44,20 +44,20 @@ DJANGO_APPS = (
 
     # Useful template tags:
     # 'django.contrib.humanize',
+    'dal',
+    'dal_select2',
 
     # Admin
     'django.contrib.admin',
 )
+
 THIRD_PARTY_APPS = (
     'raven.contrib.django.raven_compat',
     'wkhtmltopdf',
-    'smart_selects',
     'localflavor',
     'django_extensions',
     'ckeditor',
     'widget_tweaks',
-    'piwik',
-    'clever_selects',
     'rest_framework',
     'django_filters',
     'drf_hal_json',
@@ -65,7 +65,6 @@ THIRD_PARTY_APPS = (
     'rest_framework_csv',
     'corsheaders',
     'rest_framework_filters'
-    
 )
 
 # Apps specific for this project go here.
@@ -98,7 +97,7 @@ REST_FRAMEWORK = {
 
 # MIDDLEWARE CONFIGURATION
 # ------------------------------------------------------------------------------
-MIDDLEWARE_CLASSES = (
+MIDDLEWARE = (
     # Make sure djangosecure.middleware.SecurityMiddleware is listed first
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -108,9 +107,7 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.messages.middleware.MessageMiddleware',
 )
 
-# Habilita cors somente no urls /v1/
 CORS_ORIGIN_ALLOW_ALL = True
-CORS_URLS_REGEX = r'^/v1/.*$'
 
 # MIGRATIONS CONFIGURATION
 # ------------------------------------------------------------------------------
@@ -152,6 +149,7 @@ MANAGERS = ADMINS
 DATABASES = {
     'default': env.db("DATABASE_URL", default="postgres://postgres:postgres123@localhost/dbsnc"),
 }
+
 DATABASES['default']['ATOMIC_REQUESTS'] = True
 
 

@@ -1,20 +1,35 @@
 import pytest
 from django.forms import ModelForm
+from django.shortcuts import reverse
 
-from gestao.forms import DiligenciaForm
+from gestao.forms import DiligenciaForm, InserirSEI
 from gestao.models import Diligencia
 
 from ckeditor.widgets import CKEditorWidget
+from dal.autocomplete import ModelSelect2
 
+from gestao.forms import AlterarCadastradorForm
 
 pytestmark = pytest.mark.django_db
+
+def test_existencia_form_sei(client):
+
+    """ Testa existência da classe form para a inserção do sei """
+    form = InserirSEI()
+    assert form
+
+def test_campo_processo_sei_form(client):
+    """
+    Testa existência do processo_sei no form
+    """
+    form = InserirSEI()
+    assert "id=\"id_processo_sei\"" in form.as_p()
 
 def test_existencia_form_diligencia(client):
 
     """ Testa existência da classe form para a diligência """
     form = DiligenciaForm(resultado='0', componente='1')
     assert form
-
 
 def test_campo_texto_diligencia_form(client):
     """
@@ -28,7 +43,7 @@ def test_campo_classificao_arquivo_no_form_diligencia(client):
     """ Testa a existência do campo referente a seleção para a classificação do arquivo """
 
     form = DiligenciaForm(resultado='0', componente='1')
-    assert "<select id=\"id_classificacao_arquivo\" name=\"classificacao_arquivo\"" in form.as_p()
+    assert "<select name=\"classificacao_arquivo\" id=\"id_classificacao_arquivo\"" in form.as_p()
 
 
 def test_uso_ck_widget_no_texto_diligencia(client):
@@ -69,3 +84,69 @@ def test_fields_form_diligencia(client):
     fields = ('texto_diligencia', 'classificacao_arquivo')
 
     assert set(form.Meta.fields).issuperset(set(fields))
+
+
+@pytest.mark.xfail(strict=True)
+def test_form_altera_cadastrador(client):
+    """
+    Testa a existencia de um formulário para alterar o cadastrador de uma
+    adesão.
+    """
+
+    with pytest.raises(ImportError) as exception:
+        from gestao.forms import AlterarCadastradorForm
+
+
+def test_campos_form_altera_cadastrador(client):
+    """
+    Testa a presença dos campos "CPF", "uf", e "Municipio" no formulário para
+    alterar o cadastrador de uma adesão.
+    """
+
+    form = AlterarCadastradorForm()
+    fields = ("cpf_usuario", "estado", "municipio", "data_publicacao_acordo")
+
+    assert set(form.Meta.fields) == set(fields)
+
+
+def test_widget_estado_form_alterar_cadastrador(client):
+    """
+    Testa o uso do widget ModelSelect2 na campo estado no form de
+    alterar cadastrador
+    """
+
+    form = AlterarCadastradorForm()
+    assert isinstance(form['estado'].field.widget, ModelSelect2)
+
+
+def test_url_widget_estado_form_alterar_cadastrador(client):
+    """
+    Testa url usada pelo widget ModelSelect2 no campo estado no form
+    de alterar cadastrador
+    """
+
+    form = AlterarCadastradorForm()
+    uf_url = reverse('gestao:uf_chain')
+
+    assert form['estado'].field.widget.url == uf_url
+
+
+def test_widget_municipio_form_alterar_cadastrador(client):
+    """
+    Testa o uso do widget ModelSelect2 no campo municipio no form de
+    alterar cadastrador
+    """
+
+    form = AlterarCadastradorForm()
+    assert isinstance(form['municipio'].field.widget, ModelSelect2)
+
+
+def test_url_widget_municipio_form_alterar_cadastrador(client):
+    """
+    Testa url usada pelo widget ModelSelect2 no campo municipio no
+    form de alterar cadastrador
+    """
+
+    form = AlterarCadastradorForm()
+    municipio_url = reverse('gestao:cidade_chain')
+    assert form['municipio'].field.widget.url == municipio_url

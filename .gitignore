@@ -28,3 +28,5 @@ snc.sln
 **/.env
 **/.cache
 
+.pytest_cache
+.tox
