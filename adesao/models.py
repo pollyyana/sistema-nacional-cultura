@@ -260,11 +260,18 @@ class SistemaCultura(models.Model):
             if not self.compara_valores(anterior, "cadastrador"):
                 self.alterar_cadastrador(anterior.cadastrador)
 
+        """
+        TODO: Refatorar essa lógica pois todo sistema cultura criado deve possuir um
+        ente federado com uma instância da tabela Municipio associado
+        """
+        ente_federado = Municipio.objects.get(estado=self.uf, cidade=self.cidade)
+        self.alterar_cadastrador(ente_federado.usuario)
+
         super(SistemaCultura, self).save(*args, **kwargs)
 
     def alterar_cadastrador(self, cadastrador_atual):
         """
-        Altera cadastrador de um ente federado fazendo as alterações 
+        Altera cadastrador de um ente federado fazendo as alterações
         necessárias nas models associadas ao cadastrador, gerando uma nova
         versão do sistema cultura
         """
