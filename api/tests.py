@@ -310,7 +310,7 @@ def test_retorno_data_adesao_sistema_de_cultura(client, plano_trabalho):
 
 def test_retorno_maximo_de_100_objetos_sistema_de_cultura(client):
 
-    mommy.make('Municipio', cidade__codigo_ibge=seq(10), _quantity=110)
+    mommy.make('Municipio', cidade__codigo_ibge=seq(110), _quantity=110)
     limit_param = '?limit=150'
 
     url = url_sistemadeculturalocal + limit_param

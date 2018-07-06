@@ -98,7 +98,7 @@ def plano_trabalho(login):
                                 criacao_sistema=lei_sistema,
                                 orgao_gestor=orgao_gestor,
                                 plano_cultura=plano_cultura)
-    ente_federado = mommy.make('Municipio')
+    ente_federado = mommy.make('Municipio', _fill_optional=['cidade'])
 
     usuario.municipio = ente_federado
     usuario.plano_trabalho = plano_trabalho
