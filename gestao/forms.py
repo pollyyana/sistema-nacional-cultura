@@ -216,10 +216,18 @@ class AlterarCadastradorForm(forms.Form):
     def save(self):
         cadastrador_novo = Usuario.objects.get(
                 user__username=self.cleaned_data['cpf_usuario'])
-        sistema = SistemaCultura.objects.ativo(
-                cidade=self.cleaned_data.get('municipio', None),
-                uf=self.cleaned_data['estado'])
-        sistema.cadastrador = cadastrador_novo
+        try:
+            sistema = SistemaCultura.objects.ativo(
+                    cidade=self.cleaned_data.get('municipio', None),
+                    uf=self.cleaned_data['estado'])
+            sistema.cadastrador = cadastrador_novo
+        except SistemaCultura.DoesNotExist:
+            sistema = SistemaCultura(
+                    uf=self.cleaned_data['estado'],
+                    cidade=self.cleaned_data.get('municipio', None),
+                    cadastrador=cadastrador_novo
+                    )
+
         sistema.save()
 
         return sistema
