@@ -209,8 +209,8 @@ class Historico(models.Model):
 
 
 class SistemaCulturaManager(models.Manager):
-    def ativo(self):
-        return self.latest('data_criacao')
+    def ativo(self, uf, cidade=None):
+        return self.filter(uf=uf, cidade=cidade).latest('data_criacao')
 
 
 class SistemaCultura(models.Model):
