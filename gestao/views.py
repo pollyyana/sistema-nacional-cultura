@@ -235,19 +235,23 @@ class AcompanharAdesao(ListView):
         ente_federado = self.request.GET.get('municipio', None)
 
         if situacao in ('0', '1', '2', '3', '4', '5', '6'):
-            return Municipio.objects.filter(usuario__estado_processo=situacao)
+            entes = Municipio.objects.filter(usuario__estado_processo=situacao)
 
-        if ente_federado:
+        elif ente_federado:
             municipio = Municipio.objects.filter(
                 cidade__nome_municipio__icontains=ente_federado)
             estado = Municipio.objects.filter(
                 cidade__nome_municipio__isnull=True,
                 estado__nome_uf__icontains=ente_federado)
 
-            return municipio | estado
+            entes = municipio | estado
 
-        return Municipio.objects.all()
+        else:
+            entes = Municipio.objects.all()
 
+        entes = entes.order_by('-usuario__plano_trabalho__criacao_sistema__data_envio')
+
+        return entes
 
 # Acompanhamento dos planos de trabalho
 def diligencia_documental(request, etapa, st, id):
