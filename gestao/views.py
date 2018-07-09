@@ -3,7 +3,7 @@ from threading import Thread
 from django.contrib.contenttypes.models import ContentType
 from django.core.mail import send_mail
 
-from django.db.models import Q
+from django.db.models import Q, Case, When, BooleanField
 
 from django.shortcuts import redirect
 from django.shortcuts import render
@@ -249,7 +249,13 @@ class AcompanharAdesao(ListView):
         else:
             entes = Municipio.objects.all()
 
-        entes = entes.order_by('-usuario__plano_trabalho__criacao_sistema__data_envio')
+        entes = entes.annotate(
+            concluido=Case(
+                When(usuario__plano_trabalho__criacao_sistema__situacao=1, then=True),
+                default=None,
+                output_field=BooleanField(),
+            )
+        ).order_by('concluido', '-usuario__plano_trabalho__criacao_sistema__data_envio')
 
         return entes
 
