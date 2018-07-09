@@ -24,5 +24,12 @@
         <a class="link-plain" href="#">{{ request.user.usuario.get_estado_processo_display }}</a>
 
     </li>
+    {% if request.user.usuario.estado_processo == '6' %}
+        <li>
+            Publicação no DOU:
+            <a class="link-plain" href="{{ request.user.usuario.link_publicacao_acordo }}">{{ request.user.usuario.data_publicacao_acordo|date:'d/m/Y' }}</a>
+
+        </li>
+    {% endif %}
 </ul>
 <br />
