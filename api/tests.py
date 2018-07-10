@@ -121,6 +121,19 @@ def test_campos_do_objeto_ente_federado_ao_retornar_sistema_cultura_local(client
     assert campos.symmetric_difference(request.data["ente_federado"]) == set()
 
 
+def test_campos_do_objeto_estado_ao_retornar_sistema_cultura_local(client,
+                                                                          plano_trabalho):
+    sistema_de_cultura = Municipio.objects.first()
+    municipio_id = '{}/'.format(sistema_de_cultura.id)
+    url = url_sistemadeculturalocal + municipio_id
+
+    request = client.get(url, content_type="application/hal+json")
+
+    campos = set(["codigo_ibge", "sigla", "nome_uf"])
+
+    assert campos.symmetric_difference(request.data["ente_federado"]["localizacao"]["estado"]) == set()
+
+
 def test_campos_do_objeto_embedded_ao_retornar_sistema_cultura_local(client,
                                                                      plano_trabalho):
 
@@ -414,6 +427,42 @@ def test_pesquisa_por_nome_municipio_em_sistema_de_cultura_letras_minusculas(cli
 
     assert len(request.data["_embedded"]["items"]) == 1
     assert request.data["_embedded"]["items"][0]["ente_federado"]["localizacao"]["cidade"]["nome_municipio"] == cidades[0].nome_municipio
+
+
+def test_pesquisa_por_nome_uf_em_sistema_de_cultura_letras_maiusculas(client):
+
+    estados = mommy.make('Uf', _quantity=2)
+
+    for estado in estados:
+        mommy.make('Municipio', estado=estado)
+
+    nome_uf_maiuscula = estados[0].nome_uf.upper()
+    nome_uf_param = '?nome_uf={}'.format(nome_uf_maiuscula)
+
+    url = url_sistemadeculturalocal + nome_uf_param
+
+    request = client.get(url, content_type="application/hal+json")
+
+    assert len(request.data["_embedded"]["items"]) == 1
+    assert request.data["_embedded"]["items"][0]["ente_federado"]["localizacao"]["estado"]["nome_uf"] == estados[0].nome_uf
+
+
+def test_pesquisa_por_nome_uf_em_sistema_de_cultura_letras_minusculas(client):
+
+    estados = mommy.make('Uf', _quantity=2)
+
+    for estado in estados:
+        mommy.make('Municipio', estado=estado)
+
+    nome_uf_minuscula = estados[0].nome_uf.lower()
+    nome_uf_param = '?nome_uf={}'.format(nome_uf_minuscula)
+
+    url = url_sistemadeculturalocal + nome_uf_param
+
+    request = client.get(url, content_type="application/hal+json")
+
+    assert len(request.data["_embedded"]["items"]) == 1
+    assert request.data["_embedded"]["items"][0]["ente_federado"]["localizacao"]["estado"]["nome_uf"] == estados[0].nome_uf
 
 def test_pesquisa_por_estado_sigla_em_sistema_de_cultura(client):
 
