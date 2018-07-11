@@ -157,3 +157,33 @@ def test_retorna_ativo_SistemaCultura_filtrado_por_uf_e_cidade():
 
     assert SistemaCultura.objects.ativo(
             uf=sistema_ativo.uf, cidade=sistema_ativo.cidade) == sistema_ativo
+
+
+def test_ativo_ou_cria_SistemaCultura_ativo():
+    """ Testa método ativo_ou_cria do manager SistemaCulturaManager
+    retorna SistemaCultura ativo """
+
+    mommy.make('SistemaCultura',
+               data_criacao=datetime(2018, 2, 3, 0, tzinfo=timezone.utc),
+               _fill_optional=['uf', 'cidade'])
+    sistema_ativo = mommy.make('SistemaCultura', _fill_optional=['uf', 'cidade'])
+
+    assert SistemaCultura.objects.ativo_ou_cria(
+            uf=sistema_ativo.uf, cidade=sistema_ativo.cidade) == sistema_ativo
+
+
+def test_ativo_ou_cria_SistemaCultura_cria():
+    """ Testa método ativo_ou_cria do manager SistemaCulturaManager
+    retorna um novo sistema cultura """
+    cidade = mommy.make('Cidade')
+    uf = cidade.uf
+    cadastrador = mommy.make('Usuario')
+
+    sistema = SistemaCultura.objects.ativo_ou_cria(
+            cidade=cidade, uf=uf, cadastrador=cadastrador)
+
+    assert isinstance(sistema, SistemaCultura)
+    assert sistema.pk
+    assert sistema.uf == uf
+    assert sistema.cidade == cidade
+    assert sistema.cadastrador == cadastrador
