@@ -219,7 +219,18 @@ class Historico(models.Model):
 
 class SistemaCulturaManager(models.Manager):
     def ativo(self, uf, cidade=None):
+        """ Retorna último SistemaCultura ativo relativo a um ente federado """
         return self.filter(uf=uf, cidade=cidade).latest('data_criacao')
+
+    def ativo_ou_cria(self, uf, cidade=None, cadastrador=None):
+        """ Retorna último SistemaCultura ativo relativo a um ente federado
+        caso ele não exista cria um novo SistemaCultura """
+        try:
+            sistema = self.ativo(uf=uf, cidade=cidade)
+        except SistemaCultura.DoesNotExist:
+            sistema = SistemaCultura(uf=uf, cidade=cidade, cadastrador=cadastrador)
+            sistema.save()
+        return sistema
 
 
 class SistemaCultura(models.Model):
