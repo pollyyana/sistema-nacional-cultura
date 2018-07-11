@@ -254,8 +254,8 @@ class AcompanharAdesao(ListView):
                 When(usuario__plano_trabalho__criacao_sistema__situacao=1, then=True),
                 default=None,
                 output_field=BooleanField(),
-            )
-        ).order_by('concluido', '-usuario__plano_trabalho__criacao_sistema__data_envio')
+            ),
+        ).order_by('concluido', '-usuario__estado_processo', 'usuario__plano_trabalho__criacao_sistema__data_envio')
 
         return entes
 

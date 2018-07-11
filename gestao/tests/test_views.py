@@ -358,7 +358,7 @@ def test_insere_link_publicacao_dou(client, plano_trabalho, login_staff):
 
     url = reverse('gestao:alterar_situacao', kwargs={'id': user.id})
 
-    client.post(url, data={'estado_processo': '6', 'data_publicacao_acordo': '28/06/2018', 
+    client.post(url, data={'estado_processo': '6', 'data_publicacao_acordo': '28/06/2018',
         'link_publicacao_acordo': 'https://www.google.com/'})
 
     user.refresh_from_db()
@@ -370,7 +370,7 @@ def test_se_link_da_publicacao_esta_no_context(client, plano_trabalho, login_sta
     usuario = plano_trabalho.usuario
     url = reverse('gestao:alterar_situacao', kwargs={'id': usuario.id})
 
-    client.post(url, data={'estado_processo': '6', 'data_publicacao_acordo': '28/06/2018', 
+    client.post(url, data={'estado_processo': '6', 'data_publicacao_acordo': '28/06/2018',
         'link_publicacao_acordo': 'https://www.google.com/'})
 
     request = client.get('/gestao/detalhar/municipio/{}'.format(usuario.id))
@@ -732,3 +732,43 @@ def test_filtra_ufs_por_nome(client):
 
     assert len(request.json()["results"]) == 1
     assert request.json()["results"][0]['text'] == mg.sigla
+
+
+def test_acompanhar_adesao_ordenar_data_componentes(client, plano_trabalho,
+                                                    login_staff):
+    """ Testa ordenação da página de acompanhamento das adesões
+    por data de envio do componente prioritário CriacaoSistema"""
+
+    user = mommy.make('Usuario', _fill_optional=['plano_trabalho', 'municipio'])
+    user.plano_trabalho.criacao_sistema = mommy.make('CriacaoSistema')
+    user.plano_trabalho.save()
+    user.plano_trabalho.criacao_sistema.situacao = SituacoesArquivoPlano.objects.get(pk=1)
+    user.plano_trabalho.criacao_sistema.data_envio = datetime.date(2018, 1, 1)
+    user.plano_trabalho.criacao_sistema.save()
+
+    url = reverse('gestao:acompanhar_adesao')
+    response = client.get(url)
+
+    assert response.context_data['object_list'][0] == user.municipio
+
+
+def test_acompanhar_adesao_ordenar_estado_processo(client, plano_trabalho,
+                                                   login_staff):
+    """ Testa ordenação da página de acompanhamento das adesões
+    por data de envio do componente prioritário CriacaoSistema e
+    estado do processo da adesão """
+
+    user = mommy.make('Usuario', estado_processo=1,
+                      _fill_optional=['plano_trabalho', 'municipio'])
+    user.plano_trabalho.criacao_sistema = mommy.make(
+            'CriacaoSistema', situacao_id=1, data_envio=datetime.date(2018, 1, 1))
+    user.plano_trabalho.save()
+    ente_federado = plano_trabalho.usuario.municipio
+    ente_federado.usuario.estado_processo = 6
+    ente_federado.usuario.save()
+
+    url = reverse('gestao:acompanhar_adesao')
+    response = client.get(url)
+
+    assert response.context_data['object_list'][0] == ente_federado
+
