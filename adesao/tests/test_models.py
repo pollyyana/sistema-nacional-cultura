@@ -2,7 +2,6 @@ import pytest
 from datetime import datetime
 
 from django.utils import timezone
-
 from model_mommy import mommy
 
 from adesao.models import SistemaCultura
@@ -192,13 +191,10 @@ def test_ativo_ou_cria_SistemaCultura_cria():
     retorna um novo sistema cultura """
     cidade = mommy.make('Cidade')
     uf = cidade.uf
-    cadastrador = mommy.make('Usuario')
 
-    sistema = SistemaCultura.objects.ativo_ou_cria(
-            cidade=cidade, uf=uf, cadastrador=cadastrador)
+    sistema = SistemaCultura.objects.ativo_ou_cria(cidade=cidade, uf=uf)
 
     assert isinstance(sistema, SistemaCultura)
     assert sistema.pk
     assert sistema.uf == uf
     assert sistema.cidade == cidade
-    assert sistema.cadastrador == cadastrador

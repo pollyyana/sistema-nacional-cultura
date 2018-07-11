@@ -201,3 +201,22 @@ def test_save_alterar_cadastrador_form_sem_sistemacultura(plano_trabalho):
     municipio.refresh_from_db()
 
     assert municipio.usuario == new_user
+
+
+def test_save_alterar_cadastrador_form_sem_municipio(plano_trabalho):
+    """
+    Testa form de alteração de cadastrador no caso que não existe municipío
+    """
+
+    estado = mommy.make('Uf')
+    cidade = mommy.make('Cidade', uf=estado)
+    new_user = mommy.make('Usuario', user__username='12345678911')
+
+    data = {'cpf_usuario': new_user.user.username,
+            'estado': estado.codigo_ibge,
+            'municipio': cidade.id}
+    form = AlterarCadastradorForm(data=data)
+    form.is_valid()
+    sistema = form.save()
+
+    assert sistema.cadastrador == new_user
