@@ -1,7 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
-from django.utils import timezone
-
+from django.utils import timezone 
 LISTA_ESTADOS_PROCESSO = (
     ('0', 'Aguardando preenchimento dos dados cadastrais'),
     ('1', 'Aguardando envio da documentação'),
@@ -214,13 +213,13 @@ class SistemaCulturaManager(models.Manager):
         """ Retorna último SistemaCultura ativo relativo a um ente federado """
         return self.filter(uf=uf, cidade=cidade).latest('data_criacao')
 
-    def ativo_ou_cria(self, uf, cidade=None, cadastrador=None):
+    def ativo_ou_cria(self, uf, cidade=None):
         """ Retorna último SistemaCultura ativo relativo a um ente federado
         caso ele não exista cria um novo SistemaCultura """
         try:
             sistema = self.ativo(uf=uf, cidade=cidade)
         except SistemaCultura.DoesNotExist:
-            sistema = SistemaCultura(uf=uf, cidade=cidade, cadastrador=cadastrador)
+            sistema = SistemaCultura(uf=uf, cidade=cidade)
             sistema.save()
         return sistema
 
@@ -262,13 +261,6 @@ class SistemaCultura(models.Model):
 
             if not self.compara_valores(anterior, "cadastrador"):
                 self.alterar_cadastrador(anterior.cadastrador)
-
-        """
-        TODO: Refatorar essa lógica pois todo sistema cultura criado deve possuir um
-        ente federado com uma instância da tabela Municipio associado
-        """
-        ente_federado = Municipio.objects.get(estado=self.uf, cidade=self.cidade)
-        self.alterar_cadastrador(ente_federado.usuario)
 
         super(SistemaCultura, self).save(*args, **kwargs)
 
