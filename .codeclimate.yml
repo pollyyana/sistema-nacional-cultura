@@ -12,3 +12,7 @@ plugins:
 ratings:
   paths:
   - "**.py"
+
+exclude_patterns:
+- "**/migrations/"
+- "**/tests/"
