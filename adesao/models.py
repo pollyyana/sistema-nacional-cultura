@@ -271,4 +271,13 @@ class SistemaCultura(models.Model):
         versão do sistema cultura
         """
         cadastrador = self.cadastrador
-        cadastrador.recebe_permissoes_sistema_cultura(cadastrador_atual)
+        if cadastrador_atual:
+            cadastrador.recebe_permissoes_sistema_cultura(cadastrador_atual)
+        else:
+            try:
+                ente_federado = Municipio.objects.get(estado=self.uf,
+                                                      cidade=self.cidade)
+                cadastrador_atual = ente_federado.usuario
+                self.alterar_cadastrador(cadastrador_atual)
+            except Municipio.DoesNotExist:
+                return

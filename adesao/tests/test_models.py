@@ -183,3 +183,16 @@ def test_ativo_ou_cria_SistemaCultura_cria():
     assert sistema.pk
     assert sistema.uf == uf
     assert sistema.cidade == cidade
+
+
+def test_alterar_cadastrador_sistema_cultura_sem_cadastrador():
+    """ Testa alterar o cadastrador de um sistema cultura que não possui um
+    cadastrador """
+    sistema = mommy.make('SistemaCultura')
+    cadastrador = mommy.make('Usuario')
+
+    sistema.cadastrador = cadastrador
+    sistema.save()
+    sistema.refresh_from_db()
+
+    assert sistema.cadastrador == cadastrador
