@@ -1,4 +1,6 @@
-import rest_framework_filters as filters
+from django.db.models import Q
+
+from django_filters import rest_framework as filters
 
 from planotrabalho.models import PlanoTrabalho
 from adesao.models import Municipio
@@ -15,6 +17,14 @@ class MunicipioFilter(filters.FilterSet):
     data_adesao_max = filters.DateFilter(name='usuario__data_publicacao_acordo', lookup_expr=('lte'))
     municipal = filters.BooleanFilter(name='cidade__nome_municipio', method='municipios_filter')
     estadual = filters.BooleanFilter(name='cidade__nome_municipio', method='municipios_filter')
+    ente_federado = filters.CharFilter(method='ente_federado_filter')
+
+    def ente_federado_filter(self, queryset, name, value):
+
+        return queryset.filter(
+                Q(estado__sigla__istartswith=value) |
+                Q(estado__nome_uf__istartswith=value) |
+                Q(cidade__nome_municipio__istartswith=value))
 
     def municipios_filter(self, qs, name, value):
         isnull = not value
@@ -28,8 +38,8 @@ class MunicipioFilter(filters.FilterSet):
 
     class Meta:
         model = Municipio
-        fields = {'id', 'cnpj_prefeitura', 'data_adesao',
-                  'data_adesao_min', 'data_adesao_max'}
+        fields = ('id', 'cnpj_prefeitura', 'data_adesao',
+                  'data_adesao_min', 'data_adesao_max')
 
 
 class PlanoTrabalhoFilter(filters.FilterSet):
@@ -49,10 +59,7 @@ class PlanoTrabalhoFilter(filters.FilterSet):
     situacao_plano_descricao = filters.CharFilter(name='plano_cultura__situacao_lei_plano__descricao',
                                                   lookup_expr='istartswith')
     situacao_plano_id = filters.NumberFilter(name='plano_cultura__situacao_lei_plano__descricao__id')
-    sistema_cultura = filters.RelatedFilter(MunicipioFilter,
-                                            name='usuario__municipio',
-                                            queryset=Municipio.objects.all())
 
     class Meta:
         model = PlanoTrabalho
-        fields = {'id'}
+        fields = ('id',)
