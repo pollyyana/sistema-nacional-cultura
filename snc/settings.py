@@ -63,8 +63,7 @@ THIRD_PARTY_APPS = (
     'drf_hal_json',
     'rest_framework_xml',
     'rest_framework_csv',
-    'corsheaders',
-    'rest_framework_filters'
+    'corsheaders'
 )
 
 # Apps specific for this project go here.
