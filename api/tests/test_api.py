@@ -728,6 +728,7 @@ def test_retorno_sistemas_cultura_municipios(client, entes_municipais_estaduais)
 def test_retorno_sistemas_cultura_estados(client, entes_municipais_estaduais):
     """ Testa retorno de sistema culturas que são referentes a adesões
     de entes federados estaduais """
+
     estadual, municipio = entes_municipais_estaduais
     url = url_sistemadeculturalocal + '?estadual=true'
 
@@ -736,6 +737,32 @@ def test_retorno_sistemas_cultura_estados(client, entes_municipais_estaduais):
 
     assert len(response.data['_embedded']['items']) == 1
     assert municipio_response == estadual.estado.sigla
+
+
+def test_retorno_sistemas_cultura_estadual_vazio(client, entes_municipais_estaduais):
+    """ Testa retorno dos sistemas cultura ao fornecer o parâmetro estadual vazio """
+
+    estadual, municipal = entes_municipais_estaduais
+
+    url = url_sistemadeculturalocal + '?estadual=&municipal=true'
+    response = client.get(url)
+    cidade = response.data['_embedded']['items'][0]['ente_federado']['localizacao']['cidade']
+
+    assert len(response.data['_embedded']['items']) == 1
+    assert cidade['nome_municipio'] == municipal.cidade.nome_municipio
+
+
+def test_retorno_sistemas_cultura_municipal_vazio(client, entes_municipais_estaduais):
+    """ Testa retorno dos sistemas cultura ao fornecer o parâmetro municipal vazio """
+
+    estadual, municipal = entes_municipais_estaduais
+
+    url = url_sistemadeculturalocal + '?estadual=true&municipal='
+    response = client.get(url)
+    cidade = response.data['_embedded']['items'][0]['ente_federado']['localizacao']['estado']
+
+    assert len(response.data['_embedded']['items']) == 1
+    assert cidade['sigla'] == estadual.estado.sigla
 
 
 def test_filtrar_por_nome_ente_federado_sigla_estado(client, entes_municipais_estaduais):

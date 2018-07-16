@@ -15,8 +15,8 @@ class MunicipioFilter(filters.FilterSet):
     data_adesao = filters.DateFilter(name='usuario__data_publicacao_acordo')
     data_adesao_min = filters.DateFilter(name='usuario__data_publicacao_acordo', lookup_expr=('gte'))
     data_adesao_max = filters.DateFilter(name='usuario__data_publicacao_acordo', lookup_expr=('lte'))
-    municipal = filters.BooleanFilter(name='cidade__nome_municipio', method='municipios_filter')
-    estadual = filters.BooleanFilter(name='cidade__nome_municipio', method='municipios_filter')
+    municipal = filters.BooleanFilter(method='municipal_filter')
+    estadual = filters.BooleanFilter(method='estadual_filter')
     ente_federado = filters.CharFilter(method='ente_federado_filter')
 
     def ente_federado_filter(self, queryset, name, value):
@@ -26,15 +26,14 @@ class MunicipioFilter(filters.FilterSet):
                 Q(estado__nome_uf__istartswith=value) |
                 Q(cidade__nome_municipio__istartswith=value))
 
-    def municipios_filter(self, qs, name, value):
+    def estadual_filter(self, queryset, name, value):
+
+        return queryset.filter(cidade__isnull=value)
+
+    def municipal_filter(self, queryset, name, value):
         isnull = not value
 
-        if 'estadual' in self.data.keys():
-            isnull = value
-
-        lookup_expr = name + '__isnull'
-
-        return qs.filter(**{lookup_expr: isnull})
+        return queryset.filter(cidade__isnull=isnull)
 
     class Meta:
         model = Municipio
