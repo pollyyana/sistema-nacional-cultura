@@ -1,4 +1,6 @@
-import rest_framework_filters as filters
+from django.db.models import Q
+
+from django_filters import rest_framework as filters
 
 from planotrabalho.models import PlanoTrabalho
 from adesao.models import Municipio
@@ -13,23 +15,30 @@ class MunicipioFilter(filters.FilterSet):
     data_adesao = filters.DateFilter(name='usuario__data_publicacao_acordo')
     data_adesao_min = filters.DateFilter(name='usuario__data_publicacao_acordo', lookup_expr=('gte'))
     data_adesao_max = filters.DateFilter(name='usuario__data_publicacao_acordo', lookup_expr=('lte'))
-    municipal = filters.BooleanFilter(name='cidade__nome_municipio', method='municipios_filter')
-    estadual = filters.BooleanFilter(name='cidade__nome_municipio', method='municipios_filter')
+    municipal = filters.BooleanFilter(method='municipal_filter')
+    estadual = filters.BooleanFilter(method='estadual_filter')
+    ente_federado = filters.CharFilter(method='ente_federado_filter')
 
-    def municipios_filter(self, qs, name, value):
+    def ente_federado_filter(self, queryset, name, value):
+
+        return queryset.filter(
+                Q(estado__sigla__istartswith=value) |
+                Q(estado__nome_uf__istartswith=value) |
+                Q(cidade__nome_municipio__istartswith=value))
+
+    def estadual_filter(self, queryset, name, value):
+
+        return queryset.filter(cidade__isnull=value)
+
+    def municipal_filter(self, queryset, name, value):
         isnull = not value
 
-        if 'estadual' in self.data.keys():
-            isnull = value
-
-        lookup_expr = name + '__isnull'
-
-        return qs.filter(**{lookup_expr: isnull})
+        return queryset.filter(cidade__isnull=isnull)
 
     class Meta:
         model = Municipio
-        fields = {'id', 'cnpj_prefeitura', 'data_adesao',
-                  'data_adesao_min', 'data_adesao_max'}
+        fields = ('id', 'cnpj_prefeitura', 'data_adesao',
+                  'data_adesao_min', 'data_adesao_max')
 
 
 class PlanoTrabalhoFilter(filters.FilterSet):
@@ -49,10 +58,7 @@ class PlanoTrabalhoFilter(filters.FilterSet):
     situacao_plano_descricao = filters.CharFilter(name='plano_cultura__situacao_lei_plano__descricao',
                                                   lookup_expr='istartswith')
     situacao_plano_id = filters.NumberFilter(name='plano_cultura__situacao_lei_plano__descricao__id')
-    sistema_cultura = filters.RelatedFilter(MunicipioFilter,
-                                            name='usuario__municipio',
-                                            queryset=Municipio.objects.all())
 
     class Meta:
         model = PlanoTrabalho
-        fields = {'id'}
+        fields = ('id',)

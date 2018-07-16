@@ -21,14 +21,16 @@ url_acoesplanotrabalho = '/api/v1/acoesplanotrabalho/'
 
 @pytest.fixture
 def entes_municipais_estaduais():
-    estadual = mommy.make('Municipio')
+    estado = mommy.make('Uf')
     cidade = mommy.make('Cidade')
-    municipio = mommy.make('Municipio', cidade=cidade)
+    estadual = mommy.make('Municipio', estado=estado)
+    municipio = mommy.make('Municipio', estado=estado, cidade=cidade)
 
     yield estadual, municipio
 
     estadual.delete()
     municipio.delete()
+
 
 @pytest.fixture
 def sistema_de_cultura(plano_trabalho):
@@ -721,10 +723,12 @@ def test_retorno_sistemas_cultura_municipios(client, entes_municipais_estaduais)
 
     assert len(response.data['_embedded']['items']) == 1
     assert municipio_response == municipio.cidade.nome_municipio
- 
+
+
 def test_retorno_sistemas_cultura_estados(client, entes_municipais_estaduais):
     """ Testa retorno de sistema culturas que são referentes a adesões
     de entes federados estaduais """
+
     estadual, municipio = entes_municipais_estaduais
     url = url_sistemadeculturalocal + '?estadual=true'
 
@@ -733,4 +737,87 @@ def test_retorno_sistemas_cultura_estados(client, entes_municipais_estaduais):
 
     assert len(response.data['_embedded']['items']) == 1
     assert municipio_response == estadual.estado.sigla
- 
+
+
+def test_retorno_sistemas_cultura_estadual_vazio(client, entes_municipais_estaduais):
+    """ Testa retorno dos sistemas cultura ao fornecer o parâmetro estadual vazio """
+
+    estadual, municipal = entes_municipais_estaduais
+
+    url = url_sistemadeculturalocal + '?estadual=&municipal=true'
+    response = client.get(url)
+    cidade = response.data['_embedded']['items'][0]['ente_federado']['localizacao']['cidade']
+
+    assert len(response.data['_embedded']['items']) == 1
+    assert cidade['nome_municipio'] == municipal.cidade.nome_municipio
+
+
+def test_retorno_sistemas_cultura_municipal_vazio(client, entes_municipais_estaduais):
+    """ Testa retorno dos sistemas cultura ao fornecer o parâmetro municipal vazio """
+
+    estadual, municipal = entes_municipais_estaduais
+
+    url = url_sistemadeculturalocal + '?estadual=true&municipal='
+    response = client.get(url)
+    cidade = response.data['_embedded']['items'][0]['ente_federado']['localizacao']['estado']
+
+    assert len(response.data['_embedded']['items']) == 1
+    assert cidade['sigla'] == estadual.estado.sigla
+
+
+def test_filtrar_por_nome_ente_federado_sigla_estado(client, entes_municipais_estaduais):
+    """ Testa retorno de sistemas de cultura passando o nome do ente federado
+    como parâmetro, nesse caso a sigla do estado"""
+
+    estadual, municipal = entes_municipais_estaduais
+    mommy.make('Municipio')
+
+    url = url_sistemadeculturalocal + '?ente_federado={}'.format(estadual.estado.sigla)
+
+    response = client.get(url)
+
+    assert len(response.data['_embedded']['items']) == 2
+    for item in response.data['_embedded']['items']:
+        assert item['ente_federado']['localizacao']['estado']['sigla'] == estadual.estado.sigla
+
+
+def test_filtrar_por_nome_ente_federado_nome_estado(client, entes_municipais_estaduais):
+    """ Testa retorno de sistemas de cultura passando o nome do ente federado
+    como parâmetro, nesse caso o nome do estado"""
+
+    estadual, municipal = entes_municipais_estaduais
+    mommy.make('Municipio')
+
+    url = url_sistemadeculturalocal + '?ente_federado={}'.format(estadual.estado.nome_uf)
+
+    response = client.get(url)
+
+    assert len(response.data['_embedded']['items']) == 2
+    for item in response.data['_embedded']['items']:
+        assert item['ente_federado']['localizacao']['estado']['nome_uf'] == estadual.estado.nome_uf
+
+
+def test_filtrar_por_nome_ente_federado_nome_municipio(client, entes_municipais_estaduais):
+    """ Testa retorno de sistemas de cultura passando o nome do ente federado
+    como parâmetro, nesse caso a nome do município"""
+
+    estadual, municipal = entes_municipais_estaduais
+    mommy.make('Municipio')
+
+    url = url_sistemadeculturalocal + '?ente_federado={}'.format(municipal.cidade.nome_municipio)
+
+    response = client.get(url)
+    municipio_resp = response.data['_embedded']['items'][0]['ente_federado']['localizacao']['cidade']['nome_municipio']
+
+    assert len(response.data['_embedded']['items']) == 1
+    assert municipio_resp == municipal.cidade.nome_municipio
+
+
+def test_filtrar_por_nome_ente_federado_vazio(client):
+    """ Testa retorno de sistemas de cultura ao passar o parâmetro vazio """
+    mommy.make('Municipio')
+    url = url_sistemadeculturalocal + '?ente_federado='
+
+    response = client.get(url)
+
+    assert len(response.data['_embedded']['items']) == 1
