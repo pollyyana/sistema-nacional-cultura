@@ -2,6 +2,8 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.utils import timezone
 
+from planotrabalho.models import PlanoTrabalho
+
 LISTA_ESTADOS_PROCESSO = (
     ('0', 'Aguardando preenchimento dos dados cadastrais'),
     ('1', 'Aguardando envio da documentação'),
@@ -184,7 +186,6 @@ class Usuario(models.Model):
         Responsavel, DataPublicacaoAcordo e EstadoProcesso.
         """
 
-
         propriedades = ("plano_trabalho", "municipio", "secretario",
                         "responsavel", "data_publicacao_acordo",
                         "estado_processo")
@@ -195,6 +196,13 @@ class Usuario(models.Model):
 
         usuario.limpa_cadastrador()
         self.save()
+
+    def save(self, *args, **kwargs):
+        if self.pk:
+            if self.estado_processo == '6' and self.plano_trabalho is None:
+                self.plano_trabalho = PlanoTrabalho.objects.create()
+
+        super(Usuario, self).save(*args, **kwargs)
 
 
 class Historico(models.Model):
