@@ -772,3 +772,35 @@ def test_acompanhar_adesao_ordenar_estado_processo(client, plano_trabalho,
 
     assert response.context_data['object_list'][0] == ente_federado
 
+
+def test_alterar_dados_adesao_detalhe_municipio(client, login_staff):
+    """ Testa alterar os dados da adesão na tela de detalhe do município """
+
+    usuario = mommy.make('Usuario', _fill_optional=['municipio'])
+    url = reverse('gestao:alterar_dados_adesao', kwargs={'pk': usuario.id})
+    data = {'estado_processo': 6, 'data_publicacao_acordo': datetime.date.today(), 'processo_sei': '123456765'}
+    response = client.post(url, data=data)
+
+    usuario.refresh_from_db()
+
+    assert response.status_code == 302
+    assert usuario.estado_processo == '6'
+    assert usuario.data_publicacao_acordo == datetime.date.today()
+    assert usuario.processo_sei == '123456765'
+
+
+def test_alterar_dados_adesao_detalhe_municipio_sem_valors(client, login_staff):
+    """ Testa retorno ao tentar alterar os dados da adesão sem passar dados válidos """
+
+    usuario = mommy.make('Usuario', _fill_optional=['municipio'])
+    url = reverse('gestao:alterar_dados_adesao', kwargs={'pk': usuario.id})
+    data = {}
+
+    response = client.post(url, data=data)
+
+    usuario.refresh_from_db()
+
+    assert response.status_code == 302
+    assert usuario.estado_processo == '0'
+    assert usuario.data_publicacao_acordo is None
+    assert usuario.processo_sei is None

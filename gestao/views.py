@@ -41,22 +41,10 @@ from planotrabalho.models import SituacoesArquivoPlano
 
 from gestao.utils import enviar_email_aprovacao_plano
 
-from adesao.models import Usuario
-from adesao.models import Cidade
 from adesao.models import Uf
-from adesao.models import Municipio
-from adesao.models import Historico
-
-from planotrabalho.models import CriacaoSistema
-from planotrabalho.models import PlanoCultura
-from planotrabalho.models import FundoCultura
-from planotrabalho.models import OrgaoGestor
-from planotrabalho.models import ConselhoCultural
-from planotrabalho.models import SituacoesArquivoPlano
 
 from .forms import AlterarSituacao, DiligenciaForm, AlterarDocumentosEnteFederadoForm, InserirSEI
-from .forms import AlterarCadastradorForm, AlterarUsuarioForm, AlterarOrgaoForm
-from .forms import AlterarFundoForm, AlterarPlanoForm, AlterarConselhoForm, AlterarSistemaForm
+from .forms import AlterarDadosAdesao
 
 from .forms import AlterarCadastradorForm
 from .forms import AlterarUsuarioForm
@@ -132,7 +120,7 @@ class UfChain(autocomplete.Select2QuerySetView):
     def get_selected_result_label(self, item):
         return item.sigla
 
-
+#TODO: Remover essa view
 def alterar_situacao(request, id):
     if request.method == "POST":
         form = AlterarSituacao(
@@ -158,6 +146,7 @@ def alterar_situacao(request, id):
 
     return redirect('gestao:detalhar', pk=id)
 
+#TODO: Remover essa view
 def inserir_sei(request, id):
     if request.method == "POST":
         form = InserirSEI(
@@ -167,6 +156,16 @@ def inserir_sei(request, id):
             form.save()
 
     return redirect('gestao:detalhar', pk=id)
+
+
+def alterar_dados_adesao(request, pk):
+    if request.method == "POST":
+        form = AlterarDadosAdesao(request.POST,
+                                  instance=Usuario.objects.get(pk=pk))
+        if form.is_valid():
+            form.save()
+    return redirect('gestao:detalhar', pk=pk)
+
 
 def ajax_cadastrador_cpf(request):
     if request.method == "POST":
