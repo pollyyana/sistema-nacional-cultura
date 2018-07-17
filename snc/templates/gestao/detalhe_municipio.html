@@ -308,12 +308,12 @@
     <div class="col-md-6">
         <div class="panel panel-info">
           <div class="panel-heading">
-            Situação da Adesão
+            Dados da Adesão
           </div>
-          <form name="form" action="{% url 'gestao:alterar_situacao' object.id %}" method="post">
+          <form name="form" action="{% url 'gestao:alterar_dados_adesao' object.id %}" method="post">
               <div class="panel-body ">
                   {% csrf_token %}
-                  <div class="list-group-item col-md-8 text-center">
+                  <div class="list-group-item col-md-12 text-center">
                       <div class="form-group">
                           <select id="select_situacoes" name="estado_processo" class="form-control">
                               <option value="1" {% if object.estado_processo == '1' %}selected{% endif %}>Aguardando envio da documentação</option>
@@ -335,6 +335,11 @@
                       <div class="form-group">
                          <input type="text" id="link_acordo_situacao" name="link_publicacao_acordo" class="form-control hide" placeholder="Link da Publicação" value="{% if object.estado_processo == '6' and link_publicacao %} {{link_publicacao}} {% endif %}"></input>
                       </div>
+
+                     <div class="form-group">
+                        <input type="text" id="processo_sei" name="processo_sei" class="form-control" placeholder="Número do Processo SEI" value="{% if object.estado_processo == '6' and processo_sei %} {{processo_sei}} {% endif %}"></input>
+                      </div>
+
                       <div class="row">
                           <div class="col-md-12">
                             <button type="submit" class="btn btn-primary btn-xs" title="Alterar Situação" >Salvar</button>
@@ -342,32 +347,6 @@
                           </div>
                       </div>
                   </div>
-
-              </div>
-          </form>
-        </div>
-    </div>
-
-    <div class="col-md-6">
-        <div class="panel panel-info">
-          <div class="panel-heading">
-            Número do Processo SEI
-          </div>
-          <form name="form" action="{% url 'gestao:inserir_sei' object.id %}" method="post">
-              <div class="panel-body ">
-                  {% csrf_token %}
-                  <div class="list-group-item col-md-8 text-center">
-                      <div class="form-group">
-                         <input type="text" id="processo_sei" name="processo_sei" class="form-control" placeholder="Número do Processo SEI" value="{% if object.estado_processo == '6' and processo_sei %} {{processo_sei}} {% endif %}"></input>
-                      </div>
-                      <div class="row">
-                          <div class="col-md-12">
-                            <button type="submit" class="btn btn-primary btn-xs" title="Inserir SEI" >Salvar</button>
-                            <a href="{% url 'gestao:detalhar' object.id %}" class="btn btn-default btn-xs" value="Cancelar" >Cancelar</a>
-                          </div>
-                      </div>
-                  </div>
-
               </div>
           </form>
         </div>
