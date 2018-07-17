@@ -2,7 +2,7 @@ import pytest
 from django.forms import ModelForm
 from django.shortcuts import reverse
 
-from gestao.forms import DiligenciaForm, InserirSEI
+from gestao.forms import DiligenciaForm
 from gestao.models import Diligencia
 
 from ckeditor.widgets import CKEditorWidget
@@ -12,24 +12,13 @@ from gestao.forms import AlterarCadastradorForm
 
 pytestmark = pytest.mark.django_db
 
-def test_existencia_form_sei(client):
-
-    """ Testa existência da classe form para a inserção do sei """
-    form = InserirSEI()
-    assert form
-
-def test_campo_processo_sei_form(client):
-    """
-    Testa existência do processo_sei no form
-    """
-    form = InserirSEI()
-    assert "id=\"id_processo_sei\"" in form.as_p()
 
 def test_existencia_form_diligencia(client):
 
     """ Testa existência da classe form para a diligência """
     form = DiligenciaForm(resultado='0', componente='1')
     assert form
+
 
 def test_campo_texto_diligencia_form(client):
     """

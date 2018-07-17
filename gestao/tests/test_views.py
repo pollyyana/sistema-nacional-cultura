@@ -351,12 +351,13 @@ def test_muda_situacao_arquivo_componente(url, client, plano_trabalho, login_sta
 
     assert OrgaoGestor.objects.first().situacao.id == 4
 
+
 def test_insere_link_publicacao_dou(client, plano_trabalho, login_staff):
     """ Testa se ao inserir o link da publicacao no dou o objeto usuario é alterado """
 
     user = plano_trabalho.usuario
 
-    url = reverse('gestao:alterar_situacao', kwargs={'id': user.id})
+    url = reverse('gestao:alterar_dados_adesao', kwargs={'pk': user.id})
 
     client.post(url, data={'estado_processo': '6', 'data_publicacao_acordo': '28/06/2018',
         'link_publicacao_acordo': 'https://www.google.com/'})
@@ -364,11 +365,12 @@ def test_insere_link_publicacao_dou(client, plano_trabalho, login_staff):
     user.refresh_from_db()
     assert user.link_publicacao_acordo == "https://www.google.com/"
 
+
 def test_se_link_da_publicacao_esta_no_context(client, plano_trabalho, login_staff):
     """ Testa se ao detalhar um municipio com processo sei, essa informacao é transmitida"""
 
     usuario = plano_trabalho.usuario
-    url = reverse('gestao:alterar_situacao', kwargs={'id': usuario.id})
+    url = reverse('gestao:alterar_dados_adesao', kwargs={'pk': usuario.id})
 
     client.post(url, data={'estado_processo': '6', 'data_publicacao_acordo': '28/06/2018',
         'link_publicacao_acordo': 'https://www.google.com/'})
@@ -378,16 +380,20 @@ def test_se_link_da_publicacao_esta_no_context(client, plano_trabalho, login_sta
     usuario.refresh_from_db()
     assert request.context['link_publicacao'] == usuario.link_publicacao_acordo
 
-def test_insere_sei(client, login_staff):
+
+def test_insere_sei(client, plano_trabalho, login_staff):
     """ Testa se ao inserir sei o objeto usuario é alterado """
 
-    user = Usuario.objects.first()
+    user = plano_trabalho.usuario
 
-    url = reverse('gestao:inserir_sei', kwargs={'id': user.id})
+    url = reverse('gestao:alterar_dados_adesao', kwargs={'pk': user.id})
 
     client.post(url, data={'processo_sei': '123456'})
 
-    assert Usuario.objects.first().processo_sei == "123456"
+    user.refresh_from_db()
+
+    assert user.processo_sei == "123456"
+
 
 def test_se_processo_sei_esta_no_context(client, plano_trabalho, login_staff):
     """ Testa se ao detalhar um municipio com processo sei, essa informacao é transmitida"""
@@ -399,6 +405,7 @@ def test_se_processo_sei_esta_no_context(client, plano_trabalho, login_staff):
     request = client.get('/gestao/detalhar/municipio/{}'.format(usuario_id))
 
     assert request.context['processo_sei'] == plano_trabalho.usuario.processo_sei
+
 
 def test_retorno_200_para_detalhar_municipio(client, plano_trabalho, login_staff):
     """ Testa se página de detalhamento do município retorna 200 """

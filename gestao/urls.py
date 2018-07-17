@@ -10,15 +10,6 @@ urlpatterns = [
     url(r'^$', staff_member_required(
         views.AcompanharAdesao.as_view(),
         login_url='adesao:login'), name='acompanhar_adesao'),
-
-    #TODO: Remover essa url
-    url(r'^alterar/situacao/(?P<id>[\w]+)$',
-        staff_member_required(views.alterar_situacao, login_url='adesao:login'),
-        name='alterar_situacao'),
-    #TODO: Remover essa url
-    url(r'^inserir/sei/(?P<id>[\w]+)$',
-        staff_member_required(views.inserir_sei, login_url='adesao:login'),
-        name='inserir_sei'),
     url(r'^alterar/dados-adesao/(?P<pk>[0-9]+)$',
         staff_member_required(views.alterar_dados_adesao, login_url='adesao:login'),
         name='alterar_dados_adesao'),
