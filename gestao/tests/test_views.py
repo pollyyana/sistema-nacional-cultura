@@ -796,7 +796,7 @@ def test_alterar_dados_adesao_detalhe_municipio(client, login_staff):
     assert usuario.processo_sei == '123456765'
 
 
-def test_alterar_dados_adesao_detalhe_municipio_sem_valors(client, login_staff):
+def test_alterar_dados_adesao_detalhe_municipio_sem_valores(client, login_staff):
     """ Testa retorno ao tentar alterar os dados da adesão sem passar dados válidos """
 
     usuario = mommy.make('Usuario', _fill_optional=['municipio'])
@@ -809,5 +809,5 @@ def test_alterar_dados_adesao_detalhe_municipio_sem_valors(client, login_staff):
 
     assert response.status_code == 302
     assert usuario.estado_processo == '0'
-    assert usuario.data_publicacao_acordo is None
-    assert usuario.processo_sei is None
+    assert not usuario.data_publicacao_acordo
+    assert not usuario.processo_sei
