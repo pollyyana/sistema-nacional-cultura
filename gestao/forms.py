@@ -12,8 +12,9 @@ from adesao.models import Historico
 from adesao.models import Cidade
 from adesao.models import Uf
 from adesao.models import Municipio
+from adesao.models import LISTA_ESTADOS_PROCESSO
 
-from planotrabalho.models import PlanoTrabalho, CriacaoSistema, FundoCultura
+from planotrabalho.models import CriacaoSistema, FundoCultura
 from planotrabalho.models import PlanoCultura, OrgaoGestor, ConselhoCultural
 from planotrabalho.models import SituacoesArquivoPlano
 
@@ -71,11 +72,7 @@ class AlterarDadosAdesao(ModelForm):
     justificativa = forms.CharField(required=False)
     localizacao = forms.CharField(max_length="10", required=False)
     num_processo = forms.CharField(max_length="50", required=False)
-
-    # TODO: Carregar esse obrigatoriedade na definição do field
-    def __init__(self, *args, **kwargs):
-        super(AlterarDadosAdesao, self).__init__(*args, **kwargs)
-        self.fields['estado_processo'].required = False
+    estado_processo = forms.ChoiceField(choices=LISTA_ESTADOS_PROCESSO, required=False)
 
     def clean(self):
         if self.cleaned_data.get('estado_processo', None) == '6':
