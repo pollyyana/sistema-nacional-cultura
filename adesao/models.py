@@ -219,8 +219,7 @@ class SistemaCulturaManager(models.Manager):
         try:
             sistema = self.ativo(uf=uf, cidade=cidade)
         except SistemaCultura.DoesNotExist:
-            sistema = SistemaCultura(uf=uf, cidade=cidade)
-            sistema.save()
+            sistema = SistemaCultura.objects.create(uf=uf, cidade=cidade)
         return sistema
 
 
