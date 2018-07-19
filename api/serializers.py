@@ -155,7 +155,7 @@ class CidadeSerializer(serializers.ModelSerializer):
 class UfSerializer(serializers.ModelSerializer):
     class Meta:
         model = Uf
-        fields = ('codigo_ibge', 'sigla')
+        fields = ('codigo_ibge', 'sigla', 'nome_uf')
 
 
 class MunicipioLinkSerializer(hal_serializers.HalModelSerializer):

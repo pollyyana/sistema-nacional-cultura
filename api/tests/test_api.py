@@ -21,14 +21,16 @@ url_acoesplanotrabalho = '/api/v1/acoesplanotrabalho/'
 
 @pytest.fixture
 def entes_municipais_estaduais():
-    estadual = mommy.make('Municipio')
+    estado = mommy.make('Uf')
     cidade = mommy.make('Cidade')
-    municipio = mommy.make('Municipio', cidade=cidade)
+    estadual = mommy.make('Municipio', estado=estado)
+    municipio = mommy.make('Municipio', estado=estado, cidade=cidade)
 
     yield estadual, municipio
 
     estadual.delete()
     municipio.delete()
+
 
 @pytest.fixture
 def sistema_de_cultura(plano_trabalho):
@@ -119,6 +121,19 @@ def test_campos_do_objeto_ente_federado_ao_retornar_sistema_cultura_local(client
     campos = set(["cnpj_prefeitura", "endereco_eletronico", "telefones", "localizacao"])
 
     assert campos.symmetric_difference(request.data["ente_federado"]) == set()
+
+
+def test_campos_do_objeto_estado_ao_retornar_sistema_cultura_local(client,
+                                                                          plano_trabalho):
+    sistema_de_cultura = Municipio.objects.first()
+    municipio_id = '{}/'.format(sistema_de_cultura.id)
+    url = url_sistemadeculturalocal + municipio_id
+
+    request = client.get(url, content_type="application/hal+json")
+
+    campos = set(["codigo_ibge", "sigla", "nome_uf"])
+
+    assert campos.symmetric_difference(request.data["ente_federado"]["localizacao"]["estado"]) == set()
 
 
 def test_campos_do_objeto_embedded_ao_retornar_sistema_cultura_local(client,
@@ -415,6 +430,42 @@ def test_pesquisa_por_nome_municipio_em_sistema_de_cultura_letras_minusculas(cli
     assert len(request.data["_embedded"]["items"]) == 1
     assert request.data["_embedded"]["items"][0]["ente_federado"]["localizacao"]["cidade"]["nome_municipio"] == cidades[0].nome_municipio
 
+
+def test_pesquisa_por_nome_uf_em_sistema_de_cultura_letras_maiusculas(client):
+
+    estados = mommy.make('Uf', _quantity=2)
+
+    for estado in estados:
+        mommy.make('Municipio', estado=estado)
+
+    nome_uf_maiuscula = estados[0].nome_uf.upper()
+    nome_uf_param = '?nome_uf={}'.format(nome_uf_maiuscula)
+
+    url = url_sistemadeculturalocal + nome_uf_param
+
+    request = client.get(url, content_type="application/hal+json")
+
+    assert len(request.data["_embedded"]["items"]) == 1
+    assert request.data["_embedded"]["items"][0]["ente_federado"]["localizacao"]["estado"]["nome_uf"] == estados[0].nome_uf
+
+
+def test_pesquisa_por_nome_uf_em_sistema_de_cultura_letras_minusculas(client):
+
+    estados = mommy.make('Uf', _quantity=2)
+
+    for estado in estados:
+        mommy.make('Municipio', estado=estado)
+
+    nome_uf_minuscula = estados[0].nome_uf.lower()
+    nome_uf_param = '?nome_uf={}'.format(nome_uf_minuscula)
+
+    url = url_sistemadeculturalocal + nome_uf_param
+
+    request = client.get(url, content_type="application/hal+json")
+
+    assert len(request.data["_embedded"]["items"]) == 1
+    assert request.data["_embedded"]["items"][0]["ente_federado"]["localizacao"]["estado"]["nome_uf"] == estados[0].nome_uf
+
 def test_pesquisa_por_estado_sigla_em_sistema_de_cultura(client):
 
     municipios = mommy.make('Municipio', _quantity=2)
@@ -672,10 +723,12 @@ def test_retorno_sistemas_cultura_municipios(client, entes_municipais_estaduais)
 
     assert len(response.data['_embedded']['items']) == 1
     assert municipio_response == municipio.cidade.nome_municipio
- 
+
+
 def test_retorno_sistemas_cultura_estados(client, entes_municipais_estaduais):
     """ Testa retorno de sistema culturas que são referentes a adesões
     de entes federados estaduais """
+
     estadual, municipio = entes_municipais_estaduais
     url = url_sistemadeculturalocal + '?estadual=true'
 
@@ -684,4 +737,87 @@ def test_retorno_sistemas_cultura_estados(client, entes_municipais_estaduais):
 
     assert len(response.data['_embedded']['items']) == 1
     assert municipio_response == estadual.estado.sigla
- 
+
+
+def test_retorno_sistemas_cultura_estadual_vazio(client, entes_municipais_estaduais):
+    """ Testa retorno dos sistemas cultura ao fornecer o parâmetro estadual vazio """
+
+    estadual, municipal = entes_municipais_estaduais
+
+    url = url_sistemadeculturalocal + '?estadual=&municipal=true'
+    response = client.get(url)
+    cidade = response.data['_embedded']['items'][0]['ente_federado']['localizacao']['cidade']
+
+    assert len(response.data['_embedded']['items']) == 1
+    assert cidade['nome_municipio'] == municipal.cidade.nome_municipio
+
+
+def test_retorno_sistemas_cultura_municipal_vazio(client, entes_municipais_estaduais):
+    """ Testa retorno dos sistemas cultura ao fornecer o parâmetro municipal vazio """
+
+    estadual, municipal = entes_municipais_estaduais
+
+    url = url_sistemadeculturalocal + '?estadual=true&municipal='
+    response = client.get(url)
+    cidade = response.data['_embedded']['items'][0]['ente_federado']['localizacao']['estado']
+
+    assert len(response.data['_embedded']['items']) == 1
+    assert cidade['sigla'] == estadual.estado.sigla
+
+
+def test_filtrar_por_nome_ente_federado_sigla_estado(client, entes_municipais_estaduais):
+    """ Testa retorno de sistemas de cultura passando o nome do ente federado
+    como parâmetro, nesse caso a sigla do estado"""
+
+    estadual, municipal = entes_municipais_estaduais
+    mommy.make('Municipio')
+
+    url = url_sistemadeculturalocal + '?ente_federado={}'.format(estadual.estado.sigla)
+
+    response = client.get(url)
+
+    assert len(response.data['_embedded']['items']) == 2
+    for item in response.data['_embedded']['items']:
+        assert item['ente_federado']['localizacao']['estado']['sigla'] == estadual.estado.sigla
+
+
+def test_filtrar_por_nome_ente_federado_nome_estado(client, entes_municipais_estaduais):
+    """ Testa retorno de sistemas de cultura passando o nome do ente federado
+    como parâmetro, nesse caso o nome do estado"""
+
+    estadual, municipal = entes_municipais_estaduais
+    mommy.make('Municipio')
+
+    url = url_sistemadeculturalocal + '?ente_federado={}'.format(estadual.estado.nome_uf)
+
+    response = client.get(url)
+
+    assert len(response.data['_embedded']['items']) == 2
+    for item in response.data['_embedded']['items']:
+        assert item['ente_federado']['localizacao']['estado']['nome_uf'] == estadual.estado.nome_uf
+
+
+def test_filtrar_por_nome_ente_federado_nome_municipio(client, entes_municipais_estaduais):
+    """ Testa retorno de sistemas de cultura passando o nome do ente federado
+    como parâmetro, nesse caso a nome do município"""
+
+    estadual, municipal = entes_municipais_estaduais
+    mommy.make('Municipio')
+
+    url = url_sistemadeculturalocal + '?ente_federado={}'.format(municipal.cidade.nome_municipio)
+
+    response = client.get(url)
+    municipio_resp = response.data['_embedded']['items'][0]['ente_federado']['localizacao']['cidade']['nome_municipio']
+
+    assert len(response.data['_embedded']['items']) == 1
+    assert municipio_resp == municipal.cidade.nome_municipio
+
+
+def test_filtrar_por_nome_ente_federado_vazio(client):
+    """ Testa retorno de sistemas de cultura ao passar o parâmetro vazio """
+    mommy.make('Municipio')
+    url = url_sistemadeculturalocal + '?ente_federado='
+
+    response = client.get(url)
+
+    assert len(response.data['_embedded']['items']) == 1

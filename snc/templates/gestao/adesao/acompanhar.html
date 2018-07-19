@@ -63,34 +63,15 @@
                   {% endif %}
                   <td>{{ municipio.cnpj_prefeitura }}</td>
                   {% if municipio.usuario %}
-                  <form name="form" action="{% url 'gestao:alterar_situacao' municipio.usuario.id %}" method="post">
                   <td>
-                    {% csrf_token %}
-                      <!-- <select id="select_situacao_{{forloop.counter0}}" name="estado_processo" class="form-control">
-                        <option value="1" {% if municipio.usuario.estado_processo == '1' %}selected{% endif %}>Aguardando envio da documentação</option>
-                        <option value="2" {% if municipio.usuario.estado_processo == '2' %}selected{% endif %}>Documentação Recebida - Aguarda Análise</option>
-                        <option value="3" {% if municipio.usuario.estado_processo == '3' %}selected{% endif %}>Diligência Documental</option>
-                        <option value="4" {% if municipio.usuario.estado_processo == '4' %}selected{% endif %}>Encaminhado para assinatura do Secretário SAI</option>
-                        <option value="5" {% if municipio.usuario.estado_processo == '5' %}selected{% endif %}>Aguarda Publicação no DOU</option>
-                        <option value="6" {% if municipio.usuario.estado_processo == '6' %}selected{% endif %}>Publicado no DOU</option>
-                      </select> -->
-                        {% if municipio.usuario.estado_processo == '0' %}Aguardando dados cadastrais{% endif %}
+                       {% if municipio.usuario.estado_processo == '0' %}Aguardando dados cadastrais{% endif %}
                         {% if municipio.usuario.estado_processo == '1' %}Aguardando envio da documentação{% endif %}
                         {% if municipio.usuario.estado_processo == '2' %}Documentação Recebida - Aguarda Análise{% endif %}
                         {% if municipio.usuario.estado_processo == '3' %}Diligência Documental{% endif %}
                         {% if municipio.usuario.estado_processo == '4' %}Encaminhado para assinatura do Secretário SAI{% endif %}
                         {% if municipio.usuario.estado_processo == '5' %}Aguarda Publicação no DOU{% endif %}
                         {% if municipio.usuario.estado_processo == '6' %}Publicado no DOU{% endif %}
-
-                      <textarea id="justificativa_{{forloop.counter0}}" name="justificativa" class="form-control hide" placeholder="Justificativa" rows="4" cols="20"></textarea>
-                      <input type="text" id="data_acordo_{{forloop.counter0}}" name="data_publicacao_acordo" class="form-control date hide" placeholder="Data de Publicação"></input>
-                      <input type="text" id="localizacao_{{forloop.counter0}}" name="localizacao" class="form-control hide", placeholder="Localização"></input>
-                      <input type="text" id="num_processo_{{forloop.counter0}}" name="num_processo" class="form-control hide" placeholder="Número do Processo"></input>
                     </td>
-                    <!-- <td>
-                      <button type="submit" class="btn btn-primary" title="Alterar Situação" ><i class="fa fa-check"></i></button>
-                    </td> -->
-                  </form>
                   {% else %}
                   <td>Município sem cadastrador
                    {% if municipio.cidade %}
@@ -198,15 +179,6 @@
 {% block js%}
 <script type="text/javascript">
   $(document).ready(function(){
-
-
-
-
-
-
-
-
-
     $("[id^='select_situacao']").change(function(e){
       index = $(this).parent().parent().index();
       if($(this).val()==="2"){

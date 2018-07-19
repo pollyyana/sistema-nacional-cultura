@@ -63,8 +63,7 @@ THIRD_PARTY_APPS = (
     'drf_hal_json',
     'rest_framework_xml',
     'rest_framework_csv',
-    'corsheaders',
-    'rest_framework_filters'
+    'corsheaders'
 )
 
 # Apps specific for this project go here.
@@ -82,7 +81,7 @@ INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS
 REST_FRAMEWORK = {
     'DEFAULT_PAGINATION_CLASS': 'api.pagination.HalLimitOffsetPagination',
     'PAGE_SIZE': 10,
-    'DEFAULT_FILTER_BACKENDS': ('rest_framework_filters.backends.DjangoFilterBackend',),
+    'DEFAULT_FILTER_BACKENDS': ('django_filters.rest_framework.DjangoFilterBackend',),
     'DEFAULT_PARSER_CLASSES':
         ('rest_framework_xml.parsers.XMLParser',),
     'DEFAULT_RENDERER_CLASSES': (

@@ -13,8 +13,10 @@ from adesao.models import Cidade
 from adesao.models import Uf
 from adesao.models import Municipio
 from adesao.models import SistemaCultura
+from adesao.models import LISTA_ESTADOS_PROCESSO
 
-from planotrabalho.models import PlanoTrabalho, CriacaoSistema, FundoCultura
+
+from planotrabalho.models import CriacaoSistema, FundoCultura
 from planotrabalho.models import PlanoCultura, OrgaoGestor, ConselhoCultural
 from planotrabalho.models import SituacoesArquivoPlano
 
@@ -66,29 +68,21 @@ class RestrictedFileField(forms.FileField):
 
         return data
 
-class InserirSEI(ModelForm):
+
+class AlterarDadosAdesao(ModelForm):
     processo_sei = forms.CharField(max_length="50", required=False)
-
-    class Meta:
-        model = Usuario
-        fields = ('processo_sei',)
-
-
-class AlterarSituacao(ModelForm):
     justificativa = forms.CharField(required=False)
     localizacao = forms.CharField(max_length="10", required=False)
     num_processo = forms.CharField(max_length="50", required=False)
+    estado_processo = forms.ChoiceField(choices=LISTA_ESTADOS_PROCESSO, required=False)
 
     def clean(self):
-        try:
-            if self.cleaned_data['estado_processo'] == '6':
-                if not self.cleaned_data['data_publicacao_acordo']:
-                    raise forms.ValidationError('Insira a data corretamente.')
-        except:
-            raise forms.ValidationError('Insira a data corretamente.')
+        if self.cleaned_data.get('estado_processo', None) == '6':
+            if not self.cleaned_data.get('data_publicacao_acordo', None):
+                raise forms.ValidationError('Insira a data corretamente.')
 
     def save(self, commit=True):
-        usuario = super(AlterarSituacao, self).save(commit=False)
+        usuario = super(AlterarDadosAdesao, self).save(commit=False)
         historico = Historico()
         historico.usuario = usuario
         historico.situacao = self.cleaned_data['estado_processo']
@@ -99,75 +93,6 @@ class AlterarSituacao(ModelForm):
             historico.descricao = self.cleaned_data['justificativa']
         elif self.cleaned_data['estado_processo'] == '4':
             usuario.municipio.numero_processo = self.cleaned_data['num_processo']
-        elif self.cleaned_data['estado_processo'] == '6':
-            if usuario.plano_trabalho is None:
-                plano_trabalho = PlanoTrabalho()
-
-                conselho_cultural = ConselhoCultural()
-                criacao_sistema = CriacaoSistema()
-                fundo_cultura = FundoCultura()
-                orgao_gestor = OrgaoGestor()
-                plano_cultura = PlanoCultura()
-
-                conselho_cultural.situacao_id = 0
-                criacao_sistema.situacao_id = 0
-                fundo_cultura.situacao_id = 0
-                orgao_gestor.situacao_id = 0
-                plano_cultura.situacao_id = 0
-
-                if commit:
-                    criacao_sistema.save()
-                    fundo_cultura.save()
-                    orgao_gestor.save()
-                    conselho_cultural.save()
-                    plano_cultura.save()
-
-                plano_trabalho.conselho_cultural_id = conselho_cultural.id
-                plano_trabalho.criacao_sistema_id = criacao_sistema.id
-                plano_trabalho.fundo_cultura_id = fundo_cultura.id
-                plano_trabalho.orgao_gestor_id = orgao_gestor.id
-                plano_trabalho.plano_cultura_id = plano_cultura.id
-
-                if commit:
-                    plano_trabalho.save()
-
-                usuario.plano_trabalho = plano_trabalho
-
-            if (
-                    usuario.plano_trabalho.conselho_cultural is None and
-                    usuario.plano_trabalho.criacao_sistema is None and
-                    usuario.plano_trabalho.fundo_cultura is None and
-                    usuario.plano_trabalho.orgao_gestor is None and
-                    usuario.plano_trabalho.plano_cultura is None
-                    ):
-
-                conselho_cultural = ConselhoCultural()
-                criacao_sistema = CriacaoSistema()
-                fundo_cultura = FundoCultura()
-                orgao_gestor = OrgaoGestor()
-                plano_cultura = PlanoCultura()
-
-                conselho_cultural.situacao_id = 0
-                criacao_sistema.situacao_id = 0
-                fundo_cultura.situacao_id = 0
-                orgao_gestor.situacao_id = 0
-                plano_cultura.situacao_id = 0
-
-                if commit:
-                    criacao_sistema.save()
-                    fundo_cultura.save()
-                    orgao_gestor.save()
-                    conselho_cultural.save()
-                    plano_cultura.save()
-
-                usuario.plano_trabalho.conselho_cultural_id = conselho_cultural.id
-                usuario.plano_trabalho.criacao_sistema_id = criacao_sistema.id
-                usuario.plano_trabalho.fundo_cultura_id = fundo_cultura.id
-                usuario.plano_trabalho.orgao_gestor_id = orgao_gestor.id
-                usuario.plano_trabalho.plano_cultura_id = plano_cultura.id
-
-                if commit:
-                    usuario.plano_trabalho.save()
 
         if commit:
             usuario.municipio.save()
@@ -177,7 +102,8 @@ class AlterarSituacao(ModelForm):
 
     class Meta:
         model = Usuario
-        fields = ('estado_processo', 'data_publicacao_acordo', 'link_publicacao_acordo')
+        fields = ('estado_processo', 'data_publicacao_acordo', 'link_publicacao_acordo',
+                  'processo_sei')
 
 
 class DiligenciaForm(ModelForm):
@@ -189,12 +115,12 @@ class DiligenciaForm(ModelForm):
 
         super(DiligenciaForm, self).__init__(*args, **kwargs)
 
-        if resultado == '1' and componente != 'plano_trabalho':
-            self.fields['classificacao_arquivo'].queryset = SituacoesArquivoPlano.objects.filter(pk=2)
-        elif resultado == '0' and componente != 'plano_trabalho':
-            self.fields['classificacao_arquivo'].queryset = SituacoesArquivoPlano.objects.filter(id__gte=4, id__lte=6)
-
-        elif componente == 'plano_trabalho':
+        if componente != 'plano_trabalho':
+            if resultado == '1':
+                self.fields['classificacao_arquivo'].queryset = SituacoesArquivoPlano.objects.filter(pk=2)
+            else:
+                self.fields['classificacao_arquivo'].queryset = SituacoesArquivoPlano.objects.filter(id__gte=4, id__lte=6)
+        else:
             self.fields.pop('classificacao_arquivo')
 
     class Meta:

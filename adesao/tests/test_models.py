@@ -158,6 +158,7 @@ def test_retorna_ativo_SistemaCultura_filtrado_por_uf_e_cidade():
             uf=sistema_ativo.uf, cidade=sistema_ativo.cidade) == sistema_ativo
 
 
+
 def test_ativo_ou_cria_SistemaCultura_ativo():
     """ Testa método ativo_ou_cria do manager SistemaCulturaManager
     retorna SistemaCultura ativo """
@@ -196,3 +197,18 @@ def test_alterar_cadastrador_sistema_cultura_sem_cadastrador():
     sistema.refresh_from_db()
 
     assert sistema.cadastrador == cadastrador
+
+    
+def test_criar_plano_trabalho_para_Usuario_estado_processo():
+    """ Criar um plano trabalho para um Usuario caso o estado do processo
+    seja '6', que significa publicado no DOU """
+
+    usuario = mommy.make('Usuario')
+
+    usuario.estado_processo = '6'
+    usuario.save()
+
+    assert usuario.plano_trabalho
+
+    usuario.plano_trabalho.delete()
+    usuario.delete()
