@@ -113,12 +113,12 @@ class DiligenciaForm(ModelForm):
 
         super(DiligenciaForm, self).__init__(*args, **kwargs)
 
-        if resultado == '1' and componente != 'plano_trabalho':
-            self.fields['classificacao_arquivo'].queryset = SituacoesArquivoPlano.objects.filter(pk=2)
-        elif resultado == '0' and componente != 'plano_trabalho':
-            self.fields['classificacao_arquivo'].queryset = SituacoesArquivoPlano.objects.filter(id__gte=4, id__lte=6)
-
-        elif componente == 'plano_trabalho':
+        if componente != 'plano_trabalho':
+            if resultado == '1':
+                self.fields['classificacao_arquivo'].queryset = SituacoesArquivoPlano.objects.filter(pk=2)
+            else:
+                self.fields['classificacao_arquivo'].queryset = SituacoesArquivoPlano.objects.filter(id__gte=4, id__lte=6)
+        else:
             self.fields.pop('classificacao_arquivo')
 
     class Meta:
