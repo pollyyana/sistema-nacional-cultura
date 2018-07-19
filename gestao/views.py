@@ -41,22 +41,10 @@ from planotrabalho.models import SituacoesArquivoPlano
 
 from gestao.utils import enviar_email_aprovacao_plano
 
-from adesao.models import Usuario
-from adesao.models import Cidade
 from adesao.models import Uf
-from adesao.models import Municipio
-from adesao.models import Historico
 
-from planotrabalho.models import CriacaoSistema
-from planotrabalho.models import PlanoCultura
-from planotrabalho.models import FundoCultura
-from planotrabalho.models import OrgaoGestor
-from planotrabalho.models import ConselhoCultural
-from planotrabalho.models import SituacoesArquivoPlano
-
-from .forms import AlterarSituacao, DiligenciaForm, AlterarDocumentosEnteFederadoForm, InserirSEI
-from .forms import AlterarCadastradorForm, AlterarUsuarioForm, AlterarOrgaoForm
-from .forms import AlterarFundoForm, AlterarPlanoForm, AlterarConselhoForm, AlterarSistemaForm
+from .forms import DiligenciaForm, AlterarDocumentosEnteFederadoForm
+from .forms import AlterarDadosAdesao
 
 from .forms import AlterarCadastradorForm
 from .forms import AlterarUsuarioForm
@@ -133,40 +121,14 @@ class UfChain(autocomplete.Select2QuerySetView):
         return item.sigla
 
 
-def alterar_situacao(request, id):
+def alterar_dados_adesao(request, pk):
     if request.method == "POST":
-        form = AlterarSituacao(
-            request.POST,
-            instance=Usuario.objects.get(id=id))
+        form = AlterarDadosAdesao(request.POST,
+                                  instance=Usuario.objects.get(pk=pk))
         if form.is_valid():
             form.save()
+    return redirect('gestao:detalhar', pk=pk)
 
-            # try:
-            #     usuario = Usuario.objects.get(
-            #         id=id, plano_trabalho__criacao_sistema__situacao_lei_sistema_id='2',
-            #         plano_trabalho__conselho_cultural__situacao_ata_id='2',
-            #         plano_trabalho__fundo_cultura__situacao_lei_plano_id='2',
-            #         plano_trabalho__orgao_gestor__situacao_relatorio_secretaria_id='2',
-            #         plano_trabalho__plano_cultura__situacao_lei_plano_id='2')
-            #     usuario = User.objects.get(id=usuario.user_id)
-            #
-            #     message_txt = render('emails/aprovacao_plano.txt')
-            #     message_html = render('emails/aprovacao_plano.email')
-            #     enviar_email_aprovacao_plano(usuario, message_txt, message_html)
-            # except Exception as e:
-            #     return redirect('gestao:detalhar', pk=id)
-
-    return redirect('gestao:detalhar', pk=id)
-
-def inserir_sei(request, id):
-    if request.method == "POST":
-        form = InserirSEI(
-            request.POST,
-            instance=Usuario.objects.get(id=id))
-        if form.is_valid():
-            form.save()
-
-    return redirect('gestao:detalhar', pk=id)
 
 def ajax_cadastrador_cpf(request):
     if request.method == "POST":
