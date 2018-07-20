@@ -16,9 +16,8 @@
 
       <div class="form-group">
         <label for="{{ form.estado.id_for_label }}" class="col-sm-3 control-label">UF</label>
-
         <div class="col-sm-1">
-          {% render_field form.estado class="form-control" %}
+          {% render_field form.estado class="form-control" id="estado_id" %}
         </div>
         <div class="col-sm-offset-3 col-sm-9">
           {{ form.estado.errors }}
@@ -87,14 +86,14 @@ $(document).ready(function(){
     });
 
     $('#municipio_id').change(function(){
+        $municipio_id = $('#municipio_id').val
+        $estado_id = $('#estado_id').val('')
+        $url = "{% url 'gestao:ajax_cadastrador_cpf' %}" 
+
         $.ajax({
-          type: "POST",
-          url: "/gestao/ajax_cadastrador_cpf",
+          type: "GET",
+          url: $url + '?municipio='+ $municipio_id + '&estado=' + $estado_id,
           cache: false,
-          data: {
-            'csrfmiddlewaretoken': '{{ csrf_token }}',
-            'ente_federado': $('#municipio_id').val(),
-            },
           success: function(data){
             $('#id_data_publicacao_acordo').val("");
             if(!data.erro){
