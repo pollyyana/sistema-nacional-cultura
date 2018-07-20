@@ -40,6 +40,7 @@ from planotrabalho.models import ConselhoCultural
 from planotrabalho.models import SituacoesArquivoPlano
 
 from gestao.utils import enviar_email_aprovacao_plano
+from gestao.utils import empty_to_none
 
 from adesao.models import Uf
 
@@ -118,34 +119,25 @@ def alterar_dados_adesao(request, pk):
 
 
 def ajax_cadastrador_cpf(request):
-    if request.method == "POST":
+    if request.method == "GET":
         try:
-            ente_federado = request.POST.get("ente_federado", None)
-            estado = request.POST.get("estado", None)
+            cidade_id = empty_to_none(request.GET.get("municipio", None))
+            estado_id = empty_to_none(request.GET.get("estado", None))
 
-            if estado:
-                municipio = Municipio.objects.get(cidade__isnull=True, estado_id=ente_federado)
-            else:
-                municipio = Municipio.objects.get(cidade=ente_federado)
-
-            usuario = Usuario.objects.get(municipio_id=municipio.id)
-            user = User.objects.get(id=usuario.user_id)
-            if usuario.data_publicacao_acordo:
-                data_de_publicacao = usuario.data_publicacao_acordo.strftime('%d/%m/%Y')
-            else:
-                data_de_publicacao = None
+            ente_federado = Municipio.objects.get(cidade=cidade_id, estado=estado_id)
+            usuario = ente_federado.usuario
 
             data = {
-                'cpf': user.username,
-                'data_publicacao_acordo': data_de_publicacao,
+                'cpf': usuario.user.username,
+                'data_publicacao_acordo': usuario.data_publicacao_acordo,
                 'estado_processo': usuario.estado_processo
                 }
-            return JsonResponse(data)
+            return JsonResponse(status=200, data=data)
 
-        except:
-            return JsonResponse(data={"erro": True})
+        except Municipio.DoesNotExist:
+            return JsonResponse(status=400, data={"erro": "Município não existe"})
     else:
-        return JsonResponse(data={"erro": True})
+        return JsonResponse(status=415, data={"erro": "Método não permitido"})
 
 
 class AcompanharPrazo(ListView):
