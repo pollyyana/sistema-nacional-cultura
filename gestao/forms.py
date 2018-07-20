@@ -135,7 +135,8 @@ class AlterarCadastradorForm(forms.Form):
     municipio = forms.ModelChoiceField(
         queryset=Cidade.objects.all(),
         widget=autocomplete.ModelSelect2(url='gestao:cidade_chain',
-                                         forward=['estado'])
+                                         forward=['estado']),
+        required=False
         )
     data_publicacao_acordo = forms.DateField(required=False)
 

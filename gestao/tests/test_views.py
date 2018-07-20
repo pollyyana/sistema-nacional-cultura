@@ -811,3 +811,44 @@ def test_alterar_dados_adesao_detalhe_municipio_sem_valores(client, login_staff)
     assert usuario.estado_processo == '0'
     assert not usuario.data_publicacao_acordo
     assert not usuario.processo_sei
+
+
+def test_alterar_cadastrador_municipio(client, login_staff):
+    """ Testa alteração de cadastrador de um ente federal municipal """
+
+    municipio = mommy.make('Municipio', _fill_optional=['cidade'])
+    mommy.make('Usuario', municipio=municipio)
+    new_user = mommy.make('Usuario', user__username='12345678911')
+    url = reverse('gestao:alterar_cadastrador')
+
+    data = {
+        'cpf_usuario': new_user.user.username,
+        'municipio': municipio.cidade.id,
+        'estado': municipio.estado.codigo_ibge
+    }
+
+    client.post(url, data=data)
+
+    municipio.refresh_from_db()
+
+    assert municipio.usuario == new_user
+
+
+def test_alterar_cadastrador_estado(client, login_staff):
+    """ Testa alteração de cadastrador de um ente federal estadual"""
+
+    municipio = mommy.make('Municipio')
+    mommy.make('Usuario', municipio=municipio)
+    new_user = mommy.make('Usuario', user__username='12345678911')
+    url = reverse('gestao:alterar_cadastrador')
+
+    data = {
+        'cpf_usuario': new_user.user.username,
+        'estado': municipio.estado.codigo_ibge
+    }
+
+    client.post(url, data=data)
+
+    municipio.refresh_from_db()
+
+    assert municipio.usuario == new_user

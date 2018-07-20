@@ -15,8 +15,6 @@ urlpatterns = [
         name='alterar_dados_adesao'),
     url(r'^alterar/cadastrador/municipio/',
         staff_member_required(views.AlterarCadastrador.as_view()), name='alterar_cadastrador'),
-    url(r'^alterar/cadastrador/estado/',
-        staff_member_required(views.AlterarCadastradorEstado.as_view()), name='alterar_cadastrador_estado'),
     # Acompanhar e aditivar prazos dos municípios
     url(r'^acompanhar/prazo/',
         staff_member_required(views.AcompanharPrazo.as_view()), name='acompanhar_prazo'),
