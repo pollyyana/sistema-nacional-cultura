@@ -70,19 +70,6 @@ class AlterarCadastrador(FormView):
         return super(AlterarCadastrador, self).form_valid(form)
 
 
-class AlterarCadastradorEstado(FormView):
-    """AlterarCadastradorEstado
-    Altera o cadastrador de um Estado aderido
-    """
-    template_name = 'gestao/alterar_cadastrador_estado.html'
-    form_class = AlterarCadastradorForm
-    success_url = reverse_lazy('gestao:acompanhar_adesao')
-
-    def form_valid(self, form):
-        form.save()
-        return super(AlterarCadastradorEstado, self).form_valid(form)
-
-
 class CidadeChain(autocomplete.Select2QuerySetView):
     def get_queryset(self):
         """ Filtra todas as cidade de uma determinada UF """
