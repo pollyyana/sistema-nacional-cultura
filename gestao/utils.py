@@ -45,3 +45,9 @@ def enviar_email_aprovacao_plano(user, message_txt, message_html):
         [user.email],),
         kwargs={'fail_silently': 'False', 'html_message': message_html}
         ).start()
+
+
+def empty_to_none(value):
+    if not value:
+        return None
+    return value

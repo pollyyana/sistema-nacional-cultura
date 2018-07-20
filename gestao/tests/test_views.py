@@ -852,3 +852,54 @@ def test_alterar_cadastrador_estado(client, login_staff):
     municipio.refresh_from_db()
 
     assert municipio.usuario == new_user
+
+
+def test_ajax_cadastrador_cpf_ente_existente_muncipal(client, login_staff,
+                                                      plano_trabalho):
+    """ Testa retorno de CPF do cadastrador de um ente federado municipal
+    existente no sistema """
+    municipio = plano_trabalho.usuario.municipio
+    usuario = plano_trabalho.usuario
+
+    url = reverse('gestao:ajax_cadastrador_cpf')
+    url = url + '?municipio={}&estado={}'.format(municipio.cidade.id,
+                                                 municipio.estado.codigo_ibge)
+    client.login(username=login_staff.user.username, password='123456')
+
+    response = client.get(url)
+
+    assert response.status_code == 200
+    assert response.json()['data_publicacao_acordo'] == str(usuario.data_publicacao_acordo)
+    assert response.json()['cpf'] == usuario.user.username
+
+
+def test_ajax_cadastrador_cpf_ente_existente_estadual(client, login_staff,
+                                                      plano_trabalho):
+    """ Testa retorno de CPF do cadastrador de um ente federado estadual
+    existente no sistema """
+    municipio = mommy.make('Municipio')
+    usuario = mommy.make('Usuario', municipio=municipio,
+                         _fill_optional=['data_publicacao_acordo'])
+
+    url = reverse('gestao:ajax_cadastrador_cpf')
+    url = url + '?estado={}'.format(municipio.estado.codigo_ibge)
+    client.login(username=login_staff.user.username, password='123456')
+
+    response = client.get(url)
+
+    assert response.status_code == 200
+    assert response.json()['data_publicacao_acordo'] == str(usuario.data_publicacao_acordo)
+    assert response.json()['cpf'] == usuario.user.username
+
+
+def test_ajax_cadastrador_ente_inexistente(client, login_staff):
+    """ Testa retorno ao passar um ente federado não existente """
+
+    url = reverse('gestao:ajax_cadastrador_cpf') + '?estado=&municipio=0'
+
+    client.login(username=login_staff.user.username, password='123456')
+
+    response = client.get(url)
+
+    assert response.status_code == 400
+
