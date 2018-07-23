@@ -78,16 +78,24 @@ $(document).ready(function(){
     $('#estado-tab').on('click', function() {
         $fieldMuncipio = $('#municipio-field');
         $fieldMuncipio.hide();
+        $('#estado_id option').each(function(){$(this).removeAttr('selected');}); 
+        $('#municipio_id option').each(function(){$(this).removeAttr('selected');}); 
+        $('#id_data_publicacao_acordo').val("");
+        $('#cpf_usuario').val("");
     });
 
     $('#municipio-tab').on('click', function() {
         $fieldMuncipio = $('#municipio-field');
         $fieldMuncipio.show();
+        $('#estado_id').find('option:first').attr('selected',true);
+        $('#municipio_id').find('option:first').attr('selected',true);
+        $('#id_data_publicacao_acordo').val("");
+        $('#cpf_usuario').val("");
     });
 
-    $('#municipio_id').change(function(){
-        $municipio_id = $('#municipio_id').val
-        $estado_id = $('#estado_id').val('')
+    $('#municipio_id, #estado_id').change(function(){
+        $municipio_id = $('#municipio_id').val()
+        $estado_id = $('#estado_id').val()
         $url = "{% url 'gestao:ajax_cadastrador_cpf' %}" 
 
         $.ajax({
