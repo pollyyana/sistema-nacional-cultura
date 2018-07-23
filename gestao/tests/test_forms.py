@@ -7,6 +7,7 @@ from gestao.models import Diligencia
 
 from ckeditor.widgets import CKEditorWidget
 from dal.autocomplete import ModelSelect2
+from model_mommy import mommy
 
 from gestao.forms import AlterarCadastradorForm
 
@@ -139,3 +140,68 @@ def test_url_widget_municipio_form_alterar_cadastrador(client):
     form = AlterarCadastradorForm()
     municipio_url = reverse('gestao:cidade_chain')
     assert form['municipio'].field.widget.url == municipio_url
+
+
+def test_save_alterar_cadastrador_form_com_sistemacultura(plano_trabalho):
+    """
+    Método save do form AlterarCadastradorForm altera as informações necessárias,
+    quando um ente fedarado já possui um SistemaCultura associado
+    """
+    cidade = mommy.make('Cidade')
+    municipio = mommy.make('Municipio', cidade=cidade, estado=cidade.uf)
+    user = mommy.make('Usuario', municipio=municipio)
+    new_user = mommy.make('Usuario', user__username='12345678911')
+
+    mommy.make('SistemaCultura', cadastrador=user, uf=municipio.estado,
+               cidade=municipio.cidade)
+    data = {'cpf_usuario': new_user.user.username,
+            'estado': municipio.estado.codigo_ibge,
+            'municipio': municipio.cidade.id}
+    form = AlterarCadastradorForm(data=data)
+    form.is_valid()
+    form.save()
+
+    municipio.refresh_from_db()
+
+    assert municipio.usuario == new_user
+
+
+def test_save_alterar_cadastrador_form_sem_sistemacultura(plano_trabalho):
+    """
+    Método save do form AlterarCadastradorForm altera as informações necessárias,
+    quando um ente fedarado NÂO possui um SistemaCultura associado
+    """
+    cidade = mommy.make('Cidade')
+    municipio = mommy.make('Municipio', cidade=cidade, estado=cidade.uf)
+    mommy.make('Usuario', municipio=municipio)
+    new_user = mommy.make('Usuario', user__username='12345678911')
+
+    data = {'cpf_usuario': new_user.user.username,
+            'estado': municipio.estado.codigo_ibge,
+            'municipio': municipio.cidade.id}
+    form = AlterarCadastradorForm(data=data)
+    form.is_valid()
+    form.save()
+
+    municipio.refresh_from_db()
+
+    assert municipio.usuario == new_user
+
+
+def test_save_alterar_cadastrador_form_sem_municipio(plano_trabalho):
+    """
+    Testa form de alteração de cadastrador no caso que não existe municipío
+    """
+
+    estado = mommy.make('Uf')
+    cidade = mommy.make('Cidade', uf=estado)
+    new_user = mommy.make('Usuario', user__username='12345678911')
+
+    data = {'cpf_usuario': new_user.user.username,
+            'estado': estado.codigo_ibge,
+            'municipio': cidade.id}
+    form = AlterarCadastradorForm(data=data)
+    form.is_valid()
+    sistema = form.save()
+
+    assert sistema.cadastrador == new_user
