@@ -42,22 +42,25 @@ class MunicipioFilter(filters.FilterSet):
 
 
 class PlanoTrabalhoFilter(filters.FilterSet):
-    situacao_conselho_descricao = filters.CharFilter(name='conselho_cultural__situacao_ata__descricao',
+    situacao_conselho_id = filters.NumberFilter(name='conselho_cultural__situacao__id')
+    situacao_conselho_descricao = filters.CharFilter(name='conselho_cultural__situacao__descricao',
                                                      lookup_expr='istartswith')
-    situacao_conselho_id = filters.NumberFilter(name='conselho_cultural__situacao_ata__id')
 
-    situacao_orgao_descricao = filters.CharFilter(name='orgao_gestor__situacao_relatorio_secretaria__descricao',
+    situacao_orgao_id = filters.NumberFilter(name='orgao_gestor__situacao__id')
+    situacao_orgao_descricao = filters.CharFilter(name='orgao_gestor__situacao__descricao',
                                                   lookup_expr='istartswith')
-    situacao_orgao_id = filters.NumberFilter(name='orgao_gestor__situacao_relatorio_secretaria__id')
-    situacao_lei_descricao = filters.CharFilter(name='criacao_sistema__situacao_lei_sistema__descricao',
+
+    situacao_lei_id = filters.NumberFilter(name='criacao_sistema__situacao__id')
+    situacao_lei_descricao = filters.CharFilter(name='criacao_sistema__situacao__descricao',
                                                 lookup_expr='istartswith')
-    situacao_lei_id = filters.CharFilter(name='criacao_sistema__situacao_lei_sistema__id')
-    situacao_fundo_descricao = filters.CharFilter(name='fundo_cultura__situacao_lei_plano__descricao',
+
+    situacao_fundo_id = filters.NumberFilter(name='fundo_cultura__situacao__id')
+    situacao_fundo_descricao = filters.CharFilter(name='fundo_cultura__situacao__descricao',
                                                   lookup_expr='istartswith')
-    situacao_fundo_id = filters.NumberFilter(name='fundo_cultura__situacao_lei_plano__descricao__id')
-    situacao_plano_descricao = filters.CharFilter(name='plano_cultura__situacao_lei_plano__descricao',
+
+    situacao_plano_id = filters.NumberFilter(name='plano_cultura__situacao__id')
+    situacao_plano_descricao = filters.CharFilter(name='plano_cultura__situacao__descricao',
                                                   lookup_expr='istartswith')
-    situacao_plano_id = filters.NumberFilter(name='plano_cultura__situacao_lei_plano__descricao__id')
 
     class Meta:
         model = PlanoTrabalho
