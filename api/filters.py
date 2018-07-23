@@ -19,6 +19,23 @@ class MunicipioFilter(filters.FilterSet):
     estadual = filters.BooleanFilter(method='estadual_filter')
     ente_federado = filters.CharFilter(method='ente_federado_filter')
 
+    situacao_conselho_id = filters.NumberFilter(name='usuario__plano_trabalho__conselho_cultural__situacao__id')
+    situacao_orgao_id = filters.NumberFilter(name='usuario__plano_trabalho__orgao_gestor__situacao__id')
+    situacao_lei_id = filters.NumberFilter(name='usuario__plano_trabalho__criacao_sistema__situacao__id')
+    situacao_fundo_id = filters.NumberFilter(name='usuario__plano_trabalho__fundo_cultura__situacao__id')
+    situacao_plano_id = filters.NumberFilter(name='usuario__plano_trabalho__plano_cultura__situacao__id')
+
+    situacao_conselho_descricao = filters.CharFilter(name='usuario__plano_trabalho__conselho_cultural__situacao__descricao',
+                                                     lookup_expr='istartswith')
+    situacao_orgao_descricao = filters.CharFilter(name='usuario__plano_trabalho__orgao_gestor__situacao__descricao',
+                                                  lookup_expr='istartswith')
+    situacao_lei_descricao = filters.CharFilter(name='usuario__plano_trabalho__criacao_sistema__situacao__descricao',
+                                                lookup_expr='istartswith')
+    situacao_fundo_descricao = filters.CharFilter(name='usuario__plano_trabalho__fundo_cultura__situacao__descricao',
+                                                  lookup_expr='istartswith')
+    situacao_plano_descricao = filters.CharFilter(name='usuario__plano_trabalho__plano_cultura__situacao__descricao',
+                                                  lookup_expr='istartswith')
+
     def ente_federado_filter(self, queryset, name, value):
 
         return queryset.filter(
