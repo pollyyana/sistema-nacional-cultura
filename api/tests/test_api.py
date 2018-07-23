@@ -865,3 +865,48 @@ def test_filtrar_componente_situacao_descricao_acoesplanotrabalho(client, plano_
     response = client.get(url)
 
     assert len(response.data['_embedded']['items']) == 1
+
+
+@pytest.mark.parametrize("query,componente", [
+    ("situacao_lei_id", "criacao_sistema"),
+    ("situacao_orgao_id", "orgao_gestor"),
+    ("situacao_fundo_id", "fundo_cultura"),
+    ("situacao_plano_id", "plano_cultura"),
+    ("situacao_conselho_id", "conselho_cultural"),
+    ])
+def test_filtra_por_situacao_id_componente_sistema_de_cultura(client, plano_trabalho,
+                                                              query, componente):
+    """ Testa retorno ao filtrar sistemas de cultura locais por id da situação
+    dos componentes do plano de trabalho """
+
+    mommy.make('Municipio', _quantity=2)
+    situacao = getattr(plano_trabalho, componente).situacao
+
+    url = url_sistemadeculturalocal + '?{}={}'.format(query, situacao.id)
+
+    response = client.get(url)
+
+    assert len(response.data['_embedded']['items']) == 1
+
+
+@pytest.mark.parametrize("query,componente", [
+    ("situacao_lei_descricao", "criacao_sistema"),
+    ("situacao_orgao_descricao", "orgao_gestor"),
+    ("situacao_fundo_descricao", "fundo_cultura"),
+    ("situacao_plano_descricao", "plano_cultura"),
+    ("situacao_conselho_descricao", "conselho_cultural"),
+    ])
+def test_filtra_por_situacao_descricao_componente_sistema_de_cultura(client,
+                                                                     plano_trabalho,
+                                                                     query, componente):
+    """ Testa retorno ao filtrar sistemas de cultura locais por descrição da situação
+    dos componentes do plano de trabalho """
+
+    mommy.make('Municipio', _quantity=2)
+    situacao = getattr(plano_trabalho, componente).situacao
+
+    url = url_sistemadeculturalocal + '?{}={}'.format(query, situacao.descricao)
+
+    response = client.get(url)
+
+    assert len(response.data['_embedded']['items']) == 1
