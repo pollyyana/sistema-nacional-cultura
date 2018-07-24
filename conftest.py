@@ -46,7 +46,8 @@ def login(client):
     user.set_password('123456')
     user.save()
     usuario = mommy.make('Usuario', user=user,
-                         _fill_optional=['secretario', 'responsavel'])
+                         _fill_optional=['secretario', 'responsavel',
+                                         'data_publicacao_acordo'])
 
     login = client.login(username=user.username, password='123456')
 
