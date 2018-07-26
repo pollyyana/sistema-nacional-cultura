@@ -27,8 +27,11 @@ def test_arquivo_upload_lei_sistema(client, login, url, componente):
         "componente.txt", b"file_content", content_type="text/plain"
     )
 
-    response = client.post(url, data={"arquivo": arquivo})
+    response = client.post(url, data={"arquivo": arquivo,
+                                      'cnpj_fundo_cultura': '39791103000152'})
+
+    plano.refresh_from_db()
     sistema = getattr(plano, componente)
 
     assert response.status_code == 302
-    assert sistema.arquivo == arquivo
+    assert sistema.arquivo.file.name.split('/')[-1] == arquivo.name
