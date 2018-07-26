@@ -59,24 +59,44 @@ class MunicipioFilter(filters.FilterSet):
 
 
 class PlanoTrabalhoFilter(filters.FilterSet):
-    situacao_conselho_id = filters.NumberFilter(name='conselho_cultural__situacao__id')
-    situacao_conselho_descricao = filters.CharFilter(name='conselho_cultural__situacao__descricao',
+    SITUACOES_IDS = (
+        (0, 'Em preenchimento'),
+        (1, 'Avaliando anexo'),
+        (2, 'Concluída'),
+        (3, 'Arquivo aprovado com ressalvas'),
+        (4, 'Arquivo danificado'),
+        (5, 'Arquivo incompleto'),
+        (6, 'Arquivo incorreto'),
+    )
+
+    SITUACOES_DESCRICOES = (
+        ('Em preenchimento', 'Em preenchimento'),
+        ('Avaliando anexo', 'Avaliando anexo'),
+        ('Concluída', 'Concluída'),
+        ('Arquivo aprovado com ressalvas', 'Arquivo aprovado com ressalvas'),
+        ('Arquivo danificado', 'Arquivo danificado'),
+        ('Arquivo incompleto', 'Arquivo incompleto'),
+        ('Arquivo incorreto', 'Arquivo incorreto'),
+    )
+
+    situacao_conselho_id = filters.MultipleChoiceFilter(choices=SITUACOES_IDS, name='conselho_cultural__situacao__id')
+    situacao_conselho_descricao = filters.MultipleChoiceFilter(choices=SITUACOES_DESCRICOES, name='conselho_cultural__situacao__descricao',
                                                      lookup_expr='istartswith')
 
-    situacao_orgao_id = filters.NumberFilter(name='orgao_gestor__situacao__id')
-    situacao_orgao_descricao = filters.CharFilter(name='orgao_gestor__situacao__descricao',
+    situacao_orgao_id = filters.MultipleChoiceFilter(choices=SITUACOES_IDS, name='orgao_gestor__situacao__id')
+    situacao_orgao_descricao = filters.MultipleChoiceFilter(choices=SITUACOES_DESCRICOES, name='orgao_gestor__situacao__descricao',
                                                   lookup_expr='istartswith')
 
-    situacao_lei_id = filters.NumberFilter(name='criacao_sistema__situacao__id')
-    situacao_lei_descricao = filters.CharFilter(name='criacao_sistema__situacao__descricao',
+    situacao_lei_id = filters.MultipleChoiceFilter(choices=SITUACOES_IDS, name='criacao_sistema__situacao__id')
+    situacao_lei_descricao = filters.MultipleChoiceFilter(choices=SITUACOES_DESCRICOES, name='criacao_sistema__situacao__descricao',
                                                 lookup_expr='istartswith')
 
-    situacao_fundo_id = filters.NumberFilter(name='fundo_cultura__situacao__id')
-    situacao_fundo_descricao = filters.CharFilter(name='fundo_cultura__situacao__descricao',
+    situacao_fundo_id = filters.MultipleChoiceFilter(choices=SITUACOES_IDS, name='fundo_cultura__situacao__id')
+    situacao_fundo_descricao = filters.MultipleChoiceFilter(choices=SITUACOES_DESCRICOES, name='fundo_cultura__situacao__descricao',
                                                   lookup_expr='istartswith')
 
-    situacao_plano_id = filters.NumberFilter(name='plano_cultura__situacao__id')
-    situacao_plano_descricao = filters.CharFilter(name='plano_cultura__situacao__descricao',
+    situacao_plano_id = filters.MultipleChoiceFilter(choices=SITUACOES_IDS, name='plano_cultura__situacao__id')
+    situacao_plano_descricao = filters.MultipleChoiceFilter(choices=SITUACOES_DESCRICOES, name='plano_cultura__situacao__descricao',
                                                   lookup_expr='istartswith')
 
     class Meta:
