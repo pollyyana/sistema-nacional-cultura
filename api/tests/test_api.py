@@ -910,3 +910,134 @@ def test_filtra_por_situacao_descricao_componente_sistema_de_cultura(client,
     response = client.get(url)
 
     assert len(response.data['_embedded']['items']) == 1
+
+def test_filtra_componente_lei_por_multiplos_ids_situacao(client):
+    """ Testa retorno ao filtrar sistemas de cultura locais por múltiplos ids da situação
+    do componente lei sistema cultura do plano de trabalho """
+
+    usuarios = mommy.make('Usuario', _quantity=2, _fill_optional=['municipio', 'plano_trabalho'])
+    usuario_situacao_invalida =  mommy.make('Usuario', _fill_optional=['municipio', 'plano_trabalho'])
+    usuario_situacao_invalida.plano_trabalho.criacao_sistema = mommy.make('CriacaoSistema', situacao__id=5)
+    usuario_situacao_invalida.plano_trabalho.save()
+
+    for usuario in usuarios:
+        criacao_sistema = mommy.make('CriacaoSistema')
+        usuario.plano_trabalho.criacao_sistema = criacao_sistema
+        usuario.plano_trabalho.save()
+    
+    usuarios[0].plano_trabalho.criacao_sistema.situacao.id = 1
+    usuarios[0].plano_trabalho.criacao_sistema.save()
+
+    url = url_sistemadeculturalocal + '?situacao_lei_id=0&situacao_lei_id=1'
+
+    response = client.get(url)
+
+    assert len(response.data['_embedded']['items']) == 2
+    for componentes in response.data['_embedded']['items']:
+        situacao = componentes['_embedded']['acoes_plano_trabalho']['criacao_lei_sistema_cultura']['situacao']
+        assert situacao == 'Avaliando anexo' or situacao == 'Em preenchimento' 
+
+def test_filtra_componente_conselho_por_multiplos_ids_situacao(client):
+    """ Testa retorno ao filtrar sistemas de cultura locais por múltiplos ids da situação
+    do componente conselho cultural do plano de trabalho """
+
+    usuarios = mommy.make('Usuario', _quantity=2, _fill_optional=['municipio', 'plano_trabalho'])
+    usuario_situacao_invalida =  mommy.make('Usuario', _fill_optional=['municipio', 'plano_trabalho'])
+    usuario_situacao_invalida.plano_trabalho.conselho_cultural = mommy.make('ConselhoCultural', situacao__id=5)
+    usuario_situacao_invalida.plano_trabalho.save()
+
+    for usuario in usuarios:
+        conselho_cultural = mommy.make('ConselhoCultural')
+        usuario.plano_trabalho.conselho_cultural = conselho_cultural
+        usuario.plano_trabalho.save()
+    
+    usuarios[0].plano_trabalho.conselho_cultural.situacao.id = 1
+    usuarios[0].plano_trabalho.conselho_cultural.save()
+
+    url = url_sistemadeculturalocal + '?situacao_conselho_id=0&situacao_conselho_id=1'
+
+    response = client.get(url)
+
+    assert len(response.data['_embedded']['items']) == 2
+    for componentes in response.data['_embedded']['items']:
+        situacao = componentes['_embedded']['acoes_plano_trabalho']['criacao_conselho_cultural']['situacao']
+        assert situacao == 'Avaliando anexo' or situacao == 'Em preenchimento' 
+
+
+def test_filtra_componente_fundo_por_multiplos_ids_situacao(client):
+    """ Testa retorno ao filtrar sistemas de cultura locais por múltiplos ids da situação
+    do componente fundo cultura do plano de trabalho """
+
+    usuarios = mommy.make('Usuario', _quantity=2, _fill_optional=['municipio', 'plano_trabalho'])
+    usuario_situacao_invalida =  mommy.make('Usuario', _fill_optional=['municipio', 'plano_trabalho'])
+    usuario_situacao_invalida.plano_trabalho.fundo_cultura = mommy.make('FundoCultura', situacao__id=5)
+    usuario_situacao_invalida.plano_trabalho.save()
+
+    for usuario in usuarios:
+        fundo_cultura = mommy.make('FundoCultura')
+        usuario.plano_trabalho.fundo_cultura = fundo_cultura
+        usuario.plano_trabalho.save()
+    
+    usuarios[0].plano_trabalho.fundo_cultura.situacao.id = 1
+    usuarios[0].plano_trabalho.fundo_cultura.save()
+
+    url = url_sistemadeculturalocal + '?situacao_fundo_id=0&situacao_fundo_id=1'
+
+    response = client.get(url)
+
+    assert len(response.data['_embedded']['items']) == 2
+    for componentes in response.data['_embedded']['items']:
+        situacao = componentes['_embedded']['acoes_plano_trabalho']['criacao_fundo_cultura']['situacao']
+        assert situacao == 'Avaliando anexo' or situacao == 'Em preenchimento' 
+
+def test_filtra_componente_orgao_por_multiplos_ids_situacao(client):
+    """ Testa retorno ao filtrar sistemas de cultura locais por múltiplos ids da situação
+    do componente órgão gestor do plano de trabalho """
+
+    usuarios = mommy.make('Usuario', _quantity=2, _fill_optional=['municipio', 'plano_trabalho'])
+    usuario_situacao_invalida =  mommy.make('Usuario', _fill_optional=['municipio', 'plano_trabalho'])
+    usuario_situacao_invalida.plano_trabalho.orgao_gestor = mommy.make('OrgaoGestor', situacao__id=5)
+    usuario_situacao_invalida.plano_trabalho.save()
+
+    for usuario in usuarios:
+        orgao_gestor = mommy.make('OrgaoGestor')
+        usuario.plano_trabalho.orgao_gestor = orgao_gestor
+        usuario.plano_trabalho.save()
+    
+    usuarios[0].plano_trabalho.orgao_gestor.situacao.id = 1
+    usuarios[0].plano_trabalho.orgao_gestor.save()
+
+    url = url_sistemadeculturalocal + '?situacao_orgao_id=0&situacao_orgao_id=1'
+
+    response = client.get(url)
+
+    assert len(response.data['_embedded']['items']) == 2
+    for componentes in response.data['_embedded']['items']:
+        situacao = componentes['_embedded']['acoes_plano_trabalho']['criacao_orgao_gestor']['situacao']
+        assert situacao == 'Avaliando anexo' or situacao == 'Em preenchimento' 
+
+def test_filtra_componente_plano_por_multiplos_ids_situacao(client):
+    """ Testa retorno ao filtrar sistemas de cultura locais por múltiplos ids da situação
+    do componente plano cultura do plano de trabalho """
+
+    usuarios = mommy.make('Usuario', _quantity=2, _fill_optional=['municipio', 'plano_trabalho'])
+    usuario_situacao_invalida =  mommy.make('Usuario', _fill_optional=['municipio', 'plano_trabalho'])
+    usuario_situacao_invalida.plano_trabalho.plano_cultura = mommy.make('PlanoCultura', situacao__id=5)
+    usuario_situacao_invalida.plano_trabalho.save()
+
+    for usuario in usuarios:
+        plano_cultura = mommy.make('PlanoCultura')
+        usuario.plano_trabalho.plano_cultura = plano_cultura
+        usuario.plano_trabalho.save()
+    
+    usuarios[0].plano_trabalho.plano_cultura.situacao.id = 1
+    usuarios[0].plano_trabalho.plano_cultura.save()
+
+    url = url_sistemadeculturalocal + '?situacao_plano_id=0&situacao_plano_id=1'
+
+    response = client.get(url)
+
+    assert len(response.data['_embedded']['items']) == 2
+    for componentes in response.data['_embedded']['items']:
+        situacao = componentes['_embedded']['acoes_plano_trabalho']['criacao_plano_cultura']['situacao']
+        assert situacao == 'Avaliando anexo' or situacao == 'Em preenchimento' 
