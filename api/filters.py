@@ -1,12 +1,15 @@
 from django.db.models import Q
 
 from django_filters import rest_framework as filters
+from django_filters import Filter
 
 from planotrabalho.models import PlanoTrabalho
+from planotrabalho.models import ConselhoCultural
 from adesao.models import Municipio
-
+from planotrabalho.models import SituacoesArquivoPlano
 
 class MunicipioFilter(filters.FilterSet):
+
     estado_sigla = filters.CharFilter(name='estado__sigla', lookup_expr='iexact')
     nome_uf = filters.CharFilter(name='estado__nome_uf', lookup_expr='iexact')
     nome_municipio = filters.CharFilter(name='cidade__nome_municipio', lookup_expr='iexact')
@@ -19,11 +22,16 @@ class MunicipioFilter(filters.FilterSet):
     estadual = filters.BooleanFilter(method='estadual_filter')
     ente_federado = filters.CharFilter(method='ente_federado_filter')
 
-    situacao_conselho_id = filters.NumberFilter(name='usuario__plano_trabalho__conselho_cultural__situacao__id')
-    situacao_orgao_id = filters.NumberFilter(name='usuario__plano_trabalho__orgao_gestor__situacao__id')
-    situacao_lei_id = filters.NumberFilter(name='usuario__plano_trabalho__criacao_sistema__situacao__id')
-    situacao_fundo_id = filters.NumberFilter(name='usuario__plano_trabalho__fundo_cultura__situacao__id')
-    situacao_plano_id = filters.NumberFilter(name='usuario__plano_trabalho__plano_cultura__situacao__id')
+    situacao_conselho_id = filters.ModelMultipleChoiceFilter(queryset=SituacoesArquivoPlano.objects.all(),
+        field_name='usuario__plano_trabalho__conselho_cultural__situacao')
+    situacao_orgao_id = filters.ModelMultipleChoiceFilter(queryset=SituacoesArquivoPlano.objects.all(),
+        field_name='usuario__plano_trabalho__orgao_gestor__situacao')
+    situacao_lei_id = filters.ModelMultipleChoiceFilter(queryset=SituacoesArquivoPlano.objects.all(), 
+        field_name='usuario__plano_trabalho__criacao_sistema__situacao')
+    situacao_fundo_id = filters.ModelMultipleChoiceFilter(queryset=SituacoesArquivoPlano.objects.all(),
+        field_name='usuario__plano_trabalho__fundo_cultura__situacao')
+    situacao_plano_id = filters.ModelMultipleChoiceFilter(queryset=SituacoesArquivoPlano.objects.all(),
+        field_name='usuario__plano_trabalho__plano_cultura__situacao')
 
     situacao_conselho_descricao = filters.CharFilter(name='usuario__plano_trabalho__conselho_cultural__situacao__descricao',
                                                      lookup_expr='istartswith')
