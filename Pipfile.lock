@@ -124,10 +124,9 @@
         },
         "django-wkhtmltopdf": {
             "hashes": [
-                "sha256:b6501acf0d01faa51e85a78408b5f712c858a234849583a5b2970130d477fa98",
-                "sha256:68043eed152ca8fe5909540c54d56e6a7ad78c7ec9c87e92c6b6f9bbed9d7471"
+                "sha256:4cf07226332b89102e2ab1302fdd6cad402677ebfb2d50efad7cb3056a54151b"
             ],
-            "version": "==2.0.2"
+            "version": "==3.2.0"
         },
         "djangorestframework": {
             "hashes": [
