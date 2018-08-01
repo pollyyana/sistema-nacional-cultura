@@ -54,7 +54,10 @@ class CriarSistemaForm(ModelForm):
             sistema.situacao_id = 1
 
         if commit:
+            sistema.planotrabalho = self.usuario.plano_trabalho
             sistema.save()
+            self.usuario.plano_trabalho.criacao_sistema = sistema
+            self.usuario.plano_trabalho.save()
         return sistema
 
     class Meta:
@@ -83,7 +86,10 @@ class OrgaoGestorForm(ModelForm):
             orgao.situacao_id = 1
 
         if commit:
+            orgao.planotrabalho = self.usuario.plano_trabalho
             orgao.save()
+            self.usuario.plano_trabalho.orgao_gestor = orgao
+            self.usuario.plano_trabalho.save()
         return orgao
 
     class Meta:
@@ -111,7 +117,11 @@ class ConselhoCulturalForm(ModelForm):
             conselho.situacao_id = 1
 
         if commit:
+            conselho.planotrabalho = self.usuario.plano_trabalho
             conselho.save()
+            self.usuario.plano_trabalho.conselho_cultural = conselho
+            self.usuario.plano_trabalho.save()
+
             nomes = self.data.getlist('conselheiro')
             emails = self.data.getlist('email')
             segmentos = self.data.getlist('segmento')
@@ -168,13 +178,15 @@ class FundoCulturaForm(ModelForm):
             fundo.situacao_id = 1
 
         if commit:
+            fundo.planotrabalho = self.usuario.plano_trabalho
             fundo.save()
+            self.usuario.plano_trabalho.fundo_cultura = fundo
+            self.usuario.plano_trabalho.save()
         return fundo
 
     class Meta:
         model = FundoCultura
         fields = ['cnpj_fundo_cultura', 'arquivo']
-
 
 
 class PlanoCulturaForm(ModelForm):
@@ -203,7 +215,10 @@ class PlanoCulturaForm(ModelForm):
             plano.situacao_id = 1
 
         if commit:
+            plano.planotrabalho = self.usuario.plano_trabalho
             plano.save()
+            self.usuario.plano_trabalho.plano_cultura = plano
+            self.usuario.plano_trabalho.save()
         return plano
 
     class Meta:

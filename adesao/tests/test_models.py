@@ -2,7 +2,6 @@ import pytest
 from datetime import datetime
 
 from django.utils import timezone
-
 from model_mommy import mommy
 
 from adesao.models import SistemaCultura
@@ -159,6 +158,47 @@ def test_retorna_ativo_SistemaCultura_filtrado_por_uf_e_cidade():
             uf=sistema_ativo.uf, cidade=sistema_ativo.cidade) == sistema_ativo
 
 
+
+def test_ativo_ou_cria_SistemaCultura_ativo():
+    """ Testa método ativo_ou_cria do manager SistemaCulturaManager
+    retorna SistemaCultura ativo """
+
+    mommy.make('SistemaCultura',
+               data_criacao=datetime(2018, 2, 3, 0, tzinfo=timezone.utc),
+               _fill_optional=['uf', 'cidade'])
+    sistema_ativo = mommy.make('SistemaCultura', _fill_optional=['uf', 'cidade'])
+
+    assert SistemaCultura.objects.ativo_ou_cria(
+            uf=sistema_ativo.uf, cidade=sistema_ativo.cidade) == sistema_ativo
+
+
+def test_ativo_ou_cria_SistemaCultura_cria():
+    """ Testa método ativo_ou_cria do manager SistemaCulturaManager
+    retorna um novo sistema cultura """
+    cidade = mommy.make('Cidade')
+    uf = cidade.uf
+
+    sistema = SistemaCultura.objects.ativo_ou_cria(cidade=cidade, uf=uf)
+
+    assert isinstance(sistema, SistemaCultura)
+    assert sistema.pk
+    assert sistema.uf == uf
+    assert sistema.cidade == cidade
+
+
+def test_alterar_cadastrador_sistema_cultura_sem_cadastrador():
+    """ Testa alterar o cadastrador de um sistema cultura que não possui um
+    cadastrador """
+    sistema = mommy.make('SistemaCultura')
+    cadastrador = mommy.make('Usuario')
+
+    sistema.cadastrador = cadastrador
+    sistema.save()
+    sistema.refresh_from_db()
+
+    assert sistema.cadastrador == cadastrador
+
+    
 def test_criar_plano_trabalho_para_Usuario_estado_processo():
     """ Criar um plano trabalho para um Usuario caso o estado do processo
     seja '6', que significa publicado no DOU """

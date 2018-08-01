@@ -59,11 +59,6 @@ class CadastrarSistema(CreateView):
         kwargs['user'] = self.request.user.usuario
         return kwargs
 
-    def form_valid(self, form):
-        self.request.user.usuario.plano_trabalho.criacao_sistema = form.save()
-        self.request.user.usuario.plano_trabalho.save()
-        return super(CadastrarSistema, self).form_valid(form)
-
     def dispatch(self, *args, **kwargs):
         sistema = self.request.user.usuario.plano_trabalho.criacao_sistema
         if sistema:
@@ -100,11 +95,6 @@ class CadastrarOrgaoGestor(CreateView):
         kwargs['user'] = self.request.user.usuario
         return kwargs
 
-    def form_valid(self, form):
-        self.request.user.usuario.plano_trabalho.orgao_gestor = form.save()
-        self.request.user.usuario.plano_trabalho.save()
-        return super(CadastrarOrgaoGestor, self).form_valid(form)
-
     def dispatch(self, *args, **kwargs):
         orgao = self.request.user.usuario.plano_trabalho.orgao_gestor
         if orgao:
@@ -140,11 +130,6 @@ class CadastrarConselho(CreateView):
         kwargs = super(CadastrarConselho, self).get_form_kwargs()
         kwargs['user'] = self.request.user.usuario
         return kwargs
-
-    def form_valid(self, form):
-        self.request.user.usuario.plano_trabalho.conselho_cultural = form.save()
-        self.request.user.usuario.plano_trabalho.save()
-        return super(CadastrarConselho, self).form_valid(form)
 
     def dispatch(self, *args, **kwargs):
         conselho = self.request.user.usuario.plano_trabalho.conselho_cultural
@@ -257,11 +242,6 @@ class CadastrarFundo(CreateView):
         kwargs = super(CadastrarFundo, self).get_form_kwargs()
         kwargs['user'] = self.request.user.usuario
         return kwargs
-
-    def form_valid(self, form):
-        self.request.user.usuario.plano_trabalho.fundo_cultura = form.save()
-        self.request.user.usuario.plano_trabalho.save()
-        return super(CadastrarFundo, self).form_valid(form)
 
     def dispatch(self, *args, **kwargs):
         fundo = self.request.user.usuario.plano_trabalho.fundo_cultura

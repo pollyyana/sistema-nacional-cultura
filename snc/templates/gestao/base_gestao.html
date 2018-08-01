@@ -105,21 +105,7 @@
                         <a href="{% url 'exportar_xls' %}">Exportar Planilha XLS</a>
                       </li>
                       <li class="active">
-                        <a href="#" data-toggle="collapse" data-target="#alterar_cadastradores"><i class="fa fa-exchange fa-fw"></i>  Alterar Cadastradores<span class="fa arrow"></span></a>
-                        <div class="collapse" id="alterar_cadastradores" style="height: 0px;">
-                          <ul class="nav nav-second-level nav-list">
-                            <li>
-                              <a href="{% url 'gestao:alterar_cadastrador' %}">
-                                Município
-                              </a>
-                            </li>
-                            <li>
-                              <a href="{% url 'gestao:alterar_cadastrador_estado' %}">
-                                Estado
-                              </a>
-                            </li>
-                          </ul>
-                      </div>
+                        <a href="{% url 'gestao:alterar_cadastrador' %}"><i class="fa fa-exchange fa-fw"></i>  Alterar Cadastradores</a>
                       </li>
                         
                          <!-- Acompanhamento da execução do Plano de Trabalho -->
