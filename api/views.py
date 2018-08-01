@@ -23,7 +23,7 @@ class MunicipioList(generics.ListAPIView):
     serializer_class = MunicipioSerializer
     metadata_class = MunicipioMetadata
 
-    filter_backends = (DjangoFilterBackend, filters.OrderingFilter)
+    filter_backends = (DjangoFilterBackend, filters.OrderingFilter,)
     filter_class = MunicipioFilter
     ordering_fields = ('cidade', 'estado')
 
