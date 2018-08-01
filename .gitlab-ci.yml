@@ -4,6 +4,8 @@ stages:
   - cloneAndPush
 
 Git MIRROR:
+  only: 
+    - dev
   stage: cloneAndPush
   
   before_script:
