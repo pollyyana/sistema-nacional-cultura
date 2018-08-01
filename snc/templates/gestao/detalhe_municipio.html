@@ -308,6 +308,25 @@
     <div class="col-md-6">
         <div class="panel panel-info">
           <div class="panel-heading">
+            Histórico de cadastradores
+          </div>
+          <div class="list-group row">
+            <div class="col-md-12">
+              {% for sistema in historico_sistemas %}  
+                {% if sistema.cadastrador.nome_usuario %}
+                  <div  class="list-group-item col-xs-8">
+                     {{sistema.cadastrador.nome_usuario}}
+                  </div>
+                {% endif %}
+              {% endfor %}
+            </div>
+          </div>
+        </div>
+    </div>
+
+    <div class="col-md-6">
+        <div class="panel panel-info">
+          <div class="panel-heading">
             Dados da Adesão
           </div>
           <form name="form" action="{% url 'gestao:alterar_dados_adesao' object.id %}" method="post">
