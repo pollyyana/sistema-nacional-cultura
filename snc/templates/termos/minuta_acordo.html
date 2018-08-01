@@ -29,22 +29,22 @@
         <p>
           A
           <strong>UNIÃO</strong>, por intermédio do
-          <strong>MINISTÉRIO DA CULTURA - MinC</strong>, inscrito no CNPJ/MF sob o N.° 01.264.142/0002-00, situado na Esplanada dos Ministérios, Bloco "B", Brasília - Distrito Federal, neste ato representado pela Secretária de Articulação e Desenvolvimento Institucional Substituta,
-          <strong>MAGALI GUEDES DE MAGELA MOURA,</strong> residente em Brasília, carteira de identidade nº <strong> 20604912-4 </strong>, CPF/MF nº <strong>225.278.181-53 </strong>, nomeada pela <strong>Portaria nº 552, de 29 de julho 2016</strong>, e conforme delegação de competência da Portaria Nº 47, de 17 de julho de
+          <strong>MINISTÉRIO DA CULTURA - MinC</strong>, inscrito no CNPJ/MF sob o N.° 01.264.142/0002-00, situado na Esplanada dos Ministérios, Bloco "B", Brasília - Distrito Federal, neste ato representado pela Secretária da Diversidade Cultural,
+          <strong>MAGALI GUEDES DE MAGELA MOURA,</strong> residente em Brasília, carteira de identidade nº <strong> 20604912-4 </strong>, CPF/MF nº <strong>225.278.181-53 </strong>, nomeada pela <strong>Portaria nº 794, de 10 de julho de 2018</strong>, e conforme delegação de competência da Portaria Nº 47, de 17 de julho de
           2009 e o
           {% if request.user.usuario.municipio.cidade %}
-          Município de <strong>{{request.user.usuario.municipio.cidade|upper}}/{{request.user.usuario.municipio.estado}}</strong>
+          <strong>MUNICÍPIO DE {{request.user.usuario.municipio.cidade|upper}}/{{request.user.usuario.municipio.estado}}</strong>
           {% else %}
-          Governo do <strong>{{ request.user.usuario.municipio.estado.nome_uf|upper }}</strong>
+          <strong>GOVERNO DO {{ request.user.usuario.municipio.estado.nome_uf|upper }}</strong>
           {% endif %}
-          , CNPJ/MF sob o nº {{request.user.usuario.municipio.cnpj_prefeitura}}, representado por {{request.user.usuario.municipio.nome_prefeito}},
+          , CNPJ/MF sob o nº <strong>{{request.user.usuario.municipio.cnpj_prefeitura}}</strong>, representado por <strong>{{request.user.usuario.municipio.nome_prefeito}}</strong>>,
           {% if request.user.usuario.municipio.cidade %}
           Prefeito(a) Municipal,
           {% else %}
           Governador(a),
           {% endif %}
-          carteira de identidade nº {{request.user.usuario.municipio.rg_prefeito}}, CPF/MF nº {{request.user.usuario.municipio.cpf_prefeito}} firmam o presente Acordo de Cooperação
-          Federativa, que irá se reger pelas disposições do Art. 216-A da Constituição; da Lei no 8.666 de 21 de junho de 1993, no que couber; da Lei no 8.313/91, de 23 de dezembro de 1991 e demais disposições legais, pertinentes no que couber, tendo
+          carteira de identidade nº <strong>{{request.user.usuario.municipio.rg_prefeito}}</strong>, CPF/MF nº <strong>{{request.user.usuario.municipio.cpf_prefeito}}</strong>, firmam o presente Acordo de Cooperação
+          Federativa, que irá se reger pelas disposições do Art. 216-A da Constituição; da Lei no 8.666 de 21 de junho de 1993, no que couber; da Lei nº 8.313, de 23 de dezembro de 1991 e demais disposições legais pertinentes, no que couber, tendo
           como justas e acordadas as seguintes cláusulas e condições:
         </p>
         <div class="row">
@@ -70,7 +70,7 @@
           <p>
             <strong>Parágrafo Primeiro.</strong>
             Constitui a estrutura do SNC, nas respectivas esferas de governo, órgãos gestores da cultura, conselhos de política cultural, conferências de cultura, sistemas
-            de financiamento, em especial, fundos de fomento à cultura, planos de cultura, sistemas Setoriais de cultura, comissões intergestores, sistemas de informações e indicadores culturais e programas de formação na área da cultura.
+            de financiamento à cultura, em especial, fundos de fomento à cultura, planos de cultura, sistemas setoriais de cultura, comissões intergestores, sistemas de informações e indicadores culturais e programas de formação na área da cultura.
           </p>
           <p>
             <strong>Parágrafo Segundo.</strong>
@@ -79,7 +79,7 @@
           <p>
             <strong>Parágrafo Terceiro.</strong>
             As diretrizes de gestão cultural serão definidas por meio das respectivas Conferências de Cultura
-            e Conselhos de Política Cultural, compostos por no mínimo, 50% de representantes da sociedade civil, eleitos democraticamente.
+            e Conselhos de Política Cultural, compostos por, no mínimo, 50% de representantes da sociedade civil, eleitos democraticamente.
           </p>
         </p>
         <div class="row">
@@ -91,40 +91,40 @@
         <p>
           <br/>O Sistema Nacional de Cultura - SNC rege-se pelos seguintes princípios:
           <p>
-            <br/>a) diversidade das expressões culturais;
+            <br/>a) <strong>diversidade</strong> das expressões culturais;
           </p>
           <p>
-            b) universalização do acesso aos bens e serviços culturais;
+            b) <strong>universalização</strong> do acesso aos bens e serviços culturais;
           </p>
           <p>
-            c) fomento à produção, difusão e circulação de conhecimento e bens culturais;
+            c) <strong>fomento</strong> à produção, difusão e circulação de conhecimento e bens culturais;
           </p>
           <p>
-            d) cooperação entre os entes federados, os agentes públicos e privados atuantes na área cultural;
+            d) <strong>cooperação</strong> entre os entes federados, os agentes públicos e privados atuantes na área cultural;
           </p>
           <p>
-            e) integração e interação na execução das políticas, programas, projetos e ações desenvolvidas;
+            e) <strong>integração e interação</strong> na execução das políticas, programas, projetos e ações desenvolvidas;
           </p>
           <p>
-            f) complementaridade nos papéis dos agentes culturais;
+            f) <strong>complementaridade</strong> nos papéis dos agentes culturais;
           </p>
           <p>
-            g) transversalidade das políticas culturais;
+            g) <strong>transversalidade</strong> das políticas culturais;
           </p>
           <p>
-            h) autonomia dos entes federados e das instituições da sociedade civil;
+            h) <strong>autonomia</strong> dos entes federados e das instituições da sociedade civil;
           </p>
           <p>
-            i) transparência e compartilhamento das informações;
+            i) <strong>transparência</strong> e compartilhamento das informações;
           </p>
           <p>
-            j) democratização dos processos decisórios com participação e controle social;
+            j) <strong>democratização</strong> dos processos decisórios com participação e controle social;
           </p>
           <p>
-            k) descentralização articulada e pactuada da gestão, dos recursos e das ações; e
+            k) <strong>descentralização</strong> articulada e pactuada da gestão, dos recursos e das ações; e
           </p>
           <p>
-            l) ampliação progressiva dos recursos contidos nos orçamentos públicos para a cultura.
+            l) <strong>ampliação progressiva dos recursos</strong> contidos nos orçamentos públicos para a cultura.
           </p>
         </p>
         <div class="row">
