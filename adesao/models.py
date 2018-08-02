@@ -234,7 +234,7 @@ class SistemaCulturaManager(models.Manager):
 
     def por_municipio(self, uf, cidade=None):
         """ Retorna todos os SistemaCultura de uma cidade ou estado """
-        sistemas = self.filter(uf=uf, cidade=cidade)
+        sistemas = self.filter(uf=uf, cidade=cidade).select_related('cadastrador', 'cidade', 'uf')
 
         return sistemas
 

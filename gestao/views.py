@@ -379,7 +379,7 @@ class DetalharUsuario(DetailView):
         context['processo_sei'] = context['usuario'].processo_sei
         municipio = Municipio.objects.get(usuario__id=context['usuario'].id)
 
-        if municipio.estado:
+        if municipio.cidade:
             context['historico_sistemas'] = SistemaCultura.objects.por_municipio(municipio.estado, municipio.cidade)
         else:
             context['historico_sistemas'] = SistemaCultura.objects.por_municipio(municipio.estado)

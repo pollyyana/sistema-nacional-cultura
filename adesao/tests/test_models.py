@@ -87,6 +87,8 @@ def test_alterar_cadastrador_SistemaCultura(plano_trabalho):
     sistema.save()
 
     assert SistemaCultura.objects.count() == 2
+    assert SistemaCultura.objects.first().cadastrador == cadastrador_atual
+    assert SistemaCultura.objects.last().cadastrador == user
     assert Municipio.objects.first().usuario == user
     assert PlanoTrabalho.objects.first().usuario == user
     assert Secretario.objects.first().usuario == user
@@ -198,6 +200,29 @@ def test_ativo_ou_cria_SistemaCultura_cria():
     assert sistema.pk
     assert sistema.uf == uf
     assert sistema.cidade == cidade
+
+
+def test_por_municipio_SistemaCultura_cidade():
+    """ Testa se o método por município retorna os sistemas cultura de uma cidade """
+    cidade = mommy.make('Cidade')
+    uf = cidade.uf
+    sistema = mommy.make("SistemaCultura", cidade=cidade, uf=uf)
+
+    sistemas_cidade = SistemaCultura.objects.por_municipio(cidade=cidade, uf=uf)
+
+    assert sistemas_cidade.count() == 1
+    assert sistemas_cidade.first() == sistema
+
+
+def test_por_municipio_SistemaCultura_uf():
+    """ Testa se o método por município retorna os sistemas cultura de uma uf """
+    uf = mommy.make('Uf')
+    sistema = mommy.make("SistemaCultura", uf=uf)
+
+    sistemas_cidade = SistemaCultura.objects.por_municipio(uf=uf)
+
+    assert sistemas_cidade.count() == 1
+    assert sistemas_cidade.first() == sistema
 
 
 def test_alterar_cadastrador_sistema_cultura_sem_cadastrador():
