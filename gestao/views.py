@@ -30,6 +30,7 @@ from adesao.models import Usuario
 from adesao.models import Cidade
 from adesao.models import Municipio
 from adesao.models import Historico
+from adesao.models import SistemaCultura
 
 from planotrabalho.models import PlanoTrabalho
 from planotrabalho.models import CriacaoSistema
@@ -376,6 +377,12 @@ class DetalharUsuario(DetailView):
         context = super(DetalharUsuario, self).get_context_data(**kwargs)
         situacao = context['usuario'].estado_processo
         context['processo_sei'] = context['usuario'].processo_sei
+        municipio = Municipio.objects.get(usuario__id=context['usuario'].id)
+
+        if municipio.cidade:
+            context['historico_sistemas'] = SistemaCultura.objects.por_municipio(municipio.estado, municipio.cidade)
+        else:
+            context['historico_sistemas'] = SistemaCultura.objects.por_municipio(municipio.estado)
 
         try:
 
@@ -385,11 +392,9 @@ class DetalharUsuario(DetailView):
                 context['dado_situacao'] = historico.descricao
 
             elif situacao == '2':
-                municipio = Municipio.objects.get(usuario__id=context['usuario'].id)
                 context['dado_situacao'] = municipio.localizacao
 
             elif situacao == '4':
-                municipio = Municipio.objects.get(usuario__id=context['usuario'].id)
                 context['dado_situacao'] = municipio.numero_processo
 
             elif situacao == '6':
