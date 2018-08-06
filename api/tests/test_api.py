@@ -823,78 +823,78 @@ def test_filtrar_por_nome_ente_federado_vazio(client):
     assert len(response.data['_embedded']['items']) == 1
 
 
-def test_ordenar_resultados_da_api_de_forma_ascendente_por_nome_municipio(client, entes_municipais_estaduais):
+def test_ordenar_resultados_da_api_de_forma_ascendente_por_nome_municipio(client):
     """ Testa a ordenação ascendente do resultado da API por cidade(nome_municipio) """
+
+    nomes_municipios = ['Brasilia', 'Zé Doca', 'Abaetetuba']
     
-    estadual, municipal = entes_municipais_estaduais
-    mommy.make('Municipio')
+    for nome in nomes_municipios:
+        cidade =  mommy.make('Cidade', nome_municipio=nome)
+        municipios = mommy.make('Municipio', cidade=cidade)
 
     url = url_sistemadeculturalocal + '?ordering=cidade'
-    url_desc = url_sistemadeculturalocal + '?ordering=-cidade'
-
     response = client.get(url)
-    response_desc = client.get(url_desc)
 
-    municipio_asc = response.data['_embedded']['items'][0]
-    municipio_desc = response_desc.data['_embedded']['items'][0]
-    
-    assert municipio_asc != municipio_desc
-    assert len(response.data['_embedded']['items']) == 3
+    municipio = response.data['_embedded']['items']
 
-def test_ordenar_resultados_da_api_de_forma_descendente_por_cidade(client, entes_municipais_estaduais):
+    assert municipio[0]['ente_federado']['localizacao']['cidade']['nome_municipio'] == nomes_municipios[2]
+    assert municipio[1]['ente_federado']['localizacao']['cidade']['nome_municipio'] == nomes_municipios[0]    
+    assert municipio[2]['ente_federado']['localizacao']['cidade']['nome_municipio'] == nomes_municipios[1]
+
+def test_ordenar_resultados_da_api_de_forma_descendente_por_nome_municipio(client):
     """ Testa a ordenação descendente do resultado da API por cidade(nome_municipio) """
-    
-    estadual, municipal = entes_municipais_estaduais
-    mommy.make('Municipio')
+    """ O comportamento default do resultado inverso é retornar primeiro os itens com cidade == null"""
 
-    url_desc = url_sistemadeculturalocal + '?ordering=-cidade'
-    url = url_sistemadeculturalocal + '?ordering=cidade'
-
-    response_desc = client.get(url_desc)
+    url = url_sistemadeculturalocal + '?ordering=-cidade'
     response = client.get(url)
 
-    municipio_desc = response_desc.data['_embedded']['items'][0]
-    municipio_asc = response.data['_embedded']['items'][0]
+    municipio = response.data['_embedded']['items']
+    
+    for item in municipio:
+        assert item['ente_federado']['localizacao']['cidade'] == None
+    
 
-    assert municipio_desc != municipio_asc
-    assert municipio_desc['ente_federado']['localizacao']['cidade'] == None
 
 
-def test_ordenar_resultados_da_api_de_forma_ascendente_por_estado(client, entes_municipais_estaduais):
+def test_ordenar_resultados_da_api_de_forma_ascendente_por_estado(client):
     """ Testa a ordenação ascendente do resultado da API por estado(nome_uf) """
     
-    estadual, municipal = entes_municipais_estaduais
-    mommy.make('Municipio')
-
+    nomes_estados = ['Distrito Federal', 'Bahia', 'Tocantins']
+    
+    for nome in nomes_estados:
+        uf = mommy.make('Uf', nome_uf=nome)
+        municipios = mommy.make('Municipio', estado=uf)
+        
     url = url_sistemadeculturalocal + '?ordering=estado'
-    url_desc = url_sistemadeculturalocal + '?ordering=-estado'
 
     response = client.get(url)
-    response_desc = client.get(url_desc)
 
-    municipio_asc = response.data['_embedded']['items'][0]
-    municipio_desc = response_desc.data['_embedded']['items'][0]
+    estado = response.data['_embedded']['items']
 
-    assert municipio_asc != municipio_desc
-    assert len(response.data['_embedded']['items']) == 3
+    assert estado[0]['ente_federado']['localizacao']['estado']['nome_uf'] == nomes_estados[1]
+    assert estado[1]['ente_federado']['localizacao']['estado']['nome_uf'] == nomes_estados[2]
+    assert estado[2]['ente_federado']['localizacao']['estado']['nome_uf'] == nomes_estados[0]
 
 
-def test_ordenar_resultados_da_api_de_forma_descendente_por_estado(client, entes_municipais_estaduais):
+
+def test_ordenar_resultados_da_api_de_forma_descendente_por_estado(client):
     """ Testa a ordenação descendente do resultado da API por estado(nome_uf) """
     
-    estadual, municipal = entes_municipais_estaduais
-    mommy.make('Municipio')
+    nomes_estados = ['Distrito Federal', 'Bahia', 'Tocantins']
+    
+    for nome in nomes_estados:
+        uf = mommy.make('Uf', nome_uf=nome)
+        municipios = mommy.make('Municipio', estado=uf)
+        
+    url = url_sistemadeculturalocal + '?ordering=-estado'
 
-    url_desc = url_sistemadeculturalocal + '?ordering=-estado'
-    url = url_sistemadeculturalocal + '?ordering=estado'
-
-    response_desc = client.get(url_desc)
     response = client.get(url)
 
-    municipio_desc = response_desc.data['_embedded']['items'][0]
-    municipio_asc = response.data['_embedded']['items'][0]
+    estado = response.data['_embedded']['items']
 
-    assert municipio_desc != municipio_asc
+    assert estado[0]['ente_federado']['localizacao']['estado']['nome_uf'] == nomes_estados[0]
+    assert estado[1]['ente_federado']['localizacao']['estado']['nome_uf'] == nomes_estados[1]
+    assert estado[2]['ente_federado']['localizacao']['estado']['nome_uf'] == nomes_estados[2]
     
 
 @pytest.mark.parametrize("query,componente", [
