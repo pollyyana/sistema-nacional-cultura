@@ -100,22 +100,34 @@ As dependencias de pacotes estão no Pipfile.
 
 ## Utilizando o docker
 
-1. Execute o serviço do banco de dados em background
+1. Copie o template de configurações de ambiente e edite conforme necessário
+    ```
+    cp env.tmpl snc/.env
+    ```
+
+2. Execute o serviço do banco de dados em background
     ```
     sudo docker-compose up -d db
     ```
 
-2. Execute o comando migrate para criar a estrutura do banco
-    ```
-    sudo docker-compose run web python /code/manage.py migrate
-    ```
-
-3. Copie os arquivos estaticos do projeto 
-    ```
-    sudo docker-compose run web python /code/manage.py collectstatic
-    ```
-
-4. Execute a aplicação que estará disponível na porta 8000
+3.  Execute o serviço da aplicação
     ```
     sudo docker-compose up web
     ```
+
+4. Entre no container da aplicação (substitua container_id pelo ID do container)
+    ```
+    sudo docker exec -it container_id bash
+    ```
+
+5. Dentro do container da aplicação, execute o comando migrate para criar a estrutura do banco
+    ```
+    ./manage.py migrate
+    ```
+
+6. Dentro do container da aplicação, copie os arquivos estaticos do projeto
+    ```
+    ./manage.py collectstatic
+    ```
+
+A aplicação estará disponível na porta 8000
