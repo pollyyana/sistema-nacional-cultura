@@ -25,7 +25,7 @@ class MunicipioList(generics.ListAPIView):
 
     filter_backends = (DjangoFilterBackend, filters.OrderingFilter,)
     filter_class = MunicipioFilter
-    ordering_fields = ('cidade', 'estado')
+    ordering_fields = ('cidade__nome_municipio', 'estado__nome_uf')
 
 
 class MunicipioDetail(generics.RetrieveAPIView):
