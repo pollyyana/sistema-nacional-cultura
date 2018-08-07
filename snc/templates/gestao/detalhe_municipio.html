@@ -305,24 +305,32 @@
 {% endif %}
 
 <div class="row">
-    <div class="col-md-6">
-        <div class="panel panel-info">
-          <div class="panel-heading">
-            Histórico de cadastradores
-          </div>
-          <div class="list-group row">
-            <div class="col-md-12">
-              {% for sistema in historico_sistemas %}  
-                {% if sistema.cadastrador.nome_usuario %}
-                  <div  class="list-group-item col-xs-8">
-                     {{sistema.cadastrador.nome_usuario}}
-                  </div>
-                {% endif %}
+    {% if historico_sistemas %}
+      <div class="col-md-6">
+          <div class="panel panel-info">
+            <div class="panel-heading">
+              Histórico de cadastradores
+            </div>
+            <div class="panel-body">
+              {% for sistema in historico_sistemas %}
+                <ul class="list-group">            
+                    {% if sistema.cadastrador.nome_usuario %}
+                      <li class="list-group-item">
+                         <b>Usuário:</b> {{sistema.cadastrador.nome_usuario}}
+                      </li>
+                    {% endif %}
+
+                    {% if sistema.cadastrador.user.email %}
+                      <li class="list-group-item">
+                         <b>E-mail:</b> {{sistema.cadastrador.user.email}}
+                      </li>
+                    {% endif %}         
+                </ul>
               {% endfor %}
             </div>
           </div>
-        </div>
-    </div>
+      </div>
+    {% endif %}
 
     <div class="col-md-6">
         <div class="panel panel-info">
