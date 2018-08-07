@@ -1,6 +1,7 @@
 from django.shortcuts import render
 from django_filters.rest_framework import DjangoFilterBackend
 
+from rest_framework import filters
 from rest_framework import generics
 
 from adesao.models import Municipio
@@ -22,8 +23,9 @@ class MunicipioList(generics.ListAPIView):
     serializer_class = MunicipioSerializer
     metadata_class = MunicipioMetadata
 
-    filter_backends = (DjangoFilterBackend,)
+    filter_backends = (DjangoFilterBackend, filters.OrderingFilter,)
     filter_class = MunicipioFilter
+    ordering_fields = ('cidade__nome_municipio', 'estado__nome_uf')
 
 
 class MunicipioDetail(generics.RetrieveAPIView):
