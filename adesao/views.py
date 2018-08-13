@@ -10,7 +10,7 @@ from threading import Thread
 from django.shortcuts import render, redirect
 from django.http import Http404, HttpResponse
 from django.views.generic.edit import CreateView, UpdateView
-from django.views.generic import ListView, DetailView
+from django.views.generic import ListView, DetailView, TemplateView
 from django.urls import reverse_lazy, reverse
 from django.core.mail import send_mail
 from django.contrib.auth.decorators import login_required
@@ -26,7 +26,7 @@ from adesao.forms import CadastrarUsuarioForm, CadastrarMunicipioForm
 from adesao.forms import CadastrarResponsavelForm, CadastrarSecretarioForm
 from adesao.utils import enviar_email_conclusao, verificar_anexo
 
-from wkhtmltopdf.views import PDFTemplateView
+from django_weasyprint import WeasyTemplateView
 
 
 # Create your views here.
@@ -480,15 +480,9 @@ class AlterarSecretario(UpdateView):
         success_url = reverse_lazy('adesao:sucesso_secretario')
 
 
-class MinutaAcordo(PDFTemplateView):
-    filename = 'minuta_acordo.pdf'
-    header_template = 'termos/minuta_header.html'
+class MinutaAcordo(WeasyTemplateView):
+    pdf_filename = 'minuta_acordo.pdf'
     template_name = 'termos/minuta_acordo.html'
-    show_content_in_browser = True
-    cmd_options = {
-        'margin-top': 60,
-        'header-spacing': 5,
-        }
 
     def get_context_data(self, **kwargs):
         context = super(MinutaAcordo, self).get_context_data(**kwargs)
@@ -496,16 +490,15 @@ class MinutaAcordo(PDFTemplateView):
         context['static'] = self.request.get_host()
         return context
 
-
-class TermoSolicitacao(PDFTemplateView):
-    filename = 'solicitacao.pdf'
-    header_template = 'termos/solicitacao_header.html'
+class TermoSolicitacao(WeasyTemplateView):
+    pdf_filename = 'solicitacao.pdf'
+    #header_template = 'termos/solicitacao_header.html'
     template_name = 'termos/solicitacao.html'
-    show_content_in_browser = True
-    cmd_options = {
-        'margin-top': 40,
-        'header-spacing': 5,
-        }
+    #show_content_in_browser = True
+    #cmd_options = {
+    #    'margin-top': 40,
+    #    'header-spacing': 5,
+    #    }
 
     def get_context_data(self, **kwargs):
         context = super(TermoSolicitacao, self).get_context_data(**kwargs)
@@ -514,10 +507,10 @@ class TermoSolicitacao(PDFTemplateView):
         return context
 
 
-class OficioAlteracao(PDFTemplateView):
-    filename = 'alterar_responsavel.pdf'
+class OficioAlteracao(WeasyTemplateView):
+    pdf_filename = 'alterar_responsavel.pdf'
     template_name = 'termos/alterar_responsavel.html'
-    show_content_in_browser = True
+    #show_content_in_browser = True
 
     def get_context_data(self, **kwargs):
         context = super(OficioAlteracao, self).get_context_data(**kwargs)
