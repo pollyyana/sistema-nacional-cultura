@@ -123,14 +123,6 @@
             "index": "pypi",
             "version": "==1.3"
         },
-        "django-wkhtmltopdf": {
-            "hashes": [
-                "sha256:4cf07226332b89102e2ab1302fdd6cad402677ebfb2d50efad7cb3056a54151b",
-                "sha256:5dc89264b970d63f41b99c6722ccd47b15292598bec84248f3b94e5673dcfeac"
-            ],
-            "index": "pypi",
-            "version": "==3.2.0"
-        },
         "djangorestframework": {
             "hashes": [
                 "sha256:1f6baf40ed456ed2af6bd1a4ff8bbc3503cebea16509993aea2b7085bc097766",
