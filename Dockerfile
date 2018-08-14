@@ -7,7 +7,6 @@ WORKDIR /code/
 
 RUN apt-get -y update
 RUN pip install pipenv
-RUN pip install django-weasyprint
 RUN pipenv install --system && pipenv install --dev --system
 
 EXPOSE 8000
