@@ -492,13 +492,7 @@ class MinutaAcordo(WeasyTemplateView):
 
 class TermoSolicitacao(WeasyTemplateView):
     pdf_filename = 'solicitacao.pdf'
-    #header_template = 'termos/solicitacao_header.html'
     template_name = 'termos/solicitacao.html'
-    #show_content_in_browser = True
-    #cmd_options = {
-    #    'margin-top': 40,
-    #    'header-spacing': 5,
-    #    }
 
     def get_context_data(self, **kwargs):
         context = super(TermoSolicitacao, self).get_context_data(**kwargs)
@@ -510,7 +504,6 @@ class TermoSolicitacao(WeasyTemplateView):
 class OficioAlteracao(WeasyTemplateView):
     pdf_filename = 'alterar_responsavel.pdf'
     template_name = 'termos/alterar_responsavel.html'
-    #show_content_in_browser = True
 
     def get_context_data(self, **kwargs):
         context = super(OficioAlteracao, self).get_context_data(**kwargs)
