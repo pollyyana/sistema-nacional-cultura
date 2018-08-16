@@ -14,6 +14,7 @@ def migra_arquivo_criacao_sistema(apps, schema_editor):
             file = sistema.lei_sistema_cultura.file
             file_name = file.name.split('/')[-1]
             sistema.arquivo.save(file_name, file)
+            file.close()
         except ValueError:
             """ Sem file associado """
             pass
@@ -29,6 +30,7 @@ def migra_arquivo_orgao_gestor(apps, schema_editor):
             file = orgao.relatorio_atividade_secretaria.file
             file_name = file.name.split('/')[-1]
             orgao.arquivo.save(file_name, file)
+            file.close()
         except ValueError:
             """ Sem file associado """
             pass
@@ -44,6 +46,7 @@ def migra_arquivo_conselho_cultural(apps, schema_editor):
             file = conselho.ata_regimento_aprovado.file
             file_name = file.name.split('/')[-1]
             conselho.arquivo.save(file_name, file)
+            file.close()
         except ValueError:
             """ Sem file associado """
             pass
@@ -59,6 +62,7 @@ def migra_arquivo_fundo_cultura(apps, schema_editor):
             file = fundo.lei_fundo_cultura.file
             file_name = file.name.split('/')[-1]
             fundo.arquivo.save(file_name, file)
+            file.close()
         except ValueError:
             """ Sem file associado """
             pass
@@ -74,6 +78,7 @@ def migra_arquivo_plano_cultura(apps, schema_editor):
             file = plano.lei_plano_cultura.file
             file_name = file.name.split('/')[-1]
             plano.arquivo.save(file_name, file)
+            file.close()
         except ValueError:
             """ Sem file associado """
             pass
@@ -82,7 +87,7 @@ def migra_arquivo_plano_cultura(apps, schema_editor):
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('planotrabalho', '0001_initial'),
+        ('planotrabalho', '0002_newfields'),
     ]
 
     operations = [
