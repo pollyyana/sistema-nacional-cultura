@@ -34,7 +34,7 @@ def recupera_data(apps, schema_editor):
 
 class Migration(migrations.Migration):
 
-    dependencies = [("planotrabalho", "0002_migra_arquivos_componentes")]
+    dependencies = [("planotrabalho", "0003_migra_arquivos_componentes")]
 
     operations = [
         migrations.RunPython(recupera_data),
