@@ -3,18 +3,18 @@ from django.contrib.admin.views.decorators import staff_member_required
 
 from . import views
 
+app_name = 'gestao'
+
 urlpatterns = [
     # Acompanhar andamento dos processos de adesão
     url(r'^$', staff_member_required(
         views.AcompanharAdesao.as_view(),
         login_url='adesao:login'), name='acompanhar_adesao'),
-    url(r'^alterar/situacao/(?P<id>[\w]+)$',
-        staff_member_required(views.alterar_situacao, login_url='adesao:login'),
-        name='alterar_situacao'),
+    url(r'^alterar/dados-adesao/(?P<pk>[0-9]+)$',
+        staff_member_required(views.alterar_dados_adesao, login_url='adesao:login'),
+        name='alterar_dados_adesao'),
     url(r'^alterar/cadastrador/municipio/',
         staff_member_required(views.AlterarCadastrador.as_view()), name='alterar_cadastrador'),
-    url(r'^alterar/cadastrador/estado/',
-        staff_member_required(views.AlterarCadastradorEstado.as_view()), name='alterar_cadastrador_estado'),
     # Acompanhar e aditivar prazos dos municípios
     url(r'^acompanhar/prazo/',
         staff_member_required(views.AcompanharPrazo.as_view()), name='acompanhar_prazo'),
@@ -85,7 +85,13 @@ urlpatterns = [
             login_url='adesao:login'), name='alterar_usuario'),
 
     # UF e Município aninhados
-    url(r'^chain/municipio$', staff_member_required(views.MunicipioChain.as_view()), name='municipio_chain'),
+    url(r'^chain/cidade$',
+        views.CidadeChain.as_view(),
+        name='cidade_chain'),
+
+    url(r'^chain/uf$',
+        views.UfChain.as_view(),
+        name='uf_chain'),
 
     # Inserir de documentos de entes federados
     url(r'^inserir-documentos/ente-federado$',
@@ -128,5 +134,11 @@ urlpatterns = [
 
     # ajax mudança de cadastrador
     url(r'^ajax_cadastrador_cpf$', staff_member_required(views.ajax_cadastrador_cpf), name='ajax_cadastrador_cpf'),
+
+
+    # Diligência de Componente
+
+    url(r'^(?P<pk>[0-9]+)/diligencia/(?P<componente>[A-z]+)/(?P<resultado>[0-1])',
+        staff_member_required(views.DiligenciaView.as_view()), name="diligencia_componente")
 
     ]

@@ -1,0 +1,49 @@
+image: alpine:latest
+
+stages:
+  - cloneAndPush
+
+Git MIRROR:
+  only: 
+    - dev
+  stage: cloneAndPush
+  
+  before_script:
+  ##
+  ## Install ssh-agent if not already installed, it is required by Docker.
+  ## (change apt-get to yum if you use an RPM-based image)
+  ##
+  - 'which ssh-agent || ( apk --update add git openssh-client )'
+
+  ##
+  ## Create the SSH directory and give it the right permissions
+  ##
+  - mkdir -p ~/.ssh
+  - chmod 700 ~/.ssh
+  
+  ##
+  ## Run ssh-agent (inside the build environment)
+  ##
+  - eval $(ssh-agent -s)
+
+  ##
+  ## Add the SSH key stored in SSH_PRIVATE_KEY variable to the agent store
+  ##
+  - echo "$SSH_PRIVATE_KEY" | ssh-add -
+
+  ##
+  ## Create the SSH known_hosts
+  ##
+  - ssh-keyscan -H "$GITHOST" >> ~/.ssh/known_hosts
+  
+  ##
+  ## Optionally, if you will be using any Git commands, set the user name and
+  ## and email.
+  ##
+  - git config --global user.email "$GITUSERMAIL"
+  - git config --global user.name "$GITUSERNAME"
+  
+  script:
+    - git clone --mirror https://github.com/culturagovbr/$CI_PROJECT_NAME
+    - cd $CI_PROJECT_NAME.git
+    - git push --mirror git@git.cultura.gov.br:$CI_PROJECT_NAMESPACE/$CI_PROJECT_NAME

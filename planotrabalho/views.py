@@ -2,15 +2,30 @@ import json
 
 
 from django.shortcuts import redirect
-from django.http import Http404, HttpResponse
-from django.views.generic.edit import CreateView, UpdateView
-from django.views.generic import ListView, DetailView
-from django.core.urlresolvers import reverse_lazy
+from django.http import Http404
+from django.http import HttpResponse
+from django.views.generic.edit import CreateView
+from django.views.generic.edit import UpdateView
+from django.views.generic import ListView
+from django.views.generic import DetailView
+from django.urls import reverse_lazy
 
-from planotrabalho.models import PlanoTrabalho, CriacaoSistema, OrgaoGestor, Conselheiro
-from planotrabalho.models import ConselhoCultural, FundoCultura, PlanoCultura
-from .forms import CriarSistemaForm, OrgaoGestorForm, ConselhoCulturalForm, DesabilitarConselheiroForm
-from .forms import FundoCulturaForm, PlanoCulturaForm, CriarConselheiroForm, AlterarConselheiroForm
+from .models import PlanoTrabalho
+from .models import CriacaoSistema
+from .models import OrgaoGestor
+from .models import Conselheiro
+from .models import ConselhoCultural
+from .models import FundoCultura
+from .models import PlanoCultura
+
+from .forms import CriarSistemaForm
+from .forms import OrgaoGestorForm
+from .forms import ConselhoCulturalForm
+from .forms import DesabilitarConselheiroForm
+from .forms import FundoCulturaForm
+from .forms import PlanoCulturaForm
+from .forms import CriarConselheiroForm
+from .forms import AlterarConselheiroForm
 
 
 class PlanoTrabalho(DetailView):
@@ -43,11 +58,6 @@ class CadastrarSistema(CreateView):
         kwargs = super(CadastrarSistema, self).get_form_kwargs()
         kwargs['user'] = self.request.user.usuario
         return kwargs
-
-    def form_valid(self, form):
-        self.request.user.usuario.plano_trabalho.criacao_sistema = form.save()
-        self.request.user.usuario.plano_trabalho.save()
-        return super(CadastrarSistema, self).form_valid(form)
 
     def dispatch(self, *args, **kwargs):
         sistema = self.request.user.usuario.plano_trabalho.criacao_sistema
@@ -85,11 +95,6 @@ class CadastrarOrgaoGestor(CreateView):
         kwargs['user'] = self.request.user.usuario
         return kwargs
 
-    def form_valid(self, form):
-        self.request.user.usuario.plano_trabalho.orgao_gestor = form.save()
-        self.request.user.usuario.plano_trabalho.save()
-        return super(CadastrarOrgaoGestor, self).form_valid(form)
-
     def dispatch(self, *args, **kwargs):
         orgao = self.request.user.usuario.plano_trabalho.orgao_gestor
         if orgao:
@@ -125,11 +130,6 @@ class CadastrarConselho(CreateView):
         kwargs = super(CadastrarConselho, self).get_form_kwargs()
         kwargs['user'] = self.request.user.usuario
         return kwargs
-
-    def form_valid(self, form):
-        self.request.user.usuario.plano_trabalho.conselho_cultural = form.save()
-        self.request.user.usuario.plano_trabalho.save()
-        return super(CadastrarConselho, self).form_valid(form)
 
     def dispatch(self, *args, **kwargs):
         conselho = self.request.user.usuario.plano_trabalho.conselho_cultural
@@ -242,11 +242,6 @@ class CadastrarFundo(CreateView):
         kwargs = super(CadastrarFundo, self).get_form_kwargs()
         kwargs['user'] = self.request.user.usuario
         return kwargs
-
-    def form_valid(self, form):
-        self.request.user.usuario.plano_trabalho.fundo_cultura = form.save()
-        self.request.user.usuario.plano_trabalho.save()
-        return super(CadastrarFundo, self).form_valid(form)
 
     def dispatch(self, *args, **kwargs):
         fundo = self.request.user.usuario.plano_trabalho.fundo_cultura

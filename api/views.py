@@ -1,57 +1,47 @@
-from rest_framework import generics
 from django.shortcuts import render
 from django_filters.rest_framework import DjangoFilterBackend
-from rest_framework import viewsets
-import rest_framework_filters as filters
-from planotrabalho.models import * 
-from adesao.models import Municipio, Cidade, Usuario, Cidade
-from api.serializers import MunicipioSerializer, UsuarioSerializer, PlanoTrabalhoSerializer
-from .filters import *
+
+from rest_framework import filters
+from rest_framework import generics
+
+from adesao.models import Municipio
+from planotrabalho.models import PlanoTrabalho
+from api.serializers import MunicipioSerializer
+from api.serializers import PlanoTrabalhoSerializer
+from api.filters import MunicipioFilter
+from api.filters import PlanoTrabalhoFilter
+from api.metadata import MunicipioMetadata
+from api.metadata import PlanoTrabalhoMetadata
 
 
-# Swagger index page.
 def swagger_index(request):
     return render(request, 'swagger/index.html')
 
-# MUNICIPIOS
-# Lista todos os municipios
-class  MunicipioList(generics.ListAPIView):
+
+class MunicipioList(generics.ListAPIView):
     queryset = Municipio.objects.filter().order_by('-id')
     serializer_class = MunicipioSerializer
-    
-    filter_backends = (DjangoFilterBackend,)
-    filter_class = MunicipioFilter
+    metadata_class = MunicipioMetadata
 
-# Retorna um municipio especificado pela pk
+    filter_backends = (DjangoFilterBackend, filters.OrderingFilter,)
+    filter_class = MunicipioFilter
+    ordering_fields = ('cidade__nome_municipio', 'estado__nome_uf')
+
+
 class MunicipioDetail(generics.RetrieveAPIView):
     queryset = Municipio.objects.filter().order_by('-id')
     serializer_class = MunicipioSerializer
 
-# PLANO TRABALHO
-# Lista todos os planos de trabalho 
+
 class PlanoTrabalhoList(generics.ListAPIView):
     queryset = PlanoTrabalho.objects.filter().order_by('-id')
-    serializer_class = PlanoTrabalhoSerializer 
+    serializer_class = PlanoTrabalhoSerializer
+    metadata_class = PlanoTrabalhoMetadata
 
     filter_backends = (DjangoFilterBackend,)
     filter_class = PlanoTrabalhoFilter
-       
-# Retorna um plano de trabalho especificado pela pk
+
+
 class PlanoTrabalhoDetail(generics.RetrieveAPIView):
-    queryset = PlanoTrabalho.objects.filter().order_by('-id') 
-    serializer_class = PlanoTrabalhoSerializer 
-
-# USUÁRIOS
-# Lista todos os usuários
-class UsuarioList(generics.ListAPIView):
-    queryset = Usuario.objects.filter().order_by('-id')
-    serializer_class = UsuarioSerializer
-    
-    filter_backends = (DjangoFilterBackend,)
-    filter_fields = ('nome_usuario','municipio')
-
-# Retorna um usuário especificado pela pk
-class UsuarioDetail(generics.RetrieveAPIView):
-    queryset = Usuario.objects.filter().order_by('-id') 
-    serializer_class = UsuarioSerializer
-
+    queryset = PlanoTrabalho.objects.filter().order_by('-id')
+    serializer_class = PlanoTrabalhoSerializer

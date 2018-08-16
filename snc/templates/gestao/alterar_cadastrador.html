@@ -1,23 +1,30 @@
 {% extends "gestao/base_gestao.html" %} {% load widget_tweaks %} {% block content %}
+{{form.media}}
 <div class="panel panel-default">
   <div class="panel-heading">
-    Alteração de cadastrador para Municípios
+    Alteração de cadastrador do ente federado 
   </div>
+  <ul class="nav nav-tabs"> 
+      <li class="active"><a data-toggle="tab" href="#conteudo-default" id="municipio-tab">Município</a></li>
+      <li><a data-toggle="tab" href="#conteudo-default" id="estado-tab">Estado</a></li>
+  </ul>
+
+<div class="tab-content">
+  <div id="conteudo-default" class="tab-pane fade in active">
   <div class="panel-body">
     <form action="{% url 'gestao:alterar_cadastrador' %}" class="form-horizontal" method="post">{% csrf_token %}
 
       <div class="form-group">
-        <label for="{{ form.uf.id_for_label }}" class="col-sm-3 control-label">UF</label>
-
+        <label for="{{ form.estado.id_for_label }}" class="col-sm-3 control-label">UF</label>
         <div class="col-sm-1">
-          {% render_field form.uf class="form-control" %}
+          {% render_field form.estado class="form-control" id="estado_id" %}
         </div>
         <div class="col-sm-offset-3 col-sm-9">
-          {{ form.uf.errors }}
+          {{ form.estado.errors }}
         </div>
       </div>
 
-      <div class="form-group">
+      <div class="form-group" id="municipio-field">
         <label for="{{ form.municipio.id_for_label }}" class="col-sm-3 control-label">Município</label>
 
         <div class="col-sm-4">
@@ -59,6 +66,7 @@
     </form>
   </div>
 </div>
+  </div>
 
 {% endblock content %}
 
@@ -67,15 +75,33 @@
 
 $(document).ready(function(){
 
-    $('#municipio_id').change(function(){
+    $('#estado-tab').on('click', function() {
+        $fieldMuncipio = $('#municipio-field');
+        $fieldMuncipio.hide();
+        $('#estado_id option').each(function(){$(this).removeAttr('selected');}); 
+        $('#municipio_id option').each(function(){$(this).removeAttr('selected');}); 
+        $('#id_data_publicacao_acordo').val("");
+        $('#cpf_usuario').val("");
+    });
+
+    $('#municipio-tab').on('click', function() {
+        $fieldMuncipio = $('#municipio-field');
+        $fieldMuncipio.show();
+        $('#estado_id').find('option:first').attr('selected',true);
+        $('#municipio_id').find('option:first').attr('selected',true);
+        $('#id_data_publicacao_acordo').val("");
+        $('#cpf_usuario').val("");
+    });
+
+    $('#municipio_id, #estado_id').change(function(){
+        $municipio_id = $('#municipio_id').val()
+        $estado_id = $('#estado_id').val()
+        $url = "{% url 'gestao:ajax_cadastrador_cpf' %}" 
+
         $.ajax({
-          type: "POST",
-          url: "/gestao/ajax_cadastrador_cpf",
+          type: "GET",
+          url: $url + '?municipio='+ $municipio_id + '&estado=' + $estado_id,
           cache: false,
-          data: {
-            'csrfmiddlewaretoken': '{{ csrf_token }}',
-            'ente_federado': $('#municipio_id').val(),
-            },
           success: function(data){
             $('#id_data_publicacao_acordo').val("");
             if(!data.erro){

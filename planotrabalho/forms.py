@@ -35,7 +35,7 @@ SETORIAIS = (
 
 class CriarSistemaForm(ModelForm):
     minuta_projeto_lei = forms.FileField(required=False, widget=FileInput)
-    lei_sistema_cultura = forms.FileField(required=False, widget=FileInput)
+    arquivo = forms.FileField(required=True, widget=FileInput)
 
     def __init__(self, *args, **kwargs):
         self.usuario = kwargs.pop('user')
@@ -45,26 +45,29 @@ class CriarSistemaForm(ModelForm):
         limite = add_anos(self.usuario.data_publicacao_acordo, self.usuario.prazo)
         hoje = datetime.date.today()
         if hoje > limite:
-            self.add_error('lei_sistema_cultura', 'Não foi possível salvar. Você ultrapassou a data limite de envio: ' +
+            self.add_error('arquivo', 'Não foi possível salvar. Você ultrapassou a data limite de envio: ' +
                 limite.strftime("%d/%m/%Y"))
 
     def save(self, commit=True, *args, **kwargs):
         sistema = super(CriarSistemaForm, self).save(commit=False)
-        if 'lei_sistema_cultura' in self.changed_data:
-            sistema.situacao_lei_sistema_id = 1
+        if 'arquivo' in self.changed_data:
+            sistema.situacao_id = 1
 
         if commit:
+            sistema.planotrabalho = self.usuario.plano_trabalho
             sistema.save()
+            self.usuario.plano_trabalho.criacao_sistema = sistema
+            self.usuario.plano_trabalho.save()
         return sistema
 
     class Meta:
         model = CriacaoSistema
-        fields = ['lei_sistema_cultura', ]
+        fields = ['arquivo', ]
 
 
 class OrgaoGestorForm(ModelForm):
-    relatorio_atividade_secretaria = forms.FileField(
-        required=False, widget=FileInput)
+    arquivo = forms.FileField(
+        required=True, widget=FileInput)
 
     def __init__(self, *args, **kwargs):
         self.usuario = kwargs.pop('user')
@@ -74,25 +77,28 @@ class OrgaoGestorForm(ModelForm):
         limite = add_anos(self.usuario.data_publicacao_acordo, self.usuario.prazo)
         hoje = datetime.date.today()
         if hoje > limite:
-            self.add_error('relatorio_atividade_secretaria', '''Não foi possível salvar. Você ultrapassou a
+            self.add_error('arquivo', '''Não foi possível salvar. Você ultrapassou a
                 data limite de envio: ''' + limite.strftime("%d/%m/%Y"))
 
     def save(self, commit=True, *args, **kwargs):
         orgao = super(OrgaoGestorForm, self).save(commit=False)
-        if 'relatorio_atividade_secretaria' in self.changed_data:
-            orgao.situacao_relatorio_secretaria_id = 1
+        if 'arquivo' in self.changed_data:
+            orgao.situacao_id = 1
 
         if commit:
+            orgao.planotrabalho = self.usuario.plano_trabalho
             orgao.save()
+            self.usuario.plano_trabalho.orgao_gestor = orgao
+            self.usuario.plano_trabalho.save()
         return orgao
 
     class Meta:
         model = OrgaoGestor
-        exclude = ['situacao_relatorio_secretaria']
+        fields = ['arquivo']
 
 
 class ConselhoCulturalForm(ModelForm):
-    ata_regimento_aprovado = forms.FileField(required=False, widget=FileInput)
+    arquivo = forms.FileField(required=True, widget=FileInput)
 
     def __init__(self, *args, **kwargs):
         self.usuario = kwargs.pop('user')
@@ -102,16 +108,20 @@ class ConselhoCulturalForm(ModelForm):
         limite = add_anos(self.usuario.data_publicacao_acordo, self.usuario.prazo)
         hoje = datetime.date.today()
         if hoje > limite:
-            self.add_error('ata_regimento_aprovado', '''Não foi possível salvar.
+            self.add_error('arquivo', '''Não foi possível salvar.
                 Você ultrapassou a data limite de envio: ''' + limite.strftime("%d/%m/%Y"))
 
     def save(self, commit=True, *args, **kwargs):
         conselho = super(ConselhoCulturalForm, self).save(commit=False)
-        if 'ata_regimento_aprovado' in self.changed_data:
-            conselho.situacao_ata_id = 1
+        if 'arquivo' in self.changed_data:
+            conselho.situacao_id = 1
 
         if commit:
+            conselho.planotrabalho = self.usuario.plano_trabalho
             conselho.save()
+            self.usuario.plano_trabalho.conselho_cultural = conselho
+            self.usuario.plano_trabalho.save()
+
             nomes = self.data.getlist('conselheiro')
             emails = self.data.getlist('email')
             segmentos = self.data.getlist('segmento')
@@ -132,11 +142,11 @@ class ConselhoCulturalForm(ModelForm):
 
     class Meta:
         model = ConselhoCultural
-        fields = ['ata_regimento_aprovado', ]
+        fields = ['arquivo', ]
 
 
 class FundoCulturaForm(ModelForm):
-    lei_fundo_cultura = forms.FileField(required=False, widget=FileInput)
+    arquivo = forms.FileField(required=True, widget=FileInput)
 
     def __init__(self, *args, **kwargs):
         self.usuario = kwargs.pop('user')
@@ -146,12 +156,12 @@ class FundoCulturaForm(ModelForm):
         limite = add_anos(self.usuario.data_publicacao_acordo, self.usuario.prazo)
         hoje = datetime.date.today()
         if hoje > limite:
-            self.add_error('lei_fundo_cultura', '''Não foi possível salvar.
+            self.add_error('arquivo', '''Não foi possível salvar.
             Você ultrapassou a data limite de envio: ''' + limite.strftime("%d/%m/%Y"))
 
     def clean_cnpj_fundo_cultura(self):
         cnpj = self.cleaned_data['cnpj_fundo_cultura']
-        if 'lei_fundo_cultura' in self.changed_data and not cnpj:
+        if 'arquivo' in self.changed_data and not cnpj:
             raise forms.ValidationError('CNPJ é obrigatório')
         if cnpj:
             if FundoCultura.objects.filter(cnpj_fundo_cultura=cnpj) and 'cnpj_fundo_cultura' in self.changed_data:
@@ -164,17 +174,19 @@ class FundoCulturaForm(ModelForm):
 
     def save(self, commit=True, *args, **kwargs):
         fundo = super(FundoCulturaForm, self).save(commit=False)
-        if 'lei_fundo_cultura' in self.changed_data and self.is_valid:
-            fundo.situacao_lei_plano_id = 1
+        if 'arquivo' in self.changed_data and self.is_valid:
+            fundo.situacao_id = 1
 
         if commit:
+            fundo.planotrabalho = self.usuario.plano_trabalho
             fundo.save()
+            self.usuario.plano_trabalho.fundo_cultura = fundo
+            self.usuario.plano_trabalho.save()
         return fundo
 
     class Meta:
         model = FundoCultura
-        fields = ['cnpj_fundo_cultura', 'lei_fundo_cultura']
-
+        fields = ['cnpj_fundo_cultura', 'arquivo']
 
 
 class PlanoCulturaForm(ModelForm):
@@ -183,7 +195,7 @@ class PlanoCulturaForm(ModelForm):
     minuta_preparada = forms.FileField(required=False, widget=FileInput)
     ata_reuniao_aprovacao_plano = forms.FileField(
         required=False, widget=FileInput)
-    lei_plano_cultura = forms.FileField(required=False, widget=FileInput)
+    arquivo = forms.FileField(required=True, widget=FileInput)
 
     def __init__(self, *args, **kwargs):
         self.usuario = kwargs.pop('user')
@@ -193,22 +205,25 @@ class PlanoCulturaForm(ModelForm):
         limite = add_anos(self.usuario.data_publicacao_acordo, self.usuario.prazo)
         hoje = datetime.date.today()
         if hoje > limite:
-            self.add_error('lei_plano_cultura', '''Não foi possível salvar.
+            self.add_error('arquivo', '''Não foi possível salvar.
              Você ultrapassou a data limite de envio: ''' + limite.strftime("%d/%m/%Y"))
 
     def save(self, commit=True, *args, **kwargs):
         plano = super(PlanoCulturaForm, self).save(commit=False)
 
-        if 'lei_plano_cultura' in self.changed_data:
-            plano.situacao_lei_plano_id = 1
+        if 'arquivo' in self.changed_data:
+            plano.situacao_id = 1
 
         if commit:
+            plano.planotrabalho = self.usuario.plano_trabalho
             plano.save()
+            self.usuario.plano_trabalho.plano_cultura = plano
+            self.usuario.plano_trabalho.save()
         return plano
 
     class Meta:
         model = PlanoCultura
-        fields = ['lei_plano_cultura', ]
+        fields = ['arquivo', ]
 
 
 class CriarConselheiroForm(ModelForm):

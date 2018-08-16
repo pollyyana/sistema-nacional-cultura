@@ -1,4 +1,8 @@
 # Sistema Nacional de Cultura
+[![Build Status](https://travis-ci.org/culturagovbr/sistema-nacional-cultura.svg?branch=master)](https://travis-ci.org/culturagovbr/sistema-nacional-cultura)  
+[![Maintainability](https://api.codeclimate.com/v1/badges/b820f182e3e161f417a3/maintainability)](https://codeclimate.com/github/culturagovbr/sistema-nacional-cultura/maintainability)
+[![Test Coverage](https://api.codeclimate.com/v1/badges/b820f182e3e161f417a3/test_coverage)](https://codeclimate.com/github/culturagovbr/sistema-nacional-cultura/test_coverage)
+
 O Sistema Nacional de Cultura é um modelo de gestão e promoção de políticas públicas de cultura que pressupõe a ação conjunta dos entes da federação (governos federal, estadual e municipal) para democratização do setor. (http://pt.wikipedia.org/wiki/Sistema_Nacional_de_Cultura)
 
 Este aplicativo cadastra os entes federados e coordena o processo de adesao desses no SNC. Por meio deste cadastro, os estados e municípios podem gerar seus acordos de cooperação técnica para a entrada no SNC, e também manter atualizados os dados de monitoramentos das metas pactuadas no ACT.
@@ -93,3 +97,37 @@ As dependencias de pacotes estão no Pipfile.
     ```
     ./manage.py runserver
     ```
+
+## Utilizando o docker
+
+1. Copie o template de configurações de ambiente e edite conforme necessário
+    ```
+    cp env.tmpl snc/.env
+    ```
+
+2. Execute o serviço do banco de dados em background
+    ```
+    sudo docker-compose up -d db
+    ```
+
+3.  Execute o serviço da aplicação
+    ```
+    sudo docker-compose up web
+    ```
+
+4. Entre no container da aplicação (substitua container_id pelo ID do container)
+    ```
+    sudo docker exec -it container_id bash
+    ```
+
+5. Dentro do container da aplicação, execute o comando migrate para criar a estrutura do banco
+    ```
+    ./manage.py migrate
+    ```
+
+6. Dentro do container da aplicação, copie os arquivos estaticos do projeto
+    ```
+    ./manage.py collectstatic
+    ```
+
+A aplicação estará disponível na porta 8000
