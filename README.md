@@ -34,22 +34,17 @@ As dependencias de pacotes estão no Pipfile.
     pip3 install --user --upgrade pipenv
     ```
 
-3. Instale o wkhtmltopdf que é o aplicativo para renderizar html em pdf
-    ```
-    sudo apt-get install wkhtmltopdf
-    ```
-
-4. Instale o PostgreSQL e as bibliotecas de desenvolvimento
+3. Instale o PostgreSQL e as bibliotecas de desenvolvimento
     ```
     sudo apt-get install postgresql-9.4 libpq-dev
     ```    
 
-5. Clone o repositório do projeto do github
+4. Clone o repositório do projeto do github
     ```
     git clone https://github.com/culturagovbr/sistema-nacional-cultura.git snc
     ```
 
-6. Crie o ambiente virtual e instale as dependencias, dentro do diretório da aplicação
+5. Crie o ambiente virtual e instale as dependencias, dentro do diretório da aplicação
     ```
     cd snc
     pipenv install
@@ -59,17 +54,17 @@ As dependencias de pacotes estão no Pipfile.
     pipenv install --dev
     ```
 
-7. Ative o ambiente virtual
+6. Ative o ambiente virtual
     ```
     pipenv shell
     ```
 
-8. Copie o template de configurações de ambiente e edite conforme necessário
+7. Copie o template de configurações de ambiente e edite conforme necessário
     ```
     cp env.tmpl snc/.env
     ```
 
-9. Configure o banco de dados
+8. Configure o banco de dados
     Crie o banco dbsnc no seu serviço de acordo com o settings.py ou seu arquivo .env
     ```
     sudo -u postgres psql
@@ -77,7 +72,7 @@ As dependencias de pacotes estão no Pipfile.
     \q
     ```
 
-10. Execute os comandos de criação do banco
+9. Execute os comandos de criação do banco
     Criação de migração para cada APP
     ```
     ./manage.py makemigrations planotrabalho gestao adesao
@@ -88,12 +83,12 @@ As dependencias de pacotes estão no Pipfile.
     ./manage.py migrate
     ```
 
-11. Copie os arquivos estaticos do projeto
+10. Copie os arquivos estaticos do projeto
     ```
     ./manage.py collectstatic
     ```
 
-12. Execute a aplicação (É preciso ter o ambiente virtual ativado)
+11. Execute a aplicação (É preciso ter o ambiente virtual ativado)
     ```
     ./manage.py runserver
     ```
