@@ -56,7 +56,6 @@ DJANGO_APPS = (
 
 THIRD_PARTY_APPS = (
     'raven.contrib.django.raven_compat',
-    'wkhtmltopdf',
     'localflavor',
     'django_extensions',
     'ckeditor',
