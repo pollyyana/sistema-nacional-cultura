@@ -29,7 +29,6 @@ from .forms import AlterarConselheiroForm
 
 class PlanoTrabalho(DetailView):
     model = PlanoTrabalho
-    template_name = "planotrabalho/plano_trabalho.html"
 
     def get_context_data(self, **kwargs):
         try:
