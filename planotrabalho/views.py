@@ -68,7 +68,7 @@ class CadastrarSistema(CreateView):
 
     def get_success_url(self):
         trabalho = self.request.user.usuario.plano_trabalho.id
-        return reverse_lazy("planotrabalho:planotrabalho", args=[trabalho])
+        return reverse_lazy("planotrabalho:detail", args=[trabalho])
 
 
 class AlterarSistema(UpdateView):
@@ -83,7 +83,7 @@ class AlterarSistema(UpdateView):
 
     def get_success_url(self):
         trabalho = self.request.user.usuario.plano_trabalho.id
-        return reverse_lazy("planotrabalho:planotrabalho", args=[trabalho])
+        return reverse_lazy("planotrabalho:detail", args=[trabalho])
 
 
 class CadastrarOrgaoGestor(CreateView):
@@ -104,7 +104,7 @@ class CadastrarOrgaoGestor(CreateView):
 
     def get_success_url(self):
         trabalho = self.request.user.usuario.plano_trabalho.id
-        return reverse_lazy("planotrabalho:planotrabalho", args=[trabalho])
+        return reverse_lazy("planotrabalho:detail", args=[trabalho])
 
 
 class AlterarOrgaoGestor(UpdateView):
@@ -119,7 +119,7 @@ class AlterarOrgaoGestor(UpdateView):
 
     def get_success_url(self):
         trabalho = self.request.user.usuario.plano_trabalho.id
-        return reverse_lazy("planotrabalho:planotrabalho", args=[trabalho])
+        return reverse_lazy("planotrabalho:detail", args=[trabalho])
 
 
 class CadastrarConselho(CreateView):
@@ -140,7 +140,7 @@ class CadastrarConselho(CreateView):
 
     def get_success_url(self):
         trabalho = self.request.user.usuario.plano_trabalho.id
-        return reverse_lazy("planotrabalho:planotrabalho", args=[trabalho])
+        return reverse_lazy("planotrabalho:detail", args=[trabalho])
 
 
 class CriarConselheiro(CreateView):
@@ -220,7 +220,7 @@ class AlterarConselho(UpdateView):
 
     def get_success_url(self):
         trabalho = self.request.user.usuario.plano_trabalho.id
-        return reverse_lazy("planotrabalho:planotrabalho", args=[trabalho])
+        return reverse_lazy("planotrabalho:detail", args=[trabalho])
 
 
 def get_conselheiros(request):
@@ -254,7 +254,7 @@ class CadastrarFundo(CreateView):
 
     def get_success_url(self):
         trabalho = self.request.user.usuario.plano_trabalho.id
-        return reverse_lazy("planotrabalho:planotrabalho", args=[trabalho])
+        return reverse_lazy("planotrabalho:detail", args=[trabalho])
 
 
 class AlterarFundo(UpdateView):
@@ -269,7 +269,7 @@ class AlterarFundo(UpdateView):
 
     def get_success_url(self):
         trabalho = self.request.user.usuario.plano_trabalho.id
-        return reverse_lazy("planotrabalho:planotrabalho", args=[trabalho])
+        return reverse_lazy("planotrabalho:detail", args=[trabalho])
 
 
 class CadastrarPlano(CreateView):
@@ -295,7 +295,7 @@ class CadastrarPlano(CreateView):
 
     def get_success_url(self):
         trabalho = self.request.user.usuario.plano_trabalho.id
-        return reverse_lazy("planotrabalho:planotrabalho", args=[trabalho])
+        return reverse_lazy("planotrabalho:detail", args=[trabalho])
 
 
 class AlterarPlano(UpdateView):
@@ -310,4 +310,4 @@ class AlterarPlano(UpdateView):
 
     def get_success_url(self):
         trabalho = self.request.user.usuario.plano_trabalho
-        return reverse_lazy("planotrabalho:planotrabalho", args=[trabalho])
+        return reverse_lazy("planotrabalho:detail", args=[trabalho])
