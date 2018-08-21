@@ -8,7 +8,7 @@ app_name = 'planotrabalho'
 urlpatterns = [
     url(r'^(?P<pk>[0-9]+)/$',
         login_required(views.PlanoTrabalho.as_view()),
-        name='planotrabalho'),
+        name='detail'),
 
     # Primeira etapa - Criação do Sistema de Cultura
     url(r'^sistema/$',
