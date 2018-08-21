@@ -1,6 +1,7 @@
 import pytest
 
-from django.shortcuts import reverse
+from django.urls import reverse
+from django.urls import resolve
 from django.core.files.uploadedfile import SimpleUploadedFile
 
 from model_mommy import mommy
@@ -44,13 +45,22 @@ def test_arquivo_upload_lei_sistema(client, login, url, componente):
     municipio.delete()
 
 
+def test_planotrabalho_view_reverte_com_namespace_e_name(client, plano_trabalho):
+    """
+    Verifica se a view PlanoTrabalho retorna como planotrabalho:detail
+    """
+
+    name = resolve(f'/planotrabalho/{plano_trabalho.id}/')
+    assert name.url_name == "detail"
+    
+
 def test_planotrabalho_view_retorna_template_padrao(client, plano_trabalho):
     """
     Verifica se a class PlanoTrabalho utiliza o template
     padrão(plano_trabalho_detail.html)
     """
 
-    url = reverse("planotrabalho:planotrabalho", kwargs={'pk': plano_trabalho.id})
+    url = reverse("planotrabalho:detail", kwargs={'pk': plano_trabalho.id})
     response = client.get(url)
 
     assert response.template_name[0] == "planotrabalho/planotrabalho_detail.html"
