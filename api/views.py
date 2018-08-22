@@ -22,12 +22,6 @@ def swagger_index(request):
 
 class MunicipioList(generics.ListAPIView):
     queryset = Municipio.objects.filter().order_by('-id')
-    extra_counts = queryset.aggregate(
-        cidades=Count('pk', filter=Q(cidade__isnull=False)),
-        estados=Count('pk', filter=Q(cidade__isnull=True)),
-        estados_aderidos=Count('pk', filter=(Q(usuario__estado_processo=6) & Q(cidade__isnull=True))),
-        municipios_aderidos=Count('pk', filter=(Q(usuario__estado_processo=6) & Q(cidade__isnull=False))),
-    )
     serializer_class = MunicipioSerializer
     metadata_class = MunicipioMetadata
 
@@ -35,12 +29,23 @@ class MunicipioList(generics.ListAPIView):
     filter_class = MunicipioFilter
     ordering_fields = ('cidade__nome_municipio', 'estado__nome_uf')
 
+    def get_extra_counts(self): 
+        queryset = self.filter_queryset(self.get_queryset())
+        
+        return queryset.aggregate(
+            cidades=Count('pk', filter=Q(cidade__isnull=False)),
+            estados=Count('pk', filter=Q(cidade__isnull=True)),
+            estados_aderidos=Count('pk', filter=(Q(usuario__estado_processo=6) & Q(cidade__isnull=True))),
+            municipios_aderidos=Count('pk', filter=(Q(usuario__estado_processo=6) & Q(cidade__isnull=False))),
+        )
+
     def list(self, request):
         response = super(MunicipioList, self).list(self, request)
-        response.data['cidades'] = self.extra_counts['cidades']
-        response.data['estados'] = self.extra_counts['estados']
-        response.data['estados_aderidos'] = self.extra_counts['estados_aderidos']
-        response.data['municipios_aderidos'] = self.extra_counts['municipios_aderidos']
+        extra_counts = self.get_extra_counts()
+        response.data['cidades'] = extra_counts['cidades']
+        response.data['estados'] = extra_counts['estados']
+        response.data['estados_aderidos'] = extra_counts['estados_aderidos']
+        response.data['municipios_aderidos'] = extra_counts['municipios_aderidos']
         return response
 
 
