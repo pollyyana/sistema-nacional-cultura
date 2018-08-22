@@ -85,3 +85,34 @@ def test_cadastrarsistema_view_retorna_template_padrao(client, login):
     response = client.get(url)
 
     assert "planotrabalho/criacaosistema_form.html" in response.template_name
+
+
+def test_cadastrarsistema_view_redireciona_para_planotrabalho(client, login):
+    """
+    Verifica se a view CadastrarSistema redireciona para a view PlanoTrabalho
+    após uma operação bem sucedida.
+    """
+
+    url = reverse("planotrabalho:cadastrar_sistema")
+    plano_trabalho = mommy.make('PlanoTrabalho')
+    ente_federado = mommy.make('Municipio', _fill_optional=['cidade'])
+    login.municipio = ente_federado
+    login.plano_trabalho = plano_trabalho
+    login.save()
+
+    arquivo = SimpleUploadedFile(
+        "componente.txt", b"file_content", content_type="text/plain"
+    )
+
+    data = {
+        "arquivo": arquivo,
+    }
+
+    response = client.post(url, data)
+    assert response.status_code == 302
+
+    response_info = resolve(response.url)
+    assert response_info.kwargs.get("pk") == str(plano_trabalho.pk)
+
+    plano_trabalho.delete()
+    ente_federado.delete()
