@@ -10,7 +10,7 @@ from model_mommy import mommy
 @pytest.mark.parametrize(
     "url, componente",
     [
-        (reverse("planotrabalho:sistema"), "criacao_sistema"),
+        (reverse("planotrabalho:cadastrar_sistema"), "criacao_sistema"),
         (reverse("planotrabalho:gestor"), "orgao_gestor"),
         (reverse("planotrabalho:conselho"), "conselho_cultural"),
         (reverse("planotrabalho:fundo"), "fundo_cultura"),
@@ -50,17 +50,38 @@ def test_planotrabalho_view_reverte_com_namespace_e_name(client, plano_trabalho)
     Verifica se a view PlanoTrabalho retorna como planotrabalho:detail
     """
 
-    name = resolve(f'/planotrabalho/{plano_trabalho.id}/')
+    name = resolve(f"/planotrabalho/{plano_trabalho.id}/")
     assert name.url_name == "detail"
-    
+
 
 def test_planotrabalho_view_retorna_template_padrao(client, plano_trabalho):
     """
-    Verifica se a class PlanoTrabalho utiliza o template
-    padrão(plano_trabalho_detail.html)
+    Verifica se a class PlanoTrabalho utiliza o template padrão(planotrabalho_detail.html)
     """
 
-    url = reverse("planotrabalho:detail", kwargs={'pk': plano_trabalho.id})
+    url = reverse("planotrabalho:detail", kwargs={"pk": plano_trabalho.id})
     response = client.get(url)
 
-    assert response.template_name[0] == "planotrabalho/planotrabalho_detail.html"
+    assert "planotrabalho/planotrabalho_detail.html" in response.template_name
+
+
+def test_cadastrarsistema_view_reverte_com_namespace(client):
+    """
+    Verifica se a view CadastrarSistema retorna como planotrabalho:cadastrarsistema
+    """
+
+    name = resolve(f"/planotrabalho/sistema/")
+
+    assert name.url_name == "cadastrar_sistema"
+
+
+def test_cadastrarsistema_view_retorna_template_padrao(client, login):
+    """
+    Verifica se a class CadastrarSistema utiliza o template
+    padrão(cadastrarsistema_form.html)
+    """
+
+    url = reverse("planotrabalho:cadastrar_sistema")
+    response = client.get(url)
+
+    assert "planotrabalho/criacaosistema_form.html" in response.template_name
