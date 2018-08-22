@@ -51,20 +51,13 @@ class PlanoTrabalho(DetailView):
 
 
 class CadastrarSistema(CreateView):
+    model = CriacaoSistema
     form_class = CriarSistemaForm
-    template_name = "planotrabalho/cadastrar_sistema.html"
 
     def get_form_kwargs(self):
         kwargs = super(CadastrarSistema, self).get_form_kwargs()
         kwargs["user"] = self.request.user.usuario
         return kwargs
-
-    def dispatch(self, *args, **kwargs):
-        sistema = self.request.user.usuario.plano_trabalho.criacao_sistema
-        if sistema:
-            return redirect("planotrabalho:alterar_sistema", pk=sistema.id)
-
-        return super(CadastrarSistema, self).dispatch(*args, **kwargs)
 
     def get_success_url(self):
         trabalho = self.request.user.usuario.plano_trabalho.id
