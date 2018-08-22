@@ -41,9 +41,9 @@
       </p>
       {% if request.user.usuario.plano_trabalho.criacao_sistema.situacao.id != 2 %}
       {% if request.user.usuario.plano_trabalho.criacao_sistema.situacao.id == 1 %}
-      <a class="btn btn-warning" style="color:#FFF" href="{% url 'planotrabalho:sistema' %}">Aguarda Análise</a>
+      <a class="btn btn-warning" style="color:#FFF" href="{% url 'planotrabalho:cadastrar_sistema' %}">Aguarda Análise</a>
       {% elif request.user.usuario.estado_processo == '6' %}
-      <a class="btn btn-success" style="color:#FFF" href="{% url 'planotrabalho:sistema' %}">Enviar Comprovação</a>
+      <a class="btn btn-success" style="color:#FFF" href="{% url 'planotrabalho:cadastrar_sistema' %}">Enviar Comprovação</a>
       {% endif %}
       {% endif %}
       <br />

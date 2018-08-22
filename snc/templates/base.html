@@ -205,7 +205,7 @@
                       {% endif %}
                       {% if request.user.usuario.estado_processo == '6' %}
                       <li class="navTreeItem visualNoMarker navTreeFolderish section-assunto-d">
-                        <a href="{% url 'planotrabalho:planotrabalho' request.user.usuario.plano_trabalho.id %}" title="" class="state-published navTreeFolderish contenttype-folder but-warning">
+                        <a href="{% url 'planotrabalho:detail' request.user.usuario.plano_trabalho.id %}" title="" class="state-published navTreeFolderish contenttype-folder but-warning">
                           <span>Plano de Trabalho</span>
                         </a>
                       </li>
