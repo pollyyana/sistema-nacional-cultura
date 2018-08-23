@@ -36,6 +36,7 @@ SETORIAIS = (
 class CriarSistemaForm(ModelForm):
     minuta_projeto_lei = forms.FileField(required=False, widget=FileInput)
     arquivo = forms.FileField(required=True, widget=FileInput)
+    data_publicacao = forms.DateField(required=True)
 
     def __init__(self, *args, **kwargs):
         self.usuario = kwargs.pop('user')
@@ -62,12 +63,13 @@ class CriarSistemaForm(ModelForm):
 
     class Meta:
         model = CriacaoSistema
-        fields = ['arquivo', ]
+        fields = ['arquivo', 'data_publicacao']
 
 
 class OrgaoGestorForm(ModelForm):
     arquivo = forms.FileField(
         required=True, widget=FileInput)
+    data_publicacao = forms.DateField(required=True)
 
     def __init__(self, *args, **kwargs):
         self.usuario = kwargs.pop('user')
@@ -94,11 +96,12 @@ class OrgaoGestorForm(ModelForm):
 
     class Meta:
         model = OrgaoGestor
-        fields = ['arquivo']
+        fields = ['arquivo', 'data_publicacao']
 
 
 class ConselhoCulturalForm(ModelForm):
     arquivo = forms.FileField(required=True, widget=FileInput)
+    data_publicacao = forms.DateField(required=True)
 
     def __init__(self, *args, **kwargs):
         self.usuario = kwargs.pop('user')
@@ -142,11 +145,12 @@ class ConselhoCulturalForm(ModelForm):
 
     class Meta:
         model = ConselhoCultural
-        fields = ['arquivo', ]
+        fields = ['arquivo', 'data_publicacao']
 
 
 class FundoCulturaForm(ModelForm):
     arquivo = forms.FileField(required=True, widget=FileInput)
+    data_publicacao = forms.DateField(required=True)
 
     def __init__(self, *args, **kwargs):
         self.usuario = kwargs.pop('user')
@@ -186,7 +190,7 @@ class FundoCulturaForm(ModelForm):
 
     class Meta:
         model = FundoCultura
-        fields = ['cnpj_fundo_cultura', 'arquivo']
+        fields = ['cnpj_fundo_cultura', 'arquivo', 'data_publicacao']
 
 
 class PlanoCulturaForm(ModelForm):
@@ -196,6 +200,7 @@ class PlanoCulturaForm(ModelForm):
     ata_reuniao_aprovacao_plano = forms.FileField(
         required=False, widget=FileInput)
     arquivo = forms.FileField(required=True, widget=FileInput)
+    data_publicacao = forms.DateField(required=True)
 
     def __init__(self, *args, **kwargs):
         self.usuario = kwargs.pop('user')
@@ -223,7 +228,7 @@ class PlanoCulturaForm(ModelForm):
 
     class Meta:
         model = PlanoCultura
-        fields = ['arquivo', ]
+        fields = ['arquivo', 'data_publicacao']
 
 
 class CriarConselheiroForm(ModelForm):
