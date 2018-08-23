@@ -111,8 +111,8 @@ def test_cadastrarsistema_view_redireciona_para_planotrabalho(client, login):
     response = client.post(url, data)
     assert response.status_code == 302
 
-    response_info = resolve(response.url)
-    assert response_info.kwargs.get("pk") == str(plano_trabalho.pk)
+    response_content = resolve(response.url)
+    assert response_content.kwargs.get("pk") == str(plano_trabalho.pk)
 
     plano_trabalho.delete()
     ente_federado.delete()
