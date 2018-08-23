@@ -823,6 +823,163 @@ def test_filtrar_por_nome_ente_federado_vazio(client):
     assert len(response.data['_embedded']['items']) == 1
 
 
+def test_counts_com_estado_e_municipio_aderidos(client):
+    """ Testa as contagens em uma busca que retorna estado e municipio aderidos"""
+
+    estado = mommy.make('Uf', sigla="TO")
+    cidade = mommy.make('Cidade')
+    municipio_estado = mommy.make('Municipio', estado=estado)
+    municipio_cidade = mommy.make('Municipio', estado=estado, cidade=cidade)
+
+    mommy.make('Usuario', municipio=municipio_estado, estado_processo=6)
+    mommy.make('Usuario', municipio=municipio_cidade, estado_processo=6)
+
+    url = url_sistemadeculturalocal + '?ente_federado={}'.format("to")
+
+    response = client.get(url)
+    count_municipios = response.data['municipios']
+    count_estados = response.data['estados']
+    count_municipios_aderidos = response.data['municipios_aderidos']
+    count_estados_aderidos = response.data['estados_aderidos']
+
+    assert count_municipios == 1
+    assert count_estados == 1
+    assert count_municipios_aderidos == 1
+    assert count_estados_aderidos == 1
+
+
+def test_counts_com_estado_e_municipio_não_aderidos(client):
+    """ Testa as contagens em uma busca que retorna estado e municipio
+    não aderidos"""
+
+    estado = mommy.make('Uf', sigla="TO")
+    cidade = mommy.make('Cidade')
+    municipio_estado = mommy.make('Municipio', estado=estado)
+    municipio_cidade = mommy.make('Municipio', estado=estado, cidade=cidade)
+
+    mommy.make('Usuario', municipio=municipio_estado, estado_processo=1)
+    mommy.make('Usuario', municipio=municipio_cidade, estado_processo=1)
+
+    url = url_sistemadeculturalocal + '?ente_federado={}'.format("to")
+
+    response = client.get(url)
+    count_municipios = response.data['municipios']
+    count_estados = response.data['estados']
+    count_municipios_aderidos = response.data['municipios_aderidos']
+    count_estados_aderidos = response.data['estados_aderidos']
+
+    assert count_municipios == 1
+    assert count_estados == 1
+    assert count_municipios_aderidos == 0
+    assert count_estados_aderidos == 0
+
+
+def test_counts_com_apenas_estados_não_aderidos(client):
+    """ Testa as contagens em uma busca que retorna estados não aderidos"""
+
+    estado_sp = mommy.make('Uf', nome_uf="Amazonas")
+    municipio_estado_sp = mommy.make('Municipio', estado=estado_sp)
+    estado_mg = mommy.make('Uf', nome_uf="Acre")
+    municipio_estado_mg = mommy.make('Municipio', estado=estado_mg)
+
+    cidade = mommy.make('Cidade')
+    municipio_cidade = mommy.make('Municipio', estado=estado_sp, cidade=cidade)
+
+    url = url_sistemadeculturalocal + '?ente_federado=a&municipal=false'
+
+    response = client.get(url)
+    count_municipios = response.data['municipios']
+    count_estados = response.data['estados']
+    count_municipios_aderidos = response.data['municipios_aderidos']
+    count_estados_aderidos = response.data['estados_aderidos']
+
+    assert count_municipios == 0
+    assert count_estados == 2
+    assert count_municipios_aderidos == 0
+    assert count_estados_aderidos == 0
+
+def test_counts_com_um_municipio_não_aderido(client):
+    """ Testa as contagens em uma busca que retorna um municipio não aderido"""
+
+    estado_sp = mommy.make('Uf', nome_uf="Amazonas")
+    municipio_estado_sp = mommy.make('Municipio', estado=estado_sp)
+    estado_mg = mommy.make('Uf', nome_uf="Acre")
+    municipio_estado_mg = mommy.make('Municipio', estado=estado_mg)
+
+    cidade = mommy.make('Cidade')
+    municipio_cidade = mommy.make('Municipio', estado=estado_sp, cidade=cidade)
+
+    url = url_sistemadeculturalocal + '?ente_federado=a&estadual=false'
+
+    response = client.get(url)
+    count_municipios = response.data['municipios']
+    count_estados = response.data['estados']
+    count_municipios_aderidos = response.data['municipios_aderidos']
+    count_estados_aderidos = response.data['estados_aderidos']
+
+    assert count_municipios == 1
+    assert count_estados == 0
+    assert count_municipios_aderidos == 0
+    assert count_estados_aderidos == 0
+
+
+def test_counts_com_apenas_estados_aderidos(client):
+    """ Testa as contagens em uma busca que retorna estados aderidos"""
+
+    estado_sp = mommy.make('Uf', nome_uf="Amazonas")
+    municipio_estado_sp = mommy.make('Municipio', estado=estado_sp)
+    estado_mg = mommy.make('Uf', nome_uf="Acre")
+    municipio_estado_mg = mommy.make('Municipio', estado=estado_mg)
+
+    mommy.make('Usuario', municipio=municipio_estado_sp, estado_processo=6)
+    mommy.make('Usuario', municipio=municipio_estado_mg, estado_processo=6)
+
+    cidade = mommy.make('Cidade')
+    municipio_cidade = mommy.make('Municipio', estado=estado_sp, cidade=cidade)
+    mommy.make('Usuario', municipio=municipio_cidade, estado_processo=6)
+
+    url = url_sistemadeculturalocal + '?ente_federado=a&municipal=false'
+
+    response = client.get(url)
+    count_municipios = response.data['municipios']
+    count_estados = response.data['estados']
+    count_municipios_aderidos = response.data['municipios_aderidos']
+    count_estados_aderidos = response.data['estados_aderidos']
+
+    assert count_municipios == 0
+    assert count_estados == 2
+    assert count_municipios_aderidos == 0
+    assert count_estados_aderidos == 2
+
+def test_counts_com_um_municipio_aderido(client):
+    """ Testa as contagens em uma busca que retorna um municipio aderido"""
+
+    estado_sp = mommy.make('Uf', nome_uf="Amazonas")
+    municipio_estado_sp = mommy.make('Municipio', estado=estado_sp)
+    estado_mg = mommy.make('Uf', nome_uf="Acre")
+    municipio_estado_mg = mommy.make('Municipio', estado=estado_mg)
+
+    mommy.make('Usuario', municipio=municipio_estado_sp, estado_processo=6)
+    mommy.make('Usuario', municipio=municipio_estado_mg, estado_processo=6)
+
+    cidade = mommy.make('Cidade')
+    municipio_cidade = mommy.make('Municipio', estado=estado_sp, cidade=cidade)
+    mommy.make('Usuario', municipio=municipio_cidade, estado_processo=6)
+
+    url = url_sistemadeculturalocal + '?ente_federado=a&estadual=false'
+
+    response = client.get(url)
+    count_municipios = response.data['municipios']
+    count_estados = response.data['estados']
+    count_municipios_aderidos = response.data['municipios_aderidos']
+    count_estados_aderidos = response.data['estados_aderidos']
+
+    assert count_municipios == 1
+    assert count_estados == 0
+    assert count_municipios_aderidos == 1
+    assert count_estados_aderidos == 0
+
+
 def test_ordenar_resultados_da_api_de_forma_ascendente_por_nome_municipio(client):
     """ Testa a ordenação ascendente do resultado da API por cidade(nome_municipio) """
 
