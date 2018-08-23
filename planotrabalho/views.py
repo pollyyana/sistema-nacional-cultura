@@ -5,6 +5,7 @@ from django.http import Http404
 from django.http import HttpResponse
 from django.views.generic.edit import CreateView
 from django.views.generic.edit import UpdateView
+from django.views.generic.edit import ModelFormMixin
 from django.views.generic import ListView
 from django.views.generic import DetailView
 from django.urls import reverse_lazy
@@ -50,7 +51,13 @@ class PlanoTrabalho(DetailView):
         return super(PlanoTrabalho, self).dispatch(*args, **kwargs)
 
 
-class CadastrarSistema(CreateView):
+class PlanoTrabalhoCommon(ModelFormMixin):
+    def get_success_url(self):
+        trabalho = self.request.user.usuario.plano_trabalho.id
+        return reverse_lazy("planotrabalho:detail", args=[trabalho])
+
+
+class CadastrarSistema(CreateView, PlanoTrabalhoCommon):
     model = CriacaoSistema
     form_class = CriarSistemaForm
 
@@ -58,10 +65,6 @@ class CadastrarSistema(CreateView):
         kwargs = super(CadastrarSistema, self).get_form_kwargs()
         kwargs["user"] = self.request.user.usuario
         return kwargs
-
-    def get_success_url(self):
-        trabalho = self.request.user.usuario.plano_trabalho.id
-        return reverse_lazy("planotrabalho:detail", args=[trabalho])
 
 
 class AlterarSistema(UpdateView):
