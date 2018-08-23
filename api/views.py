@@ -33,19 +33,19 @@ class MunicipioList(generics.ListAPIView):
         queryset = self.filter_queryset(self.get_queryset())
         
         return queryset.aggregate(
-            cidades=Count('pk', filter=Q(cidade__isnull=False)),
+            municipios=Count('pk', filter=Q(cidade__isnull=False)),
+            municipios_aderidos=Count('pk', filter=(Q(usuario__estado_processo=6) & Q(cidade__isnull=False))),
             estados=Count('pk', filter=Q(cidade__isnull=True)),
             estados_aderidos=Count('pk', filter=(Q(usuario__estado_processo=6) & Q(cidade__isnull=True))),
-            municipios_aderidos=Count('pk', filter=(Q(usuario__estado_processo=6) & Q(cidade__isnull=False))),
         )
 
     def list(self, request):
         response = super(MunicipioList, self).list(self, request)
         extra_counts = self.get_extra_counts()
-        response.data['cidades'] = extra_counts['cidades']
+        response.data['municipios'] = extra_counts['municipios']
+        response.data['municipios_aderidos'] = extra_counts['municipios_aderidos']
         response.data['estados'] = extra_counts['estados']
         response.data['estados_aderidos'] = extra_counts['estados_aderidos']
-        response.data['municipios_aderidos'] = extra_counts['municipios_aderidos']
         return response
 
 
