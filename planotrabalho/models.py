@@ -15,12 +15,12 @@ def upload_to_componente(instance, filename):
     new_name = slugify(filename.rsplit(".", 1)[0])
     componente = instance._meta.object_name.lower()
     try:
-        entefederado = instance.planotrabalho.usuario.municipio.id
+        entefederado = instance.plano_trabalho.usuario.municipio.id
         name = "{entefederado}/docs/{componente}/{new_name}.{ext}".format(
             entefederado=entefederado, componente=componente, new_name=new_name, ext=ext
         )
     except:
-        plano_id = instance.planotrabalho.id
+        plano_id = instance.plano_trabalho.id
         name = "sem_ente_federado/{plano_id}/docs/{componente}/{new_name}.{ext}".format(
             plano_id=plano_id, componente=componente, new_name=new_name, ext=ext
         )
@@ -43,9 +43,6 @@ class ArquivoComponente(models.Model):
 
 
 class PlanoTrabalho(models.Model):
-    criacao_sistema = models.OneToOneField(
-        "CriacaoSistema", on_delete=models.CASCADE, blank=True, null=True
-    )
     orgao_gestor = models.OneToOneField(
         "OrgaoGestor", on_delete=models.CASCADE, blank=True, null=True
     )
@@ -69,6 +66,7 @@ class PlanoTrabalho(models.Model):
 
 
 class CriacaoSistema(ArquivoComponente):
+    plano_trabalho = models.ForeignKey("PlanoTrabalho", on_delete=models.CASCADE, related_name="criacao_sistema")
     minuta_projeto_lei = models.FileField(
         upload_to="minuta_lei", max_length=255, blank=True, null=True
     )

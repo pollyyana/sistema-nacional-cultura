@@ -34,10 +34,9 @@ SETORIAIS = (
 
 
 class CriarSistemaForm(ModelForm):
-    minuta_projeto_lei = forms.FileField(required=False, widget=FileInput)
-    arquivo = forms.FileField(required=True, widget=FileInput)
 
     def __init__(self, *args, **kwargs):
+        __import__('ipdb').set_trace()
         self.usuario = kwargs.pop('user')
         super(CriarSistemaForm, self).__init__(*args, **kwargs)
 
