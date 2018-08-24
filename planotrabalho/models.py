@@ -6,40 +6,36 @@ from django.contrib.contenttypes.fields import GenericRelation
 
 from gestao.models import Diligencia
 
-SITUACAO_CONSELHEIRO = (
-    ('1', 'Habilitado'),
-    ('0', 'Desabilitado')
-    )
+SITUACAO_CONSELHEIRO = (("1", "Habilitado"), ("0", "Desabilitado"))
+
 
 def upload_to_componente(instance, filename):
-    name = ''
-    ext = slugify(filename.split('.').pop(-1))
-    new_name = slugify(filename.rsplit('.', 1)[0])
+    name = ""
+    ext = slugify(filename.split(".").pop(-1))
+    new_name = slugify(filename.rsplit(".", 1)[0])
     componente = instance._meta.object_name.lower()
     try:
         entefederado = instance.planotrabalho.usuario.municipio.id
         name = "{entefederado}/docs/{componente}/{new_name}.{ext}".format(
-            entefederado=entefederado,
-            componente=componente,
-            new_name=new_name,
-            ext=ext)
+            entefederado=entefederado, componente=componente, new_name=new_name, ext=ext
+        )
     except:
         plano_id = instance.planotrabalho.id
         name = "sem_ente_federado/{plano_id}/docs/{componente}/{new_name}.{ext}".format(
-                plano_id=plano_id,
-                componente=componente,
-                new_name=new_name,
-                ext=ext)
+            plano_id=plano_id, componente=componente, new_name=new_name, ext=ext
+        )
 
     return name
 
 
 class ArquivoComponente(models.Model):
     arquivo = models.FileField(upload_to=upload_to_componente, null=True, blank=True)
-    situacao = models.ForeignKey('SituacoesArquivoPlano',
-                                 on_delete=models.CASCADE,
-                                 related_name='%(class)s_situacao',
-                                 default=0)
+    situacao = models.ForeignKey(
+        "SituacoesArquivoPlano",
+        on_delete=models.CASCADE,
+        related_name="%(class)s_situacao",
+        default=0,
+    )
     data_envio = models.DateField(default=datetime.date.today)
 
     class Meta:
@@ -48,32 +44,25 @@ class ArquivoComponente(models.Model):
 
 class PlanoTrabalho(models.Model):
     criacao_sistema = models.OneToOneField(
-        'CriacaoSistema',
-        on_delete=models.CASCADE,
-        blank=True,
-        null=True)
+        "CriacaoSistema", on_delete=models.CASCADE, blank=True, null=True
+    )
     orgao_gestor = models.OneToOneField(
-        'OrgaoGestor',
-        on_delete=models.CASCADE,
-        blank=True,
-        null=True)
+        "OrgaoGestor", on_delete=models.CASCADE, blank=True, null=True
+    )
     conselho_cultural = models.OneToOneField(
-        'ConselhoCultural',
-        on_delete=models.CASCADE,
-        blank=True,
-        null=True)
+        "ConselhoCultural", on_delete=models.CASCADE, blank=True, null=True
+    )
     fundo_cultura = models.OneToOneField(
-        'FundoCultura',
-        on_delete=models.CASCADE,
-        blank=True,
-        null=True)
+        "FundoCultura", on_delete=models.CASCADE, blank=True, null=True
+    )
     plano_cultura = models.OneToOneField(
-        'PlanoCultura',
-        on_delete=models.CASCADE,
-        blank=True,
-        null=True)
-    diligencias = GenericRelation(Diligencia, content_type_field="componente_type",
-                                  object_id_field="componente_id")
+        "PlanoCultura", on_delete=models.CASCADE, blank=True, null=True
+    )
+    diligencias = GenericRelation(
+        Diligencia,
+        content_type_field="componente_type",
+        object_id_field="componente_id",
+    )
 
     def __str__(self):
         return str(self.id)
@@ -81,83 +70,75 @@ class PlanoTrabalho(models.Model):
 
 class CriacaoSistema(ArquivoComponente):
     minuta_projeto_lei = models.FileField(
-        upload_to='minuta_lei',
-        max_length=255,
-        blank=True,
-        null=True)
+        upload_to="minuta_lei", max_length=255, blank=True, null=True
+    )
     lei_sistema_cultura = models.FileField(
-        upload_to='leis_sistema_cultura',
-        max_length=255,
-        blank=True,
-        null=True)
-    diligencias = GenericRelation(Diligencia, content_type_field="componente_type",
-                                  object_id_field="componente_id")
+        upload_to="leis_sistema_cultura", max_length=255, blank=True, null=True
+    )
+    diligencias = GenericRelation(
+        Diligencia,
+        content_type_field="componente_type",
+        object_id_field="componente_id",
+    )
 
 
 class OrgaoGestor(ArquivoComponente):
     relatorio_atividade_secretaria = models.FileField(
-        upload_to='relatorio_atividades',
-        max_length=255,
-        blank=True,
-        null=True)
-    diligencias = GenericRelation(Diligencia, content_type_field="componente_type",
-                                  object_id_field="componente_id")
+        upload_to="relatorio_atividades", max_length=255, blank=True, null=True
+    )
+    diligencias = GenericRelation(
+        Diligencia,
+        content_type_field="componente_type",
+        object_id_field="componente_id",
+    )
 
 
 class ConselhoCultural(ArquivoComponente):
     ata_regimento_aprovado = models.FileField(
-        upload_to='regimentos',
-        max_length=255,
-        blank=True,
-        null=True)
-    diligencias = GenericRelation(Diligencia, content_type_field="componente_type",
-                                  object_id_field="componente_id")
+        upload_to="regimentos", max_length=255, blank=True, null=True
+    )
+    diligencias = GenericRelation(
+        Diligencia,
+        content_type_field="componente_type",
+        object_id_field="componente_id",
+    )
 
 
 class FundoCultura(ArquivoComponente):
     cnpj_fundo_cultura = models.CharField(
-        max_length=18,
-        verbose_name='CNPJ',
-        blank=True,
-        null=True,
-        default=None)
+        max_length=18, verbose_name="CNPJ", blank=True, null=True, default=None
+    )
     lei_fundo_cultura = models.FileField(
-        upload_to='lei_fundo_cultura',
-        max_length=255,
-        blank=True,
-        null=True)
-    diligencias = GenericRelation(Diligencia, content_type_field="componente_type",
-                                  object_id_field="componente_id")
+        upload_to="lei_fundo_cultura", max_length=255, blank=True, null=True
+    )
+    diligencias = GenericRelation(
+        Diligencia,
+        content_type_field="componente_type",
+        object_id_field="componente_id",
+    )
 
 
 class PlanoCultura(ArquivoComponente):
     relatorio_diretrizes_aprovadas = models.FileField(
-        upload_to='relatorio_diretrizes',
-        max_length=255,
-        blank=True,
-        null=True)
+        upload_to="relatorio_diretrizes", max_length=255, blank=True, null=True
+    )
     minuta_preparada = models.FileField(
-        upload_to='minuta_preparada',
-        max_length=255,
-        blank=True,
-        null=True)
+        upload_to="minuta_preparada", max_length=255, blank=True, null=True
+    )
     ata_reuniao_aprovacao_plano = models.FileField(
-        upload_to='ata_aprovacao_plano',
-        max_length=255,
-        blank=True,
-        null=True)
+        upload_to="ata_aprovacao_plano", max_length=255, blank=True, null=True
+    )
     ata_votacao_projeto_lei = models.FileField(
-        upload_to='ata_votacao_lei',
-        max_length=255,
-        blank=True,
-        null=True)
+        upload_to="ata_votacao_lei", max_length=255, blank=True, null=True
+    )
     lei_plano_cultura = models.FileField(
-        upload_to='lei_plano_cultura',
-        max_length=255,
-        blank=True,
-        null=True)
-    diligencias = GenericRelation(Diligencia, content_type_field="componente_type",
-                                  object_id_field="componente_id")
+        upload_to="lei_plano_cultura", max_length=255, blank=True, null=True
+    )
+    diligencias = GenericRelation(
+        Diligencia,
+        content_type_field="componente_type",
+        object_id_field="componente_id",
+    )
 
 
 class Conselheiro(models.Model):
@@ -165,14 +146,11 @@ class Conselheiro(models.Model):
     segmento = models.CharField(max_length=255)
     email = models.EmailField(unique=False)
     situacao = models.CharField(
-        blank=True,
-        null=True,
-        max_length=1,
-        choices=SITUACAO_CONSELHEIRO,
-        default=1)
+        blank=True, null=True, max_length=1, choices=SITUACAO_CONSELHEIRO, default=1
+    )
     data_cadastro = models.DateField(blank=True, null=True)
     data_situacao = models.DateField(blank=True, null=True)
-    conselho = models.ForeignKey('ConselhoCultural', on_delete=models.CASCADE)
+    conselho = models.ForeignKey("ConselhoCultural", on_delete=models.CASCADE)
 
 
 class SituacoesArquivoPlano(models.Model):
