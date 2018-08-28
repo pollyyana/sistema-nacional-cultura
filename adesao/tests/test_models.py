@@ -223,6 +223,9 @@ def test_alterar_cadastrador_sistema_cultura_sem_cadastrador():
 
     assert sistema.cadastrador == cadastrador
 
+    cadastrador.delete()
+    sistema.delete()
+
     
 def test_criar_plano_trabalho_para_Usuario_estado_processo():
     """ Criar um plano trabalho para um Usuario caso o estado do processo
@@ -237,3 +240,26 @@ def test_criar_plano_trabalho_para_Usuario_estado_processo():
 
     usuario.plano_trabalho.delete()
     usuario.delete()
+
+
+def test_alterar_cadastrador_municipio_sem_cadastrador_previo():
+    """
+    Tenta alterar o cadastrador de um Municipio que ainda não possui
+    cadastrador
+    """
+
+    cadastrador = mommy.make('Usuario')
+    municipio = mommy.make('Municipio')
+    sistema = mommy.make('SistemaCultura', cidade=municipio.cidade, uf=municipio.estado)
+
+    sistema.cadastrador = cadastrador
+    sistema.save()
+
+    assert sistema.cadastrador == cadastrador
+
+    municipio.refresh_from_db()
+    assert municipio.usuario == cadastrador
+
+    cadastrador.delete()
+    sistema.delete()
+    municipio.delete()
