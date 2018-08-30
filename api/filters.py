@@ -49,7 +49,10 @@ class MunicipioFilter(filters.FilterSet):
         return queryset.filter(
                 Q(estado__sigla__istartswith=value) |
                 Q(estado__nome_uf__istartswith=value) |
-                Q(cidade__nome_municipio__istartswith=value))
+                Q(estado__nome_uf__unaccent__icontains=value) |
+                Q(cidade__nome_municipio__istartswith=value) |
+                Q(cidade__nome_municipio__unaccent__icontains=value)
+                )
 
     def estadual_filter(self, queryset, name, value):
 
