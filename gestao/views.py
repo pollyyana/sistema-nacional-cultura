@@ -80,14 +80,17 @@ class CidadeChain(autocomplete.Select2QuerySetView):
         """ Filtra todas as cidade de uma determinada UF """
 
         uf_pk = self.forwarded.get('estado', None)
+        
         if uf_pk:
             choices = Cidade.objects\
-                .filter(uf__pk=uf_pk)\
+                .filter(Q(uf__pk=uf_pk) & Q(nome_municipio__icontains=self.q))\
                 .values_list('pk', 'nome_municipio', named=True)
         else:
             choices = Cidade.objects\
                 .filter(uf__sigla__iexact=self.q)\
                 .values_list('pk', 'nome_municipio', named=True)
+        return choices
+
         return choices
 
     def get_result_label(self, item):
