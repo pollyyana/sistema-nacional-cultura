@@ -71,6 +71,10 @@
                 $("#myModal").modal({backdrop: 'static', keyboard: false})
                 $("#myModal").modal('show');
               });
+
+              function submit() {
+                $("form").unbind('submit').submit();
+              }
             });
           </script>
 
@@ -88,7 +92,7 @@
                   <p>Alteração concluida com sucesso.</p>
                 </div>
                 <div class="modal-footer">
-                  <a id="go" href="{% url 'gestao:acompanhar_adesao' %}" type="submit" class="btn btn-primary" >OK</a>
+                  <button id="go" onclick="submit()" type="submit" class="btn btn-primary">OK</button>
                 </div>
               </div>
             </div>
