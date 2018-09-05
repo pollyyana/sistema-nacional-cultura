@@ -68,6 +68,7 @@
             $(document).ready(function () {
               $("form").submit(function () {
                 event.preventDefault();
+                $("#myModal").modal({backdrop: 'static', keyboard: false})
                 $("#myModal").modal('show');
               });
             });
@@ -81,16 +82,13 @@
               <!-- Modal content-->
               <div class="modal-content">
                 <div class="modal-header">
-                  <button type="button" class="close" data-dismiss="modal">&times;</button>
-                  <h4 class="modal-title ">Deseja realmente salvar?</h4>
+                  <h4 class="modal-title ">Sucesso</h4>
                 </div>
                 <div class="modal-body">
-                  <p>Você pode acabar sobrescrevendo ou apagando algum arquivo existente.
-                    <p>
-                      <p>Essas alterações não podem ser desfeitas.</p>
+                  <p>Alteração concluida com sucesso.</p>
                 </div>
                 <div class="modal-footer">
-                  <a id="go" href="{% url 'gestao:acompanhar_adesao' %}" type="submit" class="btn btn-primary" >Sim</a>
+                  <a id="go" href="{% url 'gestao:acompanhar_adesao' %}" type="submit" class="btn btn-primary" >OK</a>
                 </div>
               </div>
             </div>
