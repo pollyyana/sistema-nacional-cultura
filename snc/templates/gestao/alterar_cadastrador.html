@@ -1,126 +1,158 @@
-{% extends "gestao/base_gestao.html" %} {% load widget_tweaks %} {% block content %}
-{{form.media}}
+{% extends "gestao/base_gestao.html" %} {% load widget_tweaks %} {% block content %} {{form.media}}
 <div class="panel panel-default">
   <div class="panel-heading">
-    Alteração de cadastrador do ente federado 
+    Alteração de cadastrador do ente federado
   </div>
-  <ul class="nav nav-tabs"> 
-      <li class="active"><a data-toggle="tab" href="#conteudo-default" id="municipio-tab">Município</a></li>
-      <li><a data-toggle="tab" href="#conteudo-default" id="estado-tab">Estado</a></li>
+  <ul class="nav nav-tabs">
+    <li class="active"><a data-toggle="tab" href="#conteudo-default" id="municipio-tab">Município</a></li>
+    <li><a data-toggle="tab" href="#conteudo-default" id="estado-tab">Estado</a></li>
   </ul>
 
-<div class="tab-content">
-  <div id="conteudo-default" class="tab-pane fade in active">
-  <div class="panel-body">
-    <form action="{% url 'gestao:alterar_cadastrador' %}" class="form-horizontal" method="post">{% csrf_token %}
+  <div class="tab-content">
+    <div id="conteudo-default" class="tab-pane fade in active">
+      <div class="panel-body">
+        <form action="{% url 'gestao:alterar_cadastrador' %}" class="form-horizontal" method="post">{% csrf_token %}
 
-      <div class="form-group">
-        <label for="{{ form.estado.id_for_label }}" class="col-sm-3 control-label">UF</label>
-        <div class="col-sm-1">
-          {% render_field form.estado class="form-control" id="estado_id" %}
-        </div>
-        <div class="col-sm-offset-3 col-sm-9">
-          {{ form.estado.errors }}
-        </div>
+          <div class="form-group">
+            <label for="{{ form.estado.id_for_label }}" class="col-sm-3 control-label">UF</label>
+            <div class="col-sm-1">
+              {% render_field form.estado class="form-control" id="estado_id" %}
+            </div>
+            <div class="col-sm-offset-3 col-sm-9">
+              {{ form.estado.errors }}
+            </div>
+          </div>
+
+          <div class="form-group" id="municipio-field">
+            <label for="{{ form.municipio.id_for_label }}" class="col-sm-3 control-label">Município</label>
+
+            <div class="col-sm-4">
+              {% render_field form.municipio class="form-control" id="municipio_id"%} {{ form.municipio.errors }}
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="{{ form.data_publicacao_acordo.id_for_label }}" class="col-sm-3 control-label">Data de publicação
+              do Acordo</label>
+
+            <div class="col-sm-4">
+              {% render_field form.data_publicacao_acordo class="form-control date" %} {{ form.data_publicacao_acordo.errors }}
+            </div>
+          </div>
+
+
+          <div class="form-group">
+            <label class="col-sm-3 control-label">CPF atual do Cadastrador</label>
+            <div class="col-sm-4">
+              <input disabled="true" id="cpf_usuario" value=""></input>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="{{ form.cpf_usuario.id_for_label }}" class="col-sm-3 control-label">CPF do Novo Cadastrador</label>
+
+            <div class="col-sm-4">
+              {% render_field form.cpf_usuario class="form-control cpf" %} {{ form.cpf_usuario.errors }} {{ form.non_field_errors }}
+            </div>
+          </div>
+
+
+          <div class="form-group">
+            <div class="col-sm-offset-3 col-sm-10">
+              <a class="btn btn-default" href="{% url 'adesao:home' %}">Cancelar</a>
+              <button type="submit" class="btn btn-primary">Salvar</button>
+            </div>
+          </div>
+
+          <script>
+            $(document).ready(function () {
+              $("form").submit(function () {
+                event.preventDefault();
+                $("#myModal").modal('show');
+              });
+            });
+          </script>
+
+
+
+          <div class="modal fade" id="myModal" role="dialog">
+            <div class="modal-dialog">
+
+              <!-- Modal content-->
+              <div class="modal-content">
+                <div class="modal-header">
+                  <button type="button" class="close" data-dismiss="modal">&times;</button>
+                  <h4 class="modal-title ">Deseja realmente salvar?</h4>
+                </div>
+                <div class="modal-body">
+                  <p>Você pode acabar sobrescrevendo ou apagando algum arquivo existente.
+                    <p>
+                      <p>Essas alterações não podem ser desfeitas.</p>
+                </div>
+                <div class="modal-footer">
+                  <a id="go" href="{% url 'gestao:acompanhar_adesao' %}" type="submit" class="btn btn-primary" >Sim</a>
+                </div>
+              </div>
+            </div>
+          </div>
+
+
+
+        </form>
       </div>
-
-      <div class="form-group" id="municipio-field">
-        <label for="{{ form.municipio.id_for_label }}" class="col-sm-3 control-label">Município</label>
-
-        <div class="col-sm-4">
-          {% render_field form.municipio class="form-control" id="municipio_id"%} {{ form.municipio.errors }}
-        </div>
-      </div>
-
-      <div class="form-group">
-        <label for="{{ form.data_publicacao_acordo.id_for_label }}" class="col-sm-3 control-label">Data de publicação do Acordo</label>
-
-        <div class="col-sm-4">
-          {% render_field form.data_publicacao_acordo class="form-control date" %} {{ form.data_publicacao_acordo.errors }}
-        </div>
-      </div>
-
-
-      <div class="form-group">
-        <label class="col-sm-3 control-label">CPF atual do Cadastrador</label>
-        <div class="col-sm-4">
-          <input disabled="true" id="cpf_usuario" value=""></input>
-        </div>
-      </div>
-
-      <div class="form-group">
-        <label for="{{ form.cpf_usuario.id_for_label }}" class="col-sm-3 control-label">CPF do Novo Cadastrador</label>
-
-        <div class="col-sm-4">
-          {% render_field form.cpf_usuario class="form-control cpf" %} {{ form.cpf_usuario.errors }} {{ form.non_field_errors }}
-        </div>
-      </div>
-
-
-      <div class="form-group">
-        <div class="col-sm-offset-3 col-sm-10">
-          <a class="btn btn-default" href="{% url 'adesao:home' %}">Cancelar</a>
-          <input type="submit" class="btn btn-primary" value="Salvar" />
-        </div>
-      </div>
-    </form>
+    </div>
   </div>
-</div>
-  </div>
 
-{% endblock content %}
+  {% endblock content %} {% block js %}
+  <script>
 
-{% block js %}
-<script>
+    $(document).ready(function () {
 
-$(document).ready(function(){
-
-    $('#estado-tab').on('click', function() {
+      $('#estado-tab').on('click', function () {
         $fieldMuncipio = $('#municipio-field');
         $fieldMuncipio.hide();
-        $('#estado_id option').each(function(){$(this).removeAttr('selected');}); 
-        $('#municipio_id option').each(function(){$(this).removeAttr('selected');}); 
+        $('#estado_id option').each(function () { $(this).removeAttr('selected'); });
+        $('#municipio_id option').each(function () { $(this).removeAttr('selected'); });
         $('#id_data_publicacao_acordo').val("");
         $('#cpf_usuario').val("");
-    });
+      });
 
-    $('#municipio-tab').on('click', function() {
+      $('#municipio-tab').on('click', function () {
         $fieldMuncipio = $('#municipio-field');
         $fieldMuncipio.show();
-        $('#estado_id').find('option:first').attr('selected',true);
-        $('#municipio_id').find('option:first').attr('selected',true);
+        $('#estado_id').find('option:first').attr('selected', true);
+        $('#municipio_id').find('option:first').attr('selected', true);
         $('#id_data_publicacao_acordo').val("");
         $('#cpf_usuario').val("");
-    });
+      });
 
-    $('#municipio_id, #estado_id').change(function(){
+      $('#municipio_id, #estado_id').change(function () {
         $municipio_id = $('#municipio_id').val()
         $estado_id = $('#estado_id').val()
-        $url = "{% url 'gestao:ajax_cadastrador_cpf' %}" 
+        $url = "{% url 'gestao:ajax_cadastrador_cpf' %}"
 
         $.ajax({
           type: "GET",
-          url: $url + '?municipio='+ $municipio_id + '&estado=' + $estado_id,
+          url: $url + '?municipio=' + $municipio_id + '&estado=' + $estado_id,
           cache: false,
-          success: function(data){
+          success: function (data) {
             $('#id_data_publicacao_acordo').val("");
-            if(!data.erro){
-                $( "#id_data_publicacao_acordo" ).prop( "disabled", false );
-                $('#id_data_publicacao_acordo').val(data.data_publicacao_acordo);
-                $('#cpf_usuario').val(data.cpf);
-                if(!data.cpf){
-                    $('#cpf_usuario').val("Não consta");
-                }
-                if(data.estado_processo == 0){
-                    $( "#id_data_publicacao_acordo" ).prop( "disabled", true );
-                }
-            }else{
+            if (!data.erro) {
+              $("#id_data_publicacao_acordo").prop("disabled", false);
+              $('#id_data_publicacao_acordo').val(data.data_publicacao_acordo);
+              $('#cpf_usuario').val(data.cpf);
+              if (!data.cpf) {
                 $('#cpf_usuario').val("Não consta");
-                $( "#id_data_publicacao_acordo" ).prop( "disabled", true );
+              }
+              if (data.estado_processo == 0) {
+                $("#id_data_publicacao_acordo").prop("disabled", true);
+              }
+            } else {
+              $('#cpf_usuario').val("Não consta");
+              $("#id_data_publicacao_acordo").prop("disabled", true);
             }
           }
         });
+      });
     });
-});
-</script>
-{% endblock js %}
+  </script> {% endblock js %}
