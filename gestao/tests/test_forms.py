@@ -14,21 +14,6 @@ from gestao.forms import AlterarCadastradorForm
 pytestmark = pytest.mark.django_db
 
 
-def test_existencia_form_sei(client):
-
-    """ Testa existência da classe form para a inserção do sei """
-    form = InserirSEI()
-    assert form
-
-
-def test_campo_processo_sei_form(client):
-    """
-    Testa existência do processo_sei no form
-    """
-    form = InserirSEI()
-    assert "id=\"id_processo_sei\"" in form.as_p()
-
-
 def test_existencia_form_diligencia(client):
 
     """ Testa existência da classe form para a diligência """
