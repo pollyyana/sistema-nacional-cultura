@@ -12,8 +12,10 @@ from adesao.models import Historico
 from adesao.models import Cidade
 from adesao.models import Uf
 from adesao.models import Municipio
+from adesao.models import SistemaCultura
 from adesao.models import LISTA_ESTADOS_PROCESSO
 from adesao.models import SistemaCultura
+
 
 from planotrabalho.models import CriacaoSistema, FundoCultura
 from planotrabalho.models import PlanoCultura, OrgaoGestor, ConselhoCultural
@@ -137,14 +139,19 @@ class DiligenciaForm(ModelForm):
 
 class AlterarCadastradorForm(forms.Form):
     cpf_usuario = forms.CharField(max_length=11)
-    estado = forms.ModelChoiceField(queryset=Uf.objects.all(),
-                                    widget=autocomplete.ModelSelect2(url='gestao:uf_chain'))
+    estado = forms.ModelChoiceField(
+        queryset=Uf.objects.all(),
+        widget=autocomplete.ModelSelect2(url='gestao:uf_chain')
+    )
+
     municipio = forms.ModelChoiceField(
         queryset=Cidade.objects.all(),
         widget=autocomplete.ModelSelect2(url='gestao:cidade_chain',
-                                         forward=['estado']),
+            forward=['estado']
+        ),
         required=False
-        )
+    )
+
     data_publicacao_acordo = forms.DateField(required=False)
 
     def save(self):

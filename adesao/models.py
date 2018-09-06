@@ -265,8 +265,7 @@ class SistemaCultura(models.Model):
 
         if self.pk:
             fields = self._meta.fields[1:]
-            anterior = SistemaCultura.objects\
-                    .get(pk=self.pk)
+            anterior = SistemaCultura.objects.get(pk=self.pk)
 
             comparacao = (self.compara_valores(anterior, field.attname) for field in
                           fields)
@@ -277,7 +276,8 @@ class SistemaCultura(models.Model):
             if not self.compara_valores(anterior, "cadastrador"):
                 self.alterar_cadastrador(anterior.cadastrador)
 
-        super(SistemaCultura, self).save(*args, **kwargs)
+        super().save(*args, **kwargs)
+
 
     def alterar_cadastrador(self, cadastrador_atual):
         """
@@ -292,7 +292,11 @@ class SistemaCultura(models.Model):
             try:
                 ente_federado = Municipio.objects.get(estado=self.uf,
                                                       cidade=self.cidade)
-                cadastrador_atual = ente_federado.usuario
-                self.alterar_cadastrador(cadastrador_atual)
+                cadastrador_atual = getattr(ente_federado, 'usuario', None)
+                if cadastrador_atual:
+                    cadastrador.recebe_permissoes_sistema_cultura(cadastrador_atual)
+                else:
+                    cadastrador.municipio = ente_federado
+                    cadastrador.save()
             except Municipio.DoesNotExist:
                 return

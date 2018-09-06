@@ -3,7 +3,8 @@ from threading import Thread
 from django.contrib.contenttypes.models import ContentType
 from django.core.mail import send_mail
 
-from django.db.models import Q, Case, When, BooleanField
+from django.db.models import Case, When, DateField, Count, Q
+from django.db.models.functions import Least
 
 from django.shortcuts import redirect
 from django.shortcuts import render
@@ -57,6 +58,8 @@ from .forms import AlterarPlanoForm
 from .forms import AlterarConselhoForm
 from .forms import AlterarSistemaForm
 
+from itertools import chain
+
 
 # Acompanhamento das adesões
 class AlterarCadastrador(FormView):
@@ -77,14 +80,17 @@ class CidadeChain(autocomplete.Select2QuerySetView):
         """ Filtra todas as cidade de uma determinada UF """
 
         uf_pk = self.forwarded.get('estado', None)
+        
         if uf_pk:
             choices = Cidade.objects\
-                .filter(uf__pk=uf_pk)\
+                .filter(Q(uf__pk=uf_pk) & Q(nome_municipio__icontains=self.q))\
                 .values_list('pk', 'nome_municipio', named=True)
         else:
             choices = Cidade.objects\
                 .filter(uf__sigla__iexact=self.q)\
                 .values_list('pk', 'nome_municipio', named=True)
+        return choices
+
         return choices
 
     def get_result_label(self, item):
@@ -172,6 +178,41 @@ class AcompanharAdesao(ListView):
     template_name = 'gestao/adesao/acompanhar.html'
     paginate_by = 10
 
+    def annotate_componente_mais_antigo_por_situacao(self, componentes, *args):
+        componentes = componentes.annotate(
+            data_lei_sem_analise=Case(
+                When(usuario__plano_trabalho__criacao_sistema__situacao__in=args, then='usuario__plano_trabalho__criacao_sistema__data_envio'),
+                default=None,
+                output_field=DateField(),
+            ),
+             data_orgao_sem_analise=Case(
+                When(usuario__plano_trabalho__orgao_gestor__situacao__in=args, then='usuario__plano_trabalho__orgao_gestor__data_envio'),
+                default=None,
+                output_field=DateField(),
+            ),
+             data_conselho_sem_analise=Case(
+                When(usuario__plano_trabalho__conselho_cultural__situacao__in=args, then='usuario__plano_trabalho__conselho_cultural__data_envio'),
+                default=None,
+                output_field=DateField(),
+            ),
+             data_plano_sem_analise=Case(
+                When(usuario__plano_trabalho__plano_cultura__situacao__in=args, then='usuario__plano_trabalho__plano_cultura__data_envio'),
+                default=None,
+                output_field=DateField(),
+            ),
+            data_fundo_sem_analise=Case(
+                When(usuario__plano_trabalho__fundo_cultura__situacao__in=args, then='usuario__plano_trabalho__fundo_cultura__data_envio'),
+                default=None,
+                output_field=DateField(),
+            )
+        ).annotate(
+            mais_antigo=Least('data_lei_sem_analise', 'data_orgao_sem_analise', 'data_conselho_sem_analise', 'data_plano_sem_analise',
+                'data_fundo_sem_analise')
+        )
+
+        return componentes
+
+
     def get_queryset(self):
         situacao = self.request.GET.get('situacao', None)
         ente_federado = self.request.GET.get('municipio', None)
@@ -191,15 +232,19 @@ class AcompanharAdesao(ListView):
         else:
             entes = Municipio.objects.all()
 
-        entes = entes.annotate(
-            concluido=Case(
-                When(usuario__plano_trabalho__criacao_sistema__situacao=1, then=True),
-                default=None,
-                output_field=BooleanField(),
-            ),
-        ).order_by('concluido', '-usuario__estado_processo', 'usuario__plano_trabalho__criacao_sistema__data_envio')
+        entes_concluidos = self.annotate_componente_mais_antigo_por_situacao(entes, 2, 3).annotate(
+            cadastrador=Count('usuario')).order_by('-cadastrador', '-usuario__estado_processo', 'mais_antigo')
+
+        entes_diligencia = self.annotate_componente_mais_antigo_por_situacao(entes, 4, 5, 6).annotate(
+            cadastrador=Count('usuario')).order_by('-cadastrador', '-usuario__estado_processo', 'mais_antigo')
+
+        entes_nao_analisados = self.annotate_componente_mais_antigo_por_situacao(entes, 1).annotate(
+            cadastrador=Count('usuario')).order_by('-cadastrador', '-usuario__estado_processo', 'mais_antigo')
+
+        entes = entes_nao_analisados | entes_diligencia | entes_concluidos
 
         return entes
+
 
 # Acompanhamento dos planos de trabalho
 def diligencia_documental(request, etapa, st, id):
