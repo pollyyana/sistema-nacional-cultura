@@ -14,6 +14,7 @@ from adesao.models import Uf
 from adesao.models import Municipio
 from adesao.models import SistemaCultura
 from adesao.models import LISTA_ESTADOS_PROCESSO
+from adesao.models import SistemaCultura
 
 
 from planotrabalho.models import CriacaoSistema, FundoCultura
@@ -67,6 +68,14 @@ class RestrictedFileField(forms.FileField):
             pass
 
         return data
+
+
+class InserirSEI(ModelForm):
+    processo_sei = forms.CharField(max_length="50", required=False)
+
+    class Meta:
+        model = Usuario
+        fields = ('processo_sei',)
 
 
 class AlterarDadosAdesao(ModelForm):

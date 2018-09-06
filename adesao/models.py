@@ -4,6 +4,7 @@ from django.utils import timezone
 
 from planotrabalho.models import PlanoTrabalho
 
+
 LISTA_ESTADOS_PROCESSO = (
     ('0', 'Aguardando preenchimento dos dados cadastrais'),
     ('1', 'Aguardando envio da documentação'),
@@ -276,6 +277,7 @@ class SistemaCultura(models.Model):
                 self.alterar_cadastrador(anterior.cadastrador)
 
         super().save(*args, **kwargs)
+
 
     def alterar_cadastrador(self, cadastrador_atual):
         """

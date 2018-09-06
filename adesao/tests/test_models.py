@@ -242,6 +242,69 @@ def test_criar_plano_trabalho_para_Usuario_estado_processo():
     usuario.delete()
 
 
+def test_ativo_ou_cria_SistemaCultura_ativo():
+    """ Testa método ativo_ou_cria do manager SistemaCulturaManager
+    retorna SistemaCultura ativo """
+
+    mommy.make('SistemaCultura',
+               data_criacao=datetime(2018, 2, 3, 0, tzinfo=timezone.utc),
+               _fill_optional=['uf', 'cidade'])
+    sistema_ativo = mommy.make('SistemaCultura', _fill_optional=['uf', 'cidade'])
+
+    assert SistemaCultura.objects.ativo_ou_cria(
+            uf=sistema_ativo.uf, cidade=sistema_ativo.cidade) == sistema_ativo
+
+
+def test_ativo_ou_cria_SistemaCultura_cria():
+    """ Testa método ativo_ou_cria do manager SistemaCulturaManager
+    retorna um novo sistema cultura """
+    cidade = mommy.make('Cidade')
+    uf = cidade.uf
+
+    sistema = SistemaCultura.objects.ativo_ou_cria(cidade=cidade, uf=uf)
+
+    assert isinstance(sistema, SistemaCultura)
+    assert sistema.pk
+    assert sistema.uf == uf
+    assert sistema.cidade == cidade
+
+
+def test_por_municipio_SistemaCultura_cidade():
+    """ Testa se o método por município retorna os sistemas cultura de uma cidade """
+    cidade = mommy.make('Cidade')
+    uf = cidade.uf
+    sistema = mommy.make("SistemaCultura", cidade=cidade, uf=uf)
+
+    sistemas_cidade = SistemaCultura.objects.por_municipio(cidade=cidade, uf=uf)
+
+    assert sistemas_cidade.count() == 1
+    assert sistemas_cidade.first() == sistema
+
+
+def test_por_municipio_SistemaCultura_uf():
+    """ Testa se o método por município retorna os sistemas cultura de uma uf """
+    uf = mommy.make('Uf')
+    sistema = mommy.make("SistemaCultura", uf=uf)
+
+    sistemas_cidade = SistemaCultura.objects.por_municipio(uf=uf)
+
+    assert sistemas_cidade.count() == 1
+    assert sistemas_cidade.first() == sistema
+
+
+def test_alterar_cadastrador_sistema_cultura_sem_cadastrador():
+    """ Testa alterar o cadastrador de um sistema cultura que não possui um
+    cadastrador """
+    sistema = mommy.make('SistemaCultura')
+    cadastrador = mommy.make('Usuario')
+
+    sistema.cadastrador = cadastrador
+    sistema.save()
+    sistema.refresh_from_db()
+
+    assert sistema.cadastrador == cadastrador
+
+
 def test_alterar_cadastrador_municipio_sem_cadastrador_previo():
     """
     Tenta alterar o cadastrador de um Municipio que ainda não possui
