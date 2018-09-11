@@ -891,7 +891,7 @@ def test_alterar_cadastrador_municipio(client, login_staff):
 
     municipio = mommy.make('Municipio', _fill_optional=['cidade'])
     mommy.make('Usuario', municipio=municipio)
-    new_user = mommy.make('Usuario', user__username='12345678911')
+    new_user = mommy.make('Usuario', user__username='34701068004')
     url = reverse('gestao:alterar_cadastrador')
 
     data = {
@@ -912,7 +912,7 @@ def test_alterar_cadastrador_estado(client, login_staff):
 
     municipio = mommy.make('Municipio')
     mommy.make('Usuario', municipio=municipio)
-    new_user = mommy.make('Usuario', user__username='12345678911')
+    new_user = mommy.make('Usuario', user__username='34701068004')
     url = reverse('gestao:alterar_cadastrador')
 
     data = {
