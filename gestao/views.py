@@ -15,6 +15,7 @@ from django.http import JsonResponse
 from django.http import HttpResponseRedirect
 
 from django.contrib.auth.models import User
+from django.contrib import messages
 
 from django.views.generic import CreateView
 from django.views.generic import DetailView
@@ -73,10 +74,11 @@ class AlterarCadastrador(FormView):
     """
     template_name = 'gestao/alterar_cadastrador.html'
     form_class = AlterarCadastradorForm
-    success_url = reverse_lazy('gestao:acompanhar_adesao')
+    success_url = reverse_lazy('gestao:alterar_cadastrador')
 
     def form_valid(self, form):
         form.save()
+        messages.success(self.request, 'Cadastrador alterado com sucesso')
         return super(AlterarCadastrador, self).form_valid(form)
 
 
