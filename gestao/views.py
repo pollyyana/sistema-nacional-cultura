@@ -178,6 +178,15 @@ def aditivar_prazo(request, id):
         user.prazo = user.prazo + 1
         user.save()
 
+        if user.municipio.cidade:
+            ente = user.municipio.cidade.nome_municipio
+        else:
+            ente = user.municipio.estado.nome_uf
+
+        message = 'Prazo de ' + ente + ' alterado para '+ str(user.prazo) + ' anos com sucesso'
+        messages.success(request, message)
+
+
     return redirect('gestao:acompanhar_prazo')
 
 
@@ -553,6 +562,7 @@ class AlterarSistema(UpdateView):
     model = CriacaoSistema
 
     def get_success_url(self):
+        messages.success(self.request, 'Sistema da Cultura alterado com sucesso')
         return reverse_lazy('gestao:listar_documentos', kwargs={'template': 'listar_sistemas'})
 
 
@@ -576,6 +586,7 @@ class AlterarOrgao(UpdateView):
     model = OrgaoGestor
 
     def get_success_url(self):
+        messages.success(self.request, 'Orgão Gestor alterado com sucesso')
         return reverse_lazy('gestao:listar_documentos', kwargs={'template': 'listar_orgaos'})
 
 
@@ -599,6 +610,7 @@ class AlterarConselho(UpdateView):
     model = ConselhoCultural
 
     def get_success_url(self):
+        messages.success(self.request, 'Conselho Cultural alterado com sucesso')
         return reverse_lazy('gestao:listar_documentos', kwargs={'template': 'listar_conselhos'})
 
 
@@ -622,6 +634,7 @@ class AlterarFundo(UpdateView):
     model = FundoCultura
 
     def get_success_url(self):
+        messages.success(self.request, 'Fundo de Cultura alterado com sucesso')
         return reverse_lazy('gestao:listar_documentos', kwargs={'template': 'listar_fundos'})
     
 
@@ -645,6 +658,7 @@ class AlterarPlano(UpdateView):
     model = PlanoCultura
 
     def get_success_url(self):
+        messages.success(self.request, 'Plano de Cultura alterado com sucesso')
         return reverse_lazy('gestao:listar_documentos', kwargs={'template': 'listar_planos'})
 
 
