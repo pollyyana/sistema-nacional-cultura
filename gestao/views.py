@@ -521,6 +521,7 @@ class AlterarDocumentosEnteFederado(UpdateView):
     model = Municipio
 
     def get_success_url(self):
+        messages.success(self.request, 'Ente Federado alterado com sucesso')
         return reverse_lazy('gestao:inserir_entefederado')
 
 
@@ -553,6 +554,7 @@ class InserirSistema(CreateView):
         return kwargs
 
     def get_success_url(self):
+        messages.success(self.request, 'Sistema da Cultura inserido com sucesso')
         return reverse_lazy('gestao:listar_documentos', kwargs={'template': 'listar_sistemas'})
 
 
@@ -577,6 +579,7 @@ class InserirOrgao(CreateView):
         return kwargs
 
     def get_success_url(self):
+        messages.success(self.request, 'Orgão Gestor enviado com sucesso')
         return reverse_lazy('gestao:listar_documentos', kwargs={'template': 'listar_orgaos'})
 
 
@@ -601,6 +604,7 @@ class InserirConselho(CreateView):
         return kwargs
 
     def get_success_url(self):
+        messages.success(self.request, 'Conselho Cultural enviado com sucesso')
         return reverse_lazy('gestao:listar_documentos', kwargs={'template': 'listar_conselhos'})
 
 
@@ -625,6 +629,7 @@ class InserirFundo(CreateView):
         return kwargs
 
     def get_success_url(self):
+        messages.success(self.request, 'Fundo de Cultura enviado com sucesso')
         return reverse_lazy('gestao:listar_documentos', kwargs={'template': 'listar_fundos'})
 
 
@@ -649,6 +654,7 @@ class InserirPlano(CreateView):
         return kwargs
 
     def get_success_url(self):
+        messages.success(self.request, 'Plano de Cultura enviado com sucesso')
         return reverse_lazy('gestao:listar_documentos', kwargs={'template': 'listar_planos'})
 
 
