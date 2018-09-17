@@ -1,4 +1,6 @@
 {% extends "gestao/base_gestao.html" %} {% load gestao_tags %} {% block content %}
+{% include 'messages.html' %}
+
 <div class="row">
     <div class="col-sm-12 col-md-6">
         <div class="panel panel-info">
@@ -373,39 +375,6 @@
                             <a href="{% url 'gestao:detalhar' object.id %}" class="btn btn-default btn-xs" value="Cancelar" >Cancelar</a>
                           </div>
                       </div>
-                      
-              
-                      <script>
-                        $(document).ready(function(){
-                          
-                          $("form").submit(function (event) {
-                            event.preventDefault();
-                            $("#myModal").modal({backdrop: 'static', keyboard: false})
-                            $("#myModal").modal('show');
-                          });
-                        });
-                      </script>
-                    
-              
-              
-              
-                        <div class="modal fade" id="myModal" role="dialog">
-                          <div class="modal-dialog">
-              
-                            <!-- Modal content-->
-                            <div class="modal-content">
-                              <div class="modal-header">
-                                <h4 class="modal-title ">Sucesso</h4>
-                              </div>
-                              <div class="modal-body">
-                                <p>Alteração concluida com sucesso.</p>
-                              </div>
-                              <div class="modal-footer">
-                                <button id="go" onclick="submit()" type="submit" class="btn btn-primary">OK</button>
-                              </div>
-                            </div>
-                          </div>
-                        </div>
                   </div>
               </div>
           </form>

@@ -9,6 +9,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/dev/ref/settings/
 """
 # from __future__ import absolute_import, unicode_literals
+from django.contrib.messages import constants as messages
 
 import environ
 
@@ -33,6 +34,15 @@ SECRET_KEY = env("DJANGO_SECRET_KEY", default='CHANGEME!!!')
 ALLOWED_HOSTS = env.list("ALLOWED_HOSTS", default=['localhost'])
 
 # APP CONFIGURATION
+
+MESSAGE_TAGS = {
+    messages.DEBUG: 'alert-info',
+    messages.INFO: 'alert-info',
+    messages.SUCCESS: 'alert-success',
+    messages.WARNING: 'alert-warning',
+    messages.ERROR: 'alert-danger',
+}
+
 DJANGO_APPS = (
     # Default Django apps:
     'django.contrib.auth',

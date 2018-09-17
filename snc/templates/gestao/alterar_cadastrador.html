@@ -1,4 +1,6 @@
 {% extends "gestao/base_gestao.html" %} {% load widget_tweaks %} {% block content %} {{form.media}}
+{% include 'messages.html' %}
+
 <div class="panel panel-default">
   <div class="panel-heading">
     Alteração de cadastrador do ente federado
@@ -60,42 +62,9 @@
           <div class="form-group">
             <div class="col-sm-offset-3 col-sm-10">
               <a class="btn btn-default" href="{% url 'adesao:home' %}">Cancelar</a>
-              <button type="submit" class="btn btn-primary" id="submitButton">Salvar</button>
+              <button type="submit" class="btn btn-primary">Salvar</button>
             </div>
           </div>
-
-          {% if form.errors %}
-          <script>
-            $(document).ready(function(){
-              
-              $("form").submit(function (event) {
-                event.preventDefault();
-                $("#myModal").modal({backdrop: 'static', keyboard: false})
-                $("#myModal").modal('show');
-              });
-            });
-          </script>
-          {% endif %}
-
-          <div class="modal fade" id="myModal" role="dialog">
-            <div class="modal-dialog">
-
-              <!-- Modal content-->
-              <div class="modal-content">
-                <div class="modal-header">
-                  <h4 class="modal-title ">Sucesso</h4>
-                </div>
-                <div class="modal-body">
-                  <p>Alteração concluida com sucesso.</p>
-                </div>
-                <div class="modal-footer">
-                  <button id="go" onclick="submit()" type="submit" class="btn btn-primary">OK</button>
-                </div>
-              </div>
-            </div>
-          </div>
-
-
 
         </form>
       </div>
