@@ -488,7 +488,9 @@ class AlterarUsuario(UpdateView):
     template_name = 'gestao/listar_usuarios.html'
     success_url = reverse_lazy('gestao:usuarios')
 
+
     def get_success_url(self):
+        messages.success(self.request, 'Situação de CPF: '+ str(self.object) + ' alterada com sucesso.')
         return reverse_lazy('gestao:usuarios')
 
 
