@@ -129,6 +129,7 @@ def alterar_dados_adesao(request, pk):
                                   instance=Usuario.objects.get(pk=pk))
         if form.is_valid():
             form.save()
+            messages.success(request, 'Dados da adesão foram alterados com sucesso')
     return redirect('gestao:detalhar', pk=pk)
 
 
