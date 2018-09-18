@@ -4,57 +4,81 @@
     Inserir documentos do cadastro
   </div>
   <div class="panel-body">
-    <form class="form-horizontal" method="post" enctype=multipart/form-data>{% csrf_token %}
-      <div class="form-group">
-        <label class="col-sm-3 control-label">Anexo</label>
+    <form class="form-horizontal" method="post" id="form" enctype=multipart/form-data>{% csrf_token %} 
+      <div class="validate()">
+      <label class="col-sm-3 control-label">Anexo</label>
 
-        <div class="col-sm-7">
-          {% render_field form.arquivo %}
-        </div>
-        <div class="col-sm-offset-3 col-sm-9">
-          {{ form.arquivo.errors }}
-        </div>
+      <div class="col-sm-7">
+        {% render_field form.arquivo %}
 
-        <label class="col-sm-3 control-label">Data de publicação da Lei</label>
+      </div>
+      <div class="col-sm-offset-3 col-sm-9">
+        {{ form.arquivo.errors }}
+        {{ form.non_field_errors }}
 
-        <div class="col-sm-7">
-          {% render_field form.data_publicacao class="date" %}
-        </div>
-        <div class="col-sm-offset-3 col-sm-9">
+      </div>
+
+      <label class="col-sm-3 control-label">Data de publicação da Lei</label>
+
+      <div class="col-sm-7">
+        {% render_field form.data_publicacao class="date" %}
+      </div>
+      <div class="col-sm-offset-3 col-sm-9">
+        <span class="help-block" id="erro">
           {{ form.data_publicacao.errors }}
-        </div>
+          {{ form.non_field_errors }}
+        </span>
       </div>
-
-      <div class="form-group">
-        <div class="col-sm-offset-3 col-sm-11">
-          <a class="btn btn-default" href="{% url 'gestao:listar_documentos' template='listar_conselhos' %}">Cancelar</a>
-          <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModal">Salvar</button>
-
-          <div class="modal fade" id="myModal" role="dialog">
-              <div class="modal-dialog">
-
-                <!-- Modal content-->
-                <div class="modal-content">
-                  <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal">&times;</button>
-                    <h4 class="modal-title ">Deseja realmente salvar?</h4>
-                  </div>
-                  <div class="modal-body">
-                    <p>Você pode acabar sobrescrevendo ou apagando algum arquivo existente.<p>
-                    <p>Essas alterações não podem ser desfeitas.</p>
-                  </div>
-                  <div class="modal-footer">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">Não</button>
-                    <input type="submit" class="btn btn-primary" value="Sim" />
-                  </div>
-                </div>
-
-              </div>
-            </div>
-
-        </div>
-      </div>
-    </form>
   </div>
+
+  <div class="form-group">
+    <div class="col-sm-offset-3 col-sm-11">
+      <a class="btn btn-default" href="{% url 'gestao:listar_documentos' template='listar_conselhos' %}">Cancelar</a>
+      <button type="button" onclick="validate()" class="btn btn-primary">Salvar</button>
+
+      <div class="modal fade" id="myModal" role="dialog">
+        <div class="modal-dialog">
+
+          <!-- Modal content-->
+          <div class="modal-content">
+            <div class="modal-header">
+              <button type="button" class="close" data-dismiss="modal">&times;</button>
+              <h4 class="modal-title ">Deseja realmente salvar?</h4>
+            </div>
+            <div class="modal-body">
+              <p>Você pode acabar sobrescrevendo ou apagando algum arquivo existente.<p>
+                  <p>Essas alterações não podem ser desfeitas.</p>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-default" data-dismiss="modal">Não</button>
+              <input type="submit" class="btn btn-primary" value="Sim" />
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+    </div>
+  </div>
+  </form>
 </div>
+</div>
+
+<script>
+
+  function validate() {
+    console.log("No files selected OPPAAAAAA.");
+
+    if (!document.getElementById('form').checkValidity()) {
+      console.log("No files selected.");
+      document.getElementById("erro").innerHTML = 'todos os campos são obrigatórios';
+      document.getElementById("id_arquivo").classList.add("has-error");
+      {{form.errors}} = 'asfasdfasdf';
+      var form = "has-error"
+      return form
+    } else {
+      $("#myModal").modal('show');
+    }
+  }
+</script>
 {% endblock content %}
