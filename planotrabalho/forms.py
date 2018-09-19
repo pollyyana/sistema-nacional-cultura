@@ -201,6 +201,7 @@ class PlanoCulturaForm(ModelForm):
         required=False, widget=FileInput)
     arquivo = forms.FileField(required=True, widget=FileInput)
     data_publicacao = forms.DateField(required=True)
+    error_css_class = 'has-error'
 
     def __init__(self, *args, **kwargs):
         self.usuario = kwargs.pop('user')

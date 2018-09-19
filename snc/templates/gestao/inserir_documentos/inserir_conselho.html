@@ -4,30 +4,33 @@
     Inserir ata do conselho cultural no cadastro
   </div>
   <div class="panel-body">
-    <form class="form-horizontal" method="post" id="form" enctype=multipart/form-data>{% csrf_token %} 
-      <div>
-      <label class="col-sm-3 control-label">Anexo</label>
+    <form class="form-horizontal" method="post" id="form" enctype=multipart/form-data>{% csrf_token %} <div>
+      <div class="form-group {% if form.arquivo.errors %} has-error {% endif %}">
+        <label class="col-sm-3 control-label">Anexo</label>
 
-      <div class="col-sm-7">
-        {% render_field form.arquivo %}
+        <div class="col-sm-7">
+          {% render_field form.arquivo %}
 
+        </div>
+        <div class="col-sm-offset-3 col-sm-9">
+          <span class="help-block">{{ form.arquivo.errors }}</span>
+          <span class="help-block">{{ form.non_field_errors }}</span>
+
+        </div>
       </div>
-      <div class="col-sm-offset-3 col-sm-9">
-        {{ form.arquivo.errors }}
-        {{ form.non_field_errors }}
 
-      </div>
+      <div class="form-group {% if form.data_publicacao.errors %} has-error {% endif %}">
+        <label class="col-sm-3 control-label">Data de publicação da Lei</label>
 
-      <label class="col-sm-3 control-label">Data de publicação da Lei</label>
-
-      <div class="col-sm-7">
-        {% render_field form.data_publicacao class="date" %}
-      </div>
-      <div class="col-sm-offset-3 col-sm-9">
-        <span class="help-block">
-          {{ form.data_publicacao.errors }}
-          {{ form.non_field_errors }}
-        </span>
+        <div class="col-sm-7">
+          {% render_field form.data_publicacao class="date" %}
+        </div>
+        <div class="col-sm-offset-3 col-sm-9">
+          <span class="help-block">
+            <span class="help-block">{{ form.data_publicacao.errors }}</span>
+            <span class="help-block">{{ form.non_field_errors }}</span>
+          </span>
+        </div>
       </div>
   </div>
 

@@ -5,23 +5,24 @@
   </div>
   <div class="panel-body">
     <form class="form-horizontal" method="post" enctype=multipart/form-data>{% csrf_token %}
-      <div class="form-group">
+      <div class="form-group {% if form.arquivo.errors %} has-error {% endif %}">
         <label class="col-sm-3 control-label">Anexo</label>
 
         <div class="col-sm-7">
           {% render_field form.arquivo %}
         </div>
         <div class="col-sm-offset-3 col-sm-9">
-          {{ form.arquivo.errors }}
+          <span class="help-block">{{ form.arquivo.errors}}</span>
         </div>
-
+      </div>
+      <div class="form-group {% if form.data_publicacao.errors %} has-error {% endif %}">
         <label class="col-sm-3 control-label">Data de publicação da Lei</label>
 
         <div class="col-sm-7">
-          {% render_field form.data_publicacao class="date" %}
+          <span class="help-block">{% render_field form.data_publicacao class="date" %}</span>
         </div>
-        <div class="col-sm-offset-3 col-sm-9">
-          {{ form.data_publicacao.errors }}
+        <div class="col-sm-offset-3 col-sm-9 has-error">
+            <span class="help-block">{{ form.data_publicacao.errors}}</span>
         </div>
       </div>
 
