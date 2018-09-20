@@ -50,30 +50,12 @@
                     {% endif %}
                   </td>
                   <td>
-                    {% if request.GET.anexo == 'relatorio_diretrizes_aprovadas' %}
-                    <a href="{% url 'gestao:diligencia_documental' 'plano_cultura' 'situacao_relatorio_diretrizes' usuario.id %}">
-                    {% elif request.GET.anexo == 'minuta_preparada' %}
-                    <a href="{% url 'gestao:diligencia_documental' 'plano_cultura' 'situacao_minuta' usuario.id %}">
-                    {% elif request.GET.anexo == 'ata_reuniao_aprovacao_plano' %}
-                    <a href="{% url 'gestao:diligencia_documental' 'plano_cultura' 'situacao_ata' usuario.id %}">
-                    {% elif request.GET.anexo == 'lei_plano_cultura' %}
-                    <a href="{% url 'gestao:diligencia_documental' 'plano_cultura' 'situacao_lei_plano' usuario.id %}">
-                    {% endif %}
+                    <a href="{% url 'gestao:diligencia_componente' pk=usuario.plano_trabalho.id componente='plano_cultura' resultado='0' %}">
                       <i class="fa fa-thumbs-down"></i>
-                    </a>
+                    </a>                    
                   </td>
                   <td>
-                    {% if request.GET.anexo == 'relatorio_diretrizes_aprovadas' %}
-                    <a href="{% url 'gestao:concluir_etapa' 'plano_cultura' 'situacao_relatorio_diretrizes' usuario.id %}">
-                    {% elif request.GET.anexo == 'minuta_preparada' %}
-                    <a href="{% url 'gestao:concluir_etapa' 'plano_cultura' 'situacao_minuta' usuario.id %}">
-                    {% elif request.GET.anexo == 'ata_reuniao_aprovacao_plano' %}
-                    <a href="{% url 'gestao:concluir_etapa' 'plano_cultura' 'situacao_ata' usuario.id %}">
-                    {% elif request.GET.anexo == 'lei_plano_cultura' %}
-                    <a href="{% url 'gestao:concluir_etapa' 'plano_cultura' 'situacao_lei_plano' usuario.id %}">
-                    {% endif %}
-                      <i class="fa fa-thumbs-up"></i>
-                    </a>
+                    <a href="{% url 'gestao:diligencia_componente' pk=usuario.plano_trabalho.id componente='plano_cultura' resultado='1' %}"><i class="fa fa-thumbs-up"></i></a>                      
                   </td>
                 </tr>
               {% endfor %}
