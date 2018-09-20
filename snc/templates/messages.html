@@ -1,14 +1,28 @@
 {% for message in messages %}
-<div class="alert {{ message.tags }} alert-dismissible" role="alert" id="alert">
-  </button>
-  {{ message }}
+<div class="modal fade " id="myModal" role="dialog">
+  <div class="modal-dialog">
+
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        
+        <h4 class="modal-title "><strong>Sucesso!</strong></h4>
+      </div>
+      <div class="modal-body">
+        <p>{{ message }}<p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModal">OK</button>
+      </div>
+    </div>
+
+  </div>
 </div>
+
 {% endfor %}
 
 <script>
   $(document).ready(function () {
-    $("#alert").fadeTo(2000, 500).slideUp(600, function () {
-      $("#alert").slideUp(500);
-    });
+   $('#myModal').modal("show")
   });
 </script>
