@@ -363,13 +363,13 @@ class AcompanharOrgao(ListView):
             usuarios = usuarios.filter(
                 plano_trabalho__orgao_gestor__situacao=1)
             usuarios = usuarios.exclude(
-                plano_trabalho__orgao_gestor__relatorio_atividade_secretaria='')
+                plano_trabalho__orgao_gestor__arquivo=None)
         else:
             raise Http404
 
         if q:
             usuarios = usuarios.filter(
-                municipio__cidade__nome_municipio__icontains=q)
+                municipio__cidade__nome_municipio__unaccent__icontains=q)
 
         return usuarios
 
