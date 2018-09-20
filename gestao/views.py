@@ -379,16 +379,25 @@ class AcompanharConselho(ListView):
     paginate_by = 10
 
     def get_queryset(self):
+        anexo = self.request.GET.get('anexo', None)
         q = self.request.GET.get('q', None)
+        if not anexo:
+            raise Http404()
         usuarios = Usuario.objects.filter(estado_processo='6')
         usuarios = usuarios.exclude(plano_trabalho__conselho_cultural=None)
-        usuarios = usuarios.filter(
-            plano_trabalho__conselho_cultural__situacao=1)
-        usuarios = usuarios.exclude(
-            plano_trabalho__conselho_cultural__ata_regimento_aprovado='')
+
+        if anexo == 'arquivo':
+            usuarios = usuarios.filter(
+                plano_trabalho__conselho_cultural__situacao=1)
+            usuarios = usuarios.exclude(
+                plano_trabalho__conselho_cultural__arquivo=None)
+        else:
+            raise Http404
+
         if q:
             usuarios = usuarios.filter(
-                municipio__cidade__nome_municipio__icontains=q)
+                municipio__cidade__nome_municipio__unaccent__icontains=q)
+
         return usuarios
 
 
