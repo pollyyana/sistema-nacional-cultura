@@ -1106,3 +1106,29 @@ def test_ajax_cadastrador_ente_inexistente(client, login_staff):
 
     assert response.status_code == 400
 
+
+def test_pesquisa_por_ente_federado_com_arquivo_lei_sistema(client, login_staff):
+    """ Testa a pesquisa pelo nome (sem acento) de um Ente Federado 
+    que tenha o arquivo Lei Sistema aguardando análise
+    """
+    
+    arquivo = SimpleUploadedFile(
+        "orgao.txt", b"file_content", content_type="text/plain"
+    )
+
+    municipio = mommy.make('Municipio', cidade= mommy.make('Cidade', nome_municipio='Abaeté'))    
+
+    user = mommy.make('Usuario', _fill_optional=['plano_trabalho'], municipio=municipio)
+    user.plano_trabalho.criacao_sistema = mommy.make('CriacaoSistema')
+    user.plano_trabalho.save()
+    user.plano_trabalho.criacao_sistema.situacao = SituacoesArquivoPlano.objects.get(pk=1)
+    user.plano_trabalho.criacao_sistema.data_envio = datetime.date(2018, 1, 1)
+    user.plano_trabalho.criacao_sistema.arquivo = arquivo
+    user.plano_trabalho.criacao_sistema.save()
+
+    url = reverse('gestao:acompanhar_sistema') + '?q=Abaete&anexo=arquivo' 
+    response = client.get(url)
+
+
+    assert response.context_data['object_list'][0] == user.municipio
+    assert response.context_data['object_list'][0]['cidade']['nome_municipio'] == 'Abaeté'
