@@ -16,7 +16,7 @@ before_script:
     - ./cc-test-reporter before-build
 
 script:
-    - pipenv run coverage run -m pytest --create-db
+    - pipenv run coverage run -m pytest --create-db 
     - pipenv run coverage xml
 
 after_script:
