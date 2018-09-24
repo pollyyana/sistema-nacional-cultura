@@ -1116,7 +1116,7 @@ def test_pesquisa_por_ente_federado_com_arquivo_lei_sistema(client, login_staff)
         "orgao.txt", b"file_content", content_type="text/plain"
     )
 
-    municipio = mommy.make('Municipio', cidade= mommy.make('Cidade', nome_municipio='Abaeté'))    
+    municipio = mommy.make('Municipio', cidade= mommy.make('Cidade', nome_municipio='Abaete'))    
 
     user = mommy.make('Usuario', _fill_optional=['plano_trabalho'], municipio=municipio)
     user.plano_trabalho.criacao_sistema = mommy.make('CriacaoSistema')
@@ -1131,4 +1131,4 @@ def test_pesquisa_por_ente_federado_com_arquivo_lei_sistema(client, login_staff)
 
 
     assert response.context_data['object_list'][0] == user.municipio
-    assert response.context_data['object_list'][0]['cidade']['nome_municipio'] == 'Abaeté'
+    assert response.context_data['object_list'][0]['cidade']['nome_municipio'] == 'Abaete'
