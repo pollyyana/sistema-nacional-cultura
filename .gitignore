@@ -9,6 +9,9 @@
 *.mo
 *.sqlite
 *settings_*
+*.backup.bin
+*.backup
+dump
 
 # ignore pycharm files
 *.idea
