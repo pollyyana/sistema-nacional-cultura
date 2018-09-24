@@ -39,7 +39,7 @@
                 {% endif %}
                   <td>{{ usuario.municipio.cnpj_prefeitura }}</td>
                   <td>
-                    <a href="{{ usuario.plano_trabalho.orgao_gestor.relatorio_atividade_secretaria.url }}">Download</a>
+                    <a href="{{ usuario.plano_trabalho.orgao_gestor.arquivo.url }}">Download</a>
                   </td>
                   <td>
                     <a href="{% url 'gestao:diligencia_componente' pk=usuario.plano_trabalho.id componente='orgao_gestor' resultado='0' %}"><i class="fa fa-thumbs-down"></i></a>      
