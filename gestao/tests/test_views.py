@@ -1116,7 +1116,7 @@ def test_pesquisa_por_ente_federado_com_arquivo_lei_sistema(client, login_staff)
         "orgao.txt", b"file_content", content_type="text/plain"
     )
 
-    municipio = mommy.make('Municipio', cidade= mommy.make('Cidade', nome_municipio='Abaete'))    
+    municipio = mommy.make('Municipio', cidade= mommy.make('Cidade', nome_municipio='Abaeté'))    
 
     user = mommy.make('Usuario', _fill_optional=['plano_trabalho'], municipio=municipio)
     user.estado_processo = '6'
@@ -1128,10 +1128,120 @@ def test_pesquisa_por_ente_federado_com_arquivo_lei_sistema(client, login_staff)
     user.plano_trabalho.criacao_sistema.arquivo = arquivo
     user.plano_trabalho.criacao_sistema.save()
 
-    url = reverse('gestao:acompanhar_sistema') + '?anexo=arquivo' 
+    url = reverse('gestao:acompanhar_sistema') + '?q=Abaete&anexo=arquivo' 
     response = client.get(url)
 
-    print(response.context_data['object_list'])
+    assert response.context_data['object_list'][0].municipio == user.municipio
+    assert response.context_data['object_list'][0].municipio.cidade.nome_municipio == 'Abaeté'
+
+
+def test_pesquisa_por_ente_federado_com_arquivo_plano_cultura(client, login_staff):
+    """ Testa a pesquisa pelo nome (sem acento) de um Ente Federado 
+    que tenha o arquivo Plano Cultura aguardando análise
+    """
+    
+    arquivo = SimpleUploadedFile(
+        "orgao.txt", b"file_content", content_type="text/plain"
+    )
+
+    municipio = mommy.make('Municipio', cidade= mommy.make('Cidade', nome_municipio='Abaeté'))    
+
+    user = mommy.make('Usuario', _fill_optional=['plano_trabalho'], municipio=municipio)
+    user.estado_processo = '6'
+    user.save()
+    user.plano_trabalho.plano_cultura = mommy.make('PlanoCultura')
+    user.plano_trabalho.save()
+    user.plano_trabalho.plano_cultura.situacao = SituacoesArquivoPlano.objects.get(pk=1)
+    user.plano_trabalho.plano_cultura.data_envio = datetime.date(2018, 1, 1)
+    user.plano_trabalho.plano_cultura.arquivo = arquivo
+    user.plano_trabalho.plano_cultura.save()
+
+    url = reverse('gestao:acompanhar_plano') + '?q=Abaete&anexo=arquivo' 
+    response = client.get(url)
 
     assert response.context_data['object_list'][0].municipio == user.municipio
-    assert response.context_data['object_list'][0].municipio.cidade.nome_municipio == 'Abaete'
+    assert response.context_data['object_list'][0].municipio.cidade.nome_municipio == 'Abaeté'
+
+    
+def test_pesquisa_por_ente_federado_com_arquivo_fundo_cultura(client, login_staff):
+    """ Testa a pesquisa pelo nome (sem acento) de um Ente Federado 
+    que tenha o arquivo Fundo Cultura aguardando análise
+    """
+    
+    arquivo = SimpleUploadedFile(
+        "orgao.txt", b"file_content", content_type="text/plain"
+    )
+
+    municipio = mommy.make('Municipio', cidade= mommy.make('Cidade', nome_municipio='Abaeté'))    
+
+    user = mommy.make('Usuario', _fill_optional=['plano_trabalho'], municipio=municipio)
+    user.estado_processo = '6'
+    user.save()
+    user.plano_trabalho.fundo_cultura = mommy.make('FundoCultura')
+    user.plano_trabalho.save()
+    user.plano_trabalho.fundo_cultura.situacao = SituacoesArquivoPlano.objects.get(pk=1)
+    user.plano_trabalho.fundo_cultura.data_envio = datetime.date(2018, 1, 1)
+    user.plano_trabalho.fundo_cultura.arquivo = arquivo
+    user.plano_trabalho.fundo_cultura.save()
+
+    url = reverse('gestao:acompanhar_fundo') + '?q=Abaete&anexo=arquivo' 
+    response = client.get(url)
+
+    assert response.context_data['object_list'][0].municipio == user.municipio
+    assert response.context_data['object_list'][0].municipio.cidade.nome_municipio == 'Abaeté'
+
+
+def test_pesquisa_por_ente_federado_com_arquivo_orgao_gestor(client, login_staff):
+    """ Testa a pesquisa pelo nome (sem acento) de um Ente Federado 
+    que tenha o arquivo Orgão Gestor aguardando análise
+    """
+    
+    arquivo = SimpleUploadedFile(
+        "orgao.txt", b"file_content", content_type="text/plain"
+    )
+
+    municipio = mommy.make('Municipio', cidade= mommy.make('Cidade', nome_municipio='Abaeté'))    
+
+    user = mommy.make('Usuario', _fill_optional=['plano_trabalho'], municipio=municipio)
+    user.estado_processo = '6'
+    user.save()
+    user.plano_trabalho.orgao_gestor = mommy.make('OrgaoGestor')
+    user.plano_trabalho.save()
+    user.plano_trabalho.orgao_gestor.situacao = SituacoesArquivoPlano.objects.get(pk=1)
+    user.plano_trabalho.orgao_gestor.data_envio = datetime.date(2018, 1, 1)
+    user.plano_trabalho.orgao_gestor.arquivo = arquivo
+    user.plano_trabalho.orgao_gestor.save()
+
+    url = reverse('gestao:acompanhar_orgao') + '?q=Abaete&anexo=arquivo' 
+    response = client.get(url)
+
+    assert response.context_data['object_list'][0].municipio == user.municipio
+    assert response.context_data['object_list'][0].municipio.cidade.nome_municipio == 'Abaeté'
+
+
+def test_pesquisa_por_ente_federado_com_arquivo_conselho_cultural(client, login_staff):
+    """ Testa a pesquisa pelo nome (sem acento) de um Ente Federado 
+    que tenha o arquivo Conselho Cultural aguardando análise
+    """
+    
+    arquivo = SimpleUploadedFile(
+        "orgao.txt", b"file_content", content_type="text/plain"
+    )
+
+    municipio = mommy.make('Municipio', cidade= mommy.make('Cidade', nome_municipio='Abaeté'))    
+
+    user = mommy.make('Usuario', _fill_optional=['plano_trabalho'], municipio=municipio)
+    user.estado_processo = '6'
+    user.save()
+    user.plano_trabalho.conselho_cultural = mommy.make('ConselhoCultural')
+    user.plano_trabalho.save()
+    user.plano_trabalho.conselho_cultural.situacao = SituacoesArquivoPlano.objects.get(pk=1)
+    user.plano_trabalho.conselho_cultural.data_envio = datetime.date(2018, 1, 1)
+    user.plano_trabalho.conselho_cultural.arquivo = arquivo
+    user.plano_trabalho.conselho_cultural.save()
+
+    url = reverse('gestao:acompanhar_conselho') + '?q=Abaete&anexo=arquivo' 
+    response = client.get(url)
+
+    assert response.context_data['object_list'][0].municipio == user.municipio
+    assert response.context_data['object_list'][0].municipio.cidade.nome_municipio == 'Abaeté'
