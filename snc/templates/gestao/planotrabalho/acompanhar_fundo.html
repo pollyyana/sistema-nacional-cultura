@@ -15,6 +15,7 @@
                       <i class="fa fa-search"></i>
                   </button>
               </span>
+              <input type="hidden" name="anexo" value="{{request.GET.anexo}}" >
           </div>
         </form>
         <div class="dataTable_wrapper">
@@ -40,7 +41,7 @@
                   <td>{{ usuario.municipio.cnpj_prefeitura }}</td>
                   <td>{{ usuario.plano_trabalho.fundo_cultura.cnpj_fundo_cultura }}</td>
                   <td>
-                    <a href="{{ usuario.plano_trabalho.fundo_cultura.lei_fundo_cultura.url }}">Download</a>
+                    <a href="{{ usuario.plano_trabalho.fundo_cultura.arquivo.url }}">Download</a>
                   </td>
                   <td>
                     <a href="{% url 'gestao:diligencia_componente' pk=usuario.plano_trabalho.id componente='fundo_cultura' resultado='0' %}"><i class="fa fa-thumbs-down"></i></a>                  

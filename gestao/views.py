@@ -90,7 +90,7 @@ class CidadeChain(autocomplete.Select2QuerySetView):
 
         if uf_pk:
             choices = Cidade.objects\
-                .filter(Q(uf__pk=uf_pk) & Q(nome_municipio__icontains=self.q))\
+                .filter(Q(uf__pk=uf_pk) & Q(nome_municipio__unaccent__icontains=self.q))\
                 .values_list('pk', 'nome_municipio', named=True)
         else:
             choices = Cidade.objects\
@@ -112,7 +112,8 @@ class UfChain(autocomplete.Select2QuerySetView):
         """ Filtra todas as uf passando nome ou sigla """
 
         choices = Uf.objects.filter(
-                    Q(sigla__iexact=self.q) | Q(nome_uf__icontains=self.q)
+                    Q(sigla__iexact=self.q) | 
+                    Q(nome_uf__unaccent__icontains=self.q)
                 ).values_list('pk', 'sigla', named=True)
         return choices
 
@@ -239,10 +240,10 @@ class AcompanharAdesao(ListView):
 
         elif ente_federado:
             municipio = Municipio.objects.filter(
-                cidade__nome_municipio__icontains=ente_federado)
+                cidade__nome_municipio__unaccent__icontains=ente_federado)
             estado = Municipio.objects.filter(
                 cidade__nome_municipio__isnull=True,
-                estado__nome_uf__icontains=ente_federado)
+                estado__nome_uf__unaccent__icontains=ente_federado)
 
             entes = municipio | estado
 
@@ -328,22 +329,20 @@ class AcompanharSistema(ListView):
     def get_queryset(self):
         anexo = self.request.GET.get('anexo', None)
         q = self.request.GET.get('q', None)
-        if not anexo:
-            raise Http404()
         usuarios = Usuario.objects.filter(estado_processo='6')
         usuarios = usuarios.exclude(plano_trabalho__criacao_sistema=None)
 
-        if anexo == 'lei_sistema_cultura':
+        if anexo == 'arquivo':
             usuarios = usuarios.filter(
                 plano_trabalho__criacao_sistema__situacao=1)
             usuarios = usuarios.exclude(
-                plano_trabalho__criacao_sistema__lei_sistema_cultura='')
+                plano_trabalho__criacao_sistema__arquivo=None)
         else:
-            raise Http404()
-
+            raise Http404    
+        
         if q:
             usuarios = usuarios.filter(
-                municipio__cidade__nome_municipio__icontains=q)
+                municipio__cidade__nome_municipio__unaccent__icontains=q)
 
         return usuarios
 
@@ -353,16 +352,25 @@ class AcompanharOrgao(ListView):
     paginate_by = 10
 
     def get_queryset(self):
+        anexo = self.request.GET.get('anexo', None)
         q = self.request.GET.get('q', None)
+        if not anexo:
+            raise Http404()
         usuarios = Usuario.objects.filter(estado_processo='6')
         usuarios = usuarios.exclude(plano_trabalho__orgao_gestor=None)
-        usuarios = usuarios.filter(
-            plano_trabalho__orgao_gestor__situacao=1)
-        usuarios = usuarios.exclude(
-            plano_trabalho__orgao_gestor__relatorio_atividade_secretaria='')
+
+        if anexo == 'arquivo':
+            usuarios = usuarios.filter(
+                plano_trabalho__orgao_gestor__situacao=1)
+            usuarios = usuarios.exclude(
+                plano_trabalho__orgao_gestor__arquivo=None)
+        else:
+            raise Http404
+
         if q:
             usuarios = usuarios.filter(
-                municipio__cidade__nome_municipio__icontains=q)
+                municipio__cidade__nome_municipio__unaccent__icontains=q)
+
         return usuarios
 
 
@@ -371,16 +379,25 @@ class AcompanharConselho(ListView):
     paginate_by = 10
 
     def get_queryset(self):
+        anexo = self.request.GET.get('anexo', None)
         q = self.request.GET.get('q', None)
+        if not anexo:
+            raise Http404()
         usuarios = Usuario.objects.filter(estado_processo='6')
         usuarios = usuarios.exclude(plano_trabalho__conselho_cultural=None)
-        usuarios = usuarios.filter(
-            plano_trabalho__conselho_cultural__situacao=1)
-        usuarios = usuarios.exclude(
-            plano_trabalho__conselho_cultural__ata_regimento_aprovado='')
+
+        if anexo == 'arquivo':
+            usuarios = usuarios.filter(
+                plano_trabalho__conselho_cultural__situacao=1)
+            usuarios = usuarios.exclude(
+                plano_trabalho__conselho_cultural__arquivo=None)
+        else:
+            raise Http404
+
         if q:
             usuarios = usuarios.filter(
-                municipio__cidade__nome_municipio__icontains=q)
+                municipio__cidade__nome_municipio__unaccent__icontains=q)
+
         return usuarios
 
 
@@ -389,16 +406,25 @@ class AcompanharFundo(ListView):
     paginate_by = 10
 
     def get_queryset(self):
+        anexo = self.request.GET.get('anexo', None)
         q = self.request.GET.get('q', None)
+        if not anexo:
+            raise Http404()
         usuarios = Usuario.objects.filter(estado_processo='6')
         usuarios = usuarios.exclude(plano_trabalho__fundo_cultura=None)
-        usuarios = usuarios.filter(
-            plano_trabalho__fundo_cultura__situacao=1)
-        usuarios = usuarios.exclude(
-            plano_trabalho__fundo_cultura__lei_fundo_cultura='')
+
+        if anexo == 'arquivo':
+            usuarios = usuarios.filter(
+                plano_trabalho__fundo_cultura__situacao=1)
+            usuarios = usuarios.exclude(
+                plano_trabalho__fundo_cultura__arquivo=None)
+        else:
+            raise Http404
+
         if q:
             usuarios = usuarios.filter(
-                municipio__cidade__nome_municipio__icontains=q)
+                municipio__cidade__nome_municipio__unaccent__icontains=q)
+
         return usuarios
 
 
@@ -414,17 +440,17 @@ class AcompanharPlano(ListView):
         usuarios = Usuario.objects.filter(estado_processo='6')
         usuarios = usuarios.exclude(plano_trabalho__plano_cultura=None)
 
-        if anexo == 'lei_plano_cultura':
+        if anexo == 'arquivo':
             usuarios = usuarios.filter(
                 plano_trabalho__plano_cultura__situacao=1)
             usuarios = usuarios.exclude(
-                plano_trabalho__plano_cultura__lei_plano_cultura='')
+                plano_trabalho__plano_cultura__arquivo=None)
         else:
-            raise Http404()
+            raise Http404
 
         if q:
             usuarios = usuarios.filter(
-                municipio__cidade__nome_municipio__icontains=q)
+                municipio__cidade__nome_municipio__unaccent__icontains=q)
 
         return usuarios
 
