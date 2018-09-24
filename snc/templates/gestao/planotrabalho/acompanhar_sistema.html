@@ -37,7 +37,7 @@
                 {% else %}
                   <td><a href="{% url 'gestao:detalhar' usuario.id %}">{{ usuario.municipio.estado.nome_uf }}</a></td>
                 {% endif %}
-                  <td>{{ usuario.municipio.cnpj_prefeitura }}</td>
+                  <td>{{ usuario.municipio.cnpj_prefeitura }} </td>
                   <td>
                     {% if request.GET.anexo == 'arquivo' %}
                     <a href="{{ usuario.plano_trabalho.criacao_sistema.arquivo.url }}">Download</a>
@@ -45,19 +45,13 @@
                     <a href="{{ usuario.plano_trabalho.criacao_sistema.arquivo.url }}">Download</a>
                     {% endif %}
                   </td>
+
                   <td>
-                    {% if request.GET.anexo == 'minuta_projeto_lei' %}
-                    <a href="{% url 'gestao:diligencia_documental' 'criacao_sistema' 'situacao_minuta' usuario.id %}"><i class="fa fa-thumbs-down"></i></a>
-                    {% else %}
-                    <a href="{% url 'gestao:diligencia_documental' 'criacao_sistema' 'situacao_lei_sistema' usuario.id %}"><i class="fa fa-thumbs-down"></i></a>
-                    {% endif %}
+                <a href="{% url 'gestao:diligencia_componente' pk=usuario.plano_trabalho.id componente='criacao_sistema' resultado='0' %}"><i class="fa fa-thumbs-down"></i></a>
+                    
                   </td>
                   <td>
-                    {% if request.GET.anexo == 'minuta_projeto_lei' %}
-                    <a href="{% url 'gestao:concluir_etapa' 'criacao_sistema' 'situacao_minuta' usuario.id %}"><i class="fa fa-thumbs-up"></i></a>
-                    {% else %}
-                    <a href="{% url 'gestao:concluir_etapa' 'criacao_sistema' 'situacao_lei_sistema' usuario.id %}"><i class="fa fa-thumbs-up"></i></a>
-                    {% endif %}
+                <a href="{% url 'gestao:diligencia_componente' pk=usuario.plano_trabalho.id componente='criacao_sistema' resultado='1' %}"><i class="fa fa-thumbs-up"></i></a>
                   </td>
                 </tr>
               {% endfor %}

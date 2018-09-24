@@ -1116,9 +1116,11 @@ def test_pesquisa_por_ente_federado_com_arquivo_lei_sistema(client, login_staff)
         "orgao.txt", b"file_content", content_type="text/plain"
     )
 
-    municipio = mommy.make('Municipio', cidade= mommy.make('Cidade', nome_municipio='Abaeté'))    
+    municipio = mommy.make('Municipio', cidade= mommy.make('Cidade', nome_municipio='Abaete'))    
 
     user = mommy.make('Usuario', _fill_optional=['plano_trabalho'], municipio=municipio)
+    user.estado_processo = '6'
+    user.save()
     user.plano_trabalho.criacao_sistema = mommy.make('CriacaoSistema')
     user.plano_trabalho.save()
     user.plano_trabalho.criacao_sistema.situacao = SituacoesArquivoPlano.objects.get(pk=1)
@@ -1126,9 +1128,10 @@ def test_pesquisa_por_ente_federado_com_arquivo_lei_sistema(client, login_staff)
     user.plano_trabalho.criacao_sistema.arquivo = arquivo
     user.plano_trabalho.criacao_sistema.save()
 
-    url = reverse('gestao:acompanhar_sistema') + '?q=Abaete&anexo=arquivo' 
+    url = reverse('gestao:acompanhar_sistema') + '?anexo=arquivo' 
     response = client.get(url)
 
+    print(response.context_data['object_list'])
 
-    assert response.context_data['object_list'][0] == user.municipio
-    assert response.context_data['object_list'][0]['cidade']['nome_municipio'] == 'Abaeté'
+    assert response.context_data['object_list'][0].municipio == user.municipio
+    assert response.context_data['object_list'][0].municipio.cidade.nome_municipio == 'Abaete'
