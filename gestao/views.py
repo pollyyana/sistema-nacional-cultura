@@ -164,10 +164,10 @@ class AcompanharPrazo(ListView):
         ente_federado = self.request.GET.get('municipio', None)
         if ente_federado:
             municipio = Usuario.objects.filter(
-                municipio__cidade__nome_municipio__icontains=ente_federado).order_by('municipio__estado__nome_uf')
+                municipio__cidade__nome_municipio__unaccent__icontains=ente_federado).order_by('municipio__estado__nome_uf')
             estado = Usuario.objects.filter(
                 municipio__cidade__isnull=True,
-                municipio__estado__nome_uf__icontains=ente_federado).order_by('municipio__estado__nome_uf')
+                municipio__estado__nome_uf__unaccent__icontains=ente_federado).order_by('municipio__estado__nome_uf')
 
             return municipio | estado
         return Usuario.objects.filter(estado_processo='6', data_publicacao_acordo__isnull=False).order_by(
@@ -533,10 +533,10 @@ class ListarDocumentosEnteFederado(ListView):
 
         if ente_federado:
             municipio = Municipio.objects.filter(
-                cidade__nome_municipio__icontains=ente_federado)
+                cidade__nome_municipio__unaccent__icontains=ente_federado)
             estado = Municipio.objects.filter(
                 cidade__nome_municipio__isnull=True,
-                estado__nome_uf__icontains=ente_federado)
+                estado__nome_uf__unaccent__icontains=ente_federado)
 
             return municipio | estado
 
@@ -567,7 +567,7 @@ class ListarDocumentosComponentes(ListView):
 
         if q:
             usuarios = usuarios.filter(
-                municipio__cidade__nome_municipio__icontains=q)
+                municipio__cidade__nome_municipio__unaccent__icontains=q)
 
         return usuarios
 
@@ -714,7 +714,7 @@ class Prorrogacao(ListView):
 
         if q:
             usuarios = usuarios.filter(
-                municipio__cidade__nome_municipio__icontains=q)
+                municipio__cidade__nome_municipio__unaccent__icontains=q)
         return usuarios
 
 
