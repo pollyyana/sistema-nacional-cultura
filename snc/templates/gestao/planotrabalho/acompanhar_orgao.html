@@ -15,6 +15,7 @@
                       <i class="fa fa-search"></i>
                   </button>
               </span>
+              <input type="hidden" name="anexo" value="{{request.GET.anexo}}" >
           </div>
         </form>
         <div class="dataTable_wrapper">
@@ -38,13 +39,13 @@
                 {% endif %}
                   <td>{{ usuario.municipio.cnpj_prefeitura }}</td>
                   <td>
-                    <a href="{{ usuario.plano_trabalho.orgao_gestor.relatorio_atividade_secretaria.url }}">Download</a>
+                    <a href="{{ usuario.plano_trabalho.orgao_gestor.arquivo.url }}">Download</a>
                   </td>
                   <td>
-                    <a href="{% url 'gestao:diligencia_documental' 'orgao_gestor' 'situacao_relatorio_secretaria' usuario.id %}"><i class="fa fa-thumbs-down"></i></a>
+                    <a href="{% url 'gestao:diligencia_componente' pk=usuario.plano_trabalho.id componente='orgao_gestor' resultado='0' %}"><i class="fa fa-thumbs-down"></i></a>      
                   </td>
                   <td>
-                    <a href="{% url 'gestao:concluir_etapa' 'orgao_gestor' 'situacao_relatorio_secretaria' usuario.id %}"><i class="fa fa-thumbs-up"></i></a>
+                    <a href="{% url 'gestao:diligencia_componente' pk=usuario.plano_trabalho.id componente='orgao_gestor' resultado='1' %}"><i class="fa fa-thumbs-up"></i></a>
                   </td>
                 </tr>
               {% endfor %}

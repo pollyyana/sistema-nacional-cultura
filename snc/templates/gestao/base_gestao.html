@@ -114,57 +114,37 @@
                            <div class="collapse" id="plano_trabalho" style="height: 0px;">
                            <ul class="nav nav-second-level">
                              <li>
-                               <a href="#" data-toggle="collapse" data-target="#sistema_cultura">  Sistema de Cultura<span class="fa arrow"></span>
+                               <a href="{% url 'gestao:acompanhar_sistema' %}?anexo=arquivo" >  
+                                Lei - Sistema de Cultura
                                </a>
-                               <div class="collapse" id="sistema_cultura" style="height: 0px;">
-                                 <ul class="nav nav-third-level">
-                                   <li><a href="{% url 'gestao:acompanhar_sistema' %}?anexo=lei_sistema_cultura">Lei</a></li>
-                                 </ul>
-                               </div>
+                            
                              </li>
 
                                <li>
-                                 <a href="#" data-toggle="collapse" data-target="#orgao">
-                                   Órgão Gestor<span class="fa arrow"></span>
+                                 <a href="{% url 'gestao:acompanhar_orgao' %}?anexo=arquivo">
+                                  Ato Normativo - Órgão Gestor
                                  </a>
-                                 <div class="collapse" id="orgao" style="height: 0px;">
-                                   <ul class="nav nav-third-level">
-                                     <li><a href="{% url 'gestao:acompanhar_orgao' %}">Ato normativo</a></li>
-                                   </ul>
-                                 </div>
+                                
                                </li>
 
                                <li>
-                                 <a href="#" data-toggle="collapse" data-target="#conselho">
-                                   Conselho Cultural<span class="fa arrow"></span>
+                                 <a href="{% url 'gestao:acompanhar_conselho' %}?anexo=arquivo">
+                                  Ata - Conselho Cultural
                                  </a>
-                                 <div class="collapse" id="conselho" style="height: 0px;">
-                                   <ul class="nav nav-third-level">
-                                     <li><a href="{% url 'gestao:acompanhar_conselho' %}">Ata</a></li>
-                                   </ul>
-                                 </div>
+                                 
                                </li>
 
                                <li>
-                                 <a href="#" data-toggle="collapse" data-target="#fundo">
-                                   Fundo de Cultura<span class="fa arrow"></span>
+                                 <a href="{% url 'gestao:acompanhar_fundo' %}?anexo=arquivo">
+                                  Lei - Fundo de Cultura
                                  </a>
-                                 <div class="collapse" id="fundo" style="height: 0px;">
-                                   <ul class="nav nav-third-level">
-                                     <li><a href="{% url 'gestao:acompanhar_fundo' %}">Lei</a></li>
-                                   </ul>
-                                 </div>
                              </li>
 
                              <li>
-                               <a href="#" data-toggle="collapse" data-target="#plano_cultura">
-                                 Plano de Cultura<span class="fa arrow"></span>
-                               </a>
-                               <div class="collapse" id="plano_cultura" style="height: 0px;">
-                                 <ul class="nav nav-third-level">
-                                   <li><a href="{% url 'gestao:acompanhar_plano' %}?anexo=lei_plano_cultura">Lei</a></li>
-                                 </ul>
-                               </div>
+                               <a href="{% url 'gestao:acompanhar_plano' %}?anexo=arquivo">
+                                Lei - Plano de Cultura
+                               </a> 
+                               
                              </li>
                            </ul>
                           </div>
@@ -177,58 +157,33 @@
                           <div class="collapse" id="inserir_documentos" style="height: 0px;">
                             <ul class="nav nav-second-level">
                                 <li>
-                                  <a href="#" data-toggle="collapse" data-target="#sistemacult">
-                                    Sistema de Cultura<span class="fa arrow"></span>
+                                  <a href="{% url 'gestao:listar_documentos' template='listar_sistemas' %}" data-toggle="collapse" data-target="#sistemacult">
+                                  Lei - Sistema de Cultura
                                   </a>
-                                <div class="collapse" id="sistemacult" style="height: 0px;">
-                                  <ul class="nav nav-third-level">
-                                    <li><a href="{% url 'gestao:listar_documentos' template='listar_sistemas' %}">Lei</a></li>
-                                  </ul>
-                                </div>
                               </li>
 
                               <li>
-                                <a href="#" data-toggle="collapse" data-target="#orgaogestor">
-                                  Órgão Gestor<span class="fa arrow"></span>
+                                <a href="{% url 'gestao:listar_documentos' template='listar_orgaos' %}" data-toggle="collapse" data-target="#orgaogestor">
+                                Ato normativo - Órgão Gestor
                                 </a>
-                                <div class="collapse" id="orgaogestor" style="height: 0px;">
-                                  <ul class="nav nav-third-level">
-                                    <li><a href="{% url 'gestao:listar_documentos' template='listar_orgaos' %}">Ato normativo</a></li>
-                                  </ul>
-                                </div>
                               </li>
 
                               <li>
-                                <a  href="#" data-toggle="collapse" data-target="#conselhocult">
-                                  Conselho Cultural<span class="fa arrow"></span>
+                                <a  href="{% url 'gestao:listar_documentos' template='listar_conselhos' %}" data-toggle="collapse" data-target="#conselhocult">
+                                Ata - Conselho Cultural
                                 </a>
-                                <div class="collapse" id="conselhocult" style="height: 0px;">
-                                  <ul class="nav nav-third-level">
-                                    <li><a href="{% url 'gestao:listar_documentos' template='listar_conselhos' %}">Ata</a></li>
-                                  </ul>
-                                </div>
                               </li>
 
                               <li>
-                                <a href="#" data-toggle="collapse" data-target="#fundocult">
-                                  Fundo de Cultura<span class="fa arrow"></span>
+                                <a href="{% url 'gestao:listar_documentos' template='listar_fundos' %}" data-toggle="collapse" data-target="#fundocult">
+                                Lei - Fundo de Cultura
                                 </a>
-                                <div class="collapse" id="fundocult" style="height: 0px;">
-                                  <ul class="nav nav-third-level">
-                                    <li><a href="{% url 'gestao:listar_documentos' template='listar_fundos' %}">Lei</a></li>
-                                  </ul>
-                                </div>
                               </li>
 
                               <li>
-                                <a href="#" data-toggle="collapse" data-target="#planocult">
-                                  Plano de Cultura<span class="fa arrow"></span>
+                                <a href="{% url 'gestao:listar_documentos' template='listar_planos' %}" data-toggle="collapse" data-target="#planocult">
+                                Lei - Plano de Cultura
                                 </a>
-                                <div class="collapse" id="planocult" style="height: 0px;" >
-                                  <ul class="nav nav-third-level">
-                                    <li><a href="{% url 'gestao:listar_documentos' template='listar_planos' %}">Lei</a></li>
-                                  </ul>
-                                </div>
                               </li>
 
                               <li>
