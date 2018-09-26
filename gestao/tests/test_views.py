@@ -1332,3 +1332,58 @@ def test_pesquisa_por_ente_federado_inserir_documentos_listar_planos(client, log
 
     assert response.context_data['object_list'][0].municipio == user.municipio
     assert response.context_data['object_list'][0].municipio.cidade.nome_municipio == 'Abaeté'
+
+
+def test_adicionar_prazo_permanecendo_na_mesma_pagina_apos_redirect(client, login_staff):
+    """ Testa se ao adicionar prazo a um Ente Federado, a tela permanecerá na mesma página (verificação pela url) """
+
+    users = mommy.make('Usuario', _fill_optional=['plano_trabalho', 'municipio'], _quantity=15)
+    
+    for user in users:
+        user.estado_processo = '6'
+        user.data_publicacao_acordo = datetime.date(2018, 1, 1)    
+        user.save()
+
+    page = 2
+
+    url = reverse('gestao:aditivar_prazo', kwargs={'id': str(users[14].id), 'page': str(page)})
+    request = client.post(url)
+
+    assert request.url == '/gestao/acompanhar/prazo/?page={}'.format(page)
+    assert request.status_code == 302
+
+
+def test_se_o_ente_permanece_na_mesma_pagina_apos_adicionar_prazo(client, login_staff):
+    """ Testa se ao adicionar prazo a um Ente Federado, o Ente permanecerá na mesma página após
+    sucesso ao adicionar prazo (verificação pelo id do usuário na lista de entes)"""
+
+    resposta_ok = False
+    users = mommy.make('Usuario', prazo=2, _fill_optional=['plano_trabalho'], _quantity=20)
+    
+    for user in users:
+        user.estado_processo = '6'
+        user.save()
+        user.data_publicacao_acordo = datetime.date(2018, 1, 1)    
+        user.save()
+        uf = mommy.make('Uf', nome_uf='Acre', sigla='AC')
+        cidade = mommy.make('Cidade', uf=uf)
+        user.municipio = mommy.make('Municipio', estado=uf, cidade=cidade, cnpj_prefeitura='13.348.479/0001-01')
+        user.save()
+
+    users[0].municipio.cidade.nome_municipio = 'Aaa'
+    users[0].save()
+    
+    url = reverse('gestao:aditivar_prazo', kwargs={'id': str(users[0].id), 'page': '1'})
+    request = client.post(url)
+    url_apos_redirect = request.url
+
+    response = client.get(url_apos_redirect)
+    
+    if users[0] in response.context_data['object_list']:
+        resposta_ok = True
+    
+    assert resposta_ok == True
+    assert request.status_code == 302
+    
+
+
