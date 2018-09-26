@@ -171,7 +171,7 @@ class AcompanharPrazo(ListView):
 
             return municipio | estado
         return Usuario.objects.filter(estado_processo='6', data_publicacao_acordo__isnull=False).order_by(
-            'municipio__estado__nome_uf')
+            'municipio__estado__nome_uf', 'municipio__cidade__nome_municipio')
 
 
 def aditivar_prazo(request, id,page):
