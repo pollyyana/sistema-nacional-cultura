@@ -1386,4 +1386,21 @@ def test_se_o_ente_permanece_na_mesma_pagina_apos_adicionar_prazo(client, login_
     assert request.status_code == 302
     
 
+def test_pesquisa_de_ente_federado_sem_acento_tela_adicionar_prazo(client, login_staff):
+    """ Testa a pesquisa por nome do ente federado (sem acento) - Deve retornar o nome
+    com o acento normalmente """
+
+    municipio = mommy.make('Municipio', cidade= mommy.make('Cidade', nome_municipio='Acrelândia'))    
+
+    user = mommy.make('Usuario', _fill_optional=['plano_trabalho'], municipio=municipio)
+    user.estado_processo = '6'
+    user.save()
+    user.data_publicacao_acordo = datetime.date(2018, 1, 1)
+    user.save()
+
+    url = reverse('gestao:acompanhar_prazo') + '?municipio=Acrelandia'
+    response = client.get(url)
+
+    assert response.context_data['object_list'][0].municipio == user.municipio
+    assert response.context_data['object_list'][0].municipio.cidade.nome_municipio == 'Acrelândia'
 
