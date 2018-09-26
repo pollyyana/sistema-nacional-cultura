@@ -903,7 +903,7 @@ def test_acompanhar_adesao_ordenar_data_um_componente_por_plano(client, login_st
     user_com_analise_antigo.plano_trabalho.fundo_cultura.data_envio = datetime.date(2016, 1, 1)
     user_com_analise_antigo.plano_trabalho.fundo_cultura.save()
 
-    url = reverse('gestao:acompanhar_prazo') + '?page=' + page
+    url = reverse('gestao:acompanhar_prazo' + '?page=' + '1')
     response = client.get(url)
 
     assert response.context_data['object_list'][0] == user_sem_analise_antigo.municipio
