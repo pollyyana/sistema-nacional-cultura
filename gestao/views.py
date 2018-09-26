@@ -174,9 +174,10 @@ class AcompanharPrazo(ListView):
             'municipio__estado__nome_uf')
 
 
-def aditivar_prazo(request, id):
+def aditivar_prazo(request, id,page):
     if request.method == "POST":
         user = Usuario.objects.get(id=id)
+        print(page)
         user.prazo = user.prazo + 1
         user.save()
 
