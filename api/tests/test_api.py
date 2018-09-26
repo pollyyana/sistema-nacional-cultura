@@ -1285,5 +1285,16 @@ def test_pesquisa_por_nome_municipio_para_municipios_com_acento_no_nome(client):
     url = url_sistemadeculturalocal + nome_municipio_param
 
     request = client.get(url, content_type="application/hal+json")
-    assert len(request.data["_embedded"]["items"]) == 0
+    assert len(request.data["_embedded"]["items"]) == 1
     assert request.data["_embedded"]["items"][0]["ente_federado"]["localizacao"]["cidade"]["nome_municipio"] == 'Acrelândia'
+
+def test_pesquisa_por_nome_estado_para_estados_com_acento_no_nome(client):
+    ''' Pesquisa (sem acento) o nome de um municpio que tenha acento - Deve retornar normalmente'''
+    mommy.make('Municipio', estado=mommy.make('Uf', nome_uf='Goiás'))
+
+    nome_municipio_param = '?nome_uf={}'.format('Goias')
+
+    url = url_sistemadeculturalocal + nome_municipio_param
+
+    request = client.get(url, content_type="application/hal+json")
+    assert request.data["_embedded"]["items"][0]["ente_federado"]["localizacao"]['estado']['nome_uf'] == 'Goiás'
