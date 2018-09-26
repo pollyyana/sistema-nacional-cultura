@@ -190,7 +190,7 @@ def aditivar_prazo(request, id,page):
         messages.success(request, message)
 
 
-    return redirect('gestao:acompanhar_prazo')
+    return redirect(reverse_lazy('gestao:acompanhar_prazo') + '?page=' + page)
 
 
 class AcompanharAdesao(ListView):
