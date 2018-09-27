@@ -1358,22 +1358,17 @@ def test_se_o_ente_permanece_na_mesma_pagina_apos_adicionar_prazo(client, login_
     sucesso ao adicionar prazo (verificação pelo id do usuário na lista de entes)"""
 
     resposta_ok = False
-    users = mommy.make('Usuario', prazo=2, _fill_optional=['plano_trabalho'], _quantity=20)
-    primeira = 1
-    
-    for user in users:
-        user.estado_processo = '6'
-        user.save()
-        user.data_publicacao_acordo = datetime.date(2018, 1, 1)    
-        user.save()
-        uf = mommy.make('Uf', nome_uf='Acre', sigla='AC')
+    uf = mommy.make('Uf', nome_uf='Acre', sigla='AC')
 
-        if primeira:
-            cidade = mommy.make('Cidade', uf=uf, nome_municipio='AAAAAAAAAAAA') 
-            primeira = 0 
-        else:  
-            cidade = mommy.make('Cidade', uf=uf)
-        user.municipio = mommy.make('Municipio', estado=uf, cidade=cidade, cnpj_prefeitura='13.348.479/0001-01')
+    users = mommy.make('Usuario', prazo=2, estado_processo=6 , data_publicacao_acordo = datetime.date(2018, 1, 1),
+                        _fill_optional=['plano_trabalho'], _quantity=20)
+                        
+    users[0].municipio = mommy.make('Municipio', cidade=mommy.make('Cidade', nome_municipio='AAAAAA', uf=uf), 
+                                    estado=uf, cnpj_prefeitura='13.348.479/0001-01')
+    users[0].save()
+
+    for user in users[1:19]:
+        user.municipio = mommy.make('Municipio', estado=uf, cidade=mommy.make('Cidade', uf=uf), cnpj_prefeitura='13.348.479/0001-01')
         user.save()
     
     url = reverse('gestao:aditivar_prazo', kwargs={'id': str(users[0].id), 'page': '1'})
@@ -1381,7 +1376,6 @@ def test_se_o_ente_permanece_na_mesma_pagina_apos_adicionar_prazo(client, login_
     url_apos_redirect = request.url
 
     response = client.get(url_apos_redirect)
-
     
     if users[0] in response.context_data['object_list']:
         resposta_ok = True
