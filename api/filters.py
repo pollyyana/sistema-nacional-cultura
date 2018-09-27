@@ -11,8 +11,8 @@ from planotrabalho.models import SituacoesArquivoPlano
 class MunicipioFilter(filters.FilterSet):
 
     estado_sigla = filters.CharFilter(field_name='estado__sigla', lookup_expr='iexact')
-    nome_uf = filters.CharFilter(field_name='estado__nome_uf', lookup_expr='iexact')
-    nome_municipio = filters.CharFilter(field_name='cidade__nome_municipio', lookup_expr='iexact')
+    nome_uf = filters.CharFilter(field_name='estado__nome_uf__unaccent', lookup_expr='iexact')
+    nome_municipio = filters.CharFilter(field_name='cidade__nome_municipio__unaccent', lookup_expr='iexact')
     situacao_adesao = filters.CharFilter(field_name='usuario__estado_processo',
                                          lookup_expr='istartswith')
     data_adesao = filters.DateFilter(field_name='usuario__data_publicacao_acordo')
@@ -49,7 +49,10 @@ class MunicipioFilter(filters.FilterSet):
         return queryset.filter(
                 Q(estado__sigla__istartswith=value) |
                 Q(estado__nome_uf__istartswith=value) |
-                Q(cidade__nome_municipio__istartswith=value))
+                Q(estado__nome_uf__unaccent__icontains=value) |
+                Q(cidade__nome_municipio__istartswith=value) |
+                Q(cidade__nome_municipio__unaccent__icontains=value)
+                )
 
     def estadual_filter(self, queryset, name, value):
 
