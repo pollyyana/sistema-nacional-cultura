@@ -40,7 +40,11 @@
                   <td>{{ usuario.municipio.estado.nome_uf }}</td>
                 {% endif %}
                   <td>{{ usuario.municipio.cnpj_prefeitura }}</td>
+                  {%if usuario.plano_trabalho.fundo_cultura.cnpj_fundo_cultura %}
                   <td>{{ usuario.plano_trabalho.fundo_cultura.cnpj_fundo_cultura }}</td>
+                  {% else %}
+                  <td></td>
+                  {% endif %}
                   <td>{{ usuario.plano_trabalho.fundo_cultura.data_final_instituicao_fundo_cultura }}</td>
                   <td>
                     {% if usuario.plano_trabalho.fundo_cultura.arquivo %}
