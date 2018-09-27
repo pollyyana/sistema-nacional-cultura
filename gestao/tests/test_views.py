@@ -1359,19 +1359,20 @@ def test_se_o_ente_permanece_na_mesma_pagina_apos_adicionar_prazo(client, login_
 
     resposta_ok = False
     users = mommy.make('Usuario', prazo=2, _fill_optional=['plano_trabalho'], _quantity=20)
-    
+    primeira = 1
     for user in users:
         user.estado_processo = '6'
         user.save()
         user.data_publicacao_acordo = datetime.date(2018, 1, 1)    
         user.save()
         uf = mommy.make('Uf', nome_uf='Acre', sigla='AC')
-        cidade = mommy.make('Cidade', uf=uf)
+        if primeira:
+            cidade = mommy.make('Cidade', uf=uf, nome_municipio='AAAAAAAAAAAA') 
+            primeira = 0 
+        else:  
+            cidade = mommy.make('Cidade', uf=uf)
         user.municipio = mommy.make('Municipio', estado=uf, cidade=cidade, cnpj_prefeitura='13.348.479/0001-01')
         user.save()
-
-    users[0].municipio.cidade.nome_municipio = 'Aaa'
-    users[0].save()
     
     url = reverse('gestao:aditivar_prazo', kwargs={'id': str(users[0].id), 'page': '1'})
     request = client.post(url)
