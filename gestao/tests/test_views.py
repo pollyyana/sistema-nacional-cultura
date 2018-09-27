@@ -1245,3 +1245,90 @@ def test_pesquisa_por_ente_federado_com_arquivo_conselho_cultural(client, login_
 
     assert response.context_data['object_list'][0].municipio == user.municipio
     assert response.context_data['object_list'][0].municipio.cidade.nome_municipio == 'Abaeté'
+
+
+def test_pesquisa_por_ente_federado_inserir_documentos_listar_sistemas(client, login_staff):
+    """ Testa a pesquisa pelo nome (sem acento) de um Ente Federado na tela
+    de listar documentos de sistemas de Cultura
+    """
+    
+    municipio = mommy.make('Municipio', cidade= mommy.make('Cidade', nome_municipio='Abaeté'))    
+
+    user = mommy.make('Usuario', _fill_optional=['plano_trabalho'], municipio=municipio)
+    user.estado_processo = '6'
+    user.save()
+
+    url = reverse('gestao:listar_documentos', kwargs={'template': 'listar_sistemas'}) + '?q=Abaete' 
+    response = client.get(url)
+
+    assert response.context_data['object_list'][0].municipio == user.municipio
+    assert response.context_data['object_list'][0].municipio.cidade.nome_municipio == 'Abaeté'
+
+
+def test_pesquisa_por_ente_federado_inserir_documentos_listar_orgaos(client, login_staff):
+    """ Testa a pesquisa pelo nome (sem acento) de um Ente Federado na tela
+    de listar documentos de Ogãos
+    """
+    
+    municipio = mommy.make('Municipio', cidade= mommy.make('Cidade', nome_municipio='Abaeté'))    
+
+    user = mommy.make('Usuario', _fill_optional=['plano_trabalho'], municipio=municipio)
+    user.estado_processo = '6'
+    user.save()
+
+    url = reverse('gestao:listar_documentos', kwargs={'template': 'listar_orgaos'}) + '?q=Abaete' 
+    response = client.get(url)
+
+    assert response.context_data['object_list'][0].municipio == user.municipio
+    assert response.context_data['object_list'][0].municipio.cidade.nome_municipio == 'Abaeté'
+
+
+def test_pesquisa_por_ente_federado_inserir_documentos_listar_conselhos(client, login_staff):
+    """ Testa a pesquisa pelo nome (sem acento) de um Ente Federado na tela de listar documentos de Conselhos
+    """
+    
+    municipio = mommy.make('Municipio', cidade= mommy.make('Cidade', nome_municipio='Abaeté'))    
+
+    user = mommy.make('Usuario', _fill_optional=['plano_trabalho'], municipio=municipio)
+    user.estado_processo = '6'
+    user.save()
+
+    url = reverse('gestao:listar_documentos', kwargs={'template': 'listar_conselhos'}) + '?q=Abaete' 
+    response = client.get(url)
+
+    assert response.context_data['object_list'][0].municipio == user.municipio
+    assert response.context_data['object_list'][0].municipio.cidade.nome_municipio == 'Abaeté'
+
+
+def test_pesquisa_por_ente_federado_inserir_documentos_listar_fundos(client, login_staff):
+    """ Testa a pesquisa pelo nome (sem acento) de um Ente Federado na tela de listar documentos de fundos
+    """
+    
+    municipio = mommy.make('Municipio', cidade= mommy.make('Cidade', nome_municipio='Abaeté'))    
+
+    user = mommy.make('Usuario', _fill_optional=['plano_trabalho'], municipio=municipio)
+    user.estado_processo = '6'
+    user.save()
+
+    url = reverse('gestao:listar_documentos', kwargs={'template': 'listar_fundos'}) + '?q=Abaete' 
+    response = client.get(url)
+
+    assert response.context_data['object_list'][0].municipio == user.municipio
+    assert response.context_data['object_list'][0].municipio.cidade.nome_municipio == 'Abaeté'
+
+
+def test_pesquisa_por_ente_federado_inserir_documentos_listar_planos(client, login_staff):
+    """ Testa a pesquisa pelo nome (sem acento) de um Ente Federado na tela de listar documentos de planos de Cultura
+    """
+    
+    municipio = mommy.make('Municipio', cidade= mommy.make('Cidade', nome_municipio='Abaeté'))    
+
+    user = mommy.make('Usuario', _fill_optional=['plano_trabalho'], municipio=municipio)
+    user.estado_processo = '6'
+    user.save()
+
+    url = reverse('gestao:listar_documentos', kwargs={'template': 'listar_planos'}) + '?q=Abaete' 
+    response = client.get(url)
+
+    assert response.context_data['object_list'][0].municipio == user.municipio
+    assert response.context_data['object_list'][0].municipio.cidade.nome_municipio == 'Abaeté'
