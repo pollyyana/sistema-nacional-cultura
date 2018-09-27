@@ -18,7 +18,7 @@ urlpatterns = [
     # Acompanhar e aditivar prazos dos municípios
     url(r'^acompanhar/prazo/',
         staff_member_required(views.AcompanharPrazo.as_view()), name='acompanhar_prazo'),
-    url(r'^aditivar/prazo/(?P<id>[\w]+)$',
+     url(r'^aditivar/prazo/(?P<id>[\w]+)/(?P<page>[\w]+)$',
         staff_member_required(views.aditivar_prazo, login_url='adesao:login'), name='aditivar_prazo'),
     # Acompanhar criação do sistema de cultura
     url(r'^acompanhar/sistema$', staff_member_required(

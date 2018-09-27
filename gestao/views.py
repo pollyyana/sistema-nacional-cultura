@@ -171,12 +171,13 @@ class AcompanharPrazo(ListView):
 
             return municipio | estado
         return Usuario.objects.filter(estado_processo='6', data_publicacao_acordo__isnull=False).order_by(
-            'municipio__estado__nome_uf')
+            'municipio__estado__nome_uf', 'municipio__cidade__nome_municipio')
 
 
-def aditivar_prazo(request, id):
+def aditivar_prazo(request, id,page):
     if request.method == "POST":
         user = Usuario.objects.get(id=id)
+        print(page)
         user.prazo = user.prazo + 1
         user.save()
 
@@ -189,7 +190,7 @@ def aditivar_prazo(request, id):
         messages.success(request, message)
 
 
-    return redirect('gestao:acompanhar_prazo')
+    return redirect(reverse_lazy('gestao:acompanhar_prazo') + '?page=' + page)
 
 
 class AcompanharAdesao(ListView):
