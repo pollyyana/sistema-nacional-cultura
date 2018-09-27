@@ -1247,6 +1247,93 @@ def test_pesquisa_por_ente_federado_com_arquivo_conselho_cultural(client, login_
     assert response.context_data['object_list'][0].municipio.cidade.nome_municipio == 'Abaeté'
 
 
+def test_pesquisa_por_ente_federado_inserir_documentos_listar_sistemas(client, login_staff):
+    """ Testa a pesquisa pelo nome (sem acento) de um Ente Federado na tela
+    de listar documentos de sistemas de Cultura
+    """
+    
+    municipio = mommy.make('Municipio', cidade= mommy.make('Cidade', nome_municipio='Abaeté'))    
+
+    user = mommy.make('Usuario', _fill_optional=['plano_trabalho'], municipio=municipio)
+    user.estado_processo = '6'
+    user.save()
+
+    url = reverse('gestao:listar_documentos', kwargs={'template': 'listar_sistemas'}) + '?q=Abaete' 
+    response = client.get(url)
+
+    assert response.context_data['object_list'][0].municipio == user.municipio
+    assert response.context_data['object_list'][0].municipio.cidade.nome_municipio == 'Abaeté'
+
+
+def test_pesquisa_por_ente_federado_inserir_documentos_listar_orgaos(client, login_staff):
+    """ Testa a pesquisa pelo nome (sem acento) de um Ente Federado na tela
+    de listar documentos de Ogãos
+    """
+    
+    municipio = mommy.make('Municipio', cidade= mommy.make('Cidade', nome_municipio='Abaeté'))    
+
+    user = mommy.make('Usuario', _fill_optional=['plano_trabalho'], municipio=municipio)
+    user.estado_processo = '6'
+    user.save()
+
+    url = reverse('gestao:listar_documentos', kwargs={'template': 'listar_orgaos'}) + '?q=Abaete' 
+    response = client.get(url)
+
+    assert response.context_data['object_list'][0].municipio == user.municipio
+    assert response.context_data['object_list'][0].municipio.cidade.nome_municipio == 'Abaeté'
+
+
+def test_pesquisa_por_ente_federado_inserir_documentos_listar_conselhos(client, login_staff):
+    """ Testa a pesquisa pelo nome (sem acento) de um Ente Federado na tela de listar documentos de Conselhos
+    """
+    
+    municipio = mommy.make('Municipio', cidade= mommy.make('Cidade', nome_municipio='Abaeté'))    
+
+    user = mommy.make('Usuario', _fill_optional=['plano_trabalho'], municipio=municipio)
+    user.estado_processo = '6'
+    user.save()
+
+    url = reverse('gestao:listar_documentos', kwargs={'template': 'listar_conselhos'}) + '?q=Abaete' 
+    response = client.get(url)
+
+    assert response.context_data['object_list'][0].municipio == user.municipio
+    assert response.context_data['object_list'][0].municipio.cidade.nome_municipio == 'Abaeté'
+
+
+def test_pesquisa_por_ente_federado_inserir_documentos_listar_fundos(client, login_staff):
+    """ Testa a pesquisa pelo nome (sem acento) de um Ente Federado na tela de listar documentos de fundos
+    """
+    
+    municipio = mommy.make('Municipio', cidade= mommy.make('Cidade', nome_municipio='Abaeté'))    
+
+    user = mommy.make('Usuario', _fill_optional=['plano_trabalho'], municipio=municipio)
+    user.estado_processo = '6'
+    user.save()
+
+    url = reverse('gestao:listar_documentos', kwargs={'template': 'listar_fundos'}) + '?q=Abaete' 
+    response = client.get(url)
+
+    assert response.context_data['object_list'][0].municipio == user.municipio
+    assert response.context_data['object_list'][0].municipio.cidade.nome_municipio == 'Abaeté'
+
+
+def test_pesquisa_por_ente_federado_inserir_documentos_listar_planos(client, login_staff):
+    """ Testa a pesquisa pelo nome (sem acento) de um Ente Federado na tela de listar documentos de planos de Cultura
+    """
+    
+    municipio = mommy.make('Municipio', cidade= mommy.make('Cidade', nome_municipio='Abaeté'))    
+
+    user = mommy.make('Usuario', _fill_optional=['plano_trabalho'], municipio=municipio)
+    user.estado_processo = '6'
+    user.save()
+
+    url = reverse('gestao:listar_documentos', kwargs={'template': 'listar_planos'}) + '?q=Abaete' 
+    response = client.get(url)
+
+    assert response.context_data['object_list'][0].municipio == user.municipio
+    assert response.context_data['object_list'][0].municipio.cidade.nome_municipio == 'Abaeté'
+
+
 def test_adicionar_prazo_permanecendo_na_mesma_pagina_apos_redirect(client, login_staff):
     """ Testa se ao adicionar prazo a um Ente Federado, a tela permanecerá na mesma página (verificação pela url) """
 
@@ -1272,6 +1359,7 @@ def test_se_o_ente_permanece_na_mesma_pagina_apos_adicionar_prazo(client, login_
 
     resposta_ok = False
     users = mommy.make('Usuario', prazo=2, _fill_optional=['plano_trabalho'], _quantity=20)
+    primeira = 1
     
     for user in users:
         user.estado_processo = '6'
@@ -1279,24 +1367,28 @@ def test_se_o_ente_permanece_na_mesma_pagina_apos_adicionar_prazo(client, login_
         user.data_publicacao_acordo = datetime.date(2018, 1, 1)    
         user.save()
         uf = mommy.make('Uf', nome_uf='Acre', sigla='AC')
-        cidade = mommy.make('Cidade', uf=uf)
+
+        if primeira:
+            cidade = mommy.make('Cidade', uf=uf, nome_municipio='AAAAAAAAAAAA') 
+            primeira = 0 
+        else:  
+            cidade = mommy.make('Cidade', uf=uf)
         user.municipio = mommy.make('Municipio', estado=uf, cidade=cidade, cnpj_prefeitura='13.348.479/0001-01')
         user.save()
-
-    users[0].municipio.cidade.nome_municipio = 'Aaa'
-    users[0].save()
     
     url = reverse('gestao:aditivar_prazo', kwargs={'id': str(users[0].id), 'page': '1'})
     request = client.post(url)
     url_apos_redirect = request.url
 
     response = client.get(url_apos_redirect)
+
     
     if users[0] in response.context_data['object_list']:
         resposta_ok = True
     
     assert resposta_ok == True
     assert request.status_code == 302
+    assert response.context_data['object_list'][0] == users[0]
     
 
 def test_pesquisa_de_ente_federado_sem_acento_tela_adicionar_prazo(client, login_staff):
