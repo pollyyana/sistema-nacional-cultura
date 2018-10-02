@@ -40,13 +40,7 @@
       <!-- Navigation -->
       <nav class="navbar navbar-default navbar-static-top" role="navigation" style="margin-bottom: 0">
           <div class="navbar-header">
-              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
-                  <span class="sr-only">Toggle navigation</span>
-                  <span class="icon-bar"></span>
-                  <span class="icon-bar"></span>
-                  <span class="icon-bar"></span>
-              </button>
-              <a class="navbar-brand" href="{% url 'gestao:acompanhar_adesao' %}" >SNC</a>
+              <a class="navbar-brand nav-link" href="{% url 'gestao:acompanhar_adesao' %}" >SNC</a>
           </div>
           <!-- /.navbar-header -->
 
@@ -71,7 +65,7 @@
           <div class="navbar-default sidebar" role="navigation">
               <div class="sidebar-nav navbar-collapse">
                   <ul class="nav" id="side-menu">
-                      <li class="sidebar-search">
+                      <li class="sidebar-search nav-item">
                           <div class="input-group custom-search-form">
                             <form action="{% url 'gestao:acompanhar_adesao' %}" method="get">
                               <input type="text" name="municipio" class="form-control" placeholder="Buscar...">
@@ -87,30 +81,30 @@
                       <!--<li>
                         <a href="#"><i class="fa fa-dashboard fa-fw"></i>  Dashboard</a>
                       </li>-->
-                      <li>
-                        <a href="{% url 'gestao:acompanhar_adesao' %}">Início</a>
+                      <li class="nav-item">
+                        <a class="nav-link" href="{% url 'gestao:acompanhar_adesao' %}">Início</a>
                       </li>
-                      <li>
-                        <a href="{% url 'gestao:usuarios' %}">Usuários</a>
+                      <li class="nav-item">
+                        <a class="nav-link" href="{% url 'gestao:usuarios' %}">Usuários</a>
                       </li>
-                      <li>
-                        <a href="{% url 'gestao:acompanhar_prazo' %}">
+                      <li class="nav-item">
+                        <a class="nav-link" href="{% url 'gestao:acompanhar_prazo' %}">
                           Alterar Prazos
                         </a>
                       </li>
-                      <li>
-                        <a href="{% url 'exportar_ods' %}">Exportar Planilha ODS</a>
+                      <li class="nav-item">
+                        <a class="nav-link" href="{% url 'exportar_ods' %}">Exportar Planilha ODS</a>
                       </li>
-                      <li>
-                        <a href="{% url 'exportar_xls' %}">Exportar Planilha XLS</a>
+                      <li class="nav-item">
+                        <a class="nav-link" href="{% url 'exportar_xls' %}">Exportar Planilha XLS</a>
                       </li>
-                      <li class="active">
-                        <a href="{% url 'gestao:alterar_cadastrador' %}"><i class="fa fa-exchange fa-fw"></i>  Alterar Cadastradores</a>
+                      <li class="active nav-item">
+                        <a class="nav-link" href="{% url 'gestao:alterar_cadastrador' %}"><i class="fa fa-exchange fa-fw"></i>  Alterar Cadastradores</a>
                       </li>
                         
                          <!-- Acompanhamento da execução do Plano de Trabalho -->
-                          <li>
-                           <a href="#" data-toggle="collapse" data-target="#plano_trabalho"><i class="fa fa-sitemap fa-fw"></i>  Plano de Trabalho<span class="fa arrow"></span></a>
+                          <li class="nav-item">
+                           <a class="nav-link" href="#" data-toggle="collapse" data-target="#plano_trabalho"><i class="fa fa-sitemap fa-fw"></i>  Plano de Trabalho<span class="fa arrow"></span></a>
                            <div class="collapse" id="plano_trabalho" style="height: 0px;">
                            <ul class="nav nav-second-level">
                              <li>
@@ -152,8 +146,8 @@
 
                         <!-- Inserção de documentos faltantes-->
 
-                        <li>
-                          <a href="#" data-toggle="collapse" data-target="#inserir_documentos"><i class="fa fa-upload fa-fw"></i>  Inserir Documentos<span class="fa arrow"></span></a>
+                        <li class="nav-item">
+                          <a class="nav-link" href="#" data-toggle="collapse" data-target="#inserir_documentos"><i class="fa fa-upload fa-fw"></i>  Inserir Documentos<span class="fa arrow"></span></a>
                           <div class="collapse" id="inserir_documentos" style="height: 0px;">
                             <ul class="nav nav-second-level">
                                 <li>
