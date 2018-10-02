@@ -1,8 +1,8 @@
 {% extends "gestao/base_gestao.html" %} {% load widget_tweaks %} {% block content %} {{form.media}}
 {% include 'messages.html' %}
 
-<div class="panel panel-default">
-  <div class="panel-heading">
+<div class=" card  ">
+  <div class=" card-header">
     Alteração de cadastrador do ente federado
   </div>
   <ul class="nav nav-tabs">
@@ -12,7 +12,7 @@
 
   <div class="tab-content">
     <div id="conteudo-default" class="tab-pane fade in active">
-      <div class="panel-body">
+      <div class=" card-body">
         <form action="{% url 'gestao:alterar_cadastrador' %}" class="form-horizontal" method="post">{% csrf_token %}
 
           <div class="form-group">

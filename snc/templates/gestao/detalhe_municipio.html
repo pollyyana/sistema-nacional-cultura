@@ -3,11 +3,11 @@
 
 <div class="row">
     <div class="col-sm-12 col-md-6">
-        <div class="panel panel-info">
-          <div class="panel-heading">
+        <div class=" card  card-info">
+          <div class=" card-header">
             Dados do Ente Federado
           </div>
-          <div class="panel-body">
+          <div class=" card-body">
               <div class="row">
                   <div class="col-md-7">
                     <p><strong>Localização: </strong></p>
@@ -75,11 +75,11 @@
     </div>
 
     <div class="col-sm-12 col-md-6">
-       <div class="panel panel-info">
-          <div class="panel-heading">
+       <div class=" card  card-info">
+          <div class=" card-header">
             Dados do Interlocutor
           </div>
-          <div class="panel-body">
+          <div class=" card-body">
             <p><strong>Nome:</strong> {{ object.secretario.nome_secretario }}</p>
             <p><strong>CPF:</strong> {{ object.secretario.cpf_secretario }}</p>
             <p><strong>RG:</strong> {{ object.secretario.rg_secretario }}</p>
@@ -94,11 +94,11 @@
 
 <div class="row">
     <div class="col-sm-12 col-md-6">
-        <div class="panel panel-info">
-          <div class="panel-heading">
+        <div class=" card  card-info">
+          <div class=" card-header">
             Dados do Responsável Indicado
           </div>
-          <div class="panel-body">
+          <div class=" card-body">
               <div class="row">
                   <div class="col-md-6">
                     <p><strong>Nome:</strong> {{ object.responsavel.nome_responsavel }}</p>
@@ -120,11 +120,11 @@
     </div>
 
     <div class="col-sm-12 col-md-6">
-        <div class="panel panel-info">
-          <div class="panel-heading">
+        <div class=" card  card-info">
+          <div class=" card-header">
             Dados do Cadastrador
           </div>
-          <div class="panel-body">
+          <div class=" card-body">
             <p><strong>CPF:</strong> {{ object.user.username }}</p>
             <p><strong>Nome:</strong> {{ object.nome_usuario }}</p>
             <p><strong>E-mail:</strong> {{ object.user.email }}</p>
@@ -135,12 +135,12 @@
 </div>
 
 {% if object.estado_processo == '6' %}
-<div class="panel panel-info">
-  <div class="panel-heading">
+<div class=" card  card-info">
+  <div class=" card-header">
     Dados do Plano de Trabalho
   </div>
 
-  <div class="panel-body">
+  <div class=" card-body">
   {% if object.plano_trabalho.criacao_sistema.arquivo %}
     <div class="list-group row">
         <div class="col-md-12">
@@ -309,11 +309,11 @@
 <div class="row">
     {% if historico_sistemas %}
       <div class="col-md-6">
-          <div class="panel panel-info">
-            <div class="panel-heading">
+          <div class=" card  card-info">
+            <div class=" card-header">
               Histórico de cadastradores
             </div>
-            <div class="panel-body">
+            <div class=" card-body">
               {% for sistema in historico_sistemas %}
                 <ul class="list-group">            
                     {% if sistema.cadastrador.nome_usuario %}
@@ -335,12 +335,12 @@
     {% endif %}
 
     <div class="col-md-6">
-        <div class="panel panel-info">
-          <div class="panel-heading">
+        <div class=" card  card-info">
+          <div class=" card-header">
             Dados da Adesão
           </div>
           <form name="form" action="{% url 'gestao:alterar_dados_adesao' object.id %}" method="post">
-              <div class="panel-body ">
+              <div class=" card-body ">
                   {% csrf_token %}
                   <div class="list-group-item col-md-12 text-center">
                       <div class="form-group">
