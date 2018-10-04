@@ -1,35 +1,36 @@
 <!DOCTYPE html>
+
 <head>
 
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content="">
-    <meta name="author" content="">
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="">
+  <meta name="author" content="">
 
-    <title>Sistema Nacional de Cultura</title>
+  <title>Sistema Nacional de Cultura</title>
 
 
-    {% load static %}
-    <!-- Bootstrap Core CSS -->
-    <link href="{% static 'css/bootstrap.min.css' %}" rel="stylesheet">
-    <link href="{% static 'css/jquery-ui.min.css' %}" rel="stylesheet">
+  {% load static %}
+  <!-- Bootstrap Core CSS -->
+  <link href="{% static 'css/bootstrap.min.css' %}" rel="stylesheet">
+  <link href="{% static 'css/jquery-ui.min.css' %}" rel="stylesheet">
 
-    <!-- MetisMenu CSS -->
-    <link href="{% static 'css/metisMenu.min.css' %}" rel="stylesheet">
+  <!-- MetisMenu CSS -->
+  <link href="{% static 'css/metisMenu.min.css' %}" rel="stylesheet">
 
-    <!-- DataTables CSS -->
-    <link href="{% static 'css/dataTables.bootstrap.css' %}" rel="stylesheet">
-    <link href="{% static 'css/dataTables.responsive.css' %}" rel="stylesheet">
+  <!-- DataTables CSS -->
+  <link href="{% static 'css/dataTables.bootstrap.css' %}" rel="stylesheet">
+  <link href="{% static 'css/dataTables.responsive.css' %}" rel="stylesheet">
 
-    <!-- Custom CSS -->
-    <link href="{% static 'css/dashboard.css' %}" rel="stylesheet">
+  <!-- Custom CSS -->
+  <link href="{% static 'css/dashboard.css' %}" rel="stylesheet">
 
-    <!-- Custom Fonts -->
-    <link href="{% static 'css/font-awesome.min.css' %}" rel="stylesheet" type="text/css">
+  <!-- Custom Fonts -->
+  <link href="{% static 'css/font-awesome.min.css' %}" rel="stylesheet" type="text/css">
 
-    <!-- jQuery -->
-    <script src="{% static 'js/jquery.min.js'%}"></script>
+  <!-- jQuery -->
+  <script src="{% static 'js/jquery.min.js'%}"></script>
 
 </head>
 
@@ -37,205 +38,212 @@
 
   <div id="wrapper">
 
-      <!-- Navigation -->
-      <nav class="navbar nabar-default navbar-static-top  border border-bottom-secondary" role="navigation" style="margin-bottom: 0px">
-          <div class="navbar-headers">
-              <a class="navbar-brand" href="{% url 'gestao:acompanhar_adesao' %}" >SNC</a>
-          </div>
-          <!-- /.navbar-header -->
+    <!-- Navigation -->
+    <nav class="navbar nabar-default navbar-static-top  border border-bottom-secondary" role="navigation" style="margin-bottom: 0">
+      <div class="navbar-headers">
+        <a class="navbar-brand" href="{% url 'gestao:acompanhar_adesao' %}">SNC</a>
+      </div>
+      <!-- /.navbar-header -->
 
-          <ul class="nav navbar-top-links navbar-right">
-              <li class="dropdown">
-                  <a data-toggle="dropdown" href="#">
-                      <i class="fa fa-user fa-fw"></i> {{ request.user.usuario.nome_usuario }} <i class="fa fa-caret-down"></i>
-                  </a>
-                  <ul class="dropdown-menu dropdown-user">
-                      <li><a href="{% url 'mudar_senha_gestao' %}"><i class="fa fa-user fa-fw"></i> Alterar Senha</a>
-                      </li>
-                      <li class="divider"></li>
-                      <li><a href="{% url 'adesao:logout' %}"><i class="fa fa-sign-out fa-fw"></i> Sair</a>
-                      </li>
-                  </ul>
-                  <!-- /.dropdown-user -->
-              </li>
-              <!-- /.dropdown -->
+      <ul class="nav navbar-top-links navbar-right">
+        <li class="dropdown">
+          <a data-toggle="dropdown" href="#">
+            <i class="fa fa-user fa-fw"></i> {{ request.user.usuario.nome_usuario }} <i class="fa fa-caret-down"></i>
+          </a>
+          <ul class="dropdown-menu dropdown-user">
+            <li><a href="{% url 'mudar_senha_gestao' %}"><i class="fa fa-user fa-fw"></i> Alterar Senha</a>
+            </li>
+            <li class="divider"></li>
+            <li><a href="{% url 'adesao:logout' %}"><i class="fa fa-sign-out fa-fw"></i> Sair</a>
+            </li>
           </ul>
-          </nav>
-          <!-- /.navbar-top-links -->
+          <!-- /.dropdown-user -->
+        </li>
+        <!-- /.dropdown -->
+      </ul>
+    </nav>
+    <!-- /.navbar-top-links -->
 
-          <div class="navbar-default sidebar" role="navigation">
-                      <li class="sidebar-search">
-                          <div class="input-group custom-search-form">
-                            <form action="{% url 'gestao:acompanhar_adesao' %}" method="get">
-                              <input type="text" name="municipio" class="form-control" placeholder="Buscar...">
-                              <span class="input-group-btn">
-                                  <button class="btn btn-default" type="submit">
-                                      <i class="fa fa-search"></i>
-                                  </button>
-                              </span>
-                            </form>
-                          </div>
-                          <!-- /input-group -->
-                      </li>
-                      <!--<li>
+    <div class="navbar-default sidebar" role="navigation" style="margin-top: 0">
+      <li class="sidebar-search">
+        <div class="input-group custom-search-form">
+          <form action="{% url 'gestao:acompanhar_adesao' %}" method="get">
+            <input type="text" name="municipio" class="form-control" placeholder="Buscar...">
+            <span class="input-group-btn">
+              <button class="btn btn-default" type="submit">
+                <i class="fa fa-search"></i>
+              </button>
+            </span>
+          </form>
+        </div>
+        <!-- /input-group -->
+      </li>
+      <!--<li>
                         <a href="#"><i class="fa fa-dashboard fa-fw"></i>  Dashboard</a>
                       </li>-->
-                      <li class="nav-item">
-                        <a class="nav-link" href="{% url 'gestao:acompanhar_adesao' %}">Início</a>
-                      </li>
-                      <li class="nav-item">
-                        <a class="nav-link" href="{% url 'gestao:usuarios' %}">Usuários</a>
-                      </li>
-                      <li class="nav-item">
-                        <a class="nav-link" href="{% url 'gestao:acompanhar_prazo' %}">
-                          Alterar Prazos
-                        </a>
-                      </li>
-                      <li class="nav-item">
-                        <a class="nav-link" href="{% url 'exportar_ods' %}">Exportar Planilha ODS</a>
-                      </li>
-                      <li class="nav-item">
-                        <a class="nav-link" href="{% url 'exportar_xls' %}">Exportar Planilha XLS</a>
-                      </li>
-                      <li class="active nav-item">
-                        <a class="nav-link" href="{% url 'gestao:alterar_cadastrador' %}"><i class="fa fa-exchange fa-fw"></i>  Alterar Cadastradores</a>
-                      </li>
-                        
-                         <!-- Acompanhamento da execução do Plano de Trabalho -->
-                          <li class="nav-item">
-                           <a class="nav-link" href="#" data-toggle="collapse" data-target="#plano_trabalho"><i class="fa fa-sitemap fa-fw"></i>  Plano de Trabalho<span class="fa arrow"></span></a>
-                           <div class="collapse" id="plano_trabalho" style="height: 0px;">
-                           <ul class="nav nav-second-level">
-                             <li>
-                               <a href="{% url 'gestao:acompanhar_sistema' %}?anexo=arquivo" >  
-                                Lei - Sistema de Cultura
-                               </a>
-                            
-                             </li>
+      <li class="nav-item">
+        <a class="nav-link" href="{% url 'gestao:acompanhar_adesao' %}">Início</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="{% url 'gestao:usuarios' %}">Usuários</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="{% url 'gestao:acompanhar_prazo' %}">
+          Alterar Prazos
+        </a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="{% url 'exportar_ods' %}">Exportar Planilha ODS</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="{% url 'exportar_xls' %}">Exportar Planilha XLS</a>
+      </li>
+      <li class="active nav-item">
+        <a class="nav-link" href="{% url 'gestao:alterar_cadastrador' %}"><i class="fa fa-exchange fa-fw"></i> Alterar Cadastradores</a>
+      </li>
 
-                               <li>
-                                 <a href="{% url 'gestao:acompanhar_orgao' %}?anexo=arquivo">
-                                  Ato Normativo - Órgão Gestor
-                                 </a>
-                                
-                               </li>
+      <!-- Acompanhamento da execução do Plano de Trabalho -->
+      <li class="nav-item">
+        <a class="nav-link" href="#" data-toggle="collapse" data-target="#plano_trabalho"><i class=" fa fa-sitemap fa-fw"></i> Plano de
+          Trabalho<span class="fa arrow"></span></a>
+        <div class="collapse" id="plano_trabalho" style="height: 0px;">
+          <ul class="nav nav-second-level">
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'gestao:acompanhar_sistema' %}?anexo=arquivo">
+                Lei - Sistema de Cultura
+              </a>
 
-                               <li>
-                                 <a href="{% url 'gestao:acompanhar_conselho' %}?anexo=arquivo">
-                                  Ata - Conselho Cultural
-                                 </a>
-                                 
-                               </li>
+            </li>
 
-                               <li>
-                                 <a href="{% url 'gestao:acompanhar_fundo' %}?anexo=arquivo">
-                                  Lei - Fundo de Cultura
-                                 </a>
-                             </li>
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'gestao:acompanhar_orgao' %}?anexo=arquivo">
+                Ato Normativo - Órgão Gestor
+              </a>
 
-                             <li>
-                               <a href="{% url 'gestao:acompanhar_plano' %}?anexo=arquivo">
-                                Lei - Plano de Cultura
-                               </a> 
-                               
-                             </li>
-                           </ul>
-                          </div>
-                         </li>
+            </li>
 
-                        <!-- Inserção de documentos faltantes-->
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'gestao:acompanhar_conselho' %}?anexo=arquivo">
+                Ata - Conselho Cultural
+              </a>
 
-                        <li class="nav-item">
-                          <a class="nav-link" href="#" data-toggle="collapse" data-target="#inserir_documentos"><i class="fa fa-upload fa-fw"></i>  Inserir Documentos<span class="fa arrow"></span></a>
-                          <div class="collapse" id="inserir_documentos" style="height: 0px;">
-                            <ul class="nav nav-second-level">
-                                <li>
-                                  <a href="{% url 'gestao:listar_documentos' template='listar_sistemas' %}" data-toggle="collapse" data-target="#sistemacult">
-                                  Lei - Sistema de Cultura
-                                  </a>
-                              </li>
+            </li>
 
-                              <li>
-                                <a href="{% url 'gestao:listar_documentos' template='listar_orgaos' %}" data-toggle="collapse" data-target="#orgaogestor">
-                                Ato normativo - Órgão Gestor
-                                </a>
-                              </li>
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'gestao:acompanhar_fundo' %}?anexo=arquivo">
+                Lei - Fundo de Cultura
+              </a>
+            </li>
 
-                              <li>
-                                <a  href="{% url 'gestao:listar_documentos' template='listar_conselhos' %}" data-toggle="collapse" data-target="#conselhocult">
-                                Ata - Conselho Cultural
-                                </a>
-                              </li>
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'gestao:acompanhar_plano' %}?anexo=arquivo">
+                Lei - Plano de Cultura
+              </a>
 
-                              <li>
-                                <a href="{% url 'gestao:listar_documentos' template='listar_fundos' %}" data-toggle="collapse" data-target="#fundocult">
-                                Lei - Fundo de Cultura
-                                </a>
-                              </li>
-
-                              <li>
-                                <a href="{% url 'gestao:listar_documentos' template='listar_planos' %}" data-toggle="collapse" data-target="#planocult">
-                                Lei - Plano de Cultura
-                                </a>
-                              </li>
-
-                              <li>
-                                <a href="{% url 'gestao:inserir_entefederado' %}">
-                                  Ente Federado
-                                </a>
-                              </li>
-                            </ul>
-                          </div>
-                        </li>
-                </div>
-                <!-- /.sidebar-collapse -->
-            <!-- /.navbar-static-side -->
-
-        <!-- Page Content -->
-        <div id="page-wrapper">
-            <div class="container-fluid">
-              {% block content %}
-                <div class="row">
-                    <div class="col-lg-12">
-                        <h1 class="page-header">Blank</h1>
-                    </div>
-                    <!-- /.col-lg-12 -->
-                </div>
-                <!-- /.row -->
-              {% endblock content %}
-            </div>
-            <!-- /.container-fluid -->
+            </li>
+          </ul>
         </div>
-        <!-- /#page-wrapper -->
+      </li>
 
+      <!-- Inserção de documentos faltantes-->
+
+      <li class="nav-item">
+        <a class="nav-link" href="#" data-toggle="collapse" data-target="#inserir_documentos"><i class="fa fa-upload fa-fw"></i> Inserir
+          Documentos<span class="fa arrow"></span></a>
+        <div class="collapse" id="inserir_documentos" style="height: 0px;">
+          <ul class="nav nav-second-level">
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'gestao:listar_documentos' template='listar_sistemas' %}" data-toggle="collapse"
+                data-target="#sistemacult">
+                Lei - Sistema de Cultura
+              </a>
+            </li>
+
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'gestao:listar_documentos' template='listar_orgaos' %}" data-toggle="collapse"
+                data-target="#orgaogestor">
+                Ato normativo - Órgão Gestor
+              </a>
+            </li>
+
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'gestao:listar_documentos' template='listar_conselhos' %}" data-toggle="collapse"
+                data-target="#conselhocult">
+                Ata - Conselho Cultural
+              </a>
+            </li>
+
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'gestao:listar_documentos' template='listar_fundos' %}" data-toggle="collapse"
+                data-target="#fundocult">
+                Lei - Fundo de Cultura
+              </a>
+            </li>
+
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'gestao:listar_documentos' template='listar_planos' %}" data-toggle="collapse"
+                data-target="#planocult">
+                Lei - Plano de Cultura
+              </a>
+            </li>
+
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'gestao:inserir_entefederado' %}">
+                Ente Federado
+              </a>
+            </li>
+          </ul>
+        </div>
+      </li>
     </div>
-    <!-- /#wrapper -->
+    <!-- /.sidebar-collapse -->
+    <!-- /.navbar-static-side -->
 
-    <!-- Bootstrap JavaScript -->
-    <script src="{% static 'js/bootstrap.min.js' %}"></script>
+    <!-- Page Content -->
+    <div id="page-wrapper">
+      <div class="container-fluid">
+        {% block content %}
+        <div class="row">
+          <div class="col-lg-12">
+            <h1 class="page-header">Blank</h1>
+          </div>
+          <!-- /.col-lg-12 -->
+        </div>
+        <!-- /.row -->
+        {% endblock content %}
+      </div>
+      <!-- /.container-fluid -->
+    </div>
+    <!-- /#page-wrapper -->
 
-    <!-- Metis Menu Plugin JavaScript -->
-    <script src="{% static 'js/metisMenu.min.js' %}"></script>
+  </div>
+  <!-- /#wrapper -->
 
-    <!-- DataTables Javascript -->
-    <script src="{% static 'js/jquery.dataTables.min.js' %}"></script>
-    <script src="{% static 'js/dataTables.bootstrap.min.js' %}"></script>
+  <!-- Bootstrap JavaScript -->
+  <script src="{% static 'js/bootstrap.min.js' %}"></script>
 
-    <!-- Custom Theme JavaScript -->
-    <script src="{% static 'js/dashboard.js' %}"></script>
-    <script src="{% static 'js/jquery-ui.min.js' %}"></script>
-    <script src="{% static 'js/datepicker-pt-BR.js' %}"></script>
+  <!-- Metis Menu Plugin JavaScript -->
+  <script src="{% static 'js/metisMenu.min.js' %}"></script>
 
-    <script type="text/javascript">
-      $(document).ready(function(){
-        $(".date").datepicker({
-          showButtonPanel: true,
-          regional: "pt-BR"
-        });
+  <!-- DataTables Javascript -->
+  <script src="{% static 'js/jquery.dataTables.min.js' %}"></script>
+  <script src="{% static 'js/dataTables.bootstrap.min.js' %}"></script>
+
+  <!-- Custom Theme JavaScript -->
+  <script src="{% static 'js/dashboard.js' %}"></script>
+  <script src="{% static 'js/jquery-ui.min.js' %}"></script>
+  <script src="{% static 'js/datepicker-pt-BR.js' %}"></script>
+
+  <script type="text/javascript">
+    $(document).ready(function () {
+      $(".date").datepicker({
+        showButtonPanel: true,
+        regional: "pt-BR"
       });
-    </script>
-    {% block js %}
-    {% endblock js%}
+    });
+  </script>
+  {% block js %}
+  {% endblock js%}
 
 </body>
 
