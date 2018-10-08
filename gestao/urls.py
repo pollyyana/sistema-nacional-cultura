@@ -8,8 +8,11 @@ app_name = 'gestao'
 
 urlpatterns = [
     # Acompanhar andamento dos processos de adesão
-    url(r'^$', staff_member_required(
-        views.AcompanharAdesao.as_view(),
+    # url(r'^$', staff_member_required(
+    #     views.AcompanharAdesao.as_view(),
+    #     login_url='adesao:login'), name='acompanhar_adesao'),
+    path('', staff_member_required(
+        views.AcompanharSistemaCultura.as_view(),
         login_url='adesao:login'), name='acompanhar_adesao'),
     url(r'^alterar/dados-adesao/(?P<pk>[0-9]+)$',
         staff_member_required(views.alterar_dados_adesao, login_url='adesao:login'),
@@ -160,4 +163,8 @@ urlpatterns = [
     path("<int:pk>/diligencia/add", 
         staff_member_required(views.DiligenciaGeralCreateView.as_view()),
         name="diligencia_geral_adicionar"),
+
+    path("<int:pk>/ajax/consultar_cpf",
+            staff_member_required(views.ajax_consulta_cpf),
+            name="ajax-consulta-cpf"),
     ]

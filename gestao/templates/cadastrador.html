@@ -1,0 +1,78 @@
+<div class="col-md-6">
+	<div class="panel panel-info">
+		<div class="panel-heading">
+			Administração da Adesão
+		</div>
+		<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#cadastradorModal" data-cadastrador-nome="{{ object.cadastrador.user.nome_usuario }}" data-cadastrador-cpf="{{ object.cadastrador.user.username }}">Alterar Cadastrador deste ente...</button>
+
+		<div class="modal fade" id="cadastradorModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+			<div class="modal-dialog" role="document">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h5 class="modal-title" id="cadastradorModalLabel">Alterar Cadastrador</h5>
+						<button type="button" class="close" data-dismiss="modal" aria-label="Fechar">
+							<span aria-hidden="true">&times;</span>
+						</button>
+					</div>
+					<div class="modal-body">
+						<form method="POST" action={% url 'gestao:alterar_cadastrador' %}>
+							<div class="form-group">
+								<label for="nome-atual" class="col-form-label">Nome:</label>
+								<input type="text" class="form-control" id="nome-atual" disable>
+							</div>
+							<div class="form-group">
+								<label for="cpf-atual" class="col-form-label">CPF:</label>
+								<input type="text" class="form-control" id="cpf-atual" disable>
+							</div>
+							<hr>
+							<div class="form-group">
+								<label for="nome-novo" class="col-form-label">Novo Cadastrador:</label>
+								<input type="text" class="form-control" id="nome-novo">
+							</div>
+							<div class="form-group">
+								<div class="input-group">
+									<label for="cpf-novo" class="col-form-label">CPF:</label>
+									<input type="text" class="form-control" placeholder="Procurar pelo CPF" id="cpf-novo" name="cpf_cadastrador"/>
+									<div class="input-group-btn">
+										<button class="btn btn-primary" type="submit">
+											<span class="glyphicon glyphicon-search"></span>
+										</button>
+									</div>
+								</div>
+							</div>
+							<div class="modal-footer">
+								<button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
+								<button type="button" class="btn btn-primary">Alterar Cadastrador</button>
+							</div>
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<script type="text/javascript">
+$('#cadastradorModal').on('show.bs.modal', function (event) {
+	var button = $(event.relatedTarget) // Button that triggered the modal
+	var nome_atual = button.data('cadastrador-nome')
+	var cpf_atual = button.data('cadastrador-cpf')
+
+	var modal = $(this)
+	var nome_novo = modal.find('.nome-novo')
+
+	searchCPF = function(cpf) {
+		debugger
+		$.ajax({
+			url: {% url 'gestao:ajax-consulta-cpf' %},
+			data: {cpf: cpf},
+			dataType: 'json',
+			success: function(response){
+				if (response){
+					nome_novo.val(response.nome)
+				}
+			}
+		})
+	}
+})
+</script>

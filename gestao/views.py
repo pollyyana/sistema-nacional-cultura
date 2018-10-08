@@ -138,6 +138,16 @@ def alterar_dados_adesao(request, pk):
     return redirect('gestao:detalhar', pk=pk)
 
 
+def ajax_consulta_cpf(request):
+    if not request.is_ajax():
+        return JsonResponse(data={"message": "Esta não é uma requisição AJAX"})
+
+    cpf = getattr(request.data, 'cpf', None)
+    nome = Usuario.objects.get(cpf=cpf).nome_usuario
+
+    return JsonResponse(data={"data": {"nome": nome}})
+
+
 def ajax_cadastrador_cpf(request):
     if request.method == "GET":
         try:
@@ -195,6 +205,15 @@ def aditivar_prazo(request, id,page):
 
 
     return redirect(reverse_lazy('gestao:acompanhar_prazo') + '?page=' + page)
+
+
+class AcompanharSistemaCultura(ListView):
+    model = SistemaCultura
+    template_name = 'gestao/adesao/acompanhar.html'
+    paginate_by = 10
+
+    def get_queryset(self):
+        return SistemaCultura.sistema.all()
 
 
 class AcompanharAdesao(ListView):
@@ -507,7 +526,8 @@ class DetalharEnte(DetailView):
         sistema_cultura = context['sistemacultura']
 
         if sistema_cultura.cidade:
-            context['historico_sistemas'] = SistemaCultura.objects.por_municipio(municipio.estado, municipio.cidade)
+            context['historico_sistemas'] = SistemaCultura.objects.por_municipio(sistema_cultura.uf,
+                sistema_cultura.cidade)
         else:
             context['historico_sistemas'] = SistemaCultura.objects.por_municipio(municipio.estado)
 
@@ -691,7 +711,7 @@ class AlterarFundo(UpdateView):
     def get_success_url(self):
         messages.success(self.request, 'Fundo de Cultura alterado com sucesso')
         return reverse_lazy('gestao:listar_documentos', kwargs={'template': 'listar_fundos'})
-    
+
 
 class InserirPlano(CreateView):
     template_name = 'gestao/inserir_documentos/inserir_plano.html'
