@@ -3,8 +3,8 @@
 
 <div class="row">
     <div class="col-sm-12 col-md-6">
-        <div class=" card  card-info">
-          <div class=" card-header">
+        <div class=" card  card-info" style="margin-bottom: 20px">
+          <div class=" card-header" style="color: #31708f; background-color: #d9edf7; border-color: #bce8f1">
             Dados do Ente Federado
           </div>
           <div class=" card-body">
@@ -75,8 +75,8 @@
     </div>
 
     <div class="col-sm-12 col-md-6">
-       <div class=" card  card-info">
-          <div class=" card-header">
+       <div class=" card  card-info" style="margin-bottom: 20px">
+          <div class=" card-header" style="color: #31798f; background-color: #d9edf7; border-color: #bce8f1">
             Dados do Interlocutor
           </div>
           <div class=" card-body">
@@ -94,8 +94,8 @@
 
 <div class="row">
     <div class="col-sm-12 col-md-6">
-        <div class=" card  card-info">
-          <div class=" card-header">
+        <div class=" card  card-info" style="margin-bottom: 20px">
+          <div class=" card-header" style="color: #31798f; background-color: #d9edf7; border-color: #bce8f1">
             Dados do Responsável Indicado
           </div>
           <div class=" card-body">
@@ -120,8 +120,8 @@
     </div>
 
     <div class="col-sm-12 col-md-6">
-        <div class=" card  card-info">
-          <div class=" card-header">
+        <div class=" card  card-info" style="margin-bottom: 20px">
+          <div class=" card-header" style="color: #31798f; background-color: #d9edf7; border-color: #bce8f1">
             Dados do Cadastrador
           </div>
           <div class=" card-body">
@@ -135,8 +135,8 @@
 </div>
 
 {% if object.estado_processo == '6' %}
-<div class=" card  card-info">
-  <div class=" card-header">
+<div class=" card  card-info" style="margin-bottom: 20px">
+  <div class=" card-header" style="color: #31798f; background-color: #d9edf7; border-color: #bce8f1">
     Dados do Plano de Trabalho
   </div>
 
@@ -166,8 +166,8 @@
             </div>
         {% endif %}
 
-        </div>
     </div>
+  </div>
   {% endif %}
 
     {% if object.plano_trabalho.orgao_gestor.arquivo %}
@@ -301,8 +301,7 @@
                 </div>
           </div>
         </div>
-    </div>
-    
+  </div>  
 </div>
 {% endif %}
 
@@ -310,7 +309,7 @@
     {% if historico_sistemas %}
       <div class="col-md-6">
           <div class=" card  card-info">
-            <div class=" card-header">
+            <div class=" card-header" style="color: #31798f; background-color: #d9edf7; border-color: #bce8f1">
               Histórico de cadastradores
             </div>
             <div class=" card-body">
@@ -336,7 +335,7 @@
 
     <div class="col-md-6">
         <div class=" card  card-info">
-          <div class=" card-header">
+          <div class=" card-header" style="color: #31798f; background-color: #d9edf7; border-color: #bce8f1">
             Dados da Adesão
           </div>
           <form name="form" action="{% url 'gestao:alterar_dados_adesao' object.id %}" method="post">
@@ -355,7 +354,7 @@
                       </div>
 
                       <div class="form-group">
-                        <textarea id="justificativa_situacao" name="justificativa" class="form-control hide" style="resize:none" placeholder="Justificativa" rows="4" cols="20">{% if object.estado_processo == '3' %} {{dado_situacao}} {% endif %}</textarea>
+                        <textarea id="justificativa_situacao" name="justificativa" class="form-control hide" style="resize:none" placeholder="Justificativa" rows="4" cols="20" >{% if object.estado_processo == '3' %} {{dado_situacao}} {% endif %}</textarea>
                         <input type="text" id="data_acordo_situacao" name="data_publicacao_acordo" class="form-control date hide" value="{% if object.estado_processo == '6' %} {{dado_situacao}} {% endif %}" placeholder="Data de Publicação"></input>
                         <input type="text" id="localizacao_situacao" name="localizacao" class="form-control hide" placeholder="Localização" value="{% if object.estado_processo == '2' %} {{dado_situacao}} {% endif %}"></input>
                         <input type="text" id="num_processo_situacao" name="num_processo" class="form-control hide" placeholder="Número do Processo" value="{% if object.estado_processo == '4' %} {{dado_situacao}} {% endif %}"></input>
