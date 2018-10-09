@@ -354,21 +354,23 @@
                       </div>
 
                       <div class="form-group">
-                        <textarea id="justificativa_situacao" name="justificativa" class="form-control hide" style="resize:none" placeholder="Justificativa" rows="4" cols="20" >{% if object.estado_processo == '3' %} {{dado_situacao}} {% endif %}</textarea>
-                        <input type="text" id="data_acordo_situacao" name="data_publicacao_acordo" class="form-control date hide" value="{% if object.estado_processo == '6' %} {{dado_situacao}} {% endif %}" placeholder="Data de Publicação"></input>
-                        <input type="text" id="localizacao_situacao" name="localizacao" class="form-control hide" placeholder="Localização" value="{% if object.estado_processo == '2' %} {{dado_situacao}} {% endif %}"></input>
-                        <input type="text" id="num_processo_situacao" name="num_processo" class="form-control hide" placeholder="Número do Processo" value="{% if object.estado_processo == '4' %} {{dado_situacao}} {% endif %}"></input>
+                       <div style="margin-bottom: 20px"> <textarea id="justificativa_situacao" name="justificativa" class="form-control hide" style="resize:none" placeholder="Justificativa" rows="4" cols="20" >{% if object.estado_processo == '3' %} {{dado_situacao}} {% endif %}</textarea> </div>
+                        <div style="margin-bottom: 15px"><input type="text" id="data_acordo_situacao" name="data_publicacao_acordo" class="form-control date hide" value="{% if object.estado_processo == '6' %} {{dado_situacao}} {% endif %}" placeholder="Data de Publicação"></input></div>
+                        <div style="margin-bottom: 15px">                        <input type="text" id="localizacao_situacao" name="localizacao" class="form-control hide" placeholder="Localização" value="{% if object.estado_processo == '2' %} {{dado_situacao}} {% endif %}"></input>
+                        </div>
+                        
+                        <div style="margin-bottom: 15px"><input type="text" id="num_processo_situacao" name="num_processo" class="form-control hide" placeholder="Número do Processo" value="{% if object.estado_processo == '4' %} {{dado_situacao}} {% endif %}"></input></div>
                       </div>
 
-                      <div class="form-group">
+                      <div class="form-group" style="margin-bottom: 15px">
                          <input type="text" id="link_acordo_situacao" name="link_publicacao_acordo" class="form-control hide" placeholder="Link da Publicação" value="{% if object.estado_processo == '6' and link_publicacao %} {{link_publicacao}} {% endif %}"></input>
                       </div>
 
-                     <div class="form-group">
+                     <div class="form-group" style="margin-bottom: 15px">
                         <input type="text" id="processo_sei" name="processo_sei" class="form-control" placeholder="Número do Processo SEI" value="{% if object.estado_processo == '6' and processo_sei %} {{processo_sei}} {% endif %}"></input>
                       </div>
 
-                      <div class="row">
+                      <div class="row" style="margin-bottom: 15px">
                           <div class="col-md-12">
                             <button type="submit" class="btn btn-primary btn-xs" title="Alterar Situação" >Salvar</button>
                             <a href="{% url 'gestao:detalhar' object.id %}" class="btn btn-default btn-xs" value="Cancelar" >Cancelar</a>
