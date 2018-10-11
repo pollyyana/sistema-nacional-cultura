@@ -1006,131 +1006,76 @@ def test_filtra_ufs_por_nome(client):
     assert request.json()["results"][0]["text"] == mg.sigla
 
 
-def test_acompanhar_adesao_ordenar_data_um_componente_por_plano(client, login_staff):
+def test_acompanhar_adesao_ordenar_data_um_componente_por_sistema(client, login_staff):
     """ Testa ordenação da página de acompanhamento das adesões
     por data de envio mais antiga entre os componentes"""
 
-    user_sem_analise_recente = mommy.make(
-        "Usuario", _fill_optional=["plano_trabalho", "municipio"]
-    )
-    user_sem_analise_recente.plano_trabalho.criacao_sistema = mommy.make(
-        "CriacaoSistema"
-    )
-    user_sem_analise_recente.plano_trabalho.save()
-    user_sem_analise_recente.plano_trabalho.criacao_sistema.situacao = SituacoesArquivoPlano.objects.get(
-        pk=1
-    )
-    user_sem_analise_recente.plano_trabalho.criacao_sistema.data_envio = datetime.date(
-        2018, 1, 1
-    )
-    user_sem_analise_recente.plano_trabalho.criacao_sistema.save()
+    sistema_sem_analise_recente = mommy.make('SistemaCultura', _fill_optional='legislacao')
+    sistema_sem_analise_recente.legislacao.situacao = 1
+    sistema_sem_analise_recente.legislacao.data_envio = datetime.date(2018, 1, 1)
+    sistema_sem_analise_recente.legislacao.save()
 
-    user_sem_analise_antigo = mommy.make(
-        "Usuario", _fill_optional=["plano_trabalho", "municipio"]
-    )
-    user_sem_analise_antigo.plano_trabalho.orgao_gestor = mommy.make("OrgaoGestor")
-    user_sem_analise_antigo.plano_trabalho.save()
-    user_sem_analise_antigo.plano_trabalho.orgao_gestor.situacao = SituacoesArquivoPlano.objects.get(
-        pk=1
-    )
-    user_sem_analise_antigo.plano_trabalho.orgao_gestor.data_envio = datetime.date(
-        2017, 1, 1
-    )
-    user_sem_analise_antigo.plano_trabalho.orgao_gestor.save()
+    sistema_sem_analise_antigo = mommy.make('SistemaCultura', _fill_optional=['orgao_gestor'])
+    sistema_sem_analise_antigo.orgao_gestor.situacao = 1
+    sistema_sem_analise_antigo.orgao_gestor.data_envio = datetime.date(2017, 1, 1)
+    sistema_sem_analise_antigo.orgao_gestor.save()
 
-    user_com_diligencia_antigo = mommy.make(
-        "Usuario", _fill_optional=["plano_trabalho", "municipio"]
-    )
-    user_com_diligencia_antigo.plano_trabalho.fundo_cultura = mommy.make("FundoCultura")
-    user_com_diligencia_antigo.plano_trabalho.save()
-    user_com_diligencia_antigo.plano_trabalho.fundo_cultura.situacao = SituacoesArquivoPlano.objects.get(
-        pk=4
-    )
-    user_com_diligencia_antigo.plano_trabalho.fundo_cultura.data_envio = datetime.date(
-        2016, 1, 1
-    )
-    user_com_diligencia_antigo.plano_trabalho.fundo_cultura.save()
+    sistema_com_diligencia_antigo = mommy.make('SistemaCultura', _fill_optional=['fundo_cultura'])
+    sistema_com_diligencia_antigo.fundo_cultura.situacao = 4
+    sistema_com_diligencia_antigo.fundo_cultura.data_envio = datetime.date(2016, 1, 1)
+    sistema_com_diligencia_antigo.fundo_cultura.save()
 
-    user_com_analise_antigo = mommy.make(
-        "Usuario", _fill_optional=["plano_trabalho", "municipio"]
-    )
-    user_com_analise_antigo.plano_trabalho.fundo_cultura = mommy.make("FundoCultura")
-    user_com_analise_antigo.plano_trabalho.save()
-    user_com_analise_antigo.plano_trabalho.fundo_cultura.situacao = SituacoesArquivoPlano.objects.get(
-        pk=2
-    )
-    user_com_analise_antigo.plano_trabalho.fundo_cultura.data_envio = datetime.date(
-        2016, 1, 1
-    )
-    user_com_analise_antigo.plano_trabalho.fundo_cultura.save()
+    sistema_com_analise_antigo = mommy.make('SistemaCultura', _fill_optional=['fundo_cultura'])
+    sistema_com_analise_antigo.fundo_cultura.situacao = 2
+    sistema_com_analise_antigo.fundo_cultura.data_envio = datetime.date(2016, 1, 1)
+    sistema_com_analise_antigo.fundo_cultura.save()
 
     url = reverse("gestao:acompanhar_adesao")
     response = client.get(url)
 
-    assert response.context_data["object_list"][0] == user_sem_analise_antigo.municipio
-    assert response.context_data["object_list"][1] == user_sem_analise_recente.municipio
-    assert (
-        response.context_data["object_list"][2] == user_com_diligencia_antigo.municipio
-    )
-    assert response.context_data["object_list"][3] == user_com_analise_antigo.municipio
+    assert response.context_data['object_list'][0] == sistema_sem_analise_antigo
+    assert response.context_data['object_list'][1] == sistema_sem_analise_recente
+    assert response.context_data['object_list'][2] == sistema_com_diligencia_antigo
+    assert response.context_data['object_list'][3] == sistema_com_analise_antigo
 
 
-def test_acompanhar_adesao_ordenar_data_com_plano_com_mais_de_um_componente(
-    client, login_staff
-):
-    """ Testa se na página de acompanhamento de adesões, quando há planos com múltiplos
+def test_acompanhar_adesao_ordenar_data_com_sistema_com_mais_de_um_componente(client, login_staff):
+    """ Testa se na página de acompanhamento de adesões, quando há sistemas com múltiplos 
     componentes, o correto é considerado para ordenação pela data """
 
-    user_plano_1 = mommy.make("Usuario", _fill_optional=["plano_trabalho", "municipio"])
-    user_plano_1.plano_trabalho.criacao_sistema = mommy.make("CriacaoSistema")
-    user_plano_1.plano_trabalho.save()
-    user_plano_1.plano_trabalho.criacao_sistema.situacao = SituacoesArquivoPlano.objects.get(
-        pk=5
-    )
-    user_plano_1.plano_trabalho.criacao_sistema.data_envio = datetime.date(2016, 1, 1)
-    user_plano_1.plano_trabalho.criacao_sistema.save()
+    sistema_1 = mommy.make('SistemaCultura', _fill_optional=['legislacao', 'orgao_gestor'])
 
-    user_plano_1.plano_trabalho.orgao_gestor = mommy.make("OrgaoGestor")
-    user_plano_1.plano_trabalho.save()
-    user_plano_1.plano_trabalho.orgao_gestor.situacao = SituacoesArquivoPlano.objects.get(
-        pk=1
-    )
-    user_plano_1.plano_trabalho.orgao_gestor.data_envio = datetime.date(2017, 1, 1)
-    user_plano_1.plano_trabalho.orgao_gestor.save()
+    sistema_1.legislacao.situacao = 5
+    sistema_1.legislacao.data_envio = datetime.date(2016, 1, 1)
+    sistema_1.legislacao.save()
 
-    user_plano_2 = mommy.make("Usuario", _fill_optional=["plano_trabalho", "municipio"])
-    user_plano_2.plano_trabalho.fundo_cultura = mommy.make("FundoCultura")
-    user_plano_2.plano_trabalho.save()
-    user_plano_2.plano_trabalho.fundo_cultura.situacao = SituacoesArquivoPlano.objects.get(
-        pk=4
-    )
-    user_plano_2.plano_trabalho.fundo_cultura.data_envio = datetime.date(2017, 1, 1)
-    user_plano_2.plano_trabalho.fundo_cultura.save()
+    sistema_1.orgao_gestor.situacao = 1
+    sistema_1.orgao_gestor.data_envio = datetime.date(2017, 1, 1)
+    sistema_1.orgao_gestor.save()
 
-    user_plano_2.plano_trabalho.plano_cultura = mommy.make("PlanoCultura")
-    user_plano_2.plano_trabalho.save()
-    user_plano_2.plano_trabalho.plano_cultura.situacao = SituacoesArquivoPlano.objects.get(
-        pk=3
-    )
-    user_plano_2.plano_trabalho.plano_cultura.data_envio = datetime.date(2018, 1, 1)
-    user_plano_2.plano_trabalho.plano_cultura.save()
+    sistema_2 = mommy.make('SistemaCultura', _fill_optional=['fundo_cultura', 'plano'])
 
-    user_plano_3 = mommy.make("Usuario", _fill_optional=["plano_trabalho", "municipio"])
-    user_plano_3.plano_trabalho.conselho_cultural = mommy.make("ConselhoCultural")
-    user_plano_3.plano_trabalho.save()
-    user_plano_3.plano_trabalho.conselho_cultural.situacao = SituacoesArquivoPlano.objects.get(
-        pk=1
-    )
-    user_plano_3.plano_trabalho.conselho_cultural.data_envio = datetime.date(2018, 1, 1)
-    user_plano_3.plano_trabalho.conselho_cultural.save()
+    sistema_2.fundo_cultura.situacao = 4
+    sistema_2.fundo_cultura.data_envio = datetime.date(2017, 1, 1)
+    sistema_2.fundo_cultura.save()
+
+    sistema_2.plano.situacao = 3
+    sistema_2.plano.data_envio = datetime.date(2018, 1, 1)
+    sistema_2.plano.save()
+
+    sistema_3 = mommy.make('SistemaCultura', _fill_optional=['conselho'])
+
+    sistema_3.conselho.situacao = 1
+    sistema_3.conselho.data_envio = datetime.date(2018, 1, 1)
+    sistema_3.conselho.save()
 
     url = reverse("gestao:acompanhar_adesao")
     response = client.get(url)
 
-    assert len(response.context_data["object_list"]) == 3
-    assert response.context_data["object_list"][0] == user_plano_1.municipio
-    assert response.context_data["object_list"][1] == user_plano_3.municipio
-    assert response.context_data["object_list"][2] == user_plano_2.municipio
+    assert len(response.context_data['object_list']) == 3
+    assert response.context_data['object_list'][0] == sistema_1
+    assert response.context_data['object_list'][1] == sistema_3
+    assert response.context_data['object_list'][2] == sistema_2
 
 
 def test_acompanhar_adesao_ordenar_estado_processo(client, plano_trabalho, login_staff):
@@ -1138,26 +1083,21 @@ def test_acompanhar_adesao_ordenar_estado_processo(client, plano_trabalho, login
     por data de envio mais antiga entre os componentes e
     estado do processo da adesão """
 
-    user = mommy.make(
-        "Usuario", estado_processo=1, _fill_optional=["plano_trabalho", "municipio"]
-    )
-    user.plano_trabalho.criacao_sistema = mommy.make(
-        "CriacaoSistema", situacao_id=1, data_envio=datetime.date(2018, 1, 1)
-    )
-    user.plano_trabalho.save()
+    sistema_nao_publicado = mommy.make('SistemaCultura', estado_processo=1,
+                      _fill_optional=['legislacao', 'cadastrador'])
 
-    ente_federado_publicado = plano_trabalho.usuario.municipio
-    ente_federado_publicado.usuario.estado_processo = 6
-    ente_federado_publicado.usuario.save()
+    sistema_publicado = mommy.make('SistemaCultura', estado_processo=6,
+                      _fill_optional=['legislacao', 'cadastrador'])
 
-    ente_sem_cadastrador = mommy.make("Municipio")
+    sistema_sem_cadastrador = mommy.make('SistemaCultura', cadastrador=None,
+                      _fill_optional=['legislacao'])
 
     url = reverse("gestao:acompanhar_adesao")
     response = client.get(url)
 
-    assert response.context_data["object_list"][0] == ente_federado_publicado
-    assert response.context_data["object_list"][1] == user.municipio
-    assert response.context_data["object_list"][2] == ente_sem_cadastrador
+    assert response.context_data['object_list'][0] == sistema_publicado
+    assert response.context_data['object_list'][1] == sistema_nao_publicado
+    assert response.context_data['object_list'][2] == sistema_sem_cadastrador
 
 
 def test_alterar_dados_adesao_detalhe_municipio(client, login_staff):
