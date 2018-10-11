@@ -24,12 +24,6 @@ def usuario():
 
 
 @pytest.fixture
-def sistema_cultura():
-
-    return mommy.make("SistemaCultura")
-
-
-@pytest.fixture
 def context(usuario):
     """ Retorna um contexto básico necessário para rendereziar o template de diligência """
 
@@ -67,20 +61,18 @@ def test_existencia_template_diligencia(engine, client):
     assert isinstance(template, Template)
 
 
-def test_retorno_do_botao_cancelar_de_diligencia(client, template, context):
+def test_retorno_do_botao_cancelar_de_diligencia(client, template, context, sistema_cultura):
     """ Testa se o botão cancelar presente na página de diligência
     retorna para a página de detalhe do município correspondente"""
 
-    sistema_cultura = mommy.make("SistemaCultura", _fill_optional=['ente_federado',
-        'cadastrador'])
-    context['sistema_cultura'] = sistema_cultura.id
+    context['sistema_cultura'] = sistema_cultura
 
     rendered_template = template.render(context)
 
-    url_detalhar = reverse('gestao:detalhar', args=[sistema_cultura.id])
-    html_cancelar = "<a href=\"{url_detalhar}\" class=\"btn btn-danger\">Cancelar</a>".format(url_detalhar=url_detalhar)
+    url = reverse('gestao:detalhar', kwargs={"cod_ibge": sistema_cultura.ente_federado.cod_ibge})
+    html = "<a href=\"{url}\" class=\"btn btn-danger\">Cancelar</a>".format(url=url)
 
-    assert html_cancelar in rendered_template
+    assert html in rendered_template
 
 
 def test_botao_acao_enviar_diligencia_template(template, client, context):

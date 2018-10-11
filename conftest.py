@@ -6,7 +6,10 @@ from django.contrib.auth import get_user_model
 
 from model_mommy import mommy
 
+from model_mommy.recipe import Recipe
+
 from planotrabalho.models import SituacoesArquivoPlano
+from adesao.models import EnteFederado
 from adesao.models import Usuario
 
 
@@ -33,6 +36,48 @@ def situacoes(django_db_setup, django_db_blocker):
         yield
 
         SituacoesArquivoPlano.objects.all().delete()
+
+
+@pytest.fixture(autouse=True, scope="session")
+def ente_federado(django_db_setup, django_db_blocker):
+
+    ufs = {
+            11: "RO",
+            12: "AC",
+            13: "AM",
+            14: "RR",
+            15: "PA",
+            16: "AP",
+            17: "TO",
+            21: "MA",
+            22: "PI",
+            23: "CE",
+            24: "RN",
+            25: "PB",
+            26: "PE",
+            27: "AL",
+            28: "SE",
+            29: "BA",
+            31: "MG",
+            32: "ES",
+            33: "RJ",
+            35: "SP",
+            41: "PR",
+            42: "SC",
+            43: "RS",
+            50: "MS",
+            51: "MT",
+            52: "GO",
+            53: "DF"
+            }
+
+    with django_db_blocker.unblock():
+        for cod, uf in ufs.items():
+            mommy.make("EnteFederado", cod_ibge=cod, nome=uf)
+
+        yield
+
+        EnteFederado.objects.all().delete()
 
 
 @pytest.fixture(scope='function')
@@ -131,3 +176,20 @@ def plano_trabalho(login):
     orgao_gestor.delete()
     conselheiro.delete()
     ente_federado.delete()
+
+
+@pytest.fixture(scope='function')
+def sistema_cultura():
+
+    ente_federado = EnteFederado.objects.first()
+
+    sistema_cultura = mommy.make(
+            "SistemaCultura",
+            ente_federado=ente_federado,
+            _fill_optional=['cadastrador']
+            )
+
+    yield sistema_cultura
+
+    sistema_cultura.delete()
+
