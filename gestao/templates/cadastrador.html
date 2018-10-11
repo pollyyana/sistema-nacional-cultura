@@ -64,7 +64,7 @@ $('#cadastradorModal').on('show.bs.modal', function (event) {
 	searchCPF = function(cpf) {
 		debugger
 		$.ajax({
-			url: {% url 'gestao:ajax-consulta-cpf' %},
+			url: {% url 'gestao:ajax-consulta-cpf' object.pk %},
 			data: {cpf: cpf},
 			dataType: 'json',
 			success: function(response){

@@ -76,9 +76,12 @@ urlpatterns = [
             login_url='adesao:login'), name='situacao_6'),
 
     # Detalhar usuário
-    re_path(r'^detalhar/municipio/(?P<pk>[0-9]+)$',
-        staff_member_required(views.DetalharEnte.as_view()),
-        name='detalhar'),
+    path('ente/<int:cod_ibge>',
+            staff_member_required(views.DetalharEnte.as_view()),
+            name='detalhar'),
+    # re_path(r'^detalhar/municipio/(?P<pk>[0-9]+)$',
+    #     staff_member_required(views.DetalharEnte.as_view()),
+    #     name='detalhar'),
     url(r'^usuarios/',
         staff_member_required(
             views.ListarUsuarios.as_view(),

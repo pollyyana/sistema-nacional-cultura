@@ -1,22 +1,18 @@
-from threading import Thread
-from itertools import chain
-
-from django.contrib.contenttypes.models import ContentType
-from django.core.mail import send_mail
-
 from django.db.models import Case, When, DateField, Count, Q
 from django.db.models.functions import Least
+from django.utils.translation import gettext as _
 
 from django.shortcuts import redirect
 from django.shortcuts import render
 from django.shortcuts import get_object_or_404
 
-from django.http import Http404, JsonResponse, HttpResponseRedirect
+from django.http import Http404
 from django.http import JsonResponse
-from django.http import HttpResponseRedirect
 
 from django.contrib.auth.models import User
 from django.contrib import messages
+
+from django.views.generic.detail import SingleObjectMixin
 
 from django.views.generic import CreateView
 from django.views.generic import DetailView
@@ -46,7 +42,6 @@ from planotrabalho.models import ConselhoCultural
 from planotrabalho.models import SituacoesArquivoPlano
 from planotrabalho.models import Componente
 
-from gestao.utils import enviar_email_aprovacao_plano
 from gestao.utils import empty_to_none
 
 from adesao.models import Uf
@@ -517,21 +512,51 @@ class DetalharUsuario(DetailView):
         return context
 
 
-class DetalharEnte(DetailView):
+class LookUpAnotherFieldMixin(SingleObjectMixin):
+
+    lookup_field = None
+
+    def get_object(self, queryset=None):
+
+        if queryset is None:
+            queryset = self.get_queryset()
+
+        pk = self.kwargs.get(self.pk_url_kwarg)
+        slug = self.kwargs.get(self.slug_url_kwarg)
+        lookup_field = self.lookup_field
+
+        if pk is not None and lookup_field is None:
+            queryset = queryset.filter(pk=pk)
+
+        if slug is not None and (pk is None or self.query_pk_and_slug):
+            slug_field = self.get_slug_field()
+            queryset = queryset.filter(**{slug_field: slug})
+
+        if lookup_field is not None:
+            queryset = queryset.filter(**{lookup_field: pk})
+
+        if pk is None and slug is None and lookup_field is None:
+            raise AttributeError("Generic detail view %s must be called with "
+                                 "either an object pk or a slug."
+                                 % self.__class__.__name__)
+
+        try:
+            # Get the single item from the filtered queryset
+            obj = queryset.get()
+        except queryset.model.DoesNotExist:
+            raise Http404(_("No %(verbose_name)s found matching the query") %
+                          {'verbose_name': queryset.model._meta.verbose_name})
+        return obj
+
+
+class DetalharEnte(DetailView, LookUpAnotherFieldMixin):
     model = SistemaCultura
     template_name = 'detalhe_municipio.html'
+    pk_url_kwarg = 'cod_ibge'
+    lookup_field = 'ente_federado__cod_ibge'
 
-    def get_context_data(self, **kwargs):
-        context = super(DetalharEnte, self).get_context_data(**kwargs)
-        sistema_cultura = context['sistemacultura']
-
-        if sistema_cultura.cidade:
-            context['historico_sistemas'] = SistemaCultura.objects.por_municipio(sistema_cultura.uf,
-                sistema_cultura.cidade)
-        else:
-            context['historico_sistemas'] = SistemaCultura.objects.por_municipio(municipio.estado)
-
-        return context
+    def get_queryset(self, queryset=None):
+        return SistemaCultura.sistema.all()
 
 
 class ListarUsuarios(ListView):
