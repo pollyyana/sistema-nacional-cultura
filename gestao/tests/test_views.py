@@ -1136,7 +1136,7 @@ def test_ajax_cadastrador_cpf(client, login_staff):
 
 
 def test_ajax_cadastrador_cpf_inexistente(client, login_staff):
-    """ Testa retorno ao passar um ente federado não existente """
+    """ Testa retorno ao passar um cpf inexistente """
 
     url = reverse('gestao:ajax-consulta-cpf')
 
@@ -1145,6 +1145,30 @@ def test_ajax_cadastrador_cpf_inexistente(client, login_staff):
     response = client.post(url, data={"cpf":"123467890"}, HTTP_X_REQUESTED_WITH='XMLHttpRequest')
 
     assert response.status_code == 404
+
+
+def test_ajax_cadastrador_sem_cpf(client, login_staff):
+    """ Testa retorno ao não passar um cpf """
+
+    url = reverse('gestao:ajax-consulta-cpf')
+
+    client.login(username=login_staff.user.username, password='123456')
+
+    response = client.post(url, data={"cpf":""}, HTTP_X_REQUESTED_WITH='XMLHttpRequest')
+
+    assert response.status_code == 400
+
+
+def test_ajax_cadastrador_sem_requisicao_ajax(client, login_staff):
+    """ Testa retorno ao não passar uma requisição ajax """
+
+    url = reverse('gestao:ajax-consulta-cpf')
+
+    client.login(username=login_staff.user.username, password='123456')
+
+    response = client.post(url, data={"cpf":"123467890"})
+
+    assert response.status_code == 400
 
 
 def test_pesquisa_por_ente_federado_com_arquivo_lei_sistema(client, login_staff):

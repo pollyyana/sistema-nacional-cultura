@@ -176,22 +176,14 @@ class DiligenciaGeralForm(DiligenciaForm):
 
 class AlterarCadastradorForm(forms.Form):
     cpf_usuario = forms.CharField(max_length=11)
-    estado = forms.ModelChoiceField(
-        queryset=Uf.objects.all(),
-        widget=autocomplete.ModelSelect2(url='gestao:uf_chain')
-    )
-
-    municipio = forms.ModelChoiceField(
-        queryset=Cidade.objects.all(),
-        widget=autocomplete.ModelSelect2(url='gestao:cidade_chain',
-            forward=['estado']
-        ),
-        required=False
-    )
-
     data_publicacao_acordo = forms.DateField(required=False)
 
+    def __init__(self, cod_ibge=None, *args, **kwargs):
+        super(AlterarCadastradorForm, self).__init__(*args, **kwargs)
+        self.cod_ibge = cod_ibge
+
     def clean_cpf_usuario(self):
+        #import ipdb; ipdb.set_trace()
         if not validar_cpf(self.cleaned_data['cpf_usuario']):
             raise forms.ValidationError('Por favor, digite um CPF válido!')
 
@@ -208,17 +200,14 @@ class AlterarCadastradorForm(forms.Form):
     def save(self):
         cadastrador_novo = Usuario.objects.get(
                 user__username=self.cleaned_data['cpf_usuario'])
-        sistema = SistemaCultura.objects.ativo_ou_cria(
-                cidade=self.cleaned_data.get('municipio', None),
-                uf=self.cleaned_data['estado'])
-
+        sistema = SistemaCultura.sistema.get(ente_federado__cod_ibge=self.cod_ibge)
         sistema.cadastrador = cadastrador_novo
         sistema.save()
 
         return sistema
 
     class Meta:
-        fields = ('cpf_usuario', 'estado', 'municipio', 'data_publicacao_acordo')
+        fields = ('cpf_usuario', 'data_publicacao_acordo')
 
 
 class AlterarUsuarioForm(ModelForm):

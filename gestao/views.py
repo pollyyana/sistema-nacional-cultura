@@ -75,6 +75,11 @@ class AlterarCadastrador(FormView):
     form_class = AlterarCadastradorForm
     success_url = reverse_lazy('gestao:alterar_cadastrador')
 
+    def get_form_kwargs(self):
+        kwargs = super(AlterarCadastrador, self).get_form_kwargs()
+        kwargs.update(self.kwargs)
+        return kwargs
+
     def form_valid(self, form):
         form.save()
         messages.success(self.request, 'Cadastrador alterado com sucesso')

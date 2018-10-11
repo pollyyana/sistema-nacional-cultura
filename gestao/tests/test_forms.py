@@ -158,26 +158,23 @@ def test_campos_form_altera_cadastrador(client):
     """
 
     form = AlterarCadastradorForm()
-    fields = ("cpf_usuario", "estado", "municipio", "data_publicacao_acordo")
+    fields = ("cpf_usuario", "data_publicacao_acordo")
 
     assert set(form.Meta.fields) == set(fields)
 
 
-@pytest.skip("Deve acompanhar a refatoração do processo de alterar cadastrador")
-def test_save_alterar_cadastrador_form_com_sistemacultura(sistema_cultura):
+def test_save_alterar_cadastrador_form_com_sistemacultura(sistema_cultura, login):
     """
     Método save do form AlterarCadastradorForm altera as informações necessárias,
     quando um ente fedarado já possui um SistemaCultura associado
     """
 
-    data = {'cpf_usuario': new_user.user.username,
-            'estado': municipio.estado.codigo_ibge,
-            'municipio': municipio.cidade.id}
+    data = {'cpf_usuario': login.user.username}
 
     form = AlterarCadastradorForm(data=data)
     form.is_valid()
     form.save()
 
-    municipio.refresh_from_db()
+    sistema_cultura.refresh_from_db()
 
-    assert municipio.usuario == new_user
+    assert sistema_cultura.cadastrador == login

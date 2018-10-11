@@ -15,7 +15,7 @@
 						</button>
 					</div>
 					<div class="modal-body">
-						<form method="POST" action={% url 'gestao:alterar_cadastrador' %}>
+						<form method="POST" action={% url 'gestao:alterar_cadastrador' object.ente_federado.cod_ibge %}>
 							<div class="form-group">
 								<label for="nome-atual" class="col-form-label">Nome:</label>
 								<input type="text" class="form-control" id="nome-atual" disable>
@@ -32,7 +32,7 @@
 							<div class="form-group">
 								<div class="input-group">
 									<label for="cpf-novo" class="col-form-label">CPF:</label>
-									<input type="text" class="form-control" placeholder="Procurar pelo CPF" id="cpf-novo" name="cpf_cadastrador"/>
+									<input type="text" class="form-control" placeholder="Procurar pelo CPF" id="id_cpf_usuario" name="cpf_cadastrador"/>
 									<div class="input-group-btn">
 										<button class="btn btn-primary" type="submit">
 											<span class="glyphicon glyphicon-search"></span>
