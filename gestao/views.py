@@ -111,7 +111,7 @@ class UfChain(autocomplete.Select2QuerySetView):
         """ Filtra todas as uf passando nome ou sigla """
 
         choices = Uf.objects.filter(
-                    Q(sigla__iexact=self.q) | 
+                    Q(sigla__iexact=self.q) |
                     Q(nome_uf__unaccent__icontains=self.q)
                 ).values_list('pk', 'sigla', named=True)
         return choices
@@ -134,11 +134,18 @@ def alterar_dados_adesao(request, pk):
 
 
 def ajax_consulta_cpf(request):
-    if not request.is_ajax():
-        return JsonResponse(data={"message": "Esta não é uma requisição AJAX"})
 
-    cpf = getattr(request.data, 'cpf', None)
-    nome = Usuario.objects.get(cpf=cpf).nome_usuario
+    if not request.is_ajax():
+        return JsonResponse(data={"message": "Esta não é uma requisição AJAX"}, status=400)
+
+    cpf = request.POST.get('cpf', None)
+    if not cpf:
+        return JsonResponse(data={"message": "CPF não informado"}, status=400)
+
+    try:
+        nome = Usuario.objects.get(user__username=cpf).nome_usuario
+    except Usuario.DoesNotExist:
+        return JsonResponse(data={"message": "CPF não encontrado"}, status=404)
 
     return JsonResponse(data={"data": {"nome": nome}})
 
@@ -357,8 +364,8 @@ class AcompanharSistema(ListView):
             usuarios = usuarios.exclude(
                 plano_trabalho__criacao_sistema__arquivo=None)
         else:
-            raise Http404    
-        
+            raise Http404
+
         if q:
             usuarios = usuarios.filter(
                 municipio__cidade__nome_municipio__unaccent__icontains=q)

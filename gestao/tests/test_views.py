@@ -295,7 +295,7 @@ def test_salvar_informacoes_no_banco(url, client, login_staff):
     arquivo = SimpleUploadedFile("lei.txt", b"file_content", content_type="text/plain")
     orgao_gestor.arquivo = arquivo
     orgao_gestor.save()
-    
+
     response = client.post(
         url.format(id=sistema_cultura.id, componente="orgao_gestor", resultado="0"),
         data={"classificacao_arquivo": "4", "texto_diligencia": "bla"},
@@ -519,7 +519,7 @@ def test_criacao_diligencia_exclusiva_para_gestor(client, url, plano_trabalho, l
 
 
 def test_listar_documentos(client, plano_trabalho, login_staff):
-    """ Testa funcionalidade de listagem de entes federados para alterar seus documentos 
+    """ Testa funcionalidade de listagem de entes federados para alterar seus documentos
     na tela de gestão """
 
     templates = ["listar_sistemas", "listar_orgaos", "listar_fundos", "listar_conselhos"]
@@ -798,7 +798,7 @@ def test_situacoes_componentes_diligencia(url, client, plano_trabalho, login_sta
     plano = mommy.make("Componente", tipo=4, situacao=5, _create_files=True)
 
     sistema_cultura = mommy.make("SistemaCultura", _fill_optional=['ente_federado',
-        'cadastrador'], legislacao=legislacao, orgao_gestor=orgao, 
+        'cadastrador'], legislacao=legislacao, orgao_gestor=orgao,
         fundo_cultura=fundo, conselho=conselho, plano=plano)
 
     url = f"/gestao/{sistema_cultura.id}/diligencia"
@@ -975,7 +975,7 @@ def test_acompanhar_adesao_ordenar_data_um_componente_por_plano(client, login_st
 
 
 def test_acompanhar_adesao_ordenar_data_com_plano_com_mais_de_um_componente(client, login_staff):
-    """ Testa se na página de acompanhamento de adesões, quando há planos com múltiplos 
+    """ Testa se na página de acompanhamento de adesões, quando há planos com múltiplos
     componentes, o correto é considerado para ordenação pela data """
 
     user_plano_1 = mommy.make('Usuario', _fill_optional=['plano_trabalho', 'municipio'])
@@ -1119,66 +1119,44 @@ def test_alterar_cadastrador_estado(client, login_staff):
     assert municipio.usuario == new_user
 
 
-def test_ajax_cadastrador_cpf_ente_existente_muncipal(client, login_staff,
-                                                      plano_trabalho):
+def test_ajax_cadastrador_cpf(client, login_staff):
     """ Testa retorno de CPF do cadastrador de um ente federado municipal
     existente no sistema """
-    municipio = plano_trabalho.usuario.municipio
-    usuario = plano_trabalho.usuario
 
-    url = reverse('gestao:ajax_cadastrador_cpf')
-    url = url + '?municipio={}&estado={}'.format(municipio.cidade.id,
-                                                 municipio.estado.codigo_ibge)
+    url = reverse('gestao:ajax-consulta-cpf')
+
     client.login(username=login_staff.user.username, password='123456')
 
-    response = client.get(url)
+    response = client.post(url,
+            data={"cpf": login_staff.user.username},
+            HTTP_X_REQUESTED_WITH='XMLHttpRequest')
 
     assert response.status_code == 200
-    assert response.json()['data_publicacao_acordo'] == str(usuario.data_publicacao_acordo)
-    assert response.json()['cpf'] == usuario.user.username
+    assert response.json()['data']['nome'] == str(login_staff.nome_usuario)
 
 
-def test_ajax_cadastrador_cpf_ente_existente_estadual(client, login_staff,
-                                                      plano_trabalho):
-    """ Testa retorno de CPF do cadastrador de um ente federado estadual
-    existente no sistema """
-    municipio = mommy.make('Municipio')
-    usuario = mommy.make('Usuario', municipio=municipio,
-                         _fill_optional=['data_publicacao_acordo'])
-
-    url = reverse('gestao:ajax_cadastrador_cpf')
-    url = url + '?estado={}'.format(municipio.estado.codigo_ibge)
-    client.login(username=login_staff.user.username, password='123456')
-
-    response = client.get(url)
-
-    assert response.status_code == 200
-    assert response.json()['data_publicacao_acordo'] == str(usuario.data_publicacao_acordo)
-    assert response.json()['cpf'] == usuario.user.username
-
-
-def test_ajax_cadastrador_ente_inexistente(client, login_staff):
+def test_ajax_cadastrador_cpf_inexistente(client, login_staff):
     """ Testa retorno ao passar um ente federado não existente """
 
-    url = reverse('gestao:ajax_cadastrador_cpf') + '?estado=&municipio=0'
+    url = reverse('gestao:ajax-consulta-cpf')
 
     client.login(username=login_staff.user.username, password='123456')
 
-    response = client.get(url)
+    response = client.post(url, data={"cpf":"123467890"}, HTTP_X_REQUESTED_WITH='XMLHttpRequest')
 
-    assert response.status_code == 400
+    assert response.status_code == 404
 
 
 def test_pesquisa_por_ente_federado_com_arquivo_lei_sistema(client, login_staff):
-    """ Testa a pesquisa pelo nome (sem acento) de um Ente Federado 
+    """ Testa a pesquisa pelo nome (sem acento) de um Ente Federado
     que tenha o arquivo Lei Sistema aguardando análise
     """
-    
+
     arquivo = SimpleUploadedFile(
         "orgao.txt", b"file_content", content_type="text/plain"
     )
 
-    municipio = mommy.make('Municipio', cidade= mommy.make('Cidade', nome_municipio='Abaeté'))    
+    municipio = mommy.make('Municipio', cidade= mommy.make('Cidade', nome_municipio='Abaeté'))
 
     user = mommy.make('Usuario', _fill_optional=['plano_trabalho'], municipio=municipio)
     user.estado_processo = '6'
@@ -1190,7 +1168,7 @@ def test_pesquisa_por_ente_federado_com_arquivo_lei_sistema(client, login_staff)
     user.plano_trabalho.criacao_sistema.arquivo = arquivo
     user.plano_trabalho.criacao_sistema.save()
 
-    url = reverse('gestao:acompanhar_sistema') + '?q=Abaete&anexo=arquivo' 
+    url = reverse('gestao:acompanhar_sistema') + '?q=Abaete&anexo=arquivo'
     response = client.get(url)
 
     assert response.context_data['object_list'][0].municipio == user.municipio
@@ -1198,15 +1176,15 @@ def test_pesquisa_por_ente_federado_com_arquivo_lei_sistema(client, login_staff)
 
 
 def test_pesquisa_por_ente_federado_com_arquivo_plano_cultura(client, login_staff):
-    """ Testa a pesquisa pelo nome (sem acento) de um Ente Federado 
+    """ Testa a pesquisa pelo nome (sem acento) de um Ente Federado
     que tenha o arquivo Plano Cultura aguardando análise
     """
-    
+
     arquivo = SimpleUploadedFile(
         "orgao.txt", b"file_content", content_type="text/plain"
     )
 
-    municipio = mommy.make('Municipio', cidade= mommy.make('Cidade', nome_municipio='Abaeté'))    
+    municipio = mommy.make('Municipio', cidade= mommy.make('Cidade', nome_municipio='Abaeté'))
 
     user = mommy.make('Usuario', _fill_optional=['plano_trabalho'], municipio=municipio)
     user.estado_processo = '6'
@@ -1218,23 +1196,23 @@ def test_pesquisa_por_ente_federado_com_arquivo_plano_cultura(client, login_staf
     user.plano_trabalho.plano_cultura.arquivo = arquivo
     user.plano_trabalho.plano_cultura.save()
 
-    url = reverse('gestao:acompanhar_plano') + '?q=Abaete&anexo=arquivo' 
+    url = reverse('gestao:acompanhar_plano') + '?q=Abaete&anexo=arquivo'
     response = client.get(url)
 
     assert response.context_data['object_list'][0].municipio == user.municipio
     assert response.context_data['object_list'][0].municipio.cidade.nome_municipio == 'Abaeté'
 
-    
+
 def test_pesquisa_por_ente_federado_com_arquivo_fundo_cultura(client, login_staff):
-    """ Testa a pesquisa pelo nome (sem acento) de um Ente Federado 
+    """ Testa a pesquisa pelo nome (sem acento) de um Ente Federado
     que tenha o arquivo Fundo Cultura aguardando análise
     """
-    
+
     arquivo = SimpleUploadedFile(
         "orgao.txt", b"file_content", content_type="text/plain"
     )
 
-    municipio = mommy.make('Municipio', cidade= mommy.make('Cidade', nome_municipio='Abaeté'))    
+    municipio = mommy.make('Municipio', cidade= mommy.make('Cidade', nome_municipio='Abaeté'))
 
     user = mommy.make('Usuario', _fill_optional=['plano_trabalho'], municipio=municipio)
     user.estado_processo = '6'
@@ -1246,7 +1224,7 @@ def test_pesquisa_por_ente_federado_com_arquivo_fundo_cultura(client, login_staf
     user.plano_trabalho.fundo_cultura.arquivo = arquivo
     user.plano_trabalho.fundo_cultura.save()
 
-    url = reverse('gestao:acompanhar_fundo') + '?q=Abaete&anexo=arquivo' 
+    url = reverse('gestao:acompanhar_fundo') + '?q=Abaete&anexo=arquivo'
     response = client.get(url)
 
     assert response.context_data['object_list'][0].municipio == user.municipio
@@ -1254,15 +1232,15 @@ def test_pesquisa_por_ente_federado_com_arquivo_fundo_cultura(client, login_staf
 
 
 def test_pesquisa_por_ente_federado_com_arquivo_orgao_gestor(client, login_staff):
-    """ Testa a pesquisa pelo nome (sem acento) de um Ente Federado 
+    """ Testa a pesquisa pelo nome (sem acento) de um Ente Federado
     que tenha o arquivo Orgão Gestor aguardando análise
     """
-    
+
     arquivo = SimpleUploadedFile(
         "orgao.txt", b"file_content", content_type="text/plain"
     )
 
-    municipio = mommy.make('Municipio', cidade= mommy.make('Cidade', nome_municipio='Abaeté'))    
+    municipio = mommy.make('Municipio', cidade= mommy.make('Cidade', nome_municipio='Abaeté'))
 
     user = mommy.make('Usuario', _fill_optional=['plano_trabalho'], municipio=municipio)
     user.estado_processo = '6'
@@ -1274,7 +1252,7 @@ def test_pesquisa_por_ente_federado_com_arquivo_orgao_gestor(client, login_staff
     user.plano_trabalho.orgao_gestor.arquivo = arquivo
     user.plano_trabalho.orgao_gestor.save()
 
-    url = reverse('gestao:acompanhar_orgao') + '?q=Abaete&anexo=arquivo' 
+    url = reverse('gestao:acompanhar_orgao') + '?q=Abaete&anexo=arquivo'
     response = client.get(url)
 
     assert response.context_data['object_list'][0].municipio == user.municipio
@@ -1282,15 +1260,15 @@ def test_pesquisa_por_ente_federado_com_arquivo_orgao_gestor(client, login_staff
 
 
 def test_pesquisa_por_ente_federado_com_arquivo_conselho_cultural(client, login_staff):
-    """ Testa a pesquisa pelo nome (sem acento) de um Ente Federado 
+    """ Testa a pesquisa pelo nome (sem acento) de um Ente Federado
     que tenha o arquivo Conselho Cultural aguardando análise
     """
-    
+
     arquivo = SimpleUploadedFile(
         "orgao.txt", b"file_content", content_type="text/plain"
     )
 
-    municipio = mommy.make('Municipio', cidade= mommy.make('Cidade', nome_municipio='Abaeté'))    
+    municipio = mommy.make('Municipio', cidade= mommy.make('Cidade', nome_municipio='Abaeté'))
 
     user = mommy.make('Usuario', _fill_optional=['plano_trabalho'], municipio=municipio)
     user.estado_processo = '6'
@@ -1302,7 +1280,7 @@ def test_pesquisa_por_ente_federado_com_arquivo_conselho_cultural(client, login_
     user.plano_trabalho.conselho_cultural.arquivo = arquivo
     user.plano_trabalho.conselho_cultural.save()
 
-    url = reverse('gestao:acompanhar_conselho') + '?q=Abaete&anexo=arquivo' 
+    url = reverse('gestao:acompanhar_conselho') + '?q=Abaete&anexo=arquivo'
     response = client.get(url)
 
     assert response.context_data['object_list'][0].municipio == user.municipio
@@ -1313,14 +1291,14 @@ def test_pesquisa_por_ente_federado_inserir_documentos_listar_sistemas(client, l
     """ Testa a pesquisa pelo nome (sem acento) de um Ente Federado na tela
     de listar documentos de sistemas de Cultura
     """
-    
-    municipio = mommy.make('Municipio', cidade= mommy.make('Cidade', nome_municipio='Abaeté'))    
+
+    municipio = mommy.make('Municipio', cidade= mommy.make('Cidade', nome_municipio='Abaeté'))
 
     user = mommy.make('Usuario', _fill_optional=['plano_trabalho'], municipio=municipio)
     user.estado_processo = '6'
     user.save()
 
-    url = reverse('gestao:listar_documentos', kwargs={'template': 'listar_sistemas'}) + '?q=Abaete' 
+    url = reverse('gestao:listar_documentos', kwargs={'template': 'listar_sistemas'}) + '?q=Abaete'
     response = client.get(url)
 
     assert response.context_data['object_list'][0].municipio == user.municipio
@@ -1331,14 +1309,14 @@ def test_pesquisa_por_ente_federado_inserir_documentos_listar_orgaos(client, log
     """ Testa a pesquisa pelo nome (sem acento) de um Ente Federado na tela
     de listar documentos de Ogãos
     """
-    
-    municipio = mommy.make('Municipio', cidade= mommy.make('Cidade', nome_municipio='Abaeté'))    
+
+    municipio = mommy.make('Municipio', cidade= mommy.make('Cidade', nome_municipio='Abaeté'))
 
     user = mommy.make('Usuario', _fill_optional=['plano_trabalho'], municipio=municipio)
     user.estado_processo = '6'
     user.save()
 
-    url = reverse('gestao:listar_documentos', kwargs={'template': 'listar_orgaos'}) + '?q=Abaete' 
+    url = reverse('gestao:listar_documentos', kwargs={'template': 'listar_orgaos'}) + '?q=Abaete'
     response = client.get(url)
 
     assert response.context_data['object_list'][0].municipio == user.municipio
@@ -1348,14 +1326,14 @@ def test_pesquisa_por_ente_federado_inserir_documentos_listar_orgaos(client, log
 def test_pesquisa_por_ente_federado_inserir_documentos_listar_conselhos(client, login_staff):
     """ Testa a pesquisa pelo nome (sem acento) de um Ente Federado na tela de listar documentos de Conselhos
     """
-    
-    municipio = mommy.make('Municipio', cidade= mommy.make('Cidade', nome_municipio='Abaeté'))    
+
+    municipio = mommy.make('Municipio', cidade= mommy.make('Cidade', nome_municipio='Abaeté'))
 
     user = mommy.make('Usuario', _fill_optional=['plano_trabalho'], municipio=municipio)
     user.estado_processo = '6'
     user.save()
 
-    url = reverse('gestao:listar_documentos', kwargs={'template': 'listar_conselhos'}) + '?q=Abaete' 
+    url = reverse('gestao:listar_documentos', kwargs={'template': 'listar_conselhos'}) + '?q=Abaete'
     response = client.get(url)
 
     assert response.context_data['object_list'][0].municipio == user.municipio
@@ -1365,14 +1343,14 @@ def test_pesquisa_por_ente_federado_inserir_documentos_listar_conselhos(client, 
 def test_pesquisa_por_ente_federado_inserir_documentos_listar_fundos(client, login_staff):
     """ Testa a pesquisa pelo nome (sem acento) de um Ente Federado na tela de listar documentos de fundos
     """
-    
-    municipio = mommy.make('Municipio', cidade= mommy.make('Cidade', nome_municipio='Abaeté'))    
+
+    municipio = mommy.make('Municipio', cidade= mommy.make('Cidade', nome_municipio='Abaeté'))
 
     user = mommy.make('Usuario', _fill_optional=['plano_trabalho'], municipio=municipio)
     user.estado_processo = '6'
     user.save()
 
-    url = reverse('gestao:listar_documentos', kwargs={'template': 'listar_fundos'}) + '?q=Abaete' 
+    url = reverse('gestao:listar_documentos', kwargs={'template': 'listar_fundos'}) + '?q=Abaete'
     response = client.get(url)
 
     assert response.context_data['object_list'][0].municipio == user.municipio
@@ -1382,14 +1360,14 @@ def test_pesquisa_por_ente_federado_inserir_documentos_listar_fundos(client, log
 def test_pesquisa_por_ente_federado_inserir_documentos_listar_planos(client, login_staff):
     """ Testa a pesquisa pelo nome (sem acento) de um Ente Federado na tela de listar documentos de planos de Cultura
     """
-    
-    municipio = mommy.make('Municipio', cidade= mommy.make('Cidade', nome_municipio='Abaeté'))    
+
+    municipio = mommy.make('Municipio', cidade= mommy.make('Cidade', nome_municipio='Abaeté'))
 
     user = mommy.make('Usuario', _fill_optional=['plano_trabalho'], municipio=municipio)
     user.estado_processo = '6'
     user.save()
 
-    url = reverse('gestao:listar_documentos', kwargs={'template': 'listar_planos'}) + '?q=Abaete' 
+    url = reverse('gestao:listar_documentos', kwargs={'template': 'listar_planos'}) + '?q=Abaete'
     response = client.get(url)
 
     assert response.context_data['object_list'][0].municipio == user.municipio
@@ -1400,10 +1378,10 @@ def test_adicionar_prazo_permanecendo_na_mesma_pagina_apos_redirect(client, logi
     """ Testa se ao adicionar prazo a um Ente Federado, a tela permanecerá na mesma página (verificação pela url) """
 
     users = mommy.make('Usuario', _fill_optional=['plano_trabalho', 'municipio'], _quantity=15)
-    
+
     for user in users:
         user.estado_processo = '6'
-        user.data_publicacao_acordo = datetime.date(2018, 1, 1)    
+        user.data_publicacao_acordo = datetime.date(2018, 1, 1)
         user.save()
 
     page = 2
@@ -1424,34 +1402,34 @@ def test_se_o_ente_permanece_na_mesma_pagina_apos_adicionar_prazo(client, login_
 
     users = mommy.make('Usuario', prazo=2, estado_processo=6 , data_publicacao_acordo = datetime.date(2018, 1, 1),
                         _fill_optional=['plano_trabalho'], _quantity=20)
-                        
-    users[0].municipio = mommy.make('Municipio', cidade=mommy.make('Cidade', nome_municipio='AAAAAA', uf=uf), 
+
+    users[0].municipio = mommy.make('Municipio', cidade=mommy.make('Cidade', nome_municipio='AAAAAA', uf=uf),
                                     estado=uf, cnpj_prefeitura='13.348.479/0001-01')
     users[0].save()
 
     for user in users[1:19]:
         user.municipio = mommy.make('Municipio', estado=uf, cidade=mommy.make('Cidade', uf=uf), cnpj_prefeitura='13.348.479/0001-01')
         user.save()
-    
+
     url = reverse('gestao:aditivar_prazo', kwargs={'id': str(users[0].id), 'page': '1'})
     request = client.post(url)
     url_apos_redirect = request.url
 
     response = client.get(url_apos_redirect)
-    
+
     if users[0] in response.context_data['object_list']:
         resposta_ok = True
-    
+
     assert resposta_ok == True
     assert request.status_code == 302
     assert response.context_data['object_list'][0] == users[0]
-    
+
 
 def test_pesquisa_de_ente_federado_sem_acento_tela_adicionar_prazo(client, login_staff):
     """ Testa a pesquisa por nome do ente federado (sem acento) - Deve retornar o nome
     com o acento normalmente """
 
-    municipio = mommy.make('Municipio', cidade= mommy.make('Cidade', nome_municipio='Acrelândia'))    
+    municipio = mommy.make('Municipio', cidade= mommy.make('Cidade', nome_municipio='Acrelândia'))
 
     user = mommy.make('Usuario', _fill_optional=['plano_trabalho'], municipio=municipio)
     user.estado_processo = '6'

@@ -17,8 +17,12 @@ urlpatterns = [
     url(r'^alterar/dados-adesao/(?P<pk>[0-9]+)$',
         staff_member_required(views.alterar_dados_adesao, login_url='adesao:login'),
         name='alterar_dados_adesao'),
-    url(r'^alterar/cadastrador/municipio/',
-        staff_member_required(views.AlterarCadastrador.as_view()), name='alterar_cadastrador'),
+
+    # Rota para AlterarCadastrador
+    path('ente/<int:cod_ibge>/alterarcadastrador',
+        staff_member_required(views.AlterarCadastrador.as_view()),
+        name='alterar_cadastrador'),
+
     # Acompanhar e aditivar prazos dos municípios
     url(r'^acompanhar/prazo/',
         staff_member_required(views.AcompanharPrazo.as_view()), name='acompanhar_prazo'),
@@ -167,7 +171,7 @@ urlpatterns = [
         staff_member_required(views.DiligenciaGeralCreateView.as_view()),
         name="diligencia_geral_adicionar"),
 
-    path("<int:pk>/ajax/consultar_cpf",
+    path("ajax/consultar_cpf",
             staff_member_required(views.ajax_consulta_cpf),
             name="ajax-consulta-cpf"),
     ]
