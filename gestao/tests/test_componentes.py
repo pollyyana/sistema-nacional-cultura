@@ -18,16 +18,10 @@ pytestmark = pytest.mark.django_db
 
 
 @pytest.fixture
-def usuario():
-
-    return mommy.make("Usuario")
-
-
-@pytest.fixture
-def context(usuario):
+def context(login):
     """ Retorna um contexto básico necessário para rendereziar o template de diligência """
 
-    context = Context({'usuario_id': usuario.id})
+    context = Context({'usuario_id': login.id})
     return context
 
 
@@ -75,41 +69,36 @@ def test_retorno_do_botao_cancelar_de_diligencia(client, template, context, sist
     assert html in rendered_template
 
 
-def test_botao_acao_enviar_diligencia_template(template, client, context):
-    """Testa existencia dos botão de enviar
-    no template de diligência"""
+def test_botao_acao_enviar_diligencia_template(template, client, context, sistema_cultura):
+    """Testa existencia dos botão de enviar no template de diligência"""
 
-    context['sistema_cultura'] = mommy.make("SistemaCultura").id
+    context['sistema_cultura'] = sistema_cultura
     rendered_template = template.render(context)
 
     assert "<input class=\"btn btn-primary\" type=\"submit\"></input>" in rendered_template
 
 
-def test_gestao_template(template, client, context):
+def test_gestao_template(template, client, context, sistema_cultura):
     """Testa se o template da gestão está sendo carregado"""
 
-    sistema_cultura = mommy.make("SistemaCultura")
-
-    context['sistema_cultura'] = sistema_cultura.id
+    context['sistema_cultura'] = sistema_cultura
     rendered_template = template.render(context)
 
     assert "<!DOCTYPE html>" in rendered_template
 
 
-def test_informacoes_arquivo_enviado(template, client, context):
+def test_informacoes_arquivo_enviado(template, client, context, sistema_cultura):
     """Testa se o template exibe as informações do arquivo enviado"""
 
-    sistema_cultura = mommy.make("SistemaCultura")
-
     context['ente_federado'] = 'Pará'
-    context['sistema_cultura'] = sistema_cultura.id
+    context['sistema_cultura'] = sistema_cultura
 
     rendered_template = template.render(context)
 
     assert context['ente_federado'] in rendered_template
 
 
-def test_opcoes_de_classificacao_da_diligencia(template, client, usuario, sistema_cultura, context):
+def test_opcoes_de_classificacao_da_diligencia(template, client, context, login, sistema_cultura):
     """Testa se a Classificação(Motivo) apresenta as opções conforme a especificação."""
 
     opcoes = ("Arquivo danificado",
@@ -117,10 +106,10 @@ def test_opcoes_de_classificacao_da_diligencia(template, client, usuario, sistem
               "Arquivo incorreto"
               )
 
-    form = DiligenciaComponenteForm(componente='orgao_gestor', usuario=usuario,
+    form = DiligenciaComponenteForm(componente='orgao_gestor', usuario=login,
         sistema_cultura=sistema_cultura)
     context['form'] = form
-    context['sistema_cultura'] = sistema_cultura.id
+    context['sistema_cultura'] = sistema_cultura
     context['componente'] = mommy.make("Componente")
     rendered_template = template.render(context)
 
@@ -129,7 +118,7 @@ def test_opcoes_de_classificacao_da_diligencia(template, client, usuario, sistem
     assert opcoes[2] in rendered_template
 
 
-def test_opcoes_em_um_dropdown(template, client, usuario, sistema_cultura, context):
+def test_opcoes_em_um_dropdown(template, client, context, login, sistema_cultura):
     """Testa se as Classificações(Motivo) estão presentes dentro de um dropdown."""
     opcoes = [
             {"description": "Arquivo danificado", "value": "4"},
@@ -137,10 +126,10 @@ def test_opcoes_em_um_dropdown(template, client, usuario, sistema_cultura, conte
             {"description": "Arquivo incorreto", "value": "6"}
     ]
 
-    form = DiligenciaComponenteForm(componente='orgao_gestor', usuario=usuario,
+    form = DiligenciaComponenteForm(componente='orgao_gestor', usuario=login,
         sistema_cultura=sistema_cultura)
     context['form'] = form
-    context['sistema_cultura'] = sistema_cultura.id
+    context['sistema_cultura'] = sistema_cultura
     context['componente'] = mommy.make("Componente")
     rendered_template = template.render(context)
 
@@ -150,10 +139,8 @@ def test_opcoes_em_um_dropdown(template, client, usuario, sistema_cultura, conte
     assert "</select>" in rendered_template
 
 
-def test_informacoes_do_historico_de_diligecias_do_componente(template, client, context):
+def test_informacoes_do_historico_de_diligecias_do_componente(template, client, context, sistema_cultura):
     """ Testa informações referente ao histórico de diligências do componente. """
-
-    sistema_cultura = mommy.make("SistemaCultura")
 
     diligencias = [
         {"usuario": {"nome_usuario": "Jaozin Silva" }, "classificacao_arquivo": {"descricao": "Arquivo Danificado"},
@@ -167,7 +154,7 @@ def test_informacoes_do_historico_de_diligecias_do_componente(template, client, 
     ]
 
     context['historico_diligencias'] = diligencias
-    context['sistema_cultura'] = sistema_cultura.id
+    context['sistema_cultura'] = sistema_cultura
     rendered_template = template.render(context)
 
     for diligencia in diligencias:
@@ -177,10 +164,8 @@ def test_informacoes_do_historico_de_diligecias_do_componente(template, client, 
         assert diligencia['texto_diligencia'] in rendered_template
 
 
-def test_formatacao_individual_das_diligencias_no_historico(template, client, context):
+def test_formatacao_individual_das_diligencias_no_historico(template, client, context, sistema_cultura):
     """Testa a formatacao de cada uma das diligências dentro do bloco de Histórico de Diligências."""
-
-    sistema_cultura = mommy.make("SistemaCultura")
 
     diligencias = [
         {"usuario": {"nome_usuario": "Jaozin Silva" }, "classificacao_arquivo": {"descricao": "Arquivo Danificado"},
@@ -194,7 +179,7 @@ def test_formatacao_individual_das_diligencias_no_historico(template, client, co
     ]
 
     context['historico_diligencias'] = diligencias
-    context['sistema_cultura'] = sistema_cultura.id
+    context['sistema_cultura'] = sistema_cultura
     rendered_template = template.render(context)
     for diligencia in diligencias:
 
@@ -204,22 +189,22 @@ def test_formatacao_individual_das_diligencias_no_historico(template, client, co
         assert "<li class=\"list-group-item\" style=\"border: 1px solid #b3b5b6\"><b>Resumo:</b> {resumo}</li>".format(resumo=diligencia["texto_diligencia"]) in rendered_template
 
 
-def test_renderizacao_js_form_diligencia(template, client, context):
+def test_renderizacao_js_form_diligencia(template, client, context, sistema_cultura, login):
     """Testa se o javascript do form está sendo renderizado corretamente"""
-    sistema_cultura = mommy.make("SistemaCultura")
-    usuario = mommy.make("Usuario")
-    form = DiligenciaForm(sistema_cultura=sistema_cultura, usuario=usuario)
+
+    form = DiligenciaForm(sistema_cultura=sistema_cultura, usuario=login)
 
     context['form'] = form
-    context['sistema_cultura'] = sistema_cultura.id
+    context['sistema_cultura'] = sistema_cultura
 
     rendered_template = template.render(context)
 
     assert "<script type=\"text/javascript\" src=\"/static/ckeditor/ckeditor/ckeditor.js\">" in rendered_template
 
 
-def test_opcoes_de_avaliacao_documentos_plano_de_trabalho(client, login_staff):
-    """ Testa se há a opção de avaliar negativamente e positivamente um documento enviado do Plano Trabalho """
+def test_opcoes_de_avaliacao_documentos_plano_de_trabalho(client, login_staff, sistema_cultura):
+    """ Testa se há a opção de avaliar negativamente e positivamente um
+    documento enviado do Plano Trabalho """
 
     componentes = (
         'orgao_gestor',
@@ -231,71 +216,75 @@ def test_opcoes_de_avaliacao_documentos_plano_de_trabalho(client, login_staff):
 
     legislacao = mommy.make("Componente", tipo=0, situacao=1)
     arquivo = SimpleUploadedFile("lei.txt", b"file_content", content_type="text/plain")
-    diligencia = mommy.make("Diligencia")
+    diligencia = mommy.make("DiligenciaSimples")
     orgao_gestor = mommy.make("Componente", tipo=1, situacao=1)
     fundo = mommy.make("Componente", tipo=2, situacao=1)
     conselho = mommy.make("Componente", tipo=3, situacao=1)
     plano = mommy.make("Componente", tipo=4, situacao=1)
 
-    sistema_cultura = mommy.make("SistemaCultura", _fill_optional='ente_federado', legislacao=legislacao, orgao_gestor=orgao_gestor,
-        fundo_cultura=fundo, conselho=conselho, plano=plano, estado_processo='6')
+    sistema_cultura.legislacao = legislacao
+    sistema_cultura.orgao_gestor = orgao_gestor
+    sistema_cultura.fundo_cultura = fundo
+    sistema_cultura.conselho = conselho
+    sistema_cultura.plano = plano
+    sistema_cultura.estado_processo = '6'
+    sistema_cultura.save()
 
     orgao_gestor.arquivo = arquivo
-    orgao_gestor.diligencias.add(diligencia)
+    orgao_gestor.diligencia = diligencia
     orgao_gestor.save()
 
     legislacao.arquivo = arquivo
-    legislacao.diligencias.add(diligencia)
+    legislacao.diligencia = diligencia
     legislacao.save()
 
     conselho.arquivo = arquivo
-    conselho.diligencias.add(diligencia)
+    conselho.diligencia = diligencia
     conselho.save()
 
     fundo.arquivo = arquivo
-    fundo.diligencias.add(diligencia)
+    fundo.diligencia = diligencia
     fundo.save()
 
     plano.arquivo = arquivo
-    plano.diligencias.add(diligencia)
+    plano.diligencia = diligencia
     plano.save()
 
-    request = client.get('/gestao/detalhar/municipio/{}'.format(sistema_cultura.id))
+    request = client.get(f"/gestao/ente/{sistema_cultura.ente_federado.cod_ibge}")
 
     for componente in componentes:
         assert '<a href=\"/gestao/{}/diligencia/{}/{}\">'.format(sistema_cultura.id, componente, "0") in request.rendered_content
         assert '<a href=\"/gestao/{}/diligencia/{}/{}\">'.format(sistema_cultura.id, componente, "1") in request.rendered_content
 
 
-def test_informacoes_diligencia_componente(client, login_staff):
+def test_informacoes_diligencia_componente(client, login_staff, sistema_cultura):
     """
     Testa se a linha de download do arquivo é renderizada, visto que
     só deve ser renderizada quando a diligência é por componente
     """
+
     orgao_gestor = mommy.make("Componente", tipo=1, situacao=1)
-    sistema_cultura = mommy.make("SistemaCultura", _fill_optional=['ente_federado','cadastrador'],
-        orgao_gestor=orgao_gestor)
+    sistema_cultura.orgao_gestor = orgao_gestor
+    sistema_cultura.save()
 
     arquivo = SimpleUploadedFile("lei.txt", b"file_content", content_type="text/plain")
     orgao_gestor.arquivo = arquivo
     orgao_gestor.save()
 
     request = client.get('/gestao/{}/diligencia/{}/{}'.format(
-        sistema_cultura.id, "orgao_gestor", "1"))
+        sistema_cultura.ente_federado.cod_ibge, "orgao_gestor", "1"))
 
     assert "<h2>Informações sobre o Arquivo Enviado</h2>" in request.rendered_content
     assert "<b>Download do arquivo</b>" in request.rendered_content
 
 
-def test_informacoes_diligencia_geral(client, login_staff):
+def test_informacoes_diligencia_geral(client, login_staff, sistema_cultura):
     """
     Testa se linha de informações sobre o Plano Trabalho é renderizada,
     visto que só deve ser renderizada quando a diligência é geral.
     """
 
-    sistema_cultura = mommy.make("SistemaCultura", _fill_optional=['ente_federado','cadastrador'])
-    sistema_cultura = SistemaCultura.objects.first()
-    request = client.get('/gestao/{}/diligencia/add'.format(
-        sistema_cultura.id))
+    cod_ibge = sistema_cultura.ente_federado.cod_ibge
+    request = client.get('/gestao/{cod_ibge}/diligencia/add')
 
     assert "<h2>Informações sobre o Plano Trabalho</h2>" in request.rendered_content
