@@ -4,6 +4,7 @@ from django.shortcuts import reverse
 
 from gestao.forms import DiligenciaComponenteForm, DiligenciaGeralForm
 from gestao.models import DiligenciaSimples
+from adesao.models import SistemaCultura
 
 from ckeditor.widgets import CKEditorWidget
 from dal.autocomplete import ModelSelect2
@@ -163,18 +164,18 @@ def test_campos_form_altera_cadastrador(client):
     assert set(form.Meta.fields) == set(fields)
 
 
-def test_save_alterar_cadastrador_form_com_sistemacultura(sistema_cultura, login):
+def test_save_alterar_cadastrador_form_com_sistemacultura(sistema_cultura):
     """
     Método save do form AlterarCadastradorForm altera as informações necessárias,
     quando um ente fedarado já possui um SistemaCultura associado
     """
 
-    data = {'cpf_usuario': login.user.username}
+    usuario = mommy.make("Usuario", user__username='11416309071')
+    data = {'cpf_usuario': usuario.user.username}
 
-    form = AlterarCadastradorForm(data=data)
+    form = AlterarCadastradorForm(data=data, cod_ibge=sistema_cultura.ente_federado.cod_ibge)
     form.is_valid()
     form.save()
 
-    sistema_cultura.refresh_from_db()
-
-    assert sistema_cultura.cadastrador == login
+    sistema_atualizado = SistemaCultura.sistema.get(ente_federado__cod_ibge=sistema_cultura.ente_federado.cod_ibge)
+    assert sistema_atualizado.cadastrador == usuario
