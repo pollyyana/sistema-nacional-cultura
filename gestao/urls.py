@@ -8,16 +8,13 @@ app_name = 'gestao'
 
 urlpatterns = [
     # Acompanhar andamento dos processos de adesão
-    # url(r'^$', staff_member_required(
-    #     views.AcompanharAdesao.as_view(),
-    #     login_url='adesao:login'), name='acompanhar_adesao'),
     path('', staff_member_required(
         views.AcompanharSistemaCultura.as_view(),
         login_url='adesao:login'), name='acompanhar_adesao'),
-    url(r'^alterar/dados-adesao/(?P<pk>[0-9]+)$',
-        staff_member_required(views.alterar_dados_adesao, login_url='adesao:login'),
+    path('ente/<int:cod_ibge>/dados-adesao',
+        staff_member_required(views.AlterarDadosEnte.as_view()),
         name='alterar_dados_adesao'),
-
+    
     # Rota para AlterarCadastrador
     path('ente/<int:cod_ibge>/alterarcadastrador',
         staff_member_required(views.AlterarCadastrador.as_view()),

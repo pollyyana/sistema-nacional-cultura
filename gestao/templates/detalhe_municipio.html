@@ -8,53 +8,53 @@
           <div class="panel-body">
               <div class="row">
                   <div class="col-md-7">
-                    <p><strong>Localização:</strong> {{object.ente_federado}}</p>
-                    <p><strong>CNPJ:</strong> {{ object.sede.cnpj }}</p>
+                    <p><strong>Localização:</strong> {{ente.ente_federado}}</p>
+                    <p><strong>CNPJ:</strong> {{ ente.sede.cnpj }}</p>
                     <p><strong>Prefeito:</strong>
-                        {% if object.gestor.termo_posse %}
-                        <a href="{{ object.gestor.termo_posse.url }}">{{ object.gestor.nome }}</a>
+                        {% if ente.gestor.termo_posse %}
+                        <a href="{{ ente.gestor.termo_posse.url }}">{{ ente.gestor.nome }}</a>
                         {% else %}
-                        {{ object.gestor.nome }}
+                        {{ ente.gestor.nome }}
                         {% endif %}
                     </p>
                     <p><strong>CPF:</strong>
-                        {% if object.gestor.cpf %}
-                        <a href="{{ object.gestor.cpf.url }}">{{ object.gestor.cpf }}</a>
+                        {% if ente.gestor.cpf %}
+                        <a href="{{ ente.gestor.cpf.url }}">{{ ente.gestor.cpf }}</a>
                         {% else %}
-                        {{ object.gestor.cpf }}
+                        {{ ente.gestor.cpf }}
                         {% endif %}
                     </p>
                     <p><strong>RG:</strong>
-                         {% if object.gestor.rg %}
-                         <a href="{{ object.gestor.rg.url }}">{{ object.gestor.rg }}</a>
+                         {% if ente.gestor.rg %}
+                         <a href="{{ ente.gestor.rg.url }}">{{ ente.gestor.rg }}</a>
                          {% else %}
-                         {{ object.gestor.rg }}
+                         {{ ente.gestor.rg }}
                          {% endif %}
                     </p>
-                    <p><strong>E-mail:</strong> {{ object.gestor.email_institucional }}</p>
+                    <p><strong>E-mail:</strong> {{ ente.gestor.email_institucional }}</p>
 
                 </div>
 
                 <div class="col-md-5">
-                    <p><strong>Telefone:</strong> {{ object.sede.telefone_um }}</p>
-                    <p><strong>Endereço:</strong> {{ object.sede.endereco }}</p>
-                    <p><strong>Complemento:</strong> {{ object.sede.complemento }}</p>
-                    <p><strong>Bairro:</strong> {{ object.sede.bairro }}</p>
-                    {% if object.processo_sei %}
+                    <p><strong>Telefone:</strong> {{ ente.sede.telefone_um }}</p>
+                    <p><strong>Endereço:</strong> {{ ente.sede.endereco }}</p>
+                    <p><strong>Complemento:</strong> {{ ente.sede.complemento }}</p>
+                    <p><strong>Bairro:</strong> {{ ente.sede.bairro }}</p>
+                    {% if ente.processo_sei %}
                       <p>
                         <strong>Processo SEI:</strong> 
-                          {% if object.processo_sei %}
-                            {{object.processo_sei}}
+                          {% if ente.processo_sei %}
+                            {{ente.processo_sei}}
                           {% endif %}
                       </p>
                     {% endif %}
-                    {% if object.data_publicacao_acordo %}
+                    {% if ente.data_publicacao_acordo %}
                       <p>
                         <strong>Publicação no DOU:</strong> 
-                          {% if object.link_publicacao_acordo %}
-                            <a href="{{ object.link_publicacao_acordo }}"> {{object.data_publicacao_acordo|date:'d/m/Y'}}</a>
+                          {% if ente.link_publicacao_acordo %}
+                            <a href="{{ ente.link_publicacao_acordo }}"> {{ente.data_publicacao_acordo|date:'d/m/Y'}}</a>
                           {% else %}
-                            {{object.data_publicacao_acordo|date:'d/m/Y'}} 
+                            {{ente.data_publicacao_acordo|date:'d/m/Y'}} 
                           {% endif %}
                       </p>
                     {% endif %}
@@ -70,13 +70,13 @@
             Dados do Interlocutor
           </div>
           <div class="panel-body">
-            <p><strong>Nome:</strong> {{ object.secretario.nome }}</p>
-            <p><strong>CPF:</strong> {{ object.secretario.cpf }}</p>
-            <p><strong>RG:</strong> {{ object.secretario.rg }}</p>
-            <p><strong>Cargo:</strong> {{ object.secretario.cargo }}</p>
-            <p><strong>Instituição:</strong> {{ object.secretario.instituicao }}</p>
-            <p><strong>E-mail:</strong> {{ object.secretario.email_institucional }}</p>
-            <p><strong>Telefone:</strong> {{ object.secretario.telefone_um }}</p>
+            <p><strong>Nome:</strong> {{ ente.secretario.nome }}</p>
+            <p><strong>CPF:</strong> {{ ente.secretario.cpf }}</p>
+            <p><strong>RG:</strong> {{ ente.secretario.rg }}</p>
+            <p><strong>Cargo:</strong> {{ ente.secretario.cargo }}</p>
+            <p><strong>Instituição:</strong> {{ ente.secretario.instituicao }}</p>
+            <p><strong>E-mail:</strong> {{ ente.secretario.email_institucional }}</p>
+            <p><strong>Telefone:</strong> {{ ente.secretario.telefone_um }}</p>
           </div>
         </div>
     </div>
@@ -91,17 +91,17 @@
           <div class="panel-body">
               <div class="row">
                   <div class="col-md-6">
-                    <p><strong>Nome:</strong> {{ object.responsavel.nome }}</p>
-                    <p><strong>CPF:</strong> {{ object.responsavel.cpf }}</p>
-                    <p><strong>RG:</strong> {{ object.responsavel.rg }}</p>
-                    <p><strong>Cargo:</strong> {{ object.responsavel.cargo }}</p>
+                    <p><strong>Nome:</strong> {{ ente.responsavel.nome }}</p>
+                    <p><strong>CPF:</strong> {{ ente.responsavel.cpf }}</p>
+                    <p><strong>RG:</strong> {{ ente.responsavel.rg }}</p>
+                    <p><strong>Cargo:</strong> {{ ente.responsavel.cargo }}</p>
 
                   </div>
                   <div class="col-md-6">
 
-                    <p><strong>Instituição:</strong> {{ object.responsavel.instituicaol }}</p>
-                    <p><strong>E-mail:</strong> {{ object.responsavel.email_institucional }}</p>
-                    <p><strong>Telefone:</strong> {{ object.responsavel.telefone_um }}</p>
+                    <p><strong>Instituição:</strong> {{ ente.responsavel.instituicaol }}</p>
+                    <p><strong>E-mail:</strong> {{ ente.responsavel.email_institucional }}</p>
+                    <p><strong>Telefone:</strong> {{ ente.responsavel.telefone_um }}</p>
                   </div>
 
               </div>
@@ -115,23 +115,23 @@
             Dados do Cadastrador
           </div>
           <div class="panel-body">
-            <p><strong>CPF:</strong> {{ object.cadastrador.user.username }}</p>
-            <p><strong>Nome:</strong> {{ object.cadastrador.nome_usuario }}</p>
-            <p><strong>E-mail:</strong> {{ object.cadastrador.user.email }}</p>
-            <p><strong>Data de cadastro:</strong> {{ object.cadastrador.data_cadastro }}</p>
+            <p><strong>CPF:</strong> {{ ente.cadastrador.user.username }}</p>
+            <p><strong>Nome:</strong> {{ ente.cadastrador.nome_usuario }}</p>
+            <p><strong>E-mail:</strong> {{ ente.cadastrador.user.email }}</p>
+            <p><strong>Data de cadastro:</strong> {{ ente.cadastrador.data_cadastro }}</p>
           </div>
         </div>
     </div>
 </div>
 
-{% if object.estado_processo == '6' %}
+{% if ente.estado_processo == '6' %}
 <div class="panel panel-info">
   <div class="panel-heading">
     Dados do Plano de Trabalho
   </div>
 
   <div class="panel-body">
-  {% if object.legislacao.arquivo %}
+  {% if ente.legislacao.arquivo %}
     <div class="list-group row">
         <div class="col-md-12">
             <div  class="list-group-item col-xs-8">
@@ -139,20 +139,20 @@
             </div>
 
             <div class="list-group-item col-xs-2 text-center">
-              <a href="{{ object.legislacao.arquivo.url}}">Download</a>
+              <a href="{{ ente.legislacao.arquivo.url}}">Download</a>
             </div>
-            {% if object.legislacao.situacao == 1 %}
+            {% if ente.legislacao.situacao == 1 %}
 
               <div class="list-group-item col-xs-1 text-center ">
-                <a href="{% url 'gestao:diligencia_componente' pk=object.id componente='legislacao' resultado='0' %}"><i class="fa fa-thumbs-down"></i></a>
+                <a href="{% url 'gestao:diligencia_componente' pk=ente.id componente='legislacao' resultado='0' %}"><i class="fa fa-thumbs-down"></i></a>
             </div>
 
             <div class="list-group-item col-xs-1 text-center">
-                <a href="{% url 'gestao:diligencia_componente' pk=object.id componente='legislacao' resultado='1' %}"><i class="fa fa-thumbs-up"></i></a>
+                <a href="{% url 'gestao:diligencia_componente' pk=ente.id componente='legislacao' resultado='1' %}"><i class="fa fa-thumbs-up"></i></a>
             </div>
             {% else %}
             <div class="list-group-item col-xs-2 text-center">
-                <b>{{ object.legislacao.situacao.descricao }}</b>
+                <b>{{ ente.legislacao.situacao.descricao }}</b>
             </div>
         {% endif %}
 
@@ -160,7 +160,7 @@
     </div>
   {% endif %}
 
-    {% if object.orgao_gestor.arquivo %}
+    {% if ente.orgao_gestor.arquivo %}
     <div class="list-group row">
       <div class="col-md-12">
           <div  class="list-group-item col-xs-8">
@@ -168,20 +168,20 @@
           </div>
 
           <div class="list-group-item col-xs-2 text-center">
-            <a href="{{ object.orgao_gestor.arquivo.url }}">Download</a>
+            <a href="{{ ente.orgao_gestor.arquivo.url }}">Download</a>
           </div>
-          {% if object.orgao_gestor.situacao == 1 %}
+          {% if ente.orgao_gestor.situacao == 1 %}
 
           <div class="list-group-item col-xs-1 text-center">
-              <a href="{% url 'gestao:diligencia_componente' pk=object.id componente='orgao_gestor' resultado='0' %}"><i class="fa fa-thumbs-down"></i></a>
+              <a href="{% url 'gestao:diligencia_componente' pk=ente.id componente='orgao_gestor' resultado='0' %}"><i class="fa fa-thumbs-down"></i></a>
           </div>
 
           <div class="list-group-item col-xs-1 text-center">
-              <a href="{% url 'gestao:diligencia_componente' pk=object.id componente='orgao_gestor' resultado='1' %}"><i class="fa fa-thumbs-up"></i></a>
+              <a href="{% url 'gestao:diligencia_componente' pk=ente.id componente='orgao_gestor' resultado='1' %}"><i class="fa fa-thumbs-up"></i></a>
           </div>
           {% else %}
           <div class="list-group-item col-xs-2 text-center">
-              <b>{{ object.orgao_gestor.situacao.descricao }}</b>
+              <b>{{ ente.orgao_gestor.situacao.descricao }}</b>
           </div>
           {% endif %}
 
@@ -189,7 +189,7 @@
     </div>
     {% endif %}
 
-    {% if object.conselho.arquivo %}
+    {% if ente.conselho.arquivo %}
     <div class="list-group row">
       <div class="col-md-12">
           <div  class="list-group-item col-xs-8">
@@ -197,20 +197,20 @@
           </div>
 
           <div class="list-group-item col-xs-2 text-center">
-            <a href="{{ object.conselho.arquivo.url }}">Download</a>
+            <a href="{{ ente.conselho.arquivo.url }}">Download</a>
           </div>
-          {% if object.conselho.situacao == 1 %}
+          {% if ente.conselho.situacao == 1 %}
 
           <div class="list-group-item col-xs-1 text-center">
-              <a href="{% url 'gestao:diligencia_componente' pk=object.id componente='conselho' resultado='0' %}"><i class="fa fa-thumbs-down"></i></a>
+              <a href="{% url 'gestao:diligencia_componente' pk=ente.id componente='conselho' resultado='0' %}"><i class="fa fa-thumbs-down"></i></a>
           </div>
 
           <div class="list-group-item col-xs-1 text-center">
-              <a href="{% url 'gestao:diligencia_componente' pk=object.id componente='conselho' resultado='1' %}"><i class="fa fa-thumbs-up"></i></a>
+              <a href="{% url 'gestao:diligencia_componente' pk=ente.id componente='conselho' resultado='1' %}"><i class="fa fa-thumbs-up"></i></a>
           </div>
           {% else %}
           <div class="list-group-item col-xs-2 text-center">
-              <b>{{ object.conselho.get_situacao_display }}</b>
+              <b>{{ ente.conselho.get_situacao_display }}</b>
           </div>
           {% endif %}
 
@@ -218,28 +218,28 @@
     </div>
     {% endif %}
 
-    {% if object.fundo_cultura.arquivo %}
+    {% if ente.fundo_cultura.arquivo %}
     <div class="list-group row">
        <div class="col-md-12">
           <div  class="list-group-item col-xs-8">
-            Fundo de Cultura - Lei {% if object.fundo_cultura.cnpj_fundo_cultura %} (CNPJ: {{object.fundo_cultura.cnpj_fundo_cultura}}) {% endif %}
+            Fundo de Cultura - Lei {% if ente.fundo_cultura.cnpj_fundo_cultura %} (CNPJ: {{ente.fundo_cultura.cnpj_fundo_cultura}}) {% endif %}
           </div>
 
           <div class="list-group-item col-xs-2 text-center">
-            <a href="{{ object.fundo_cultura.arquivo.url }}">Download</a>
+            <a href="{{ ente.fundo_cultura.arquivo.url }}">Download</a>
           </div>
-          {% if object.fundo_cultura.situacao == 1 %}
+          {% if ente.fundo_cultura.situacao == 1 %}
 
           <div class="list-group-item col-xs-1 text-center">
-              <a href="{% url 'gestao:diligencia_componente' pk=object.id componente='fundo_cultura' resultado='0' %}"><i class="fa fa-thumbs-down"></i></a>
+              <a href="{% url 'gestao:diligencia_componente' pk=ente.id componente='fundo_cultura' resultado='0' %}"><i class="fa fa-thumbs-down"></i></a>
           </div>
 
           <div class="list-group-item col-xs-1 text-center">
-              <a href="{% url 'gestao:diligencia_componente' pk=object.id componente='fundo_cultura' resultado='1' %}"><i class="fa fa-thumbs-up"></i></a>
+              <a href="{% url 'gestao:diligencia_componente' pk=ente.id componente='fundo_cultura' resultado='1' %}"><i class="fa fa-thumbs-up"></i></a>
           </div>
           {% else %}
           <div class="list-group-item col-xs-2 text-center">
-              <b>{{ object.fundo_cultura.situacao.descricao }}</b>
+              <b>{{ ente.fundo_cultura.situacao.descricao }}</b>
           </div>
           {% endif %}
 
@@ -249,7 +249,7 @@
 
 
 
-    {% if object.plano.arquivo %}
+    {% if ente.plano.arquivo %}
     <div class="list-group row">
         <div class="col-md-12">
           <div  class="list-group-item col-xs-8">
@@ -257,20 +257,20 @@
           </div>
 
           <div class="list-group-item col-xs-2 text-center">
-            <a href="{{ object.plano_cultura.arquivo.url}}">Download</a>
+            <a href="{{ ente.plano_cultura.arquivo.url}}">Download</a>
           </div>
-          {% if object.plano.situacao == 1 %}
+          {% if ente.plano.situacao == 1 %}
 
           <div class="list-group-item col-xs-1 text-center">
-              <a href="{% url 'gestao:diligencia_componente' pk=object.id componente='plano' resultado='0' %}"><i class="fa fa-thumbs-down"></i></a>
+              <a href="{% url 'gestao:diligencia_componente' pk=ente.id componente='plano' resultado='0' %}"><i class="fa fa-thumbs-down"></i></a>
           </div>
 
           <div class="list-group-item col-xs-1 text-center">
-              <a href="{% url 'gestao:diligencia_componente' pk=object.id componente='plano' resultado='1' %}"><i class="fa fa-thumbs-up"></i></a>            
+              <a href="{% url 'gestao:diligencia_componente' pk=ente.id componente='plano' resultado='1' %}"><i class="fa fa-thumbs-up"></i></a>            
           </div>
           {% else %}
           <div class="list-group-item col-xs-2 text-center">
-              <b>{{ object.plano.situacao.descricao }}</b>
+              <b>{{ ente.plano.situacao.descricao }}</b>
           </div>
           {% endif %}
 
@@ -287,7 +287,7 @@
               <b>Situação Geral do Plano de Trabalho</b>
             </div>
                 <div class="list-group-item col-xs-4 text-center">
-                    <a href="{% url 'gestao:diligencia_geral_adicionar' pk=object.id %}">Criar Diligência</a>
+                    <a href="{% url 'gestao:diligencia_geral_adicionar' pk=ente.id %}">Criar Diligência</a>
                 </div>
           </div>
         </div>
@@ -329,40 +329,40 @@
           <div class="panel-heading">
             Dados da Adesão
           </div>
-          <form name="form" action="{% url 'gestao:alterar_dados_adesao' object.id %}" method="post">
+          <form name="form" action="{% url 'gestao:alterar_dados_adesao' ente.ente_federado.cod_ibge %}" method="post">
               <div class="panel-body ">
                   {% csrf_token %}
                   <div class="list-group-item col-md-12 text-center">
                       <div class="form-group">
                           <select id="select_situacoes" name="estado_processo" class="form-control">
-                              <option value="1" {% if object.estado_processo == '1' %}selected{% endif %}>Aguardando envio da documentação</option>
-                              <option value="2" {% if object.estado_processo == '2' %}selected{% endif %}>Documentação Recebida - Aguarda Análise</option>
-                              <option value="3" {% if object.estado_processo == '3' %}selected{% endif %}>Diligência Documental</option>
-                              <option value="4" {% if object.estado_processo == '4' %}selected{% endif %}>Encaminhado para assinatura do Secretário SAI</option>
-                              <option value="5" {% if object.estado_processo == '5' %}selected{% endif %}>Aguarda Publicação no DOU</option>
-                              <option value="6" {% if object.estado_processo == '6' %}selected{% endif %}>Publicado no DOU</option>
+                              <option value="1" {% if ente.estado_processo == '1' %}selected{% endif %}>Aguardando envio da documentação</option>
+                              <option value="2" {% if ente.estado_processo == '2' %}selected{% endif %}>Documentação Recebida - Aguarda Análise</option>
+                              <option value="3" {% if ente.estado_processo == '3' %}selected{% endif %}>Diligência Documental</option>
+                              <option value="4" {% if ente.estado_processo == '4' %}selected{% endif %}>Encaminhado para assinatura do Secretário SAI</option>
+                              <option value="5" {% if ente.estado_processo == '5' %}selected{% endif %}>Aguarda Publicação no DOU</option>
+                              <option value="6" {% if ente.estado_processo == '6' %}selected{% endif %}>Publicado no DOU</option>
                             </select>
                       </div>
 
                       <div class="form-group">
-                        <textarea id="justificativa_situacao" name="justificativa" class="form-control hide" style="resize:none" placeholder="Justificativa" rows="4" cols="20">{% if object.estado_processo == '3' %} {{dado_situacao}} {% endif %}</textarea>
-                        <input type="text" id="data_acordo_situacao" name="data_publicacao_acordo" class="form-control date hide" value="{% if object.estado_processo == '6' %} {{object.data_publicacao_acordo}} {% endif %}" placeholder="Data de Publicação"></input>
-                        <input type="text" id="localizacao_situacao" name="localizacao" class="form-control hide" placeholder="Localização" value="{% if object.estado_processo == '2' %} {{object.localizacao}} {% endif %}"></input>
-                        <input type="text" id="num_processo_situacao" name="num_processo" class="form-control hide" placeholder="Número do Processo" value="{% if object.estado_processo == '4' %} {{object.num_processo}} {% endif %}"></input>
+                        <textarea id="justificativa_situacao" name="justificativa" class="form-control hide" style="resize:none" placeholder="Justificativa" rows="4" cols="20">{% if ente.estado_processo == '3' %} {{dado_situacao}} {% endif %}</textarea>
+                        <input type="text" id="data_acordo_situacao" name="data_publicacao_acordo" class="form-control date hide" value="{% if ente.estado_processo == '6' %} {{ente.data_publicacao_acordo}} {% endif %}" placeholder="Data de Publicação"></input>
+                        <input type="text" id="localizacao_situacao" name="localizacao" class="form-control hide" placeholder="Localização" value="{% if ente.estado_processo == '2' %} {{ente.localizacao}} {% endif %}"></input>
+                        <input type="text" id="num_processo_situacao" name="num_processo" class="form-control hide" placeholder="Número do Processo" value="{% if ente.estado_processo == '4' %} {{ente.num_processo}} {% endif %}"></input>
                       </div>
 
                       <div class="form-group">
-                         <input type="text" id="link_acordo_situacao" name="link_publicacao_acordo" class="form-control hide" placeholder="Link da Publicação" value="{% if object.estado_processo == '6' and link_publicacao %} {{object.link_publicacao_acordo}} {% endif %}"></input>
+                         <input type="text" id="link_acordo_situacao" name="link_publicacao_acordo" class="form-control hide" placeholder="Link da Publicação" value="{% if ente.estado_processo == '6' and link_publicacao %} {{ente.link_publicacao_acordo}} {% endif %}"></input>
                       </div>
 
                      <div class="form-group">
-                        <input type="text" id="processo_sei" name="processo_sei" class="form-control" placeholder="Número do Processo SEI" value="{% if object.estado_processo == '6' and processo_sei %} {{object.processo_sei}} {% endif %}"></input>
+                        <input type="text" id="processo_sei" name="processo_sei" class="form-control" placeholder="Número do Processo SEI" value="{% if ente.estado_processo == '6' and processo_sei %} {{ente.processo_sei}} {% endif %}"></input>
                       </div>
 
                       <div class="row">
                           <div class="col-md-12">
                             <button type="submit" class="btn btn-primary btn-xs" title="Alterar Situação" >Salvar</button>
-                            <a href="{% url 'gestao:detalhar' object.id %}" class="btn btn-default btn-xs" value="Cancelar" >Cancelar</a>
+                            <a href="{% url 'gestao:detalhar' ente.ente_federado.cod_ibge %}" class="btn btn-default btn-xs" value="Cancelar" >Cancelar</a>
                           </div>
                       </div>
                       
@@ -407,6 +407,9 @@
     {% include "cadastrador.html" %}
 
 </div>
+{% for evento in historico %}
+<p>{{ evento }}</p>
+{% endfor %}
 
 {% endblock content %}
 
