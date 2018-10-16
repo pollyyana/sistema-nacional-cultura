@@ -17,7 +17,7 @@ urlpatterns = [
     
     # Rota para AlterarCadastrador
     path('ente/<int:cod_ibge>/alterarcadastrador',
-        staff_member_required(views.AlterarCadastrador.as_view()),
+        staff_member_required(views.AlterarCadastradorEnte.as_view()),
         name='alterar_cadastrador'),
 
     # Acompanhar e aditivar prazos dos municípios

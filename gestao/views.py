@@ -65,6 +65,8 @@ from .forms import CriarConselhoForm
 from .forms import CriarFundoForm
 from .forms import CriarPlanoForm
 
+from .forms import CadastradorEnte
+
 
 # Acompanhamento das adesões
 class AlterarCadastrador(UpdateView):
@@ -591,6 +593,16 @@ class AlterarDadosEnte(UpdateView, LookUpAnotherFieldMixin):
     pk_url_kwarg = "cod_ibge"
     lookup_field = "ente_federado__cod_ibge"
     queryset = SistemaCultura.sistema.all()
+
+
+class AlterarCadastradorEnte(UpdateView, LookUpAnotherFieldMixin):
+    model = SistemaCultura
+    queryset = SistemaCultura.sistema.all()
+    form_class = CadastradorEnte
+    context_object_name = "ente"
+    template_name = "detalhe_municipio.html"
+    pk_url_kwarg = "cod_ibge"
+    lookup_field = "ente_federado__cod_ibge"
 
 
 class ListarUsuarios(ListView):

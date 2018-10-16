@@ -82,6 +82,38 @@ class InserirSEI(ModelForm):
         fields = ('processo_sei',)
 
 
+class CadastradorEnte(forms.ModelForm):
+    cpf_cadastrador = forms.CharField(max_length="20")
+    data_publicacao_acordo = forms.DateField(required=False)
+
+    def clean_cpf_cadastrador(self):
+        if not validar_cpf(self.cleaned_data['cpf_cadastrador']):
+            raise forms.ValidationError('Por favor, digite um CPF válido!')
+
+        try:
+            Usuario.objects.get(user__username=self.cleaned_data['cpf_cadastrador'])
+        except Usuario.DoesNotExist:
+            raise forms.ValidationError('Este CPF não está cadastrado.')
+
+        return self.cleaned_data['cpf_cadastrador']
+
+    def save(self):
+        sistema = self.instance
+        cadastrador = Usuario.objects.get(user__username=self.cleaned_data['cpf_cadastrador'])
+        sistema.cadastrador = cadastrador
+
+        if self.cleaned_data['data_publicacao_acordo']:
+            sistema.data_publicacao_acordo = self.cleaned_data['data_publicacao_acordo']
+
+        sistema.save()
+
+        return sistema
+
+    class Meta:
+        model = SistemaCultura
+        fields = ["cpf_cadastrador", "data_publicacao_acordo"]
+
+
 class AlterarDadosAdesao(ModelForm):
     processo_sei = forms.CharField(max_length="50", required=False)
     justificativa = forms.CharField(required=False)
@@ -185,22 +217,22 @@ class AlterarCadastradorForm(forms.Form):
     def clean_cpf_usuario(self):
         #import ipdb; ipdb.set_trace()
         if not validar_cpf(self.cleaned_data['cpf_usuario']):
-            raise forms.ValidationError('Por favor, digite um CPF válido!')
+            raise forms.validationerror('por favor, digite um cpf válido!')
 
         try:
-            User.objects.get(username=''.join(re.findall(
+            user.objects.get(username=''.join(re.findall(
                 '\d+',
                 self.cleaned_data['cpf_usuario'])))
             return self.cleaned_data['cpf_usuario']
-        except User.DoesNotExist:
-            raise forms.ValidationError('Esse CPF não está cadastrado.')
+        except user.doesnotexist:
+            raise forms.validationerror('esse cpf não está cadastrado.')
 
         return self.cleaned_data['cpf_usuario']
 
     def save(self):
-        cadastrador_novo = Usuario.objects.get(
+        cadastrador_novo = usuario.objects.get(
                 user__username=self.cleaned_data['cpf_usuario'])
-        sistema = SistemaCultura.sistema.get(ente_federado__cod_ibge=self.cod_ibge)
+        sistema = sistemacultura.sistema.get(ente_federado__cod_ibge=self.cod_ibge)
         sistema.data_publicacao_acordo = self.cleaned_data['data_publicacao_acordo']
         sistema.cadastrador = cadastrador_novo
         sistema.save()
