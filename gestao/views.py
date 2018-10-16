@@ -67,11 +67,12 @@ from .forms import CriarPlanoForm
 
 
 # Acompanhamento das adesões
-class AlterarCadastrador(FormView):
+class AlterarCadastrador(UpdateView):
     """AlterarCadastrador
     Altera o cadastrador de um Municipio aderido
     """
-    template_name = 'gestao/alterar_cadastrador.html'
+    queryset = SistemaCultura.sistema.all()
+    template_name = 'cadastrador.html'
     form_class = AlterarCadastradorForm
 
     def get_form_kwargs(self):
@@ -81,7 +82,7 @@ class AlterarCadastrador(FormView):
         return kwargs
 
     def get_success_url(self):
-        return reverse_lazy('gestao:alterar_cadastrador', kwargs={'cod_ibge': self.cod_ibge})
+       return reverse_lazy('gestao:alterar_cadastrador', kwargs={'cod_ibge': self.cod_ibge})
 
     def form_valid(self, form):
         form.save()

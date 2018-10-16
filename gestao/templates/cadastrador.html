@@ -3,7 +3,7 @@
 		<div class="panel-heading">
 			Administração da Adesão
 		</div>
-		<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#cadastradorModal" data-cadastrador-nome="{{ object.cadastrador.user.nome_usuario }}" data-cadastrador-cpf="{{ object.cadastrador.user.username }}">Alterar Cadastrador deste ente...</button>
+		<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#cadastradorModal" data-cadastrador-nome="{{ object.cadastrador.nome_usuario }}" data-cadastrador-cpf="{{ object.cadastrador.user.username }}">Alterar Cadastrador deste ente...</button>
 
 		<div class="modal fade" id="cadastradorModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
 			<div class="modal-dialog" role="document">
@@ -18,11 +18,11 @@
 						<form method="POST" action={% url 'gestao:alterar_cadastrador' object.ente_federado.cod_ibge %}>
 							<div class="form-group">
 								<label for="nome-atual" class="col-form-label">Nome:</label>
-								<input type="text" class="form-control" id="nome-atual" disable>
+								<input type="text" class="form-control" id="nome-atual" disabled>
 							</div>
 							<div class="form-group">
 								<label for="cpf-atual" class="col-form-label">CPF:</label>
-								<input type="text" class="form-control" id="cpf-atual" disable>
+								<input type="text" class="form-control" id="cpf-atual" disabled>
 							</div>
 							<hr>
 							<div class="form-group">
@@ -59,25 +59,27 @@
 		var nome_atual = button.data('cadastrador-nome')
 		var cpf_atual = button.data('cadastrador-cpf')
 
-		var modal = $(this)
-		var nome_novo = modal.find('.nome-novo')
+		$('#nome-atual').val(nome_atual)
+		$('#cpf-atual').val(cpf_atual)
 	})
-
 
 	var search = function(){
 		$url = "{% url 'gestao:ajax-consulta-cpf' %}"
+		csrf_token = "{{ csrf_token }}"
 		cpf = $('#id_cpf_usuario').val()
 
 		$.ajax({
 			type: "POST",
 			url: $url,
-			data: {cpf: cpf},
+			data: {
+				cpf: cpf,
+				csrfmiddlewaretoken: csrf_token
+			},
 			dataType: 'json',
 			cache: false,
 			success: function(response){
 				if (response){
-					console.log(response.nome)
-					nome_novo.val(response.nome)
+					$('#nome-novo').val(response.data.nome)
 				}
 			}
 		})
