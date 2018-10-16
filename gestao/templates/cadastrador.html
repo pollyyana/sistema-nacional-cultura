@@ -30,11 +30,12 @@
 								<input type="text" class="form-control" id="nome-novo">
 							</div>
 							<div class="form-group">
+								{% csrf_token %}
+								<label for="id_cpf_usuario" class="col-form-label">CPF:</label>
 								<div class="input-group">
-									<label for="id_cpf_usuario" class="col-form-label">CPF:</label>
 									<input type="text" class="form-control" placeholder="Procurar pelo CPF" id="id_cpf_usuario" name="cpf_cadastrador"/>
 									<div class="input-group-btn">
-										<button class="btn btn-primary" type="button" id="search_cpf">
+										<button class="btn btn-primary" type="button" id="search_cpf" onclick="search()">
 											<span class="glyphicon glyphicon-search"></span>
 										</button>
 									</div>
@@ -42,7 +43,7 @@
 							</div>
 							<div class="modal-footer">
 								<button type="submit" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
-								<button type="button" class="btn btn-primary">Alterar Cadastrador</button>
+								<button type="submit" class="btn btn-primary">Alterar Cadastrador</button>
 							</div>
 						</form>
 					</div>
@@ -53,33 +54,32 @@
 </div>
 
 <script type="text/javascript">
-$('#cadastradorModal').on('show.bs.modal', function (event) {
-	var button = $(event.relatedTarget) // Button that triggered the modal
-	var nome_atual = button.data('cadastrador-nome')
-	var cpf_atual = button.data('cadastrador-cpf')
+	$('#cadastradorModal').on('show.bs.modal', function (event) {
+		var button = $(event.relatedTarget) // Button that triggered the modal
+		var nome_atual = button.data('cadastrador-nome')
+		var cpf_atual = button.data('cadastrador-cpf')
 
-	var modal = $(this)
-	var nome_novo = modal.find('.nome-novo')
+		var modal = $(this)
+		var nome_novo = modal.find('.nome-novo')
+	})
 
-	$("#search_cpf").trigger("click");  
 
-	searchCPF = function(cpf) {
-		debugger
+	var search = function(){
+		$url = "{% url 'gestao:ajax-consulta-cpf' %}"
+		cpf = $('#id_cpf_usuario').val()
+
 		$.ajax({
-			url: {% url 'gestao:ajax-consulta-cpf' %},
+			type: "POST",
+			url: $url,
 			data: {cpf: cpf},
 			dataType: 'json',
+			cache: false,
 			success: function(response){
 				if (response){
+					console.log(response.nome)
 					nome_novo.val(response.nome)
 				}
 			}
 		})
 	}
-})
-
-$('#search_cpf').on('click',function(){
-	alert("button inside modal clicked");
-})
-
 </script>
