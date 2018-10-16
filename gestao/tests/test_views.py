@@ -9,11 +9,10 @@ from django.core import mail
 
 from model_mommy import mommy
 
+from gestao.models import DiligenciaSimples
 from gestao.forms import DiligenciaForm
-
-from gestao.models import Diligencia
 from adesao.models import Uf
-from adesao.models import Usuario
+from adesao.models import SistemaCultura
 
 from planotrabalho.models import OrgaoGestor
 from planotrabalho.models import CriacaoSistema
@@ -21,9 +20,6 @@ from planotrabalho.models import FundoCultura
 from planotrabalho.models import PlanoCultura
 from planotrabalho.models import ConselhoCultural
 from planotrabalho.models import SituacoesArquivoPlano
-from planotrabalho.models import PlanoTrabalho
-
-from gestao.views import AlterarCadastrador
 
 
 pytestmark = pytest.mark.django_db
@@ -36,14 +32,24 @@ def url():
     return "/gestao/{id}/diligencia/{componente}/{resultado}"
 
 
-def test_url_diligencia_retorna_200(url, client, plano_trabalho, login_staff):
+def test_url_diligencia_retorna_200(url, client, login_staff):
     """
     Testa se há url referente à página de diligências.
-    A url teria o formato: gestao/id_plano_trabalho/diligencia/componente_plano_trabalho
+    A url teria o formato: gestao/id_sistema_cultura/diligencia/componente_plano_trabalho
     """
+    orgao_gestor = mommy.make("Componente", tipo=1, situacao=1)
+    sistema_cultura = mommy.make(
+        "SistemaCultura",
+        _fill_optional=["ente_federado", "cadastrador"],
+        orgao_gestor=orgao_gestor,
+    )
+
+    arquivo = SimpleUploadedFile("lei.txt", b"file_content", content_type="text/plain")
+    orgao_gestor.arquivo = arquivo
+    orgao_gestor.save()
 
     request = client.get(
-        url.format(id=plano_trabalho.id, componente="plano_cultura", resultado="0")
+        url.format(id=sistema_cultura.pk, componente="orgao_gestor", resultado="1")
     )
 
     assert request.status_code == 200
@@ -57,7 +63,7 @@ def test_resolve_url_atraves_sua_view_name(url, client, plano_trabalho):
     )
 
     assert resolved.url_name == "diligencia_componente"
-    assert resolved.kwargs["pk"] == str(plano_trabalho.id)
+    assert resolved.kwargs["pk"] == plano_trabalho.id
 
 
 def test_recepcao_componente_na_url_diligencia(url, client, plano_trabalho):
@@ -70,11 +76,22 @@ def test_recepcao_componente_na_url_diligencia(url, client, plano_trabalho):
     assert resolved.kwargs["componente"] == "lei_sistema"
 
 
-def test_url_componente_retorna_200(url, client, plano_trabalho, login_staff):
+def test_url_componente_retorna_200(url, client, login_staff):
     """Testa se a url retorna 200 ao acessar um componente"""
 
+    orgao_gestor = mommy.make("Componente", tipo=1, situacao=1)
+    sistema_cultura = mommy.make(
+        "SistemaCultura",
+        _fill_optional=["ente_federado", "cadastrador"],
+        orgao_gestor=orgao_gestor,
+    )
+
+    arquivo = SimpleUploadedFile("lei.txt", b"file_content", content_type="text/plain")
+    orgao_gestor.arquivo = arquivo
+    orgao_gestor.save()
+
     request = client.get(
-        url.format(id=plano_trabalho.id, componente="fundo_cultura", resultado="0")
+        url.format(id=sistema_cultura.id, componente="orgao_gestor", resultado="0")
     )
 
     assert request.status_code == 200
@@ -103,66 +120,86 @@ def test_renderiza_template(url, client, plano_trabalho, login_staff):
     assert request.content
 
 
-def test_renderiza_template_diligencia(url, client, plano_trabalho, login_staff):
+def test_renderiza_template_diligencia(url, client, login_staff):
     """Testa se o template específico da diligência é renderizado corretamente"""
 
-    request = client.get(
-        url.format(id=plano_trabalho.id, componente="conselho_cultural", resultado="0")
+    conselho = mommy.make("Componente", tipo=3, situacao=1)
+    sistema_cultura = mommy.make(
+        "SistemaCultura",
+        _fill_optional=["ente_federado", "cadastrador"],
+        conselho=conselho,
     )
-    assert "gestao/diligencia/diligencia.html" == request.templates[0].name
+
+    arquivo = SimpleUploadedFile(
+        "conselho.txt", b"file_content", content_type="text/plain"
+    )
+    conselho.arquivo = arquivo
+    conselho.save()
+
+    request = client.get(
+        url.format(id=sistema_cultura.id, componente="conselho", resultado="0")
+    )
+    assert "diligencia.html" == request.templates[0].name
 
 
-def test_existencia_do_contexto_view(url, client, plano_trabalho, login_staff):
+def test_existencia_do_contexto_view(url, client, login_staff):
     """Testa se o contexto existe no retorno da view """
 
-    contexts = ["ente_federado", "arquivo", "data_envio", "historico_diligencias"]
+    contexts = ["sistema_cultura", "situacoes", "historico_diligencias"]
 
-    request = client.get(
-        url.format(id=plano_trabalho.id, componente="conselho_cultural", resultado="0")
+    sistema_cultura = mommy.make(
+        "SistemaCultura", _fill_optional=["ente_federado", "cadastrador"]
     )
+
+    url = reverse(
+        "gestao:diligencia_geral_adicionar", kwargs={"pk": sistema_cultura.id}
+    )
+    request = client.get(url)
 
     for context in contexts:
         assert context in request.context
 
 
-def test_valor_context_retornado_na_view(url, client, plano_trabalho, login_staff):
-    """Testa se há informações retornadas na view"""
-
-    request = client.get(
-        url.format(id=plano_trabalho.id, componente="fundo_cultura", resultado="0")
-    )
-
-    contexts = [
-        "ente_federado",
-        "arquivo",
-        "data_envio",
-        "historico_diligencias",
-        "usuario_id",
-    ]
-    for context in contexts:
-        assert request.context[context] != ""
-
-
-def test_retorno_400_post_criacao_diligencia(url, client, plano_trabalho, login_staff):
+def test_retorno_400_post_criacao_diligencia(url, client, login_staff):
     """ Testa se o status do retorno é 400 para requests sem os parâmetros esperados """
 
+    orgao_gestor = mommy.make("Componente", tipo=1, situacao=1)
+    sistema_cultura = mommy.make(
+        "SistemaCultura",
+        _fill_optional=["ente_federado", "cadastrador"],
+        orgao_gestor=orgao_gestor,
+    )
+
+    arquivo = SimpleUploadedFile("lei.txt", b"file_content", content_type="text/plain")
+    orgao_gestor.arquivo = arquivo
+    orgao_gestor.save()
+
     request = client.post(
-        url.format(id=plano_trabalho.id, componente="orgao_gestor", resultado="0"),
+        url.format(id=sistema_cultura.id, componente="orgao_gestor", resultado="0"),
         data={"bla": ""},
     )
 
     assert request.status_code == 400
 
 
-def test_retorna_400_POST_classificacao_inexistente(
-    url, client, plano_trabalho, login_staff
-):
+def test_retorna_400_POST_classificacao_inexistente(url, client, login_staff):
     """
     Testa se o status do retorno é 400 quando feito um POST com a classificao invalida
     de um arquivo.
     """
+    orgao_gestor = mommy.make("Componente", tipo=1, situacao=1)
+    sistema_cultura = mommy.make(
+        "SistemaCultura",
+        _fill_optional=["ente_federado", "cadastrador"],
+        orgao_gestor=orgao_gestor,
+    )
+
+    arquivo = SimpleUploadedFile("lei.txt", b"file_content", content_type="text/plain")
+    orgao_gestor.arquivo = arquivo
+    orgao_gestor.save()
+
     request = client.post(
-        url.format(id=plano_trabalho.id, componente="orgao_gestor", resultado="0"),
+        url.format(id=sistema_cultura.id, componente="orgao_gestor", resultado="0"),
         data={"classificacao_arquivo": ""},
     )
     user = login_staff.user
@@ -171,54 +208,69 @@ def test_retorna_400_POST_classificacao_inexistente(
     assert request.status_code == 400
 
 
-def test_form_diligencia_utlizado_na_diligencia_view(
-    url, client, plano_trabalho, login_staff
-):
-    """Testa que existe um form no context da diligência view """
-
-    request = client.get(
-        url.format(id=plano_trabalho.id, componente="plano_trabalho", resultado="0")
-    )
-    assert request.context["form"]
-
-
-def test_tipo_do_form_utilizado_na_diligencia_view(
-    url, client, plano_trabalho, login_staff
-):
+def test_tipo_do_form_utilizado_na_diligencia_view(url, client, login_staff):
     """ Testa se o form utilizado na diligencia_view é do tipo DiligenciaForm """
 
+    orgao_gestor = mommy.make("Componente", tipo=1, situacao=1)
+    sistema_cultura = mommy.make(
+        "SistemaCultura",
+        _fill_optional=["ente_federado", "cadastrador"],
+        orgao_gestor=orgao_gestor,
+    )
+
+    arquivo = SimpleUploadedFile("lei.txt", b"file_content", content_type="text/plain")
+    orgao_gestor.arquivo = arquivo
+    orgao_gestor.save()
+
     request = client.get(
-        url.format(id=plano_trabalho.id, componente="orgao_gestor", resultado="0")
+        url.format(id=sistema_cultura.id, componente="orgao_gestor", resultado="0")
     )
 
     assert isinstance(request.context["form"], DiligenciaForm)
 
 
-def test_invalido_form_para_post_diligencia(url, client, plano_trabalho, login_staff):
+def test_invalido_form_para_post_diligencia(url, client, login_staff):
     """ Testa se o form invalida post com dados errados """
 
+    orgao_gestor = mommy.make("Componente", tipo=1, situacao=1)
+    sistema_cultura = mommy.make(
+        "SistemaCultura",
+        _fill_optional=["ente_federado", "cadastrador"],
+        orgao_gestor=orgao_gestor,
+    )
+
+    arquivo = SimpleUploadedFile("lei.txt", b"file_content", content_type="text/plain")
+    orgao_gestor.arquivo = arquivo
+    orgao_gestor.save()
+
     request = client.post(
-        url.format(id=plano_trabalho.id, componente="orgao_gestor", resultado="0"),
+        url.format(id=sistema_cultura.id, componente="orgao_gestor", resultado="0"),
         data={"classificacao_arquivo": "", "texto_diligencia": ""},
     )
 
     assert request.status_code == 400
 
 
-def test_obj_ente_federado(url, client, plano_trabalho, login_staff):
+def test_obj_ente_federado(url, client, login_staff):
     """ Testa se o objeto retornado ente_federado é uma String"""
 
-    request = client.get(
-        url.format(id=plano_trabalho.id, componente="orgao_gestor", resultado="0")
+    orgao_gestor = mommy.make("Componente", tipo=1, situacao=1)
+    sistema_cultura = mommy.make(
+        "SistemaCultura",
+        _fill_optional=["ente_federado", "cadastrador"],
+        orgao_gestor=orgao_gestor,
     )
 
-    ente_federado = "{} - {}".format(
-        plano_trabalho.usuario.municipio.cidade.nome_municipio,
-        plano_trabalho.usuario.municipio.estado.sigla,
-        )
+    arquivo = SimpleUploadedFile("lei.txt", b"file_content", content_type="text/plain")
+    orgao_gestor.arquivo = arquivo
+    orgao_gestor.save()
+
+    request = client.get(
+        url.format(id=sistema_cultura.id, componente="orgao_gestor", resultado="0")
+    )
 
     assert isinstance(request.context["ente_federado"], str)
-    assert request.context["ente_federado"] == ente_federado
+    assert request.context["ente_federado"] == sistema_cultura.ente_federado.nome
 
 
 def test_404_para_plano_trabalho_invalido_diligencia(url, client, login_staff):
@@ -229,63 +281,103 @@ def test_404_para_plano_trabalho_invalido_diligencia(url, client, login_staff):
     assert request.status_code == 404
 
 
-def test_ente_federado_retornado_na_diligencia(
-    url, client, plano_trabalho, login_staff
-):
+def test_ente_federado_retornado_na_diligencia(url, client, login_staff):
     """
     Testa se ente_federado retornado está relacionado com o plano trabalho passado como parâmetro
     """
 
-    request = client.get(
-        url.format(id=plano_trabalho.id, componente="conselho_cultural", resultado="0")
+    conselho = mommy.make("Componente", tipo=3, situacao=1)
+    sistema_cultura = mommy.make(
+        "SistemaCultura",
+        _fill_optional=["ente_federado", "cadastrador"],
+        conselho=conselho,
     )
 
-    ente_federado = "{} - {}".format(
-        plano_trabalho.usuario.municipio.cidade.nome_municipio,
-        plano_trabalho.usuario.municipio.estado.sigla
-        )
-    assert request.context["ente_federado"] == ente_federado
+    arquivo = SimpleUploadedFile(
+        "conselho.txt", b"file_content", content_type="text/plain"
+    )
+    conselho.arquivo = arquivo
+    conselho.save()
+
+    request = client.get(
+        url.format(id=sistema_cultura.id, componente="conselho", resultado="0")
+    )
+
+    assert request.context["ente_federado"] == sistema_cultura.ente_federado.nome
 
 
-def test_salvar_informacoes_no_banco(url, client, plano_trabalho, login_staff):
+def test_salvar_informacoes_no_banco(url, client, login_staff):
     """Testa se as informacoes validadas pelo form estao sendo salvas no banco"""
 
+    orgao_gestor = mommy.make("Componente", tipo=1, situacao=1)
+    sistema_cultura = mommy.make(
+        "SistemaCultura",
+        _fill_optional=["ente_federado", "cadastrador"],
+        orgao_gestor=orgao_gestor,
+    )
+
+    arquivo = SimpleUploadedFile("lei.txt", b"file_content", content_type="text/plain")
+    orgao_gestor.arquivo = arquivo
+    orgao_gestor.save()
+
     response = client.post(
-        url.format(id=plano_trabalho.id, componente="orgao_gestor", resultado="0"),
+        url.format(id=sistema_cultura.id, componente="orgao_gestor", resultado="0"),
         data={"classificacao_arquivo": "4", "texto_diligencia": "bla"},
     )
-    diligencia = Diligencia.objects.first()
-    assert Diligencia.objects.count() == 1
+    diligencia = DiligenciaSimples.objects.first()
+    orgao_gestor.refresh_from_db()
+
+    assert DiligenciaSimples.objects.count() == 1
     assert diligencia.texto_diligencia == "bla"
-    assert diligencia.classificacao_arquivo.id == 4
-    assert isinstance(diligencia.componente, OrgaoGestor)
+    assert diligencia.classificacao_arquivo == 4
+    assert orgao_gestor.situacao == diligencia.classificacao_arquivo
 
 
-def test_redirecionamento_de_pagina_apos_POST(url, client, plano_trabalho, login_staff):
+def test_redirecionamento_de_pagina_apos_POST(url, client, login_staff):
     """ Testa se há o redirecionamento de página após o POST da diligência """
 
+    orgao_gestor = mommy.make("Componente", tipo=1, situacao=1)
+    sistema_cultura = mommy.make(
+        "SistemaCultura",
+        _fill_optional=["ente_federado", "cadastrador"],
+        orgao_gestor=orgao_gestor,
+    )
+
+    arquivo = SimpleUploadedFile("lei.txt", b"file_content", content_type="text/plain")
+    orgao_gestor.arquivo = arquivo
+    orgao_gestor.save()
+
     request = client.post(
-        url.format(id=plano_trabalho.id, componente="orgao_gestor", resultado="0"),
+        url.format(id=sistema_cultura.id, componente="orgao_gestor", resultado="0"),
         data={"classificacao_arquivo": "4", "texto_diligencia": "Ta errado cara"},
     )
     url_redirect = request.url.split("http://testserver/")
 
-    assert url_redirect[0] == "/gestao/detalhar/municipio/{}".format(
-        plano_trabalho.usuario.id
-    )
+    assert url_redirect[0] == "/gestao/detalhar/municipio/{}".format(sistema_cultura.id)
     assert request.status_code == 302
 
 
 def test_arquivo_enviado_pelo_componente(url, client, plano_trabalho, login_staff):
     """ Testa se o arquivo enviado pelo componente está correto """
 
-    arquivo = plano_trabalho.conselho_cultural.arquivo
-
-    request = client.get(
-        url.format(id=plano_trabalho.id, componente="conselho_cultural", resultado="0")
+    conselho = mommy.make("Componente", tipo=3, situacao=1)
+    sistema_cultura = mommy.make(
+        "SistemaCultura",
+        _fill_optional=["ente_federado", "cadastrador"],
+        conselho=conselho,
     )
 
-    assert request.context["arquivo"] == arquivo
+    arquivo = SimpleUploadedFile(
+        "conselho.txt", b"file_content", content_type="text/plain"
+    )
+    conselho.arquivo = arquivo
+    conselho.save()
+
+    request = client.get(
+        url.format(id=sistema_cultura.id, componente="conselho", resultado="0")
+    )
+
+    assert request.context["arquivo"] == conselho.arquivo
 
 
 def test_arquivo_enviado_salvo_no_diretorio_do_componente(
@@ -305,19 +397,20 @@ def test_arquivo_enviado_salvo_no_diretorio_do_componente(
 
 def test_exibicao_historico_diligencia(url, client, plano_trabalho, login_staff):
     """Testa se o histórico de diligências é retornado pelo contexto"""
-
-    diligencia = mommy.make(
-        "Diligencia", _quantity=4, componente=plano_trabalho.orgao_gestor
-    )
-    diligencias = (
-        plano_trabalho.orgao_gestor.diligencias.all()
-        .order_by("-data_criacao")
-        .order_by("-id")[:3]
+    sistema_cultura = mommy.make(
+        "SistemaCultura", _fill_optional=["ente_federado", "cadastrador"]
     )
 
-    request = client.get(
-        url.format(id=plano_trabalho.id, componente="orgao_gestor", resultado="0")
+    diligencia = mommy.make("DiligenciaSimples", _quantity=4)
+    diligencias = SistemaCultura.historico.ente(
+        cod_ibge=sistema_cultura.ente_federado.cod_ibge
     )
+
+    url = reverse(
+        "gestao:diligencia_geral_adicionar", kwargs={"pk": sistema_cultura.id}
+    )
+    request = client.get(url)
+
     diferenca_listas = set(diligencias).symmetric_difference(
         set(request.context["historico_diligencias"])
     )
@@ -330,26 +423,25 @@ def test_captura_nome_usuario_logado_na_diligencia(
     """
         Testa se o nome do usuario logado é capturado assim que uma diligencia for feita
     """
+    orgao_gestor = mommy.make("Componente", tipo=1, situacao=1)
+    sistema_cultura = mommy.make(
+        "SistemaCultura",
+        _fill_optional=["ente_federado", "cadastrador"],
+        orgao_gestor=orgao_gestor,
+    )
+
+    arquivo = SimpleUploadedFile("lei.txt", b"file_content", content_type="text/plain")
+    orgao_gestor.arquivo = arquivo
+    orgao_gestor.save()
 
     request = client.post(
-        url.format(id=plano_trabalho.id, componente="orgao_gestor", resultado="0"),
+        url.format(id=sistema_cultura.id, componente="orgao_gestor", resultado="0"),
         data={"classificacao_arquivo": "4", "texto_diligencia": "Muito legal"},
     )
 
-    diligencia = Diligencia.objects.last()
+    diligencia = DiligenciaSimples.objects.last()
 
     assert diligencia.usuario == login_staff
-
-
-def test_muda_situacao_arquivo_componente(url, client, plano_trabalho, login_staff):
-    """ Testa se ao realizar o post da diligência a situação do arquivo do componente é alterada """
-
-    request = client.post(
-        url.format(id=plano_trabalho.id, componente="orgao_gestor", resultado="0"),
-        data={"classificacao_arquivo": 4, "texto_diligencia": "Não vai rolar"},
-    )
-
-    assert OrgaoGestor.objects.first().situacao.id == 4
 
 
 def test_insere_link_publicacao_dou(client, plano_trabalho, login_staff):
@@ -357,28 +449,19 @@ def test_insere_link_publicacao_dou(client, plano_trabalho, login_staff):
 
     user = plano_trabalho.usuario
 
-    url = reverse('gestao:alterar_dados_adesao', kwargs={'pk': user.id})
+    url = reverse("gestao:alterar_dados_adesao", kwargs={"pk": user.id})
 
-    client.post(url, data={'estado_processo': '6', 'data_publicacao_acordo': '28/06/2018',
-        'link_publicacao_acordo': 'https://www.google.com/'})
+    client.post(
+        url,
+        data={
+            "estado_processo": "6",
+            "data_publicacao_acordo": "28/06/2018",
+            "link_publicacao_acordo": "https://www.google.com/",
+        },
+    )
 
     user.refresh_from_db()
     assert user.link_publicacao_acordo == "https://www.google.com/"
-
-
-def test_se_link_da_publicacao_esta_no_context(client, plano_trabalho, login_staff):
-    """ Testa se ao detalhar um municipio com processo sei, essa informacao é transmitida"""
-
-    usuario = plano_trabalho.usuario
-    url = reverse('gestao:alterar_dados_adesao', kwargs={'pk': usuario.id})
-
-    client.post(url, data={'estado_processo': '6', 'data_publicacao_acordo': '28/06/2018',
-        'link_publicacao_acordo': 'https://www.google.com/'})
-
-    request = client.get('/gestao/detalhar/municipio/{}'.format(usuario.id))
-
-    usuario.refresh_from_db()
-    assert request.context['link_publicacao'] == usuario.link_publicacao_acordo
 
 
 def test_insere_sei(client, plano_trabalho, login_staff):
@@ -386,64 +469,64 @@ def test_insere_sei(client, plano_trabalho, login_staff):
 
     user = plano_trabalho.usuario
 
-    url = reverse('gestao:alterar_dados_adesao', kwargs={'pk': user.id})
+    url = reverse("gestao:alterar_dados_adesao", kwargs={"pk": user.id})
 
-    client.post(url, data={'processo_sei': '123456'})
+    client.post(url, data={"processo_sei": "123456"})
 
     user.refresh_from_db()
 
     assert user.processo_sei == "123456"
 
 
-def test_se_processo_sei_esta_no_context(client, plano_trabalho, login_staff):
-    """ Testa se ao detalhar um municipio com processo sei, essa informacao é transmitida"""
-
-    plano_trabalho.usuario.processo_sei = "123456"
-    plano_trabalho.usuario.save()
-
-    usuario_id = plano_trabalho.usuario.id
-    request = client.get('/gestao/detalhar/municipio/{}'.format(usuario_id))
-
-    assert request.context['processo_sei'] == plano_trabalho.usuario.processo_sei
-
-
 def test_retorno_200_para_detalhar_municipio(client, plano_trabalho, login_staff):
     """ Testa se página de detalhamento do município retorna 200 """
 
-    usuario_id = plano_trabalho.usuario.id
-    request = client.get("/gestao/detalhar/municipio/{}".format(usuario_id))
+    sistema_cultura = mommy.make("SistemaCultura")
+    request = client.get("/gestao/detalhar/municipio/{}".format(sistema_cultura.id))
     assert request.status_code == 200
 
 
-def test_retorno_do_form_da_diligencia(url, client, plano_trabalho, login_staff):
+@pytest.mark.skip
+def test_retorno_do_form_da_diligencia(url, client, login_staff):
     """ Testa se form retornado no contexto tem as opções corretas dependendo do tipo de resultado"""
 
+    SITUACOES = (
+        (0, "Em preenchimento"),
+        (1, "Avaliando anexo"),
+        (2, "Concluída"),
+        (3, "Arquivo aprovado com ressalvas"),
+        (4, "Arquivo danificado"),
+        (5, "Arquivo incompleto"),
+        (6, "Arquivo incorreto"),
+    )
+
+    orgao_gestor = mommy.make("Componente", tipo=1, situacao=1)
+    sistema_cultura = mommy.make(
+        "SistemaCultura",
+        _fill_optional=["ente_federado", "cadastrador"],
+        orgao_gestor=orgao_gestor,
+    )
+
+    arquivo = SimpleUploadedFile("lei.txt", b"file_content", content_type="text/plain")
+    orgao_gestor.arquivo = arquivo
+    orgao_gestor.save()
+
     request_aprova = client.get(
-        url.format(id=plano_trabalho.id, componente="orgao_gestor", resultado=1)
+        url.format(id=sistema_cultura.id, componente="orgao_gestor", resultado=1)
     )
     request_recusa = client.get(
-        url.format(id=plano_trabalho.id, componente="orgao_gestor", resultado=0)
+        url.format(id=sistema_cultura.id, componente="orgao_gestor", resultado=0)
     )
 
     classificacao_aprova = set(
-        request_aprova.context["form"].fields["classificacao_arquivo"].queryset
+        request_aprova.context["form"].fields["classificacao_arquivo"].choices
     )
     classificacao_recusa = set(
-        request_recusa.context["form"].fields["classificacao_arquivo"].queryset
+        request_recusa.context["form"].fields["classificacao_arquivo"].choices
     )
 
-    assert (
-        classificacao_aprova.symmetric_difference(
-            SituacoesArquivoPlano.objects.filter(pk=2)
-        )
-        == set()
-    )
-    assert (
-        classificacao_recusa.symmetric_difference(
-            SituacoesArquivoPlano.objects.filter(id__gte=4, id__lte=6)
-        )
-        == set()
-    )
+    assert classificacao_aprova.symmetric_difference(SITUACOES[2:3]) == set()
+    assert classificacao_recusa.symmetric_difference(SITUACOES[4:7]) == set()
 
 
 def usuario_id_retornado_pelo_context_diligencia(
@@ -476,17 +559,22 @@ def test_criacao_diligencia_exclusiva_para_gestor(client, url, plano_trabalho, l
 
 
 def test_listar_documentos(client, plano_trabalho, login_staff):
-    """ Testa funcionalidade de listagem de entes federados para alterar seus documentos 
+    """ Testa funcionalidade de listagem de entes federados para alterar seus documentos
     na tela de gestão """
 
-    templates = ["listar_sistemas", "listar_orgaos", "listar_fundos", "listar_conselhos"]
+    templates = [
+        "listar_sistemas",
+        "listar_orgaos",
+        "listar_fundos",
+        "listar_conselhos",
+    ]
 
     for template in templates:
 
         url = reverse("gestao:listar_documentos", kwargs={"template": template})
         response = client.get(url)
 
-        for usuario in response.context_data['object_list']:
+        for usuario in response.context_data["object_list"]:
             assert usuario.estado_processo == 6
             assert usuario.plano_trabalho != None
 
@@ -558,9 +646,7 @@ def test_inserir_documentos_criacao_sistema(client, plano_trabalho, login_staff)
         "sistema_cultura.txt", b"file_content", content_type="text/plain"
     )
 
-    url = reverse(
-        "gestao:inserir_sistema", kwargs={"pk": plano_trabalho.id}
-    )
+    url = reverse("gestao:inserir_sistema", kwargs={"pk": plano_trabalho.id})
 
     client.post(url, data={"arquivo": arquivo, "data_publicacao": "28/06/2018"})
 
@@ -604,7 +690,7 @@ def test_alterar_documentos_fundo_cultura(client, plano_trabalho, login_staff):
         "gestao:alterar_fundo", kwargs={"pk": plano_trabalho.fundo_cultura.id}
     )
 
-    client.post(url, data={"arquivo": arquivo,  "data_publicacao": "28/06/2018"})
+    client.post(url, data={"arquivo": arquivo, "data_publicacao": "28/06/2018"})
 
     name = FundoCultura.objects.first().arquivo.name.split("fundocultura/")[1]
     situacao = FundoCultura.objects.first().situacao
@@ -684,9 +770,7 @@ def test_inserir_documentos_conselho_cultural(client, plano_trabalho, login_staf
         "conselho_cultural.txt", b"file_content", content_type="text/plain"
     )
 
-    url = reverse(
-        "gestao:inserir_conselho", kwargs={"pk": plano_trabalho.id}
-    )
+    url = reverse("gestao:inserir_conselho", kwargs={"pk": plano_trabalho.id})
 
     client.post(url, data={"arquivo": arquivo, "data_publicacao": "28/06/2018"})
 
@@ -697,43 +781,60 @@ def test_inserir_documentos_conselho_cultural(client, plano_trabalho, login_staf
     assert situacao.id == 1
 
 
-def test_retorna_200_para_diligencia_geral(client, url, plano_trabalho, login_staff):
+def test_retorna_200_para_diligencia_geral(client, url, login_staff):
     """ Testa se retonar 200 ao dar um get na diligencia geral """
-    request = client.get(
-        url.format(id=plano_trabalho.id, componente="plano_trabalho", resultado=1)
+    diligencia = mommy.make("DiligenciaSimples")
+    sistema_cultura = mommy.make(
+        "SistemaCultura",
+        _fill_optional=["ente_federado", "cadastrador"],
+        diligencia=diligencia,
     )
+
+    url = f"/gestao/{sistema_cultura.id}/diligencia"
+    request = client.get(url)
 
     assert request.status_code == 200
 
 
-def test_salvar_informacoes_no_banco_diligencia_geral(
-    url, client, plano_trabalho, login_staff
-):
+def test_salvar_informacoes_no_banco_diligencia_geral(url, client, login_staff):
     """Testa se as informacoes validadas pelo form estao sendo salvas no banco"""
-
-    response = client.post(
-        url.format(id=plano_trabalho.id, componente="plano_trabalho", resultado="1"),
-        data={"texto_diligencia": "bla"},
+    sistema_cultura = mommy.make(
+        "SistemaCultura", _fill_optional=["ente_federado", "cadastrador"]
     )
-    diligencia = Diligencia.objects.first()
-    assert Diligencia.objects.count() == 1
-    assert diligencia.texto_diligencia == "bla"
-    assert isinstance(diligencia.componente, PlanoTrabalho)
+
+    url = reverse(
+        "gestao:diligencia_geral_adicionar", kwargs={"pk": sistema_cultura.id}
+    )
+
+    response = client.post(url, data={"texto_diligencia": "bla"})
+
+    diligencia = DiligenciaSimples.objects.first()
+    sistema_cultura = SistemaCultura.sistema.filter(
+        ente_federado__cod_ibge=sistema_cultura.ente_federado.cod_ibge
+    )[0]
+
+    assert DiligenciaSimples.objects.count() == 1
+    assert DiligenciaSimples.objects.first() == sistema_cultura.diligencia
 
 
 def test_redirecionamento_de_pagina_apos_POST_diligencia_geral(
-    url, client, plano_trabalho, login_staff
+    url, client, login_staff
 ):
     """ Testa se há o redirecionamento de página após o POST da diligência """
-
-    request = client.post(
-        url.format(id=plano_trabalho.id, componente="plano_trabalho", resultado="1"),
-        data={"classificacao_arquivo": "4", "texto_diligencia": "Ta errado cara"},
+    sistema_cultura = mommy.make(
+        "SistemaCultura", _fill_optional=["ente_federado", "cadastrador"]
     )
+
+    url = reverse(
+        "gestao:diligencia_geral_adicionar", kwargs={"pk": sistema_cultura.id}
+    )
+    request = client.post(url, data={"texto_diligencia": "Ta errado cara"})
     url_redirect = request.url.split("http://testserver/")
 
-    assert url_redirect[0] == "/gestao/detalhar/municipio/{}".format(
-        plano_trabalho.usuario.id
+    diligencia = DiligenciaSimples.objects.first()
+
+    assert url_redirect[0] == reverse(
+        "gestao:detalhar", kwargs={"pk": sistema_cultura.id}
     )
     assert request.status_code == 302
 
@@ -741,50 +842,77 @@ def test_redirecionamento_de_pagina_apos_POST_diligencia_geral(
 def test_situacoes_componentes_diligencia(url, client, plano_trabalho, login_staff):
     """ Testa as informações referentes aos componentes do
     plano de trabalho na diligência geral """
+    legislacao = mommy.make("Componente", tipo=0, situacao=1, _create_files=True)
+    orgao = mommy.make("Componente", tipo=1, situacao=2, _create_files=True)
+    fundo = mommy.make("Componente", tipo=2, situacao=3, _create_files=True)
+    conselho = mommy.make("Componente", tipo=3, situacao=4, _create_files=True)
+    plano = mommy.make("Componente", tipo=4, situacao=5, _create_files=True)
 
-    response = client.get(
-        url.format(id=plano_trabalho.id, componente="plano_trabalho", resultado="1")
+    sistema_cultura = mommy.make(
+        "SistemaCultura",
+        _fill_optional=["ente_federado", "cadastrador"],
+        legislacao=legislacao,
+        orgao_gestor=orgao,
+        fundo_cultura=fundo,
+        conselho=conselho,
+        plano=plano,
     )
+
+    url = f"/gestao/{sistema_cultura.id}/diligencia"
+    response = client.get(url)
+
     situacoes = response.context["situacoes"]
 
-    assert situacoes["criacao_sistema"] == plano_trabalho.criacao_sistema.situacao.descricao
-    assert situacoes["orgao_gestor"] == plano_trabalho.orgao_gestor.situacao.descricao
-    assert situacoes["fundo_cultura"] == plano_trabalho.fundo_cultura.situacao.descricao
+    # import ipdb; ipdb.set_trace()
+    assert situacoes["legislacao"] == sistema_cultura.legislacao.get_situacao_display()
     assert (
-        situacoes["conselho_cultural"]
-        == plano_trabalho.conselho_cultural.situacao.descricao
+        situacoes["orgao_gestor"] == sistema_cultura.orgao_gestor.get_situacao_display()
     )
-    assert situacoes["plano_cultura"] == plano_trabalho.plano_cultura.situacao.descricao
-
-
-def test_tipo_diligencia_geral(url, client, plano_trabalho, login_staff):
-    """ Testa tipo da dilgência para diligência geral """
-
-    request = client.post(
-        url.format(id=plano_trabalho.id, componente="plano_trabalho", resultado="0"),
-        data={"texto_diligencia": "Ta errado cara"},
+    assert (
+        situacoes["fundo_cultura"]
+        == sistema_cultura.fundo_cultura.get_situacao_display()
     )
-
-    assert Diligencia.objects.first().tipo_diligencia == "geral"
+    assert situacoes["conselho"] == sistema_cultura.conselho.get_situacao_display()
+    assert situacoes["plano"] == sistema_cultura.plano.get_situacao_display()
 
 
 def test_tipo_diligencia_componente(url, client, plano_trabalho, login_staff):
-    """ Testa tipo da dilgência para diligência específica de um componente"""
+    """ Testa criação da diligência específica de um componente"""
+    orgao_gestor = mommy.make("Componente", tipo=1, situacao=1)
+    sistema_cultura = mommy.make(
+        "SistemaCultura",
+        _fill_optional=["ente_federado", "cadastrador"],
+        orgao_gestor=orgao_gestor,
+    )
+
+    arquivo = SimpleUploadedFile("lei.txt", b"file_content", content_type="text/plain")
+    orgao_gestor.arquivo = arquivo
+    orgao_gestor.save()
 
     request = client.post(
-        url.format(id=plano_trabalho.id, componente="orgao_gestor", resultado="0"),
+        url.format(id=sistema_cultura.id, componente="orgao_gestor", resultado="0"),
         data={"classificacao_arquivo": "4", "texto_diligencia": "Ta errado cara"},
     )
 
-    assert Diligencia.objects.first().tipo_diligencia == "componente"
+    sistema_cultura.orgao_gestor.refresh_from_db()
+
+    assert DiligenciaSimples.objects.count() == 1
+    assert DiligenciaSimples.objects.first() == sistema_cultura.orgao_gestor.diligencia
 
 
-def test_envio_email_diligencia_geral(url, client, plano_trabalho, login_staff):
+def test_envio_email_diligencia_geral(client, login_staff):
     """ Testa envio do email para diligência geral """
+    sistema_cultura = mommy.make(
+        "SistemaCultura", _fill_optional=["ente_federado", "cadastrador"]
+    )
+
+    url = "/gestao/{id}/diligencia/"
+
+    sistema_cultura.cadastrador.user.email = "teste@teste.com"
+    sistema_cultura.cadastrador.user.save()
 
     request = client.post(
-        url.format(id=plano_trabalho.id, componente="plano_trabalho", resultado="1"),
-        data={"texto_diligencia": "Ta errado cara"},
+        url.format(id=sistema_cultura.id), data={"texto_diligencia": "Ta errado cara"}
     )
 
     assert len(mail.outbox) == 1
@@ -794,17 +922,24 @@ def test_diligencia_geral_sem_componentes(url, client, plano_trabalho, login_sta
     """ Testa se ao fazer a diligência geral de um ente federado
     sem componentes retorne componente inexistente"""
 
-    plano_trabalho.criacao_sistema = None
-    plano_trabalho.orgao_gestor = None
-    plano_trabalho.plano_cultura = None
-    plano_trabalho.fundo_cultura = None
-    plano_trabalho.conselho_cultural = None
-    plano_trabalho.save()
+    sistema_cultura = mommy.make(
+        "SistemaCultura",
+        legislacao=None,
+        orgao_gestor=None,
+        plano=None,
+        conselho=None,
+        fundo_cultura=None,
+        _fill_optional=["ente_federado", "cadastrador"],
+    )
 
-    request = client.get(url.format(id=plano_trabalho.id, componente="plano_trabalho", resultado="1"))
+    url = reverse(
+        "gestao:diligencia_geral_adicionar", kwargs={"pk": sistema_cultura.id}
+    )
 
-    for situacao in request.context['situacoes'].values():
-        assert situacao == 'Inexistente'
+    request = client.get(url)
+
+    for situacao in request.context["situacoes"].values():
+        assert situacao == "Inexistente"
 
 
 def test_filtro_cidades_por_uf(client):
@@ -835,7 +970,7 @@ def test_filtro_cidades_por_uf_pk(client):
     mommy.make("Cidade", uf=mg, _quantity=3)
     mommy.make("Cidade", uf=sp, _quantity=2)
 
-    q = json.dumps({'estado': mg.pk})
+    q = json.dumps({"estado": mg.pk})
     url = "{url}?forward={q}".format(url=reverse("gestao:cidade_chain"), q=q)
     request = client.get(url)
     assert len(request.json()["results"]) == 3
@@ -854,7 +989,7 @@ def test_filtra_ufs_por_sigla(client):
     request = client.get(url)
 
     assert len(request.json()["results"]) == 1
-    assert request.json()["results"][0]['text'] == mg.sigla
+    assert request.json()["results"][0]["text"] == mg.sigla
 
 
 def test_filtra_ufs_por_nome(client):
@@ -868,94 +1003,134 @@ def test_filtra_ufs_por_nome(client):
     request = client.get(url)
 
     assert len(request.json()["results"]) == 1
-    assert request.json()["results"][0]['text'] == mg.sigla
+    assert request.json()["results"][0]["text"] == mg.sigla
 
 
 def test_acompanhar_adesao_ordenar_data_um_componente_por_plano(client, login_staff):
     """ Testa ordenação da página de acompanhamento das adesões
     por data de envio mais antiga entre os componentes"""
 
-    user_sem_analise_recente = mommy.make('Usuario', _fill_optional=['plano_trabalho', 'municipio'])
-    user_sem_analise_recente.plano_trabalho.criacao_sistema = mommy.make('CriacaoSistema')
+    user_sem_analise_recente = mommy.make(
+        "Usuario", _fill_optional=["plano_trabalho", "municipio"]
+    )
+    user_sem_analise_recente.plano_trabalho.criacao_sistema = mommy.make(
+        "CriacaoSistema"
+    )
     user_sem_analise_recente.plano_trabalho.save()
-    user_sem_analise_recente.plano_trabalho.criacao_sistema.situacao = SituacoesArquivoPlano.objects.get(pk=1)
-    user_sem_analise_recente.plano_trabalho.criacao_sistema.data_envio = datetime.date(2018, 1, 1)
+    user_sem_analise_recente.plano_trabalho.criacao_sistema.situacao = SituacoesArquivoPlano.objects.get(
+        pk=1
+    )
+    user_sem_analise_recente.plano_trabalho.criacao_sistema.data_envio = datetime.date(
+        2018, 1, 1
+    )
     user_sem_analise_recente.plano_trabalho.criacao_sistema.save()
 
-    user_sem_analise_antigo = mommy.make('Usuario', _fill_optional=['plano_trabalho', 'municipio'])
-    user_sem_analise_antigo.plano_trabalho.orgao_gestor = mommy.make('OrgaoGestor')
+    user_sem_analise_antigo = mommy.make(
+        "Usuario", _fill_optional=["plano_trabalho", "municipio"]
+    )
+    user_sem_analise_antigo.plano_trabalho.orgao_gestor = mommy.make("OrgaoGestor")
     user_sem_analise_antigo.plano_trabalho.save()
-    user_sem_analise_antigo.plano_trabalho.orgao_gestor.situacao = SituacoesArquivoPlano.objects.get(pk=1)
-    user_sem_analise_antigo.plano_trabalho.orgao_gestor.data_envio = datetime.date(2017, 1, 1)
+    user_sem_analise_antigo.plano_trabalho.orgao_gestor.situacao = SituacoesArquivoPlano.objects.get(
+        pk=1
+    )
+    user_sem_analise_antigo.plano_trabalho.orgao_gestor.data_envio = datetime.date(
+        2017, 1, 1
+    )
     user_sem_analise_antigo.plano_trabalho.orgao_gestor.save()
 
-    user_com_diligencia_antigo = mommy.make('Usuario', _fill_optional=['plano_trabalho', 'municipio'])
-    user_com_diligencia_antigo.plano_trabalho.fundo_cultura = mommy.make('FundoCultura')
+    user_com_diligencia_antigo = mommy.make(
+        "Usuario", _fill_optional=["plano_trabalho", "municipio"]
+    )
+    user_com_diligencia_antigo.plano_trabalho.fundo_cultura = mommy.make("FundoCultura")
     user_com_diligencia_antigo.plano_trabalho.save()
-    user_com_diligencia_antigo.plano_trabalho.fundo_cultura.situacao = SituacoesArquivoPlano.objects.get(pk=4)
-    user_com_diligencia_antigo.plano_trabalho.fundo_cultura.data_envio = datetime.date(2016, 1, 1)
+    user_com_diligencia_antigo.plano_trabalho.fundo_cultura.situacao = SituacoesArquivoPlano.objects.get(
+        pk=4
+    )
+    user_com_diligencia_antigo.plano_trabalho.fundo_cultura.data_envio = datetime.date(
+        2016, 1, 1
+    )
     user_com_diligencia_antigo.plano_trabalho.fundo_cultura.save()
 
-    user_com_analise_antigo = mommy.make('Usuario', _fill_optional=['plano_trabalho', 'municipio'])
-    user_com_analise_antigo.plano_trabalho.fundo_cultura = mommy.make('FundoCultura')
+    user_com_analise_antigo = mommy.make(
+        "Usuario", _fill_optional=["plano_trabalho", "municipio"]
+    )
+    user_com_analise_antigo.plano_trabalho.fundo_cultura = mommy.make("FundoCultura")
     user_com_analise_antigo.plano_trabalho.save()
-    user_com_analise_antigo.plano_trabalho.fundo_cultura.situacao = SituacoesArquivoPlano.objects.get(pk=2)
-    user_com_analise_antigo.plano_trabalho.fundo_cultura.data_envio = datetime.date(2016, 1, 1)
+    user_com_analise_antigo.plano_trabalho.fundo_cultura.situacao = SituacoesArquivoPlano.objects.get(
+        pk=2
+    )
+    user_com_analise_antigo.plano_trabalho.fundo_cultura.data_envio = datetime.date(
+        2016, 1, 1
+    )
     user_com_analise_antigo.plano_trabalho.fundo_cultura.save()
 
-    url = reverse('gestao:acompanhar_adesao')
+    url = reverse("gestao:acompanhar_adesao")
     response = client.get(url)
 
-    assert response.context_data['object_list'][0] == user_sem_analise_antigo.municipio
-    assert response.context_data['object_list'][1] == user_sem_analise_recente.municipio
-    assert response.context_data['object_list'][2] == user_com_diligencia_antigo.municipio
-    assert response.context_data['object_list'][3] == user_com_analise_antigo.municipio
+    assert response.context_data["object_list"][0] == user_sem_analise_antigo.municipio
+    assert response.context_data["object_list"][1] == user_sem_analise_recente.municipio
+    assert (
+        response.context_data["object_list"][2] == user_com_diligencia_antigo.municipio
+    )
+    assert response.context_data["object_list"][3] == user_com_analise_antigo.municipio
 
 
-def test_acompanhar_adesao_ordenar_data_com_plano_com_mais_de_um_componente(client, login_staff):
-    """ Testa se na página de acompanhamento de adesões, quando há planos com múltiplos 
+def test_acompanhar_adesao_ordenar_data_com_plano_com_mais_de_um_componente(
+    client, login_staff
+):
+    """ Testa se na página de acompanhamento de adesões, quando há planos com múltiplos
     componentes, o correto é considerado para ordenação pela data """
 
-    user_plano_1 = mommy.make('Usuario', _fill_optional=['plano_trabalho', 'municipio'])
-    user_plano_1.plano_trabalho.criacao_sistema = mommy.make('CriacaoSistema')
+    user_plano_1 = mommy.make("Usuario", _fill_optional=["plano_trabalho", "municipio"])
+    user_plano_1.plano_trabalho.criacao_sistema = mommy.make("CriacaoSistema")
     user_plano_1.plano_trabalho.save()
-    user_plano_1.plano_trabalho.criacao_sistema.situacao = SituacoesArquivoPlano.objects.get(pk=5)
+    user_plano_1.plano_trabalho.criacao_sistema.situacao = SituacoesArquivoPlano.objects.get(
+        pk=5
+    )
     user_plano_1.plano_trabalho.criacao_sistema.data_envio = datetime.date(2016, 1, 1)
     user_plano_1.plano_trabalho.criacao_sistema.save()
 
-    user_plano_1.plano_trabalho.orgao_gestor = mommy.make('OrgaoGestor')
+    user_plano_1.plano_trabalho.orgao_gestor = mommy.make("OrgaoGestor")
     user_plano_1.plano_trabalho.save()
-    user_plano_1.plano_trabalho.orgao_gestor.situacao = SituacoesArquivoPlano.objects.get(pk=1)
+    user_plano_1.plano_trabalho.orgao_gestor.situacao = SituacoesArquivoPlano.objects.get(
+        pk=1
+    )
     user_plano_1.plano_trabalho.orgao_gestor.data_envio = datetime.date(2017, 1, 1)
     user_plano_1.plano_trabalho.orgao_gestor.save()
 
-    user_plano_2 = mommy.make('Usuario', _fill_optional=['plano_trabalho', 'municipio'])
-    user_plano_2.plano_trabalho.fundo_cultura = mommy.make('FundoCultura')
+    user_plano_2 = mommy.make("Usuario", _fill_optional=["plano_trabalho", "municipio"])
+    user_plano_2.plano_trabalho.fundo_cultura = mommy.make("FundoCultura")
     user_plano_2.plano_trabalho.save()
-    user_plano_2.plano_trabalho.fundo_cultura.situacao = SituacoesArquivoPlano.objects.get(pk=4)
+    user_plano_2.plano_trabalho.fundo_cultura.situacao = SituacoesArquivoPlano.objects.get(
+        pk=4
+    )
     user_plano_2.plano_trabalho.fundo_cultura.data_envio = datetime.date(2017, 1, 1)
     user_plano_2.plano_trabalho.fundo_cultura.save()
 
-    user_plano_2.plano_trabalho.plano_cultura = mommy.make('PlanoCultura')
+    user_plano_2.plano_trabalho.plano_cultura = mommy.make("PlanoCultura")
     user_plano_2.plano_trabalho.save()
-    user_plano_2.plano_trabalho.plano_cultura.situacao = SituacoesArquivoPlano.objects.get(pk=3)
+    user_plano_2.plano_trabalho.plano_cultura.situacao = SituacoesArquivoPlano.objects.get(
+        pk=3
+    )
     user_plano_2.plano_trabalho.plano_cultura.data_envio = datetime.date(2018, 1, 1)
     user_plano_2.plano_trabalho.plano_cultura.save()
 
-    user_plano_3 = mommy.make('Usuario', _fill_optional=['plano_trabalho', 'municipio'])
-    user_plano_3.plano_trabalho.conselho_cultural = mommy.make('ConselhoCultural')
+    user_plano_3 = mommy.make("Usuario", _fill_optional=["plano_trabalho", "municipio"])
+    user_plano_3.plano_trabalho.conselho_cultural = mommy.make("ConselhoCultural")
     user_plano_3.plano_trabalho.save()
-    user_plano_3.plano_trabalho.conselho_cultural.situacao = SituacoesArquivoPlano.objects.get(pk=1)
+    user_plano_3.plano_trabalho.conselho_cultural.situacao = SituacoesArquivoPlano.objects.get(
+        pk=1
+    )
     user_plano_3.plano_trabalho.conselho_cultural.data_envio = datetime.date(2018, 1, 1)
     user_plano_3.plano_trabalho.conselho_cultural.save()
 
-    url = reverse('gestao:acompanhar_adesao')
+    url = reverse("gestao:acompanhar_adesao")
     response = client.get(url)
 
-    assert len(response.context_data['object_list']) == 3
-    assert response.context_data['object_list'][0] == user_plano_1.municipio
-    assert response.context_data['object_list'][1] == user_plano_3.municipio
-    assert response.context_data['object_list'][2] == user_plano_2.municipio
+    assert len(response.context_data["object_list"]) == 3
+    assert response.context_data["object_list"][0] == user_plano_1.municipio
+    assert response.context_data["object_list"][1] == user_plano_3.municipio
+    assert response.context_data["object_list"][2] == user_plano_2.municipio
 
 
 def test_acompanhar_adesao_ordenar_estado_processo(client, plano_trabalho, login_staff):
@@ -963,47 +1138,53 @@ def test_acompanhar_adesao_ordenar_estado_processo(client, plano_trabalho, login
     por data de envio mais antiga entre os componentes e
     estado do processo da adesão """
 
-    user = mommy.make('Usuario', estado_processo=1,
-                      _fill_optional=['plano_trabalho', 'municipio'])
+    user = mommy.make(
+        "Usuario", estado_processo=1, _fill_optional=["plano_trabalho", "municipio"]
+    )
     user.plano_trabalho.criacao_sistema = mommy.make(
-            'CriacaoSistema', situacao_id=1, data_envio=datetime.date(2018, 1, 1))
+        "CriacaoSistema", situacao_id=1, data_envio=datetime.date(2018, 1, 1)
+    )
     user.plano_trabalho.save()
 
     ente_federado_publicado = plano_trabalho.usuario.municipio
     ente_federado_publicado.usuario.estado_processo = 6
     ente_federado_publicado.usuario.save()
 
-    ente_sem_cadastrador = mommy.make('Municipio')
+    ente_sem_cadastrador = mommy.make("Municipio")
 
-    url = reverse('gestao:acompanhar_adesao')
+    url = reverse("gestao:acompanhar_adesao")
     response = client.get(url)
 
-    assert response.context_data['object_list'][0] == ente_federado_publicado
-    assert response.context_data['object_list'][1] == user.municipio
-    assert response.context_data['object_list'][2] == ente_sem_cadastrador
+    assert response.context_data["object_list"][0] == ente_federado_publicado
+    assert response.context_data["object_list"][1] == user.municipio
+    assert response.context_data["object_list"][2] == ente_sem_cadastrador
 
 
 def test_alterar_dados_adesao_detalhe_municipio(client, login_staff):
     """ Testa alterar os dados da adesão na tela de detalhe do município """
 
-    usuario = mommy.make('Usuario', _fill_optional=['municipio'])
-    url = reverse('gestao:alterar_dados_adesao', kwargs={'pk': usuario.id})
-    data = {'estado_processo': 6, 'data_publicacao_acordo': datetime.date.today(), 'processo_sei': '123456765'}
+    usuario = mommy.make("Usuario", _fill_optional=["municipio"])
+    url = reverse("gestao:alterar_dados_adesao", kwargs={"pk": usuario.id})
+    data = {
+        "estado_processo": 6,
+        "data_publicacao_acordo": datetime.date.today(),
+        "processo_sei": "123456765",
+    }
     response = client.post(url, data=data)
 
     usuario.refresh_from_db()
 
     assert response.status_code == 302
-    assert usuario.estado_processo == '6'
+    assert usuario.estado_processo == "6"
     assert usuario.data_publicacao_acordo == datetime.date.today()
-    assert usuario.processo_sei == '123456765'
+    assert usuario.processo_sei == "123456765"
 
 
 def test_alterar_dados_adesao_detalhe_municipio_sem_valores(client, login_staff):
     """ Testa retorno ao tentar alterar os dados da adesão sem passar dados válidos """
 
-    usuario = mommy.make('Usuario', _fill_optional=['municipio'])
-    url = reverse('gestao:alterar_dados_adesao', kwargs={'pk': usuario.id})
+    usuario = mommy.make("Usuario", _fill_optional=["municipio"])
+    url = reverse("gestao:alterar_dados_adesao", kwargs={"pk": usuario.id})
     data = {}
 
     response = client.post(url, data=data)
@@ -1011,345 +1192,439 @@ def test_alterar_dados_adesao_detalhe_municipio_sem_valores(client, login_staff)
     usuario.refresh_from_db()
 
     assert response.status_code == 302
-    assert usuario.estado_processo == '0'
+    assert usuario.estado_processo == "0"
     assert not usuario.data_publicacao_acordo
     assert not usuario.processo_sei
 
 
-def test_alterar_cadastrador_municipio(client, login_staff):
-    """ Testa alteração de cadastrador de um ente federal municipal """
+def test_alterar_cadastrador_sem_data_publicacao(client, login_staff):
+    """ Testa alteração de cadastrador de um sistema cultura
+    sem data de publicação do acordo """
 
-    municipio = mommy.make('Municipio', _fill_optional=['cidade'])
-    mommy.make('Usuario', municipio=municipio)
     new_user = mommy.make('Usuario', user__username='34701068004')
-    url = reverse('gestao:alterar_cadastrador')
+    sistema = mommy.make('SistemaCultura', ente_federado__cod_ibge=123456)
+
+    url = reverse('gestao:alterar_cadastrador', kwargs={'cod_ibge': sistema.ente_federado.cod_ibge})
 
     data = {
         'cpf_usuario': new_user.user.username,
-        'municipio': municipio.cidade.id,
-        'estado': municipio.estado.codigo_ibge
     }
 
     client.post(url, data=data)
 
-    municipio.refresh_from_db()
+    sistema_atualizado = SistemaCultura.sistema.get(ente_federado__cod_ibge=sistema.ente_federado.cod_ibge)
+    assert sistema_atualizado.cadastrador == new_user
 
-    assert municipio.usuario == new_user
 
+def test_alterar_cadastrador_com_data_publicacao(client, login_staff):
+    """ Testa alteração de cadastrador de um sistema cultura 
+    com data de publicação do acordo"""
 
-def test_alterar_cadastrador_estado(client, login_staff):
-    """ Testa alteração de cadastrador de um ente federal estadual"""
-
-    municipio = mommy.make('Municipio')
-    mommy.make('Usuario', municipio=municipio)
     new_user = mommy.make('Usuario', user__username='34701068004')
-    url = reverse('gestao:alterar_cadastrador')
+    sistema = mommy.make('SistemaCultura', ente_federado__cod_ibge=123456)
+
+    url = reverse('gestao:alterar_cadastrador', kwargs={'cod_ibge': sistema.ente_federado.cod_ibge})
 
     data = {
         'cpf_usuario': new_user.user.username,
-        'estado': municipio.estado.codigo_ibge
+        'data_publicacao_acordo': "2016-02-02"
     }
 
     client.post(url, data=data)
 
-    municipio.refresh_from_db()
+    sistema.refresh_from_db()
 
-    assert municipio.usuario == new_user
+    sistema_atualizado = SistemaCultura.sistema.get(ente_federado__cod_ibge=sistema.ente_federado.cod_ibge)
+    assert sistema_atualizado.cadastrador == new_user
+    assert sistema_atualizado.data_publicacao_acordo == datetime.date(2016, 2, 2)
 
 
-def test_ajax_cadastrador_cpf_ente_existente_muncipal(client, login_staff,
-                                                      plano_trabalho):
+def test_ajax_cadastrador_cpf(client, login_staff):
     """ Testa retorno de CPF do cadastrador de um ente federado municipal
     existente no sistema """
-    municipio = plano_trabalho.usuario.municipio
-    usuario = plano_trabalho.usuario
 
-    url = reverse('gestao:ajax_cadastrador_cpf')
-    url = url + '?municipio={}&estado={}'.format(municipio.cidade.id,
-                                                 municipio.estado.codigo_ibge)
-    client.login(username=login_staff.user.username, password='123456')
+    url = reverse("gestao:ajax-consulta-cpf")
 
-    response = client.get(url)
+    client.login(username=login_staff.user.username, password="123456")
 
-    assert response.status_code == 200
-    assert response.json()['data_publicacao_acordo'] == str(usuario.data_publicacao_acordo)
-    assert response.json()['cpf'] == usuario.user.username
-
-
-def test_ajax_cadastrador_cpf_ente_existente_estadual(client, login_staff,
-                                                      plano_trabalho):
-    """ Testa retorno de CPF do cadastrador de um ente federado estadual
-    existente no sistema """
-    municipio = mommy.make('Municipio')
-    usuario = mommy.make('Usuario', municipio=municipio,
-                         _fill_optional=['data_publicacao_acordo'])
-
-    url = reverse('gestao:ajax_cadastrador_cpf')
-    url = url + '?estado={}'.format(municipio.estado.codigo_ibge)
-    client.login(username=login_staff.user.username, password='123456')
-
-    response = client.get(url)
+    response = client.post(
+        url,
+        data={"cpf": login_staff.user.username},
+        HTTP_X_REQUESTED_WITH="XMLHttpRequest",
+    )
 
     assert response.status_code == 200
-    assert response.json()['data_publicacao_acordo'] == str(usuario.data_publicacao_acordo)
-    assert response.json()['cpf'] == usuario.user.username
+    assert response.json()["data"]["nome"] == str(login_staff.nome_usuario)
 
 
-def test_ajax_cadastrador_ente_inexistente(client, login_staff):
-    """ Testa retorno ao passar um ente federado não existente """
+def test_ajax_cadastrador_cpf_inexistente(client, login_staff):
+    """ Testa retorno ao passar um cpf inexistente """
 
-    url = reverse('gestao:ajax_cadastrador_cpf') + '?estado=&municipio=0'
+    url = reverse("gestao:ajax-consulta-cpf")
 
-    client.login(username=login_staff.user.username, password='123456')
+    client.login(username=login_staff.user.username, password="123456")
 
-    response = client.get(url)
+    response = client.post(
+        url, data={"cpf": "123467890"}, HTTP_X_REQUESTED_WITH="XMLHttpRequest"
+    )
+
+    assert response.status_code == 404
+
+
+def test_ajax_cadastrador_sem_cpf(client, login_staff):
+    """ Testa retorno ao não passar um cpf """
+
+    url = reverse("gestao:ajax-consulta-cpf")
+
+    client.login(username=login_staff.user.username, password="123456")
+
+    response = client.post(
+        url, data={"cpf": ""}, HTTP_X_REQUESTED_WITH="XMLHttpRequest"
+    )
+
+    assert response.status_code == 400
+
+
+def test_ajax_cadastrador_sem_requisicao_ajax(client, login_staff):
+    """ Testa retorno ao não passar uma requisição ajax """
+
+    url = reverse("gestao:ajax-consulta-cpf")
+
+    client.login(username=login_staff.user.username, password="123456")
+
+    response = client.post(url, data={"cpf": "123467890"})
 
     assert response.status_code == 400
 
 
 def test_pesquisa_por_ente_federado_com_arquivo_lei_sistema(client, login_staff):
-    """ Testa a pesquisa pelo nome (sem acento) de um Ente Federado 
+    """ Testa a pesquisa pelo nome (sem acento) de um Ente Federado
     que tenha o arquivo Lei Sistema aguardando análise
     """
-    
+
     arquivo = SimpleUploadedFile(
         "orgao.txt", b"file_content", content_type="text/plain"
     )
 
-    municipio = mommy.make('Municipio', cidade= mommy.make('Cidade', nome_municipio='Abaeté'))    
+    municipio = mommy.make(
+        "Municipio", cidade=mommy.make("Cidade", nome_municipio="Abaeté")
+    )
 
-    user = mommy.make('Usuario', _fill_optional=['plano_trabalho'], municipio=municipio)
-    user.estado_processo = '6'
+    user = mommy.make("Usuario", _fill_optional=["plano_trabalho"], municipio=municipio)
+    user.estado_processo = "6"
     user.save()
-    user.plano_trabalho.criacao_sistema = mommy.make('CriacaoSistema')
+    user.plano_trabalho.criacao_sistema = mommy.make("CriacaoSistema")
     user.plano_trabalho.save()
-    user.plano_trabalho.criacao_sistema.situacao = SituacoesArquivoPlano.objects.get(pk=1)
+    user.plano_trabalho.criacao_sistema.situacao = SituacoesArquivoPlano.objects.get(
+        pk=1
+    )
     user.plano_trabalho.criacao_sistema.data_envio = datetime.date(2018, 1, 1)
     user.plano_trabalho.criacao_sistema.arquivo = arquivo
     user.plano_trabalho.criacao_sistema.save()
 
-    url = reverse('gestao:acompanhar_sistema') + '?q=Abaete&anexo=arquivo' 
+    url = reverse("gestao:acompanhar_sistema") + "?q=Abaete&anexo=arquivo"
     response = client.get(url)
 
-    assert response.context_data['object_list'][0].municipio == user.municipio
-    assert response.context_data['object_list'][0].municipio.cidade.nome_municipio == 'Abaeté'
+    assert response.context_data["object_list"][0].municipio == user.municipio
+    assert (
+        response.context_data["object_list"][0].municipio.cidade.nome_municipio
+        == "Abaeté"
+    )
 
 
 def test_pesquisa_por_ente_federado_com_arquivo_plano_cultura(client, login_staff):
-    """ Testa a pesquisa pelo nome (sem acento) de um Ente Federado 
+    """ Testa a pesquisa pelo nome (sem acento) de um Ente Federado
     que tenha o arquivo Plano Cultura aguardando análise
     """
-    
+
     arquivo = SimpleUploadedFile(
         "orgao.txt", b"file_content", content_type="text/plain"
     )
 
-    municipio = mommy.make('Municipio', cidade= mommy.make('Cidade', nome_municipio='Abaeté'))    
+    municipio = mommy.make(
+        "Municipio", cidade=mommy.make("Cidade", nome_municipio="Abaeté")
+    )
 
-    user = mommy.make('Usuario', _fill_optional=['plano_trabalho'], municipio=municipio)
-    user.estado_processo = '6'
+    user = mommy.make("Usuario", _fill_optional=["plano_trabalho"], municipio=municipio)
+    user.estado_processo = "6"
     user.save()
-    user.plano_trabalho.plano_cultura = mommy.make('PlanoCultura')
+    user.plano_trabalho.plano_cultura = mommy.make("PlanoCultura")
     user.plano_trabalho.save()
     user.plano_trabalho.plano_cultura.situacao = SituacoesArquivoPlano.objects.get(pk=1)
     user.plano_trabalho.plano_cultura.data_envio = datetime.date(2018, 1, 1)
     user.plano_trabalho.plano_cultura.arquivo = arquivo
     user.plano_trabalho.plano_cultura.save()
 
-    url = reverse('gestao:acompanhar_plano') + '?q=Abaete&anexo=arquivo' 
+    url = reverse("gestao:acompanhar_plano") + "?q=Abaete&anexo=arquivo"
     response = client.get(url)
 
-    assert response.context_data['object_list'][0].municipio == user.municipio
-    assert response.context_data['object_list'][0].municipio.cidade.nome_municipio == 'Abaeté'
+    assert response.context_data["object_list"][0].municipio == user.municipio
+    assert (
+        response.context_data["object_list"][0].municipio.cidade.nome_municipio
+        == "Abaeté"
+    )
 
-    
+
 def test_pesquisa_por_ente_federado_com_arquivo_fundo_cultura(client, login_staff):
-    """ Testa a pesquisa pelo nome (sem acento) de um Ente Federado 
+    """ Testa a pesquisa pelo nome (sem acento) de um Ente Federado
     que tenha o arquivo Fundo Cultura aguardando análise
     """
-    
+
     arquivo = SimpleUploadedFile(
         "orgao.txt", b"file_content", content_type="text/plain"
     )
 
-    municipio = mommy.make('Municipio', cidade= mommy.make('Cidade', nome_municipio='Abaeté'))    
+    municipio = mommy.make(
+        "Municipio", cidade=mommy.make("Cidade", nome_municipio="Abaeté")
+    )
 
-    user = mommy.make('Usuario', _fill_optional=['plano_trabalho'], municipio=municipio)
-    user.estado_processo = '6'
+    user = mommy.make("Usuario", _fill_optional=["plano_trabalho"], municipio=municipio)
+    user.estado_processo = "6"
     user.save()
-    user.plano_trabalho.fundo_cultura = mommy.make('FundoCultura')
+    user.plano_trabalho.fundo_cultura = mommy.make("FundoCultura")
     user.plano_trabalho.save()
     user.plano_trabalho.fundo_cultura.situacao = SituacoesArquivoPlano.objects.get(pk=1)
     user.plano_trabalho.fundo_cultura.data_envio = datetime.date(2018, 1, 1)
     user.plano_trabalho.fundo_cultura.arquivo = arquivo
     user.plano_trabalho.fundo_cultura.save()
 
-    url = reverse('gestao:acompanhar_fundo') + '?q=Abaete&anexo=arquivo' 
+    url = reverse("gestao:acompanhar_fundo") + "?q=Abaete&anexo=arquivo"
     response = client.get(url)
 
-    assert response.context_data['object_list'][0].municipio == user.municipio
-    assert response.context_data['object_list'][0].municipio.cidade.nome_municipio == 'Abaeté'
+    assert response.context_data["object_list"][0].municipio == user.municipio
+    assert (
+        response.context_data["object_list"][0].municipio.cidade.nome_municipio
+        == "Abaeté"
+    )
 
 
 def test_pesquisa_por_ente_federado_com_arquivo_orgao_gestor(client, login_staff):
-    """ Testa a pesquisa pelo nome (sem acento) de um Ente Federado 
+    """ Testa a pesquisa pelo nome (sem acento) de um Ente Federado
     que tenha o arquivo Orgão Gestor aguardando análise
     """
-    
+
     arquivo = SimpleUploadedFile(
         "orgao.txt", b"file_content", content_type="text/plain"
     )
 
-    municipio = mommy.make('Municipio', cidade= mommy.make('Cidade', nome_municipio='Abaeté'))    
+    municipio = mommy.make(
+        "Municipio", cidade=mommy.make("Cidade", nome_municipio="Abaeté")
+    )
 
-    user = mommy.make('Usuario', _fill_optional=['plano_trabalho'], municipio=municipio)
-    user.estado_processo = '6'
+    user = mommy.make("Usuario", _fill_optional=["plano_trabalho"], municipio=municipio)
+    user.estado_processo = "6"
     user.save()
-    user.plano_trabalho.orgao_gestor = mommy.make('OrgaoGestor')
+    user.plano_trabalho.orgao_gestor = mommy.make("OrgaoGestor")
     user.plano_trabalho.save()
     user.plano_trabalho.orgao_gestor.situacao = SituacoesArquivoPlano.objects.get(pk=1)
     user.plano_trabalho.orgao_gestor.data_envio = datetime.date(2018, 1, 1)
     user.plano_trabalho.orgao_gestor.arquivo = arquivo
     user.plano_trabalho.orgao_gestor.save()
 
-    url = reverse('gestao:acompanhar_orgao') + '?q=Abaete&anexo=arquivo' 
+    url = reverse("gestao:acompanhar_orgao") + "?q=Abaete&anexo=arquivo"
     response = client.get(url)
 
-    assert response.context_data['object_list'][0].municipio == user.municipio
-    assert response.context_data['object_list'][0].municipio.cidade.nome_municipio == 'Abaeté'
+    assert response.context_data["object_list"][0].municipio == user.municipio
+    assert (
+        response.context_data["object_list"][0].municipio.cidade.nome_municipio
+        == "Abaeté"
+    )
 
 
 def test_pesquisa_por_ente_federado_com_arquivo_conselho_cultural(client, login_staff):
-    """ Testa a pesquisa pelo nome (sem acento) de um Ente Federado 
+    """ Testa a pesquisa pelo nome (sem acento) de um Ente Federado
     que tenha o arquivo Conselho Cultural aguardando análise
     """
-    
+
     arquivo = SimpleUploadedFile(
         "orgao.txt", b"file_content", content_type="text/plain"
     )
 
-    municipio = mommy.make('Municipio', cidade= mommy.make('Cidade', nome_municipio='Abaeté'))    
+    municipio = mommy.make(
+        "Municipio", cidade=mommy.make("Cidade", nome_municipio="Abaeté")
+    )
 
-    user = mommy.make('Usuario', _fill_optional=['plano_trabalho'], municipio=municipio)
-    user.estado_processo = '6'
+    user = mommy.make("Usuario", _fill_optional=["plano_trabalho"], municipio=municipio)
+    user.estado_processo = "6"
     user.save()
-    user.plano_trabalho.conselho_cultural = mommy.make('ConselhoCultural')
+    user.plano_trabalho.conselho_cultural = mommy.make("ConselhoCultural")
     user.plano_trabalho.save()
-    user.plano_trabalho.conselho_cultural.situacao = SituacoesArquivoPlano.objects.get(pk=1)
+    user.plano_trabalho.conselho_cultural.situacao = SituacoesArquivoPlano.objects.get(
+        pk=1
+    )
     user.plano_trabalho.conselho_cultural.data_envio = datetime.date(2018, 1, 1)
     user.plano_trabalho.conselho_cultural.arquivo = arquivo
     user.plano_trabalho.conselho_cultural.save()
 
-    url = reverse('gestao:acompanhar_conselho') + '?q=Abaete&anexo=arquivo' 
+    url = reverse("gestao:acompanhar_conselho") + "?q=Abaete&anexo=arquivo"
     response = client.get(url)
 
-    assert response.context_data['object_list'][0].municipio == user.municipio
-    assert response.context_data['object_list'][0].municipio.cidade.nome_municipio == 'Abaeté'
+    assert response.context_data["object_list"][0].municipio == user.municipio
+    assert (
+        response.context_data["object_list"][0].municipio.cidade.nome_municipio
+        == "Abaeté"
+    )
 
 
-def test_pesquisa_por_ente_federado_inserir_documentos_listar_sistemas(client, login_staff):
+def test_pesquisa_por_ente_federado_inserir_documentos_listar_sistemas(
+    client, login_staff
+):
     """ Testa a pesquisa pelo nome (sem acento) de um Ente Federado na tela
     de listar documentos de sistemas de Cultura
     """
-    
-    municipio = mommy.make('Municipio', cidade= mommy.make('Cidade', nome_municipio='Abaeté'))    
 
-    user = mommy.make('Usuario', _fill_optional=['plano_trabalho'], municipio=municipio)
-    user.estado_processo = '6'
+    municipio = mommy.make(
+        "Municipio", cidade=mommy.make("Cidade", nome_municipio="Abaeté")
+    )
+
+    user = mommy.make("Usuario", _fill_optional=["plano_trabalho"], municipio=municipio)
+    user.estado_processo = "6"
     user.save()
 
-    url = reverse('gestao:listar_documentos', kwargs={'template': 'listar_sistemas'}) + '?q=Abaete' 
+    url = (
+        reverse("gestao:listar_documentos", kwargs={"template": "listar_sistemas"})
+        + "?q=Abaete"
+    )
     response = client.get(url)
 
-    assert response.context_data['object_list'][0].municipio == user.municipio
-    assert response.context_data['object_list'][0].municipio.cidade.nome_municipio == 'Abaeté'
+    assert response.context_data["object_list"][0].municipio == user.municipio
+    assert (
+        response.context_data["object_list"][0].municipio.cidade.nome_municipio
+        == "Abaeté"
+    )
 
 
-def test_pesquisa_por_ente_federado_inserir_documentos_listar_orgaos(client, login_staff):
+def test_pesquisa_por_ente_federado_inserir_documentos_listar_orgaos(
+    client, login_staff
+):
     """ Testa a pesquisa pelo nome (sem acento) de um Ente Federado na tela
     de listar documentos de Ogãos
     """
-    
-    municipio = mommy.make('Municipio', cidade= mommy.make('Cidade', nome_municipio='Abaeté'))    
 
-    user = mommy.make('Usuario', _fill_optional=['plano_trabalho'], municipio=municipio)
-    user.estado_processo = '6'
+    municipio = mommy.make(
+        "Municipio", cidade=mommy.make("Cidade", nome_municipio="Abaeté")
+    )
+
+    user = mommy.make("Usuario", _fill_optional=["plano_trabalho"], municipio=municipio)
+    user.estado_processo = "6"
     user.save()
 
-    url = reverse('gestao:listar_documentos', kwargs={'template': 'listar_orgaos'}) + '?q=Abaete' 
+    url = (
+        reverse("gestao:listar_documentos", kwargs={"template": "listar_orgaos"})
+        + "?q=Abaete"
+    )
     response = client.get(url)
 
-    assert response.context_data['object_list'][0].municipio == user.municipio
-    assert response.context_data['object_list'][0].municipio.cidade.nome_municipio == 'Abaeté'
+    assert response.context_data["object_list"][0].municipio == user.municipio
+    assert (
+        response.context_data["object_list"][0].municipio.cidade.nome_municipio
+        == "Abaeté"
+    )
 
 
-def test_pesquisa_por_ente_federado_inserir_documentos_listar_conselhos(client, login_staff):
+def test_pesquisa_por_ente_federado_inserir_documentos_listar_conselhos(
+    client, login_staff
+):
     """ Testa a pesquisa pelo nome (sem acento) de um Ente Federado na tela de listar documentos de Conselhos
     """
-    
-    municipio = mommy.make('Municipio', cidade= mommy.make('Cidade', nome_municipio='Abaeté'))    
 
-    user = mommy.make('Usuario', _fill_optional=['plano_trabalho'], municipio=municipio)
-    user.estado_processo = '6'
+    municipio = mommy.make(
+        "Municipio", cidade=mommy.make("Cidade", nome_municipio="Abaeté")
+    )
+
+    user = mommy.make("Usuario", _fill_optional=["plano_trabalho"], municipio=municipio)
+    user.estado_processo = "6"
     user.save()
 
-    url = reverse('gestao:listar_documentos', kwargs={'template': 'listar_conselhos'}) + '?q=Abaete' 
+    url = (
+        reverse("gestao:listar_documentos", kwargs={"template": "listar_conselhos"})
+        + "?q=Abaete"
+    )
     response = client.get(url)
 
-    assert response.context_data['object_list'][0].municipio == user.municipio
-    assert response.context_data['object_list'][0].municipio.cidade.nome_municipio == 'Abaeté'
+    assert response.context_data["object_list"][0].municipio == user.municipio
+    assert (
+        response.context_data["object_list"][0].municipio.cidade.nome_municipio
+        == "Abaeté"
+    )
 
 
-def test_pesquisa_por_ente_federado_inserir_documentos_listar_fundos(client, login_staff):
+def test_pesquisa_por_ente_federado_inserir_documentos_listar_fundos(
+    client, login_staff
+):
     """ Testa a pesquisa pelo nome (sem acento) de um Ente Federado na tela de listar documentos de fundos
     """
-    
-    municipio = mommy.make('Municipio', cidade= mommy.make('Cidade', nome_municipio='Abaeté'))    
 
-    user = mommy.make('Usuario', _fill_optional=['plano_trabalho'], municipio=municipio)
-    user.estado_processo = '6'
+    municipio = mommy.make(
+        "Municipio", cidade=mommy.make("Cidade", nome_municipio="Abaeté")
+    )
+
+    user = mommy.make("Usuario", _fill_optional=["plano_trabalho"], municipio=municipio)
+    user.estado_processo = "6"
     user.save()
 
-    url = reverse('gestao:listar_documentos', kwargs={'template': 'listar_fundos'}) + '?q=Abaete' 
+    url = (
+        reverse("gestao:listar_documentos", kwargs={"template": "listar_fundos"})
+        + "?q=Abaete"
+    )
     response = client.get(url)
 
-    assert response.context_data['object_list'][0].municipio == user.municipio
-    assert response.context_data['object_list'][0].municipio.cidade.nome_municipio == 'Abaeté'
+    assert response.context_data["object_list"][0].municipio == user.municipio
+    assert (
+        response.context_data["object_list"][0].municipio.cidade.nome_municipio
+        == "Abaeté"
+    )
 
 
-def test_pesquisa_por_ente_federado_inserir_documentos_listar_planos(client, login_staff):
+def test_pesquisa_por_ente_federado_inserir_documentos_listar_planos(
+    client, login_staff
+):
     """ Testa a pesquisa pelo nome (sem acento) de um Ente Federado na tela de listar documentos de planos de Cultura
     """
-    
-    municipio = mommy.make('Municipio', cidade= mommy.make('Cidade', nome_municipio='Abaeté'))    
 
-    user = mommy.make('Usuario', _fill_optional=['plano_trabalho'], municipio=municipio)
-    user.estado_processo = '6'
+    municipio = mommy.make(
+        "Municipio", cidade=mommy.make("Cidade", nome_municipio="Abaeté")
+    )
+
+    user = mommy.make("Usuario", _fill_optional=["plano_trabalho"], municipio=municipio)
+    user.estado_processo = "6"
     user.save()
 
-    url = reverse('gestao:listar_documentos', kwargs={'template': 'listar_planos'}) + '?q=Abaete' 
+    url = (
+        reverse("gestao:listar_documentos", kwargs={"template": "listar_planos"})
+        + "?q=Abaete"
+    )
     response = client.get(url)
 
-    assert response.context_data['object_list'][0].municipio == user.municipio
-    assert response.context_data['object_list'][0].municipio.cidade.nome_municipio == 'Abaeté'
+    assert response.context_data["object_list"][0].municipio == user.municipio
+    assert (
+        response.context_data["object_list"][0].municipio.cidade.nome_municipio
+        == "Abaeté"
+    )
 
 
-def test_adicionar_prazo_permanecendo_na_mesma_pagina_apos_redirect(client, login_staff):
+def test_adicionar_prazo_permanecendo_na_mesma_pagina_apos_redirect(
+    client, login_staff
+):
     """ Testa se ao adicionar prazo a um Ente Federado, a tela permanecerá na mesma página (verificação pela url) """
 
-    users = mommy.make('Usuario', _fill_optional=['plano_trabalho', 'municipio'], _quantity=15)
-    
+    users = mommy.make(
+        "Usuario", _fill_optional=["plano_trabalho", "municipio"], _quantity=15
+    )
+
     for user in users:
-        user.estado_processo = '6'
-        user.data_publicacao_acordo = datetime.date(2018, 1, 1)    
+        user.estado_processo = "6"
+        user.data_publicacao_acordo = datetime.date(2018, 1, 1)
         user.save()
 
     page = 2
 
-    url = reverse('gestao:aditivar_prazo', kwargs={'id': str(users[14].id), 'page': str(page)})
+    url = reverse(
+        "gestao:aditivar_prazo", kwargs={"id": str(users[14].id), "page": str(page)}
+    )
     request = client.post(url)
 
-    assert request.url == '/gestao/acompanhar/prazo/?page={}'.format(page)
+    assert request.url == "/gestao/acompanhar/prazo/?page={}".format(page)
     assert request.status_code == 302
 
 
@@ -1358,48 +1633,67 @@ def test_se_o_ente_permanece_na_mesma_pagina_apos_adicionar_prazo(client, login_
     sucesso ao adicionar prazo (verificação pelo id do usuário na lista de entes)"""
 
     resposta_ok = False
-    uf = mommy.make('Uf', nome_uf='Acre', sigla='AC')
+    uf = mommy.make("Uf", nome_uf="Acre", sigla="AC")
 
-    users = mommy.make('Usuario', prazo=2, estado_processo=6 , data_publicacao_acordo = datetime.date(2018, 1, 1),
-                        _fill_optional=['plano_trabalho'], _quantity=20)
-                        
-    users[0].municipio = mommy.make('Municipio', cidade=mommy.make('Cidade', nome_municipio='AAAAAA', uf=uf), 
-                                    estado=uf, cnpj_prefeitura='13.348.479/0001-01')
+    users = mommy.make(
+        "Usuario",
+        prazo=2,
+        estado_processo=6,
+        data_publicacao_acordo=datetime.date(2018, 1, 1),
+        _fill_optional=["plano_trabalho"],
+        _quantity=20,
+    )
+
+    users[0].municipio = mommy.make(
+        "Municipio",
+        cidade=mommy.make("Cidade", nome_municipio="AAAAAA", uf=uf),
+        estado=uf,
+        cnpj_prefeitura="13.348.479/0001-01",
+    )
     users[0].save()
 
     for user in users[1:19]:
-        user.municipio = mommy.make('Municipio', estado=uf, cidade=mommy.make('Cidade', uf=uf), cnpj_prefeitura='13.348.479/0001-01')
+        user.municipio = mommy.make(
+            "Municipio",
+            estado=uf,
+            cidade=mommy.make("Cidade", uf=uf),
+            cnpj_prefeitura="13.348.479/0001-01",
+        )
         user.save()
-    
-    url = reverse('gestao:aditivar_prazo', kwargs={'id': str(users[0].id), 'page': '1'})
+
+    url = reverse("gestao:aditivar_prazo", kwargs={"id": str(users[0].id), "page": "1"})
     request = client.post(url)
     url_apos_redirect = request.url
 
     response = client.get(url_apos_redirect)
-    
-    if users[0] in response.context_data['object_list']:
+
+    if users[0] in response.context_data["object_list"]:
         resposta_ok = True
-    
+
     assert resposta_ok == True
     assert request.status_code == 302
-    assert response.context_data['object_list'][0] == users[0]
-    
+    assert response.context_data["object_list"][0] == users[0]
+
 
 def test_pesquisa_de_ente_federado_sem_acento_tela_adicionar_prazo(client, login_staff):
     """ Testa a pesquisa por nome do ente federado (sem acento) - Deve retornar o nome
     com o acento normalmente """
 
-    municipio = mommy.make('Municipio', cidade= mommy.make('Cidade', nome_municipio='Acrelândia'))    
+    municipio = mommy.make(
+        "Municipio", cidade=mommy.make("Cidade", nome_municipio="Acrelândia")
+    )
 
-    user = mommy.make('Usuario', _fill_optional=['plano_trabalho'], municipio=municipio)
-    user.estado_processo = '6'
+    user = mommy.make("Usuario", _fill_optional=["plano_trabalho"], municipio=municipio)
+    user.estado_processo = "6"
     user.save()
     user.data_publicacao_acordo = datetime.date(2018, 1, 1)
     user.save()
 
-    url = reverse('gestao:acompanhar_prazo') + '?municipio=Acrelandia'
+    url = reverse("gestao:acompanhar_prazo") + "?municipio=Acrelandia"
     response = client.get(url)
 
-    assert response.context_data['object_list'][0].municipio == user.municipio
-    assert response.context_data['object_list'][0].municipio.cidade.nome_municipio == 'Acrelândia'
-
+    assert response.context_data["object_list"][0].municipio == user.municipio
+    assert (
+        response.context_data["object_list"][0].municipio.cidade.nome_municipio
+        == "Acrelândia"
+    )

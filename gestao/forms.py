@@ -21,7 +21,7 @@ from planotrabalho.models import CriacaoSistema, FundoCultura
 from planotrabalho.models import PlanoCultura, OrgaoGestor, ConselhoCultural
 from planotrabalho.models import SituacoesArquivoPlano
 
-from gestao.models import Diligencia
+from gestao.models import Diligencia, DiligenciaSimples
 
 from .utils import enviar_email_alteracao_situacao
 
@@ -82,6 +82,38 @@ class InserirSEI(ModelForm):
         fields = ('processo_sei',)
 
 
+class CadastradorEnte(forms.ModelForm):
+    cpf_cadastrador = forms.CharField(max_length="20")
+    data_publicacao_acordo = forms.DateField(required=False)
+
+    def clean_cpf_cadastrador(self):
+        if not validar_cpf(self.cleaned_data['cpf_cadastrador']):
+            raise forms.ValidationError('Por favor, digite um CPF válido!')
+
+        try:
+            Usuario.objects.get(user__username=self.cleaned_data['cpf_cadastrador'])
+        except Usuario.DoesNotExist:
+            raise forms.ValidationError('Este CPF não está cadastrado.')
+
+        return self.cleaned_data['cpf_cadastrador']
+
+    def save(self):
+        sistema = self.instance
+        cadastrador = Usuario.objects.get(user__username=self.cleaned_data['cpf_cadastrador'])
+        sistema.cadastrador = cadastrador
+
+        if self.cleaned_data['data_publicacao_acordo']:
+            sistema.data_publicacao_acordo = self.cleaned_data['data_publicacao_acordo']
+
+        sistema.save()
+
+        return sistema
+
+    class Meta:
+        model = SistemaCultura
+        fields = ["cpf_cadastrador", "data_publicacao_acordo"]
+
+
 class AlterarDadosAdesao(ModelForm):
     processo_sei = forms.CharField(max_length="50", required=False)
     justificativa = forms.CharField(required=False)
@@ -120,72 +152,95 @@ class AlterarDadosAdesao(ModelForm):
 
 
 class DiligenciaForm(ModelForm):
+
     texto_diligencia = forms.CharField(widget=CKEditorWidget())
-
-    def __init__(self, resultado, componente, *args, **kwargs):
-        """ Form da diligência recebe como parâmetro o resultado, que serve
-        para diferenciar diligência de aprovação e reprovação """
-
+    
+    def __init__(self, *args, **kwargs):
+        self.sistema_cultura = kwargs.pop("sistema_cultura")
+        usuario = kwargs.pop("usuario")
         super(DiligenciaForm, self).__init__(*args, **kwargs)
-
-        if componente != 'plano_trabalho':
-            if resultado == '1':
-                self.fields['classificacao_arquivo'].queryset = SituacoesArquivoPlano.objects.filter(pk=2)
-            else:
-                self.fields['classificacao_arquivo'].queryset = SituacoesArquivoPlano.objects.filter(id__gte=4, id__lte=6)
-        else:
-            self.fields.pop('classificacao_arquivo')
+        self.instance.usuario = usuario
 
     class Meta:
-        model = Diligencia
+        model = DiligenciaSimples
+        fields = ('texto_diligencia',)
+
+
+class DiligenciaComponenteForm(DiligenciaForm):
+    SITUACOES = (
+        (4, "Arquivo danificado"),
+        (5, "Arquivo incompleto"),
+        (6, "Arquivo incorreto")
+    )
+
+    classificacao_arquivo = forms.TypedChoiceField(choices=SITUACOES, required=False)
+
+    def __init__(self, *args, **kwargs):
+        self.tipo_componente = kwargs.pop("componente")
+        super(DiligenciaComponenteForm, self).__init__(*args, **kwargs)
+
+    def save(self, commit=True):
+        diligencia = super(DiligenciaForm, self).save()
+
+        if commit:
+            componente = getattr(self.sistema_cultura, self.tipo_componente)
+            componente.diligencia = diligencia
+            componente.situacao = self.cleaned_data['classificacao_arquivo']
+            componente.save()
+
+    class Meta:
+        model = DiligenciaSimples
         fields = ('texto_diligencia', 'classificacao_arquivo')
+
+
+class DiligenciaGeralForm(DiligenciaForm):
+
+    def __init__(self, *args, **kwargs):
+        super(DiligenciaGeralForm, self).__init__(*args, **kwargs)
+
+    def save(self, commit=True):
+        diligencia = super(DiligenciaForm, self).save()
+
+        if commit:
+            self.sistema_cultura.diligencia = diligencia
+            self.sistema_cultura.save()
 
 
 class AlterarCadastradorForm(forms.Form):
     cpf_usuario = forms.CharField(max_length=11)
-    estado = forms.ModelChoiceField(
-        queryset=Uf.objects.all(),
-        widget=autocomplete.ModelSelect2(url='gestao:uf_chain')
-    )
-
-    municipio = forms.ModelChoiceField(
-        queryset=Cidade.objects.all(),
-        widget=autocomplete.ModelSelect2(url='gestao:cidade_chain',
-            forward=['estado']
-        ),
-        required=False
-    )
-
     data_publicacao_acordo = forms.DateField(required=False)
 
+    def __init__(self, cod_ibge=None, *args, **kwargs):
+        super(AlterarCadastradorForm, self).__init__(*args, **kwargs)
+        self.cod_ibge = cod_ibge
+
     def clean_cpf_usuario(self):
+        #import ipdb; ipdb.set_trace()
         if not validar_cpf(self.cleaned_data['cpf_usuario']):
-            raise forms.ValidationError('Por favor, digite um CPF válido!')
+            raise forms.validationerror('por favor, digite um cpf válido!')
 
         try:
-            User.objects.get(username=''.join(re.findall(
+            user.objects.get(username=''.join(re.findall(
                 '\d+',
                 self.cleaned_data['cpf_usuario'])))
             return self.cleaned_data['cpf_usuario']
-        except User.DoesNotExist:
-            raise forms.ValidationError('Esse CPF não está cadastrado.')
+        except user.doesnotexist:
+            raise forms.validationerror('esse cpf não está cadastrado.')
 
         return self.cleaned_data['cpf_usuario']
 
     def save(self):
-        cadastrador_novo = Usuario.objects.get(
+        cadastrador_novo = usuario.objects.get(
                 user__username=self.cleaned_data['cpf_usuario'])
-        sistema = SistemaCultura.objects.ativo_ou_cria(
-                cidade=self.cleaned_data.get('municipio', None),
-                uf=self.cleaned_data['estado'])
-
+        sistema = sistemacultura.sistema.get(ente_federado__cod_ibge=self.cod_ibge)
+        sistema.data_publicacao_acordo = self.cleaned_data['data_publicacao_acordo']
         sistema.cadastrador = cadastrador_novo
         sistema.save()
 
         return sistema
 
     class Meta:
-        fields = ('cpf_usuario', 'estado', 'municipio', 'data_publicacao_acordo')
+        fields = ('cpf_usuario', 'data_publicacao_acordo')
 
 
 class AlterarUsuarioForm(ModelForm):

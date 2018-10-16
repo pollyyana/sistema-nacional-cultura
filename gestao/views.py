@@ -1,21 +1,18 @@
-from threading import Thread
-
-from django.contrib.contenttypes.models import ContentType
-from django.core.mail import send_mail
-
 from django.db.models import Case, When, DateField, Count, Q
 from django.db.models.functions import Least
+from django.utils.translation import gettext as _
 
 from django.shortcuts import redirect
 from django.shortcuts import render
 from django.shortcuts import get_object_or_404
 
-from django.http import Http404, JsonResponse, HttpResponseRedirect
+from django.http import Http404
 from django.http import JsonResponse
-from django.http import HttpResponseRedirect
 
 from django.contrib.auth.models import User
 from django.contrib import messages
+
+from django.views.generic.detail import SingleObjectMixin
 
 from django.views.generic import CreateView
 from django.views.generic import DetailView
@@ -27,6 +24,8 @@ from django.views.generic.edit import UpdateView
 from django.urls import reverse_lazy
 
 from dal import autocomplete
+
+from templated_email.generic_views import TemplatedEmailFormViewMixin
 
 from adesao.models import Usuario
 from adesao.models import Cidade
@@ -41,13 +40,15 @@ from planotrabalho.models import FundoCultura
 from planotrabalho.models import OrgaoGestor
 from planotrabalho.models import ConselhoCultural
 from planotrabalho.models import SituacoesArquivoPlano
+from planotrabalho.models import Componente
 
-from gestao.utils import enviar_email_aprovacao_plano
 from gestao.utils import empty_to_none
 
 from adesao.models import Uf
 
-from .forms import DiligenciaForm, AlterarDocumentosEnteFederadoForm
+from .models import DiligenciaSimples
+
+from .forms import DiligenciaComponenteForm, DiligenciaGeralForm, AlterarDocumentosEnteFederadoForm
 from .forms import AlterarDadosAdesao
 
 from .forms import AlterarCadastradorForm
@@ -64,17 +65,26 @@ from .forms import CriarConselhoForm
 from .forms import CriarFundoForm
 from .forms import CriarPlanoForm
 
-from itertools import chain
+from .forms import CadastradorEnte
 
 
 # Acompanhamento das adesões
-class AlterarCadastrador(FormView):
+class AlterarCadastrador(UpdateView):
     """AlterarCadastrador
     Altera o cadastrador de um Municipio aderido
     """
-    template_name = 'gestao/alterar_cadastrador.html'
+    queryset = SistemaCultura.sistema.all()
+    template_name = 'cadastrador.html'
     form_class = AlterarCadastradorForm
-    success_url = reverse_lazy('gestao:alterar_cadastrador')
+
+    def get_form_kwargs(self):
+        kwargs = super(AlterarCadastrador, self).get_form_kwargs()
+        self.cod_ibge = self.kwargs['cod_ibge']
+        kwargs.update(self.kwargs)
+        return kwargs
+
+    def get_success_url(self):
+       return reverse_lazy('gestao:alterar_cadastrador', kwargs={'cod_ibge': self.cod_ibge})
 
     def form_valid(self, form):
         form.save()
@@ -112,7 +122,7 @@ class UfChain(autocomplete.Select2QuerySetView):
         """ Filtra todas as uf passando nome ou sigla """
 
         choices = Uf.objects.filter(
-                    Q(sigla__iexact=self.q) | 
+                    Q(sigla__iexact=self.q) |
                     Q(nome_uf__unaccent__icontains=self.q)
                 ).values_list('pk', 'sigla', named=True)
         return choices
@@ -132,6 +142,23 @@ def alterar_dados_adesao(request, pk):
             form.save()
             messages.success(request, 'Dados da adesão foram alterados com sucesso')
     return redirect('gestao:detalhar', pk=pk)
+
+
+def ajax_consulta_cpf(request):
+
+    if not request.is_ajax():
+        return JsonResponse(data={"message": "Esta não é uma requisição AJAX"}, status=400)
+
+    cpf = request.POST.get('cpf', None)
+    if not cpf:
+        return JsonResponse(data={"message": "CPF não informado"}, status=400)
+
+    try:
+        nome = Usuario.objects.get(user__username=cpf).nome_usuario
+    except Usuario.DoesNotExist:
+        return JsonResponse(data={"message": "CPF não encontrado"}, status=404)
+
+    return JsonResponse(data={"data": {"nome": nome}})
 
 
 def ajax_cadastrador_cpf(request):
@@ -191,6 +218,15 @@ def aditivar_prazo(request, id,page):
 
 
     return redirect(reverse_lazy('gestao:acompanhar_prazo') + '?page=' + page)
+
+
+class AcompanharSistemaCultura(ListView):
+    model = SistemaCultura
+    template_name = 'gestao/adesao/acompanhar.html'
+    paginate_by = 10
+
+    def get_queryset(self):
+        return SistemaCultura.sistema.all()
 
 
 class AcompanharAdesao(ListView):
@@ -339,8 +375,8 @@ class AcompanharSistema(ListView):
             usuarios = usuarios.exclude(
                 plano_trabalho__criacao_sistema__arquivo=None)
         else:
-            raise Http404    
-        
+            raise Http404
+
         if q:
             usuarios = usuarios.filter(
                 municipio__cidade__nome_municipio__unaccent__icontains=q)
@@ -492,6 +528,81 @@ class DetalharUsuario(DetailView):
         except:
             pass
         return context
+
+
+class LookUpAnotherFieldMixin(SingleObjectMixin):
+
+    lookup_field = None
+
+    def get_object(self, queryset=None):
+
+        if queryset is None:
+            queryset = self.get_queryset()
+
+        pk = self.kwargs.get(self.pk_url_kwarg)
+        slug = self.kwargs.get(self.slug_url_kwarg)
+        lookup_field = self.lookup_field
+
+        if pk is not None and lookup_field is None:
+            queryset = queryset.filter(pk=pk)
+
+        if slug is not None and (pk is None or self.query_pk_and_slug):
+            slug_field = self.get_slug_field()
+            queryset = queryset.filter(**{slug_field: slug})
+
+        if lookup_field is not None:
+            queryset = queryset.filter(**{lookup_field: pk})
+
+        if pk is None and slug is None and lookup_field is None:
+            raise AttributeError("Generic detail view %s must be called with "
+                                 "either an object pk or a slug."
+                                 % self.__class__.__name__)
+
+        try:
+            # Get the single item from the filtered queryset
+            obj = queryset.get()
+        except queryset.model.DoesNotExist:
+            raise Http404(_("No %(verbose_name)s found matching the query") %
+                          {'verbose_name': queryset.model._meta.verbose_name})
+        return obj
+
+
+class DetalharEnte(DetailView, LookUpAnotherFieldMixin):
+    model = SistemaCultura
+    context_object_name = "ente"
+    template_name = "detalhe_municipio.html"
+    pk_url_kwarg = "cod_ibge"
+    lookup_field = "ente_federado__cod_ibge"
+    queryset = SistemaCultura.sistema.all()
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        ente_federado = context['object'].ente_federado
+        historico = SistemaCultura.historico.filter(ente_federado=ente_federado)[:10]
+        context['historico'] = historico
+
+        return context
+
+
+class AlterarDadosEnte(UpdateView, LookUpAnotherFieldMixin):
+    model = SistemaCultura
+    fields = ["processo_sei", "estado_processo", "justificativa",
+              "localizacao", "link_publicacao_acordo"]
+    context_object_name = "ente"
+    template_name = "detalhe_municipio.html"
+    pk_url_kwarg = "cod_ibge"
+    lookup_field = "ente_federado__cod_ibge"
+    queryset = SistemaCultura.sistema.all()
+
+
+class AlterarCadastradorEnte(UpdateView, LookUpAnotherFieldMixin):
+    model = SistemaCultura
+    queryset = SistemaCultura.sistema.all()
+    form_class = CadastradorEnte
+    context_object_name = "ente"
+    template_name = "detalhe_municipio.html"
+    pk_url_kwarg = "cod_ibge"
+    lookup_field = "ente_federado__cod_ibge"
 
 
 class ListarUsuarios(ListView):
@@ -671,7 +782,7 @@ class AlterarFundo(UpdateView):
     def get_success_url(self):
         messages.success(self.request, 'Fundo de Cultura alterado com sucesso')
         return reverse_lazy('gestao:listar_documentos', kwargs={'template': 'listar_fundos'})
-    
+
 
 class InserirPlano(CreateView):
     template_name = 'gestao/inserir_documentos/inserir_plano.html'
@@ -719,164 +830,110 @@ class Prorrogacao(ListView):
         return usuarios
 
 
-class DiligenciaView(CreateView):
-    template_name = 'gestao/diligencia/diligencia.html'
-    form_class = DiligenciaForm
+class DiligenciaComponenteView(CreateView):
+    template_name = 'diligencia.html'
+    model = DiligenciaSimples
+    form_class = DiligenciaComponenteForm
+    context_object_name = "diligencia"
 
-    componentes = {
-        'fundo_cultura': 'fundocultura',
-        'orgao_gestor': 'orgaogestor',
-        'conselho_cultural': 'conselhocultural',
-        'plano_cultura': 'planocultura',
-        'criacao_sistema': 'criacaosistema',
-        'plano_trabalho': 'planotrabalho',
-    }
+    def get_form_kwargs(self):
+        kwargs = super(DiligenciaComponenteView, self).get_form_kwargs()
+        kwargs['componente'] = self.kwargs['componente']
+        kwargs['sistema_cultura'] = self.get_sistema_cultura()
+        kwargs['usuario'] = self.request.user.usuario
 
-    def send_email_diligencia(self):
-        usuario = self.get_plano_trabalho().usuario
-        situacoes = self.get_situacao_componentes()
-        send_mail('MINISTÉRIO DA CULTURA - SNC - DILIGÊNCIA PLANO DE TRABALHO',
-                  'Prezado Cadastrador,\n' +
-                  'Uma diligência referente ao Plano de Trabalho do ente federado ' + self.get_ente_federado_name() +
-                  ' acabou de ser realizada.\n' +
-                  'O corpo da mensagem é: ' + self.object.texto_diligencia + '\n' +
-                  'As situações dos arquivos enviados de cada componente são: \n' +
-                  'Lei de Criação do Sistema de Cultura: ' + situacoes['criacao_sistema'] + ';\n' +
-                  'Órgão Gestor: ' + situacoes['orgao_gestor'] + ';\n' +
-                  'Conselho de Política Cultural: ' + situacoes['conselho_cultural'] + ';\n' +
-                  'Fundo de Cultura: ' + situacoes['fundo_cultura'] + ';\n' +
-                  'Plano de Cultura: ' + situacoes['plano_cultura'] + '.\n\n' +
-                  'Atenciosamente,\n\n' +
-                  'Equipe SNC\nMinistério da Cultura',
-                  'naoresponda@cultura.gov.br',
-                  [usuario.user.email], fail_silently=False)
+        return kwargs
 
     def get_success_url(self):
-        usuario = self.get_plano_trabalho().usuario
-        return reverse_lazy('gestao:detalhar', kwargs={'pk': usuario.id})
+        sistema_cultura = self.get_sistema_cultura()
+        return reverse_lazy('gestao:detalhar', kwargs={'pk': sistema_cultura.id})
 
-    def get_plano_trabalho(self):
-        return get_object_or_404(PlanoTrabalho, pk=int(self.kwargs['pk']))
-
-    def get_ente_federado(self):
-        plano_trabalho = self.get_plano_trabalho()
-        return plano_trabalho.usuario.municipio
-
-    def get_form(self):
-        form_class = super().get_form_class()
-
-        return form_class(resultado=self.kwargs['resultado'], componente=self.kwargs['componente'], **self.get_form_kwargs())
+    def get_sistema_cultura(self):
+        return get_object_or_404(SistemaCultura, pk=int(self.kwargs['pk']))
 
     def get_componente(self):
         """ Retonar o componente baseado no argumento passado pela url"""
-        plano_trabalho = self.get_plano_trabalho()
-        plano_componente = None
+        sistema_cultura = self.get_sistema_cultura()
+        componente = None
 
-        if(self.kwargs['componente'] != 'plano_trabalho'):
-            try:
-                plano_componente = getattr(plano_trabalho,
-                                           self.kwargs['componente'])
-                assert plano_componente
-            except(AssertionError, AttributeError):
-                raise Http404('Componente não existe')
-        else:
-            plano_componente = plano_trabalho
-
-        return plano_componente
-
-    def get_ente_federado_name(self):
-        ente_federado = self.get_ente_federado()
-        name = None
-
-        if ente_federado.cidade:
-            name = "{} - {}".format(ente_federado.cidade.nome_municipio,
-                                    ente_federado.estado.sigla)
-
-        else:
-            name = ente_federado.estado.sigla
-
-        return name
-
-    def get_historico_diligencias(self):
-        plano_componente = self.get_componente()
-
-        historico_diligencias = plano_componente.diligencias.all().order_by('-data_criacao').order_by('-id')
-
-        return historico_diligencias[:3]
-
-    def get_componente_descricao(self, componente):
         try:
-            descricao = componente.situacao.descricao
-        except AttributeError:
-            descricao = 'Inexistente'
+            componente = getattr(sistema_cultura,
+                                       self.kwargs['componente'])
+            assert componente
+        except(AssertionError, AttributeError):
+            raise Http404('Componente não existe')
 
-        return descricao
-
-    def get_situacao_componentes(self):
-        situacoes = {}
-        plano_trabalho = self.get_plano_trabalho()
-
-        componentes = ["criacao_sistema", "orgao_gestor", "fundo_cultura", "conselho_cultural", "plano_cultura"]
-
-        for componente in componentes:
-            plano_comp = getattr(plano_trabalho, componente)
-            situacoes[componente] = self.get_componente_descricao(plano_comp)
-
-        return situacoes
+        return componente
 
     def get_context_data(self, form=None, **kwargs):
-        context = {}
-        plano_componente = self.get_componente()
-        ente_federado = self.get_ente_federado()
+        context = super().get_context_data(**kwargs)
+        componente = self.get_componente()
+        ente_federado = self.get_sistema_cultura().ente_federado.nome
 
-        if form is None:
-            form = self.get_form()
-
-        if (isinstance(plano_componente, PlanoTrabalho)):
-            context['situacoes'] = self.get_situacao_componentes()
-        else:
-            context['arquivo'] = plano_componente.arquivo
-
-        context['form'] = form
-        context['ente_federado'] = self.get_ente_federado_name()
-        context['historico_diligencias'] = self.get_historico_diligencias()
-        context['usuario_id'] = ente_federado.usuario.id
+        context['arquivo'] = componente.arquivo
+        context['ente_federado'] = self.get_sistema_cultura().ente_federado.nome
+        context['sistema_cultura'] = self.get_sistema_cultura().id
         context['data_envio'] = "--/--/----"
-        context['componente'] = plano_componente
-        context['plano_trabalho'] = self.get_plano_trabalho()
+        context['componente'] = componente
 
         return context
-
-    def form_valid(self, form):
-        plano_componente = self.get_componente()
-        self.object = form.save()
-
-        plano_componente.situacao = self.object.classificacao_arquivo
-        plano_componente.save()
-
-        if(isinstance(self.get_componente(), PlanoTrabalho)):
-            self.send_email_diligencia()
-
-        return HttpResponseRedirect(self.get_success_url())
 
     def form_invalid(self, form):
         return self.render_to_response(self.get_context_data(form=form), status=400)
 
-    def post(self, request, *args, **kwargs):
-        plano_componente = self.get_componente()
-        form = self.get_form()
 
-        if(isinstance(plano_componente, PlanoTrabalho)):
-            form.instance.tipo_diligencia = 'geral'
-        else:
-            form.instance.tipo_diligencia = 'componente'
+class DiligenciaGeralCreateView(CreateView, TemplatedEmailFormViewMixin):
+    template_name = 'diligencia.html'
+    model = DiligenciaSimples
+    form_class = DiligenciaGeralForm
 
-        form.instance.usuario = request.user.usuario
-        form.instance.ente_federado = self.get_ente_federado()
-        form.instance.componente_id = plano_componente.id
-        form.instance.componente_type = ContentType.objects.get(app_label='planotrabalho', model=self.componentes[self.kwargs['componente']])
+    templated_email_template_name = "diligencia"
+    templated_email_from_email = "naoresponda@cultura.gov.br"
 
-        if form.is_valid():
-            return self.form_valid(form)
-        else:
-            return self.form_invalid(form)
+    def get_form_kwargs(self):
+        kwargs = super(DiligenciaGeralCreateView, self).get_form_kwargs()
+        kwargs['sistema_cultura'] = self.get_sistema_cultura()
+        kwargs['usuario'] = self.request.user.usuario
+
+        return kwargs
+
+    def get_context_data(self, form=None, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['sistema_cultura'] = self.get_sistema_cultura().id
+        context['situacoes'] = self.get_sistema_cultura().get_situacao_componentes()
+        context['historico_diligencias'] = self.get_historico_diligencias()
+
+        return context
+
+    def get_historico_diligencias(self):
+        historico_diligencias = SistemaCultura.historico.ente(
+            cod_ibge=self.get_sistema_cultura().ente_federado.cod_ibge)
+
+        return historico_diligencias
+
+    def get_sistema_cultura(self):
+        return get_object_or_404(SistemaCultura, pk=int(self.kwargs['pk']))
+
+    def templated_email_get_recipients(self, form):
+        return self.get_sistema_cultura().cadastrador.user.email
+
+    def get_success_url(self):
+        return reverse_lazy("gestao:detalhar", kwargs={"pk": self.get_sistema_cultura().id})
+
+
+class DiligenciaGeralDetailView(DetailView):
+    model = SistemaCultura
+    fields = ['diligencia']
+    template_name = 'diligencia.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+
+        context['sistema_cultura'] = self.object.id
+        context['situacoes'] = self.object.get_situacao_componentes()
+        return context
+
+
+class SituacaoArquivoComponenteUpdateView(UpdateView):
+    model = Componente
+    fields = ['situacao']
