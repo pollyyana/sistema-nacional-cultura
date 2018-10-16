@@ -73,12 +73,15 @@ class AlterarCadastrador(FormView):
     """
     template_name = 'gestao/alterar_cadastrador.html'
     form_class = AlterarCadastradorForm
-    success_url = reverse_lazy('gestao:alterar_cadastrador')
 
     def get_form_kwargs(self):
         kwargs = super(AlterarCadastrador, self).get_form_kwargs()
+        self.cod_ibge = self.kwargs['cod_ibge']
         kwargs.update(self.kwargs)
         return kwargs
+
+    def get_success_url(self):
+        return reverse_lazy('gestao:alterar_cadastrador', kwargs={'cod_ibge': self.cod_ibge})
 
     def form_valid(self, form):
         form.save()

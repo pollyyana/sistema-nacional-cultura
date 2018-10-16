@@ -183,7 +183,6 @@ class AlterarCadastradorForm(forms.Form):
         self.cod_ibge = cod_ibge
 
     def clean_cpf_usuario(self):
-        #import ipdb; ipdb.set_trace()
         if not validar_cpf(self.cleaned_data['cpf_usuario']):
             raise forms.ValidationError('Por favor, digite um CPF válido!')
 
@@ -201,6 +200,7 @@ class AlterarCadastradorForm(forms.Form):
         cadastrador_novo = Usuario.objects.get(
                 user__username=self.cleaned_data['cpf_usuario'])
         sistema = SistemaCultura.sistema.get(ente_federado__cod_ibge=self.cod_ibge)
+        sistema.data_publicacao_acordo = self.cleaned_data['data_publicacao_acordo']
         sistema.cadastrador = cadastrador_novo
         sistema.save()
 

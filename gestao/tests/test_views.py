@@ -1078,45 +1078,46 @@ def test_alterar_dados_adesao_detalhe_municipio_sem_valores(client, login_staff)
     assert not usuario.processo_sei
 
 
-def test_alterar_cadastrador_municipio(client, login_staff):
-    """ Testa alteração de cadastrador de um ente federal municipal """
+def test_alterar_cadastrador_sem_data_publicacao(client, login_staff):
+    """ Testa alteração de cadastrador de um sistema cultura
+    sem data de publicação do acordo """
 
-    municipio = mommy.make('Municipio', _fill_optional=['cidade'])
-    mommy.make('Usuario', municipio=municipio)
     new_user = mommy.make('Usuario', user__username='34701068004')
-    url = reverse('gestao:alterar_cadastrador')
+    sistema = mommy.make('SistemaCultura', ente_federado__cod_ibge=123456)
+
+    url = reverse('gestao:alterar_cadastrador', kwargs={'cod_ibge': sistema.ente_federado.cod_ibge})
 
     data = {
         'cpf_usuario': new_user.user.username,
-        'municipio': municipio.cidade.id,
-        'estado': municipio.estado.codigo_ibge
     }
 
     client.post(url, data=data)
 
-    municipio.refresh_from_db()
+    sistema_atualizado = SistemaCultura.sistema.get(ente_federado__cod_ibge=sistema.ente_federado.cod_ibge)
+    assert sistema_atualizado.cadastrador == new_user
 
-    assert municipio.usuario == new_user
 
+def test_alterar_cadastrador_com_data_publicacao(client, login_staff):
+    """ Testa alteração de cadastrador de um sistema cultura 
+    com data de publicação do acordo"""
 
-def test_alterar_cadastrador_estado(client, login_staff):
-    """ Testa alteração de cadastrador de um ente federal estadual"""
-
-    municipio = mommy.make('Municipio')
-    mommy.make('Usuario', municipio=municipio)
     new_user = mommy.make('Usuario', user__username='34701068004')
-    url = reverse('gestao:alterar_cadastrador')
+    sistema = mommy.make('SistemaCultura', ente_federado__cod_ibge=123456)
+
+    url = reverse('gestao:alterar_cadastrador', kwargs={'cod_ibge': sistema.ente_federado.cod_ibge})
 
     data = {
         'cpf_usuario': new_user.user.username,
-        'estado': municipio.estado.codigo_ibge
+        'data_publicacao_acordo': "2016-02-02"
     }
 
     client.post(url, data=data)
 
-    municipio.refresh_from_db()
+    sistema.refresh_from_db()
 
-    assert municipio.usuario == new_user
+    sistema_atualizado = SistemaCultura.sistema.get(ente_federado__cod_ibge=sistema.ente_federado.cod_ibge)
+    assert sistema_atualizado.cadastrador == new_user
+    assert sistema_atualizado.data_publicacao_acordo == datetime.date(2016, 2, 2)
 
 
 def test_ajax_cadastrador_cpf(client, login_staff):
