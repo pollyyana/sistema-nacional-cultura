@@ -132,8 +132,6 @@ def cria_sistema_cultura(apps, schema_editor):
 
         sistema_cultura.save()
 
-    print(erros)
-
 
 class Migration(migrations.Migration):
 

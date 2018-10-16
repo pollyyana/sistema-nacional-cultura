@@ -6,7 +6,7 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('adesao', '0019_auto_20181005_1645'),
+        ('adesao', '0018_remove_sistemacultura_localizacao'),
     ]
 
     operations = [
