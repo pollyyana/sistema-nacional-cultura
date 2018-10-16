@@ -225,80 +225,67 @@ class AcompanharSistemaCultura(ListView):
     template_name = 'gestao/adesao/acompanhar.html'
     paginate_by = 10
 
-    def get_queryset(self):
-        return SistemaCultura.sistema.all()
-
-
-class AcompanharAdesao(ListView):
-    template_name = 'gestao/adesao/acompanhar.html'
-    paginate_by = 10
-
     def annotate_componente_mais_antigo_por_situacao(self, componentes, *args):
         componentes = componentes.annotate(
-            data_lei_sem_analise=Case(
-                When(usuario__plano_trabalho__criacao_sistema__situacao__in=args, then='usuario__plano_trabalho__criacao_sistema__data_envio'),
+            data_legislacao_sem_analise=Case(
+                When(legislacao__situacao__in=args, then='legislacao__data_envio'),
                 default=None,
                 output_field=DateField(),
             ),
              data_orgao_sem_analise=Case(
-                When(usuario__plano_trabalho__orgao_gestor__situacao__in=args, then='usuario__plano_trabalho__orgao_gestor__data_envio'),
+                When(orgao_gestor__situacao__in=args, then='orgao_gestor__data_envio'),
                 default=None,
                 output_field=DateField(),
             ),
              data_conselho_sem_analise=Case(
-                When(usuario__plano_trabalho__conselho_cultural__situacao__in=args, then='usuario__plano_trabalho__conselho_cultural__data_envio'),
+                When(conselho__situacao__in=args, then='conselho__data_envio'),
                 default=None,
                 output_field=DateField(),
             ),
              data_plano_sem_analise=Case(
-                When(usuario__plano_trabalho__plano_cultura__situacao__in=args, then='usuario__plano_trabalho__plano_cultura__data_envio'),
+                When(plano__situacao__in=args, then='plano__data_envio'),
                 default=None,
                 output_field=DateField(),
             ),
             data_fundo_sem_analise=Case(
-                When(usuario__plano_trabalho__fundo_cultura__situacao__in=args, then='usuario__plano_trabalho__fundo_cultura__data_envio'),
+                When(fundo_cultura__situacao__in=args, then='fundo_cultura__data_envio'),
                 default=None,
                 output_field=DateField(),
             )
         ).annotate(
-            mais_antigo=Least('data_lei_sem_analise', 'data_orgao_sem_analise', 'data_conselho_sem_analise', 'data_plano_sem_analise',
+            mais_antigo=Least('data_legislacao_sem_analise', 'data_orgao_sem_analise', 'data_conselho_sem_analise', 'data_plano_sem_analise',
                 'data_fundo_sem_analise')
         )
 
         return componentes
 
-
     def get_queryset(self):
         situacao = self.request.GET.get('situacao', None)
-        ente_federado = self.request.GET.get('municipio', None)
+        ente_federado = self.request.GET.get('ente_federado', None)
 
         if situacao in ('0', '1', '2', '3', '4', '5', '6'):
-            entes = Municipio.objects.filter(usuario__estado_processo=situacao)
+            sistemas = SistemaCultura.objects.filter(estado_processo=situacao)
 
-        elif ente_federado:
-            municipio = Municipio.objects.filter(
-                cidade__nome_municipio__unaccent__icontains=ente_federado)
-            estado = Municipio.objects.filter(
-                cidade__nome_municipio__isnull=True,
-                estado__nome_uf__unaccent__icontains=ente_federado)
-
-            entes = municipio | estado
-
+        if ente_federado:
+            sistemas = SistemaCultura.objects.filter(
+                ente_federado__nome__icontains=ente_federado)
         else:
-            entes = Municipio.objects.all()
+            sistemas = SistemaCultura.objects.all()
 
-        entes_concluidos = self.annotate_componente_mais_antigo_por_situacao(entes, 2, 3).annotate(
-            cadastrador=Count('usuario')).order_by('-cadastrador', '-usuario__estado_processo', 'mais_antigo')
+        sistemas_concluidos = self.annotate_componente_mais_antigo_por_situacao(sistemas, 2, 3).annotate(
+            tem_cadastrador=Count('cadastrador')).order_by('-tem_cadastrador', '-estado_processo', 'mais_antigo')
 
-        entes_diligencia = self.annotate_componente_mais_antigo_por_situacao(entes, 4, 5, 6).annotate(
-            cadastrador=Count('usuario')).order_by('-cadastrador', '-usuario__estado_processo', 'mais_antigo')
+        sistemas_diligencia = self.annotate_componente_mais_antigo_por_situacao(sistemas, 4, 5, 6).annotate(
+            tem_cadastrador=Count('cadastrador')).order_by('-tem_cadastrador', '-estado_processo', 'mais_antigo')
 
-        entes_nao_analisados = self.annotate_componente_mais_antigo_por_situacao(entes, 1).annotate(
-            cadastrador=Count('usuario')).order_by('-cadastrador', '-usuario__estado_processo', 'mais_antigo')
+        sistemas_nao_analisados = self.annotate_componente_mais_antigo_por_situacao(sistemas, 1).annotate(
+            tem_cadastrador=Count('cadastrador')).order_by('-tem_cadastrador', '-estado_processo', 'mais_antigo')
 
-        entes = entes_nao_analisados | entes_diligencia | entes_concluidos
+        sistemas = sistemas_nao_analisados | sistemas_diligencia | sistemas_concluidos
 
-        return entes
+        sistemas.distinct('ente_federado').select_related()
+
+        return sistemas
 
 
 # Acompanhamento dos planos de trabalho
