@@ -566,12 +566,30 @@ class LookUpAnotherFieldMixin(SingleObjectMixin):
 
 class DetalharEnte(DetailView, LookUpAnotherFieldMixin):
     model = SistemaCultura
-    template_name = 'detalhe_municipio.html'
-    pk_url_kwarg = 'cod_ibge'
-    lookup_field = 'ente_federado__cod_ibge'
+    context_object_name = "ente"
+    template_name = "detalhe_municipio.html"
+    pk_url_kwarg = "cod_ibge"
+    lookup_field = "ente_federado__cod_ibge"
+    queryset = SistemaCultura.sistema.all()
 
-    def get_queryset(self, queryset=None):
-        return SistemaCultura.sistema.all()
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        ente_federado = context['object'].ente_federado
+        historico = SistemaCultura.historico.filter(ente_federado=ente_federado)[:10]
+        context['historico'] = historico
+
+        return context
+
+
+class AlterarDadosEnte(UpdateView, LookUpAnotherFieldMixin):
+    model = SistemaCultura
+    fields = ["processo_sei", "estado_processo", "justificativa",
+              "localizacao", "link_publicacao_acordo"]
+    context_object_name = "ente"
+    template_name = "detalhe_municipio.html"
+    pk_url_kwarg = "cod_ibge"
+    lookup_field = "ente_federado__cod_ibge"
+    queryset = SistemaCultura.sistema.all()
 
 
 class ListarUsuarios(ListView):

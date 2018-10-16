@@ -4,6 +4,7 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.utils import timezone
 from django.utils.translation import ugettext_lazy as _
+from django.urls import reverse_lazy
 from django.contrib.contenttypes.fields import GenericRelation
 
 from planotrabalho.models import PlanoTrabalho
@@ -380,6 +381,8 @@ class SistemaCultura(models.Model):
     link_publicacao_acordo = models.CharField(max_length=100, blank=True, null=True)
     processo_sei = models.CharField(max_length=100, blank=True, null=True)
     numero_processo = models.CharField(max_length=50, blank=True)
+    localizacao = models.CharField(_("Localização do Processo"), max_length=10, blank=True, null=True)
+    justificativa = models.TextField(_("Justificativa"), blank=True, null=True)
     diligencia = models.ForeignKey("gestao.DiligenciaSimples", on_delete=models.SET_NULL, related_name="sistema_cultura", blank=True, null=True)
     alterado_em = models.DateTimeField("Alterado em", default=timezone.now)
 
@@ -389,6 +392,10 @@ class SistemaCultura(models.Model):
 
     class Meta:
         ordering = ['ente_federado', '-alterado_em']
+
+    def get_absolute_url(self):
+        url = reverse_lazy("gestao:detalhar", kwargs={"cod_ibge": self.ente_federado.cod_ibge})
+        return url
 
     def get_situacao_componentes(self):
         """
@@ -426,30 +433,30 @@ class SistemaCultura(models.Model):
                 self.pk = None
                 self.alterado_em = timezone.now()
 
-            #if not self.compara_valores(anterior, "cadastrador"):
-                #self.alterar_cadastrador(anterior.cadastrador)
+            # if not self.compara_valores(anterior, "cadastrador"):
+            #     self.alterar_cadastrador(anterior.cadastrador)
 
         super().save(*args, **kwargs)
 
-    """def alterar_cadastrador(self, cadastrador_atual):
-        
-        Altera cadastrador de um ente federado fazendo as alterações
-        necessárias nas models associadas ao cadastrador, gerando uma nova
-        versão do sistema cultura
-        
-        cadastrador = self.cadastrador
-        if cadastrador_atual:
-            cadastrador.recebe_permissoes_sistema_cultura(cadastrador_atual)
-        else:
-            try:
-                ente_federado = Municipio.objects.get(estado=self.uf,
-                                                      cidade=self.cidade)
-                cadastrador_atual = getattr(ente_federado, 'usuario', None)
-                if cadastrador_atual:
-                    cadastrador.recebe_permissoes_sistema_cultura(cadastrador_atual)
-                else:
-                    cadastrador.municipio = ente_federado
-                    cadastrador.save()
-            except Municipio.DoesNotExist:
-                return
-    """
+    # def alterar_cadastrador(self, cadastrador_atual):
+    #     """
+    #     Altera cadastrador de um ente federado fazendo as alterações
+    #     necessárias nas models associadas ao cadastrador, gerando uma nova
+    #     versão do sistema cultura
+    #     """
+
+    #     cadastrador = self.cadastrador
+    #     if cadastrador_atual:
+    #         cadastrador.recebe_permissoes_sistema_cultura(cadastrador_atual)
+    #     else:
+    #         try:
+    #             ente_federado = Municipio.objects.get(estado=self.uf,
+    #                                                   cidade=self.cidade)
+    #             cadastrador_atual = getattr(ente_federado, 'usuario', None)
+    #             if cadastrador_atual:
+    #                 cadastrador.recebe_permissoes_sistema_cultura(cadastrador_atual)
+    #             else:
+    #                 cadastrador.municipio = ente_federado
+    #                 cadastrador.save()
+    #         except Municipio.DoesNotExist:
+    #             return
