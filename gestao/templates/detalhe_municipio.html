@@ -329,7 +329,7 @@
           <div class="panel-heading">
             Dados da Adesão
           </div>
-          <form name="form" action="{% url 'gestao:alterar_dados_adesao' ente.ente_federado.cod_ibge %}" method="post">
+          <form name="form" id="detalhe_municipio_form" action="{% url 'gestao:alterar_dados_adesao' object.id %}" method="post">
               <div class="panel-body ">
                   {% csrf_token %}
                   <div class="list-group-item col-md-12 text-center">
@@ -370,7 +370,7 @@
                       <script>
                         $(document).ready(function(){
                           
-                          $("form").submit(function (event) {
+                          $("#detalhe_municipio_formn").submit(function (event) {
                             event.preventDefault();
                             $("#myModal").modal({backdrop: 'static', keyboard: false})
                             $("#myModal").modal('show');
