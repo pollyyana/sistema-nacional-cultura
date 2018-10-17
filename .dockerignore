@@ -1,0 +1,6 @@
+**/media/**
+**/__pycache__/*
+*.pyc
+**/.tox/**
+**/.git/**
+**/staticfiles/**
