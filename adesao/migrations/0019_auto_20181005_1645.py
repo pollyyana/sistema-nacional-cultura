@@ -96,6 +96,7 @@ def cria_sistema_cultura(apps, schema_editor):
                         componente_novo.arquivo = componente_antigo.arquivo
                         componente_novo.situacao = componente_antigo.situacao.id
                         componente_novo.data_envio = componente_antigo.data_envio
+                        componente_novo.data_publicacao = componente_antigo.data_publicacao
 
                         diligencia = componente_antigo.diligencias.last()
                         if diligencia:
@@ -136,7 +137,7 @@ def cria_sistema_cultura(apps, schema_editor):
 class Migration(migrations.Migration):
 
     dependencies = [
-            ('planotrabalho', '0007_componente_diligencia'),
+            ('planotrabalho', '0008_componente_data_publicacao'),
             ('gestao', '0006_remove_diligenciasimples_tipo_diligencia'),
             ('adesao', '0020_auto_20181008_1610'),
             ]

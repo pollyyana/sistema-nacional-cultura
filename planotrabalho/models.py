@@ -2,6 +2,7 @@ import datetime
 
 from django.db import models
 from django.utils.text import slugify
+from django.utils.translation import ugettext as _
 from django.contrib.contenttypes.fields import GenericRelation
 
 from gestao.models import Diligencia
@@ -129,6 +130,7 @@ class Componente(ArquivoComponente2):
         choices=LISTA_TIPOS_COMPONENTES,
         default=0)
     diligencia = models.ForeignKey('gestao.DiligenciaSimples', on_delete=models.CASCADE, related_name="componente", blank=True, null=True)
+    data_publicacao = models.DateField(_("Data de Publicação do Componente"), null=True, blank=True)
 
     def __str__(self):
         return str(self.id)
