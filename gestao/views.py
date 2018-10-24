@@ -273,13 +273,16 @@ class AcompanharSistemaCultura(ListView):
             sistemas = SistemaCultura.objects.all()
 
         sistemas_concluidos = self.annotate_componente_mais_antigo_por_situacao(sistemas, 2, 3).annotate(
-            tem_cadastrador=Count('cadastrador')).order_by('-tem_cadastrador', '-estado_processo', 'mais_antigo')
+            tem_cadastrador=Count('cadastrador')).order_by(
+            '-tem_cadastrador', '-estado_processo', 'mais_antigo')
 
         sistemas_diligencia = self.annotate_componente_mais_antigo_por_situacao(sistemas, 4, 5, 6).annotate(
-            tem_cadastrador=Count('cadastrador')).order_by('-tem_cadastrador', '-estado_processo', 'mais_antigo')
+            tem_cadastrador=Count('cadastrador')).order_by(
+            '-tem_cadastrador', '-estado_processo', 'mais_antigo')
 
         sistemas_nao_analisados = self.annotate_componente_mais_antigo_por_situacao(sistemas, 1).annotate(
-            tem_cadastrador=Count('cadastrador')).order_by('-tem_cadastrador', '-estado_processo', 'mais_antigo')
+            tem_cadastrador=Count('cadastrador')).order_by(
+            '-tem_cadastrador', '-estado_processo', 'mais_antigo')
 
         sistemas = sistemas_nao_analisados | sistemas_diligencia | sistemas_concluidos
 
@@ -833,7 +836,7 @@ class DiligenciaComponenteView(CreateView):
 
     def get_success_url(self):
         sistema_cultura = self.get_sistema_cultura()
-        return reverse_lazy('gestao:detalhar', kwargs={'pk': sistema_cultura.id})
+        return reverse_lazy('gestao:detalhar', kwargs={'cod_ibge': sistema_cultura.ente_federado.cod_ibge})
 
     def get_sistema_cultura(self):
         return get_object_or_404(SistemaCultura, pk=int(self.kwargs['pk']))
@@ -858,8 +861,8 @@ class DiligenciaComponenteView(CreateView):
         ente_federado = self.get_sistema_cultura().ente_federado.nome
 
         context['arquivo'] = componente.arquivo
-        context['ente_federado'] = self.get_sistema_cultura().ente_federado.nome
-        context['sistema_cultura'] = self.get_sistema_cultura().id
+        context['ente_federado'] = ente_federado
+        context['sistema_cultura'] = self.get_sistema_cultura()
         context['data_envio'] = "--/--/----"
         context['componente'] = componente
 
@@ -886,7 +889,7 @@ class DiligenciaGeralCreateView(CreateView, TemplatedEmailFormViewMixin):
 
     def get_context_data(self, form=None, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['sistema_cultura'] = self.get_sistema_cultura().id
+        context['sistema_cultura'] = self.get_sistema_cultura()
         context['situacoes'] = self.get_sistema_cultura().get_situacao_componentes()
         context['historico_diligencias'] = self.get_historico_diligencias()
 
@@ -905,7 +908,7 @@ class DiligenciaGeralCreateView(CreateView, TemplatedEmailFormViewMixin):
         return self.get_sistema_cultura().cadastrador.user.email
 
     def get_success_url(self):
-        return reverse_lazy("gestao:detalhar", kwargs={"pk": self.get_sistema_cultura().id})
+        return reverse_lazy("gestao:detalhar", kwargs={"cod_ibge": self.get_sistema_cultura().ente_federado.cod_ibge})
 
 
 class DiligenciaGeralDetailView(DetailView):

@@ -152,7 +152,7 @@ class AlterarDadosAdesao(ModelForm):
 
 
 class DiligenciaForm(ModelForm):
-
+    
     texto_diligencia = forms.CharField(widget=CKEditorWidget())
     
     def __init__(self, *args, **kwargs):
@@ -168,6 +168,10 @@ class DiligenciaForm(ModelForm):
 
 class DiligenciaComponenteForm(DiligenciaForm):
     SITUACOES = (
+        (0, "Em preenchimento"),
+        (1, "Avaliando anexo"),
+        (2, "Concluída"),
+        (3, "Arquivo aprovado com ressalvas"),
         (4, "Arquivo danificado"),
         (5, "Arquivo incompleto"),
         (6, "Arquivo incorreto")
@@ -215,7 +219,6 @@ class AlterarCadastradorForm(forms.Form):
         self.cod_ibge = cod_ibge
 
     def clean_cpf_usuario(self):
-        #import ipdb; ipdb.set_trace()
         if not validar_cpf(self.cleaned_data['cpf_usuario']):
             raise forms.validationerror('por favor, digite um cpf válido!')
 
