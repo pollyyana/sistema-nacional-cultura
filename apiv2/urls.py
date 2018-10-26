@@ -1,19 +1,19 @@
-from django.conf.urls import url
+from django.urls import path
 
 from rest_framework.urlpatterns import format_suffix_patterns
 
-from api import views
+from . import views
 
 app_name = 'api'
 
 urlpatterns = [
-    url(r'^$', views.swagger_index, name='swagger-index'),
+    path('/', views.swagger_index, name='swagger-index'),
 
-    url(r'^v1/sistemadeculturalocal/$', views.MunicipioList.as_view(), name='municipio-list'),
-    url(r'^v1/sistemadeculturalocal/(?P<pk>[0-9]+)/$', views.MunicipioDetail.as_view(), name='municipio-detail'),
+    path('/v2/sistemadeculturalocal/', views.MunicipioList.as_view(), name='sistemacultura-list'),
+    path('/v2/sistemadeculturalocal/<int:pk>/', views.MunicipioDetail.as_view(), name='sistemacultura-detail'),
 
-    url(r'^v1/acoesplanotrabalho/$', views.PlanoTrabalhoList.as_view(), name='planotrabalho-list'),
-    url(r'^v1/acoesplanotrabalho/(?P<pk>[0-9]+)/$', views.PlanoTrabalhoDetail.as_view(), name='planotrabalho-detail'),
+    path('/v2/acoesplanotrabalho/', views.PlanoTrabalhoList.as_view(), name='planotrabalho-list'),
+    path('/v2/acoesplanotrabalho/<int:pk>/', views.PlanoTrabalhoDetail.as_view(), name='planotrabalho-detail'),
 
 ]
 
