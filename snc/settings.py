@@ -87,6 +87,7 @@ LOCAL_APPS = (
     'planotrabalho',
     'snc',
     'api',
+    'apiv2',
 )
 
 # App used on development process
