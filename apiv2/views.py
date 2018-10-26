@@ -8,12 +8,12 @@ from rest_framework.response import Response
 
 from adesao.models import Municipio
 from planotrabalho.models import PlanoTrabalho
-from api.serializers import MunicipioSerializer
-from api.serializers import PlanoTrabalhoSerializer
-from api.filters import MunicipioFilter
-from api.filters import PlanoTrabalhoFilter
-from api.metadata import MunicipioMetadata
-from api.metadata import PlanoTrabalhoMetadata
+from .serializers import MunicipioSerializer
+from .serializers import PlanoTrabalhoSerializer
+from .filters import MunicipioFilter
+from .filters import PlanoTrabalhoFilter
+from .metadata import MunicipioMetadata
+from .metadata import PlanoTrabalhoMetadata
 
 
 def swagger_index(request):
