@@ -2,6 +2,8 @@ import pytest
 import random
 import datetime
 
+from django.urls import reverse
+
 from rest_framework import status
 from model_mommy import mommy
 from model_mommy.recipe import seq
@@ -15,8 +17,8 @@ from planotrabalho.models import SITUACAO_CONSELHEIRO
 
 pytestmark = pytest.mark.django_db
 
-url_sistemadeculturalocal = '/api/v1/sistemadeculturalocal/'
-url_acoesplanotrabalho = '/api/v1/acoesplanotrabalho/'
+url_sistemadeculturalocal = reverse("api:sistemacultura-list")
+url_acoesplanotrabalho = reverse("api:planotrabalho-list")
 
 
 @pytest.fixture
