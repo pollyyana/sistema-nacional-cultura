@@ -13,11 +13,13 @@ from django.contrib.messages import constants as messages
 
 import environ
 
-import raven
+import sentry_sdk
+from sentry_sdk.integrations.django import DjangoIntegration
 
 
 env = environ.Env(
     DEBUG=(bool, False),
+    SENTRY_DSN=(str, None),
     )
 env.read_env()
 
@@ -67,7 +69,6 @@ DJANGO_APPS = (
 )
 
 THIRD_PARTY_APPS = (
-    'raven.contrib.django.raven_compat',
     'localflavor',
     'ckeditor',
     'widget_tweaks',
@@ -342,10 +343,8 @@ CKEDITOR_CONFIGS = {
 PIWIK_SITE_ID = 1
 PIWIK_URL = ''
 
-if env('RAVEN_DSN_URL'):
-    RAVEN_CONFIG = {
-        'dsn': env('RAVEN_DSN_URL'),
-        # If you are using git, you can also automatically configure the
-        # release based on the git info.
-        # 'release': raven.fetch_git_sha(str(ROOT_DIR)),
-    }
+if env("SENTRY_DSN", None):
+    sentry_sdk.init(
+            dsn=env("SENTRY_DSN_URL"),
+            integrations=[DjangoIntegration()]
+            )
