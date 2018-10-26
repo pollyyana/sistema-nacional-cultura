@@ -86,7 +86,6 @@ LOCAL_APPS = (
     'gestao',
     'planotrabalho',
     'snc',
-    'api',
     'apiv2',
 )
 
