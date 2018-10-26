@@ -57,6 +57,11 @@ from .forms import AlterarFundoForm
 from .forms import AlterarPlanoForm
 from .forms import AlterarConselhoForm
 from .forms import AlterarSistemaForm
+from .forms import CriarSistemaForm
+from .forms import CriarOrgaoForm
+from .forms import CriarConselhoForm
+from .forms import CriarFundoForm
+from .forms import CriarPlanoForm
 
 from itertools import chain
 
@@ -505,15 +510,16 @@ class AlterarDocumentosEnteFederado(UpdateView):
         return reverse_lazy('gestao:inserir_entefederado')
 
 
-class InserirSistema(ListView):
-    template_name = 'gestao/inserir_documentos/inserir_sistema.html'
+class ListarDocumentosComponentes(ListView):
     paginate_by = 10
+
+    def get_template_names(self):
+        return ['gestao/inserir_documentos/%s.html' % self.kwargs['template']]
 
     def get_queryset(self):
         q = self.request.GET.get('q', None)
 
         usuarios = Usuario.objects.filter(estado_processo='6')
-        usuarios = usuarios.exclude(plano_trabalho__criacao_sistema=None)
 
         if q:
             usuarios = usuarios.filter(
@@ -522,110 +528,119 @@ class InserirSistema(ListView):
         return usuarios
 
 
+class InserirSistema(CreateView):
+    template_name = 'gestao/inserir_documentos/inserir_sistema.html'
+    form_class = CriarSistemaForm
+
+    def get_form_kwargs(self):
+        kwargs = super(InserirSistema, self).get_form_kwargs()
+        pk = self.kwargs['pk']
+        kwargs['plano'] = PlanoTrabalho.objects.get(pk=pk)
+        return kwargs
+
+    def get_success_url(self):
+        return reverse_lazy('gestao:listar_documentos', kwargs={'template': 'listar_sistemas'})
+
+
 class AlterarSistema(UpdateView):
-    template_name = 'gestao/inserir_documentos/alterar_sistema.html'
+    template_name = 'gestao/inserir_documentos/inserir_sistema.html'
     form_class = AlterarSistemaForm
     model = CriacaoSistema
 
     def get_success_url(self):
-        return reverse_lazy('gestao:inserir_sistema')
+        return reverse_lazy('gestao:listar_documentos', kwargs={'template': 'listar_sistemas'})
 
 
-class InserirOrgao(ListView):
+class InserirOrgao(CreateView):
     template_name = 'gestao/inserir_documentos/inserir_orgao.html'
-    paginate_by = 10
+    form_class = CriarOrgaoForm
 
-    def get_queryset(self):
-        q = self.request.GET.get('q', None)
-        usuarios = Usuario.objects.filter(estado_processo='6')
-        usuarios = usuarios.exclude(plano_trabalho__orgao_gestor=None)
+    def get_form_kwargs(self):
+        kwargs = super(InserirOrgao, self).get_form_kwargs()
+        pk = self.kwargs['pk']
+        kwargs['plano'] = PlanoTrabalho.objects.get(pk=pk)
+        return kwargs
 
-        if q:
-            usuarios = usuarios.filter(
-                municipio__cidade__nome_municipio__icontains=q)
-        return usuarios
+    def get_success_url(self):
+        return reverse_lazy('gestao:listar_documentos', kwargs={'template': 'listar_orgaos'})
 
 
 class AlterarOrgao(UpdateView):
-    template_name = 'gestao/inserir_documentos/alterar_orgao.html'
+    template_name = 'gestao/inserir_documentos/inserir_orgao.html'
     form_class = AlterarOrgaoForm
     model = OrgaoGestor
 
     def get_success_url(self):
-        return reverse_lazy('gestao:inserir_orgao')
+        return reverse_lazy('gestao:listar_documentos', kwargs={'template': 'listar_orgaos'})
 
 
-class InserirConselho(ListView):
+class InserirConselho(CreateView):
     template_name = 'gestao/inserir_documentos/inserir_conselho.html'
-    paginate_by = 10
+    form_class = CriarConselhoForm
 
-    def get_queryset(self):
-        q = self.request.GET.get('q', None)
-        usuarios = Usuario.objects.filter(estado_processo='6')
-        usuarios = usuarios.exclude(plano_trabalho__conselho_cultural=None)
+    def get_form_kwargs(self):
+        kwargs = super(InserirConselho, self).get_form_kwargs()
+        pk = self.kwargs['pk']
+        kwargs['plano'] = PlanoTrabalho.objects.get(pk=pk)
+        return kwargs
 
-        if q:
-            usuarios = usuarios.filter(
-                municipio__cidade__nome_municipio__icontains=q)
-        return usuarios
+    def get_success_url(self):
+        return reverse_lazy('gestao:listar_documentos', kwargs={'template': 'listar_conselhos'})
 
 
 class AlterarConselho(UpdateView):
-    template_name = 'gestao/inserir_documentos/alterar_conselho.html'
+    template_name = 'gestao/inserir_documentos/inserir_conselho.html'
     form_class = AlterarConselhoForm
     model = ConselhoCultural
 
     def get_success_url(self):
-        return reverse_lazy('gestao:inserir_conselho')
+        return reverse_lazy('gestao:listar_documentos', kwargs={'template': 'listar_conselhos'})
 
 
-class InserirFundo(ListView):
+class InserirFundo(CreateView):
     template_name = 'gestao/inserir_documentos/inserir_fundo.html'
-    paginate_by = 10
+    form_class = CriarFundoForm
 
-    def get_queryset(self):
-        q = self.request.GET.get('q', None)
-        usuarios = Usuario.objects.filter(estado_processo='6')
-        usuarios = usuarios.exclude(plano_trabalho__fundo_cultura=None)
+    def get_form_kwargs(self):
+        kwargs = super(InserirFundo, self).get_form_kwargs()
+        pk = self.kwargs['pk']
+        kwargs['plano'] = PlanoTrabalho.objects.get(pk=pk)
+        return kwargs
 
-        if q:
-            usuarios = usuarios.filter(
-                municipio__cidade__nome_municipio__icontains=q)
-        return usuarios
+    def get_success_url(self):
+        return reverse_lazy('gestao:listar_documentos', kwargs={'template': 'listar_fundos'})
 
 
 class AlterarFundo(UpdateView):
-    template_name = 'gestao/inserir_documentos/alterar_fundo.html'
+    template_name = 'gestao/inserir_documentos/inserir_fundo.html'
     form_class = AlterarFundoForm
     model = FundoCultura
 
     def get_success_url(self):
-        return reverse_lazy('gestao:inserir_fundo')
+        return reverse_lazy('gestao:listar_documentos', kwargs={'template': 'listar_fundos'})
+    
 
-
-class InserirPlano(ListView):
+class InserirPlano(CreateView):
     template_name = 'gestao/inserir_documentos/inserir_plano.html'
-    paginate_by = 10
+    form_class = CriarPlanoForm
 
-    def get_queryset(self):
-        q = self.request.GET.get('q', None)
-        usuarios = Usuario.objects.filter(estado_processo='6')
-        usuarios = usuarios.exclude(plano_trabalho__plano_cultura=None)
+    def get_form_kwargs(self):
+        kwargs = super(InserirPlano, self).get_form_kwargs()
+        pk = self.kwargs['pk']
+        kwargs['plano'] = PlanoTrabalho.objects.get(pk=pk)
+        return kwargs
 
-        if q:
-            usuarios = usuarios.filter(
-                municipio__cidade__nome_municipio__icontains=q)
-
-        return usuarios
+    def get_success_url(self):
+        return reverse_lazy('gestao:listar_documentos', kwargs={'template': 'listar_planos'})
 
 
 class AlterarPlano(UpdateView):
-    template_name = 'gestao/inserir_documentos/alterar_plano.html'
+    template_name = 'gestao/inserir_documentos/inserir_plano.html'
     form_class = AlterarPlanoForm
     model = PlanoCultura
 
     def get_success_url(self):
-        return reverse_lazy('gestao:inserir_plano')
+        return reverse_lazy('gestao:listar_documentos', kwargs={'template': 'listar_planos'})
 
 
 class Prorrogacao(ListView):

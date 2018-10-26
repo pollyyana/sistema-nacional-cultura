@@ -475,8 +475,24 @@ def test_criacao_diligencia_exclusiva_para_gestor(client, url, plano_trabalho, l
     assert url_redirect[0] == url_login
 
 
-def test_inserir_documentos_orgao_gestor(client, plano_trabalho, login_staff):
-    """ Testa se funcionalidade de inserir documento para orgão gestor na
+def test_listar_documentos(client, plano_trabalho, login_staff):
+    """ Testa funcionalidade de listagem de entes federados para alterar seus documentos 
+    na tela de gestão """
+
+    templates = ["listar_sistemas", "listar_orgaos", "listar_fundos", "listar_conselhos"]
+
+    for template in templates:
+
+        url = reverse("gestao:listar_documentos", kwargs={"template": template})
+        response = client.get(url)
+
+        for usuario in response.context_data['object_list']:
+            assert usuario.estado_processo == 6
+            assert usuario.plano_trabalho != None
+
+
+def test_alterar_documentos_orgao_gestor(client, plano_trabalho, login_staff):
+    """ Testa se funcionalidade de alterar documento para orgão gestor na
     tela de gestão salva no field arquivo """
 
     arquivo = SimpleUploadedFile(
@@ -485,11 +501,53 @@ def test_inserir_documentos_orgao_gestor(client, plano_trabalho, login_staff):
 
     url = reverse("gestao:alterar_orgao", kwargs={"pk": plano_trabalho.orgao_gestor.id})
 
-    client.post(url, data={"arquivo": arquivo})
+    client.post(url, data={"arquivo": arquivo, "data_publicacao": "28/06/2018"})
 
     name = OrgaoGestor.objects.first().arquivo.name.split("orgaogestor/")[1]
+    situacao = OrgaoGestor.objects.first().situacao
 
     assert name == arquivo.name
+    assert situacao.id == 1
+
+
+def test_inserir_documentos_orgao_gestor(client, plano_trabalho, login_staff):
+    """ Testa se funcionalidade de inserir documento para orgão gestor na
+    tela de gestão salva no field arquivo """
+
+    arquivo = SimpleUploadedFile(
+        "orgao.txt", b"file_content", content_type="text/plain"
+    )
+
+    url = reverse("gestao:inserir_orgao", kwargs={"pk": plano_trabalho.id})
+
+    client.post(url, data={"arquivo": arquivo, "data_publicacao": "28/06/2018"})
+
+    name = OrgaoGestor.objects.last().arquivo.name.split("orgaogestor/")[1]
+    situacao = OrgaoGestor.objects.last().situacao
+
+    assert name == arquivo.name
+    assert situacao.id == 1
+
+
+def test_alterar_documentos_criacao_sistema(client, plano_trabalho, login_staff):
+    """ Testa se funcionalidade de alterar documento para sistema de cultura na
+    tela de gestão salva no field arquivo """
+
+    arquivo = SimpleUploadedFile(
+        "sistema_cultura.txt", b"file_content", content_type="text/plain"
+    )
+
+    url = reverse(
+        "gestao:alterar_sistema", kwargs={"pk": plano_trabalho.criacao_sistema.id}
+    )
+
+    client.post(url, data={"arquivo": arquivo, "data_publicacao": "28/06/2018"})
+
+    name = CriacaoSistema.objects.first().arquivo.name.split("criacaosistema/")[1]
+    situacao = CriacaoSistema.objects.first().situacao
+
+    assert name == arquivo.name
+    assert situacao.id == 1
 
 
 def test_inserir_documentos_criacao_sistema(client, plano_trabalho, login_staff):
@@ -501,18 +559,20 @@ def test_inserir_documentos_criacao_sistema(client, plano_trabalho, login_staff)
     )
 
     url = reverse(
-        "gestao:alterar_sistema", kwargs={"pk": plano_trabalho.criacao_sistema.id}
+        "gestao:inserir_sistema", kwargs={"pk": plano_trabalho.id}
     )
 
-    client.post(url, data={"arquivo": arquivo})
+    client.post(url, data={"arquivo": arquivo, "data_publicacao": "28/06/2018"})
 
-    name = CriacaoSistema.objects.first().arquivo.name.split("criacaosistema/")[1]
+    name = CriacaoSistema.objects.last().arquivo.name.split("criacaosistema/")[1]
+    situacao = CriacaoSistema.objects.last().situacao
 
     assert name == arquivo.name
+    assert situacao.id == 1
 
 
 def test_inserir_documentos_fundo_cultura(client, plano_trabalho, login_staff):
-    """ Testa se funcionalidade de inserir documento para na fundo de cultura na
+    """ Testa se funcionalidade de inserir documento para o fundo de cultura na
     tela de gestão salva no field arquivo """
 
     arquivo = SimpleUploadedFile(
@@ -523,11 +583,34 @@ def test_inserir_documentos_fundo_cultura(client, plano_trabalho, login_staff):
         "gestao:alterar_fundo", kwargs={"pk": plano_trabalho.fundo_cultura.id}
     )
 
-    client.post(url, data={"arquivo": arquivo})
+    client.post(url, data={"arquivo": arquivo, "data_publicacao": "28/06/2018"})
 
-    name = FundoCultura.objects.first().arquivo.name.split("fundocultura/")[1]
+    name = FundoCultura.objects.last().arquivo.name.split("fundocultura/")[1]
+    situacao = FundoCultura.objects.last().situacao
 
     assert name == arquivo.name
+    assert situacao.id == 1
+
+
+def test_alterar_documentos_fundo_cultura(client, plano_trabalho, login_staff):
+    """ Testa se funcionalidade de alterar documento para o fundo de cultura na
+    tela de gestão salva no field arquivo """
+
+    arquivo = SimpleUploadedFile(
+        "fundo_cultura.txt", b"file_content", content_type="text/plain"
+    )
+
+    url = reverse(
+        "gestao:alterar_fundo", kwargs={"pk": plano_trabalho.fundo_cultura.id}
+    )
+
+    client.post(url, data={"arquivo": arquivo,  "data_publicacao": "28/06/2018"})
+
+    name = FundoCultura.objects.first().arquivo.name.split("fundocultura/")[1]
+    situacao = FundoCultura.objects.first().situacao
+
+    assert name == arquivo.name
+    assert situacao.id == 1
 
 
 def test_inserir_documentos_plano_cultura(client, plano_trabalho, login_staff):
@@ -542,15 +625,38 @@ def test_inserir_documentos_plano_cultura(client, plano_trabalho, login_staff):
         "gestao:alterar_plano", kwargs={"pk": plano_trabalho.plano_cultura.id}
     )
 
-    client.post(url, data={"arquivo": arquivo})
+    client.post(url, data={"arquivo": arquivo, "data_publicacao": "28/06/2018"})
 
-    name = PlanoCultura.objects.first().arquivo.name.split("planocultura/")[1]
+    name = PlanoCultura.objects.last().arquivo.name.split("planocultura/")[1]
+    situacao = PlanoCultura.objects.last().situacao
 
     assert name == arquivo.name
+    assert situacao.id == 1
 
 
-def test_inserir_documentos_conselho_cultural(client, plano_trabalho, login_staff):
-    """ Testa se funcionalidade de inserir documento para conselho cultural na
+def test_alterar_documentos_plano_cultura(client, plano_trabalho, login_staff):
+    """ Testa se funcionalidade de alterar documento para plano de cultura na
+    tela de gestão salva no field arquivo """
+
+    arquivo = SimpleUploadedFile(
+        "plano_cultura.txt", b"file_content", content_type="text/plain"
+    )
+
+    url = reverse(
+        "gestao:alterar_plano", kwargs={"pk": plano_trabalho.plano_cultura.id}
+    )
+
+    client.post(url, data={"arquivo": arquivo, "data_publicacao": "28/06/2018"})
+
+    name = PlanoCultura.objects.first().arquivo.name.split("planocultura/")[1]
+    situacao = PlanoCultura.objects.first().situacao
+
+    assert name == arquivo.name
+    assert situacao.id == 1
+
+
+def test_alterar_documentos_conselho_cultural(client, plano_trabalho, login_staff):
+    """ Testa se funcionalidade de alterar documento para conselho cultural na
     tela de gestão salva no field arquivo """
 
     arquivo = SimpleUploadedFile(
@@ -561,10 +667,34 @@ def test_inserir_documentos_conselho_cultural(client, plano_trabalho, login_staf
         "gestao:alterar_conselho", kwargs={"pk": plano_trabalho.conselho_cultural.id}
     )
 
-    client.post(url, data={"arquivo": arquivo})
+    client.post(url, data={"arquivo": arquivo, "data_publicacao": "28/06/2018"})
 
     name = ConselhoCultural.objects.first().arquivo.name.split("conselhocultural/")[1]
+    situacao = ConselhoCultural.objects.first().situacao
+
     assert name == arquivo.name
+    assert situacao.id == 1
+
+
+def test_inserir_documentos_conselho_cultural(client, plano_trabalho, login_staff):
+    """ Testa se funcionalidade de inserção documentos para conselho cultural na
+    tela de gestão salva no field arquivo """
+
+    arquivo = SimpleUploadedFile(
+        "conselho_cultural.txt", b"file_content", content_type="text/plain"
+    )
+
+    url = reverse(
+        "gestao:inserir_conselho", kwargs={"pk": plano_trabalho.id}
+    )
+
+    client.post(url, data={"arquivo": arquivo, "data_publicacao": "28/06/2018"})
+
+    name = ConselhoCultural.objects.last().arquivo.name.split("conselhocultural/")[1]
+    situacao = ConselhoCultural.objects.last().situacao
+
+    assert name == arquivo.name
+    assert situacao.id == 1
 
 
 def test_retorna_200_para_diligencia_geral(client, url, plano_trabalho, login_staff):
