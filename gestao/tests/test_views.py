@@ -416,17 +416,20 @@ def test_exibicao_historico_diligencia(url, client, login_staff):
         "SistemaCultura", ente_federado__cod_ibge=123456, _fill_optional=["cadastrador"]
     )
 
-    diligencia = mommy.make("DiligenciaSimples", _quantity=4)
-    diligencias = SistemaCultura.historico.ente(
-        cod_ibge=sistema_cultura.ente_federado.cod_ibge
-    )
+    diligencias = mommy.make("DiligenciaSimples", _quantity=4)
+
+    for diligencia in diligencias:
+        diligencia.sistema_cultura.add(sistema_cultura)
+
+    diligencias_ente = DiligenciaSimples.objects.filter(
+        sistema_cultura__ente_federado__cod_ibge=sistema_cultura.ente_federado.cod_ibge)
 
     url = reverse(
         "gestao:diligencia_geral_adicionar", kwargs={"pk": sistema_cultura.id}
     )
     request = client.get(url)
 
-    diferenca_listas = set(diligencias).symmetric_difference(
+    diferenca_listas = set(diligencias_ente).symmetric_difference(
         set(request.context["historico_diligencias"])
     )
     assert diferenca_listas == set()
@@ -499,9 +502,8 @@ def test_retorno_200_para_detalhar_ente(client, sistema_cultura, login_staff):
     assert request.status_code == 200
 
 
-@pytest.mark.skip
 def test_retorno_do_form_da_diligencia(url, client, login_staff):
-    """ Testa se form retornado no contexto tem as opções corretas dependendo do tipo de resultado"""
+    """ Testa se form retornado no contexto tem as opções corretas"""
 
     SITUACOES = (
         (0, "Em preenchimento"),
@@ -525,22 +527,15 @@ def test_retorno_do_form_da_diligencia(url, client, login_staff):
     orgao_gestor.arquivo = arquivo
     orgao_gestor.save()
 
-    request_aprova = client.get(
-        url.format(id=sistema_cultura.id, componente="orgao_gestor")
-    )
-    request_recusa = client.get(
+    request = client.get(
         url.format(id=sistema_cultura.id, componente="orgao_gestor")
     )
 
-    classificacao_aprova = set(
-        request_aprova.context["form"].fields["classificacao_arquivo"].choices
-    )
-    classificacao_recusa = set(
-        request_recusa.context["form"].fields["classificacao_arquivo"].choices
+    classificacao = set(
+        request.context["form"].fields["classificacao_arquivo"].choices
     )
 
-    assert classificacao_aprova.symmetric_difference(SITUACOES[2:3]) == set()
-    assert classificacao_recusa.symmetric_difference(SITUACOES[4:7]) == set()
+    assert classificacao.symmetric_difference(SITUACOES) == set()
 
 
 def usuario_id_retornado_pelo_context_diligencia(
@@ -950,17 +945,14 @@ def test_tipo_diligencia_componente(url, client, plano_trabalho, login_staff):
 def test_envio_email_diligencia_geral(client, login_staff):
     """ Testa envio do email para diligência geral """
     sistema_cultura = mommy.make(
-        "SistemaCultura", _fill_optional=["ente_federado", "cadastrador"]
+        "SistemaCultura", _fill_optional="cadastrador", ente_federado__cod_ibge=123456
     )
-
-    url = "/gestao/{id}/diligencia/"
 
     sistema_cultura.cadastrador.user.email = "teste@teste.com"
     sistema_cultura.cadastrador.user.save()
 
-    request = client.post(
-        url.format(id=sistema_cultura.id), data={"texto_diligencia": "Ta errado cara"}
-    )
+    url = reverse("gestao:diligencia_geral_adicionar", kwargs={"pk": sistema_cultura.id})
+    request = client.post(url, data={"texto_diligencia": "Ta errado cara"})
 
     assert len(mail.outbox) == 1
 
