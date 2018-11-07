@@ -357,177 +357,33 @@ def situacao_6 (request, etapa, st, id):
     getattr(usuario.plano_trabalho, etapa).save()
     return redirect('gestao:detalhar', pk=id)
 
-#Teste Christian
 
-class AcompanharSistema(ListView):
-    template_name = 'gestao/planotrabalho/acompanhar_sistema.html'
+class AcompanharComponente(ListView):
     paginate_by = 10
+
+    def get_template_names(self):
+        return ['gestao/planotrabalho/acompanhar_%s.html' % self.kwargs['componente']]
 
     def get_queryset(self):
         anexo = self.request.GET.get('anexo', None)
         q = self.request.GET.get('q', None)
-        usuarios = Usuario.objects.filter(estado_processo='6')
-        usuarios = usuarios.exclude(plano_trabalho__criacao_sistema=None)
+        sistemas = SistemaCultura.sistema.filter(estado_processo='6')
+        kwargs = {'{0}'.format(self.kwargs['componente']): None}
+        sistemas = sistemas.exclude(**kwargs)
 
         if anexo == 'arquivo':
-            usuarios = usuarios.filter(
-                plano_trabalho__criacao_sistema__situacao=1)
-            usuarios = usuarios.exclude(
-                plano_trabalho__criacao_sistema__arquivo=None)
+            kwargs = {'{0}__situacao'.format(self.kwargs['componente']): 1}
+            sistemas = sistemas.filter(**kwargs)
+            kwargs = {'{0}__arquivo'.format(self.kwargs['componente']): None}
+            sistemas = sistemas.exclude(**kwargs)
         else:
             raise Http404
 
         if q:
-            usuarios = usuarios.filter(
-                municipio__cidade__nome_municipio__unaccent__icontains=q)
+            sistemas = sistemas.filter(
+                ente_federado__nome__unaccent__icontains=q)
 
-        return usuarios
-
-
-class AcompanharOrgao(ListView):
-    template_name = 'gestao/planotrabalho/acompanhar_orgao.html'
-    paginate_by = 10
-
-    def get_queryset(self):
-        anexo = self.request.GET.get('anexo', None)
-        q = self.request.GET.get('q', None)
-        if not anexo:
-            raise Http404()
-        usuarios = Usuario.objects.filter(estado_processo='6')
-        usuarios = usuarios.exclude(plano_trabalho__orgao_gestor=None)
-
-        if anexo == 'arquivo':
-            usuarios = usuarios.filter(
-                plano_trabalho__orgao_gestor__situacao=1)
-            usuarios = usuarios.exclude(
-                plano_trabalho__orgao_gestor__arquivo=None)
-        else:
-            raise Http404
-
-        if q:
-            usuarios = usuarios.filter(
-                municipio__cidade__nome_municipio__unaccent__icontains=q)
-
-        return usuarios
-
-
-class AcompanharConselho(ListView):
-    template_name = 'gestao/planotrabalho/acompanhar_conselho.html'
-    paginate_by = 10
-
-    def get_queryset(self):
-        anexo = self.request.GET.get('anexo', None)
-        q = self.request.GET.get('q', None)
-        if not anexo:
-            raise Http404()
-        usuarios = Usuario.objects.filter(estado_processo='6')
-        usuarios = usuarios.exclude(plano_trabalho__conselho_cultural=None)
-
-        if anexo == 'arquivo':
-            usuarios = usuarios.filter(
-                plano_trabalho__conselho_cultural__situacao=1)
-            usuarios = usuarios.exclude(
-                plano_trabalho__conselho_cultural__arquivo=None)
-        else:
-            raise Http404
-
-        if q:
-            usuarios = usuarios.filter(
-                municipio__cidade__nome_municipio__unaccent__icontains=q)
-
-        return usuarios
-
-
-class AcompanharFundo(ListView):
-    template_name = 'gestao/planotrabalho/acompanhar_fundo.html'
-    paginate_by = 10
-
-    def get_queryset(self):
-        anexo = self.request.GET.get('anexo', None)
-        q = self.request.GET.get('q', None)
-        if not anexo:
-            raise Http404()
-        usuarios = Usuario.objects.filter(estado_processo='6')
-        usuarios = usuarios.exclude(plano_trabalho__fundo_cultura=None)
-
-        if anexo == 'arquivo':
-            usuarios = usuarios.filter(
-                plano_trabalho__fundo_cultura__situacao=1)
-            usuarios = usuarios.exclude(
-                plano_trabalho__fundo_cultura__arquivo=None)
-        else:
-            raise Http404
-
-        if q:
-            usuarios = usuarios.filter(
-                municipio__cidade__nome_municipio__unaccent__icontains=q)
-
-        return usuarios
-
-
-class AcompanharPlano(ListView):
-    template_name = 'gestao/planotrabalho/acompanhar_plano.html'
-    paginate_by = 10
-
-    def get_queryset(self):
-        anexo = self.request.GET.get('anexo', None)
-        q = self.request.GET.get('q', None)
-        if not anexo:
-            raise Http404()
-        usuarios = Usuario.objects.filter(estado_processo='6')
-        usuarios = usuarios.exclude(plano_trabalho__plano_cultura=None)
-
-        if anexo == 'arquivo':
-            usuarios = usuarios.filter(
-                plano_trabalho__plano_cultura__situacao=1)
-            usuarios = usuarios.exclude(
-                plano_trabalho__plano_cultura__arquivo=None)
-        else:
-            raise Http404
-
-        if q:
-            usuarios = usuarios.filter(
-                municipio__cidade__nome_municipio__unaccent__icontains=q)
-
-        return usuarios
-
-#Teste Christian
-
-
-class DetalharUsuario(DetailView):
-    model = Usuario
-    template_name = 'gestao/detalhe_municipio.html'
-
-    def get_context_data(self, **kwargs):
-        context = super(DetalharUsuario, self).get_context_data(**kwargs)
-        situacao = context['usuario'].estado_processo
-        context['processo_sei'] = context['usuario'].processo_sei
-        municipio = Municipio.objects.get(usuario__id=context['usuario'].id)
-
-        if municipio.cidade:
-            context['historico_sistemas'] = SistemaCultura.objects.por_municipio(municipio.estado, municipio.cidade)
-        else:
-            context['historico_sistemas'] = SistemaCultura.objects.por_municipio(municipio.estado)
-
-        try:
-
-            if situacao == '3':
-                historico = Historico.objects.filter(usuario_id=context['usuario'].id)
-                historico = historico[0]
-                context['dado_situacao'] = historico.descricao
-
-            elif situacao == '2':
-                context['dado_situacao'] = municipio.localizacao
-
-            elif situacao == '4':
-                context['dado_situacao'] = municipio.numero_processo
-
-            elif situacao == '6':
-                context['dado_situacao'] = context['usuario'].data_publicacao_acordo.strftime('%d/%m/%Y')
-                context['link_publicacao'] = context['usuario'].link_publicacao_acordo
-        except:
-            pass
-        return context
+        return sistemas
 
 
 class LookUpAnotherFieldMixin(SingleObjectMixin):
