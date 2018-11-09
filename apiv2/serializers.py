@@ -159,7 +159,7 @@ class UfSerializer(serializers.ModelSerializer):
 
 
 class MunicipioLinkSerializer(hal_serializers.HalModelSerializer):
-    self = HalHyperlinkedIdentityField(view_name='api:municipio-detail')
+    self = HalHyperlinkedIdentityField(view_name='api:sistemacultura-detail')
 
     class Meta:
         model = Municipio
@@ -173,7 +173,7 @@ class MunicipioSerializer(hal_serializers.HalModelSerializer):
     _embedded = serializers.SerializerMethodField(method_name='get_embedded')
     situacao_adesao = serializers.SerializerMethodField()
     data_adesao = serializers.DateField(source='usuario.data_publicacao_acordo')
-    self = HalHyperlinkedIdentityField(view_name='api:municipio-detail')
+    self = HalHyperlinkedIdentityField(view_name='api:sistemacultura-detail')
 
     class Meta:
         model = Municipio

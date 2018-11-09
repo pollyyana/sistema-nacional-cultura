@@ -6,6 +6,7 @@ from rest_framework import filters
 from rest_framework import generics
 from rest_framework.response import Response
 
+from adesao.models import SistemaCultura
 from adesao.models import Municipio
 from planotrabalho.models import PlanoTrabalho
 from .serializers import MunicipioSerializer
@@ -20,14 +21,14 @@ def swagger_index(request):
     return render(request, 'swagger/index.html')
 
 
-class MunicipioList(generics.ListAPIView):
-    queryset = Municipio.objects.filter().order_by('-id')
+class SistemaCulturaAPIList(generics.ListAPIView):
+    queryset = SistemaCultura.sistema.all()
     serializer_class = MunicipioSerializer
     metadata_class = MunicipioMetadata
 
     filter_backends = (DjangoFilterBackend, filters.OrderingFilter,)
     filterset_class = MunicipioFilter
-    ordering_fields = ('cidade__nome_municipio', 'estado__nome_uf')
+    ordering_fields = ('ente_federado__nome', 'estado__nome_uf')
 
     def get_extra_counts(self): 
         queryset = self.filter_queryset(self.get_queryset())
