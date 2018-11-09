@@ -12,12 +12,11 @@ class MunicipioFilter(filters.FilterSet):
 
     estado_sigla = filters.CharFilter(field_name='estado__sigla', lookup_expr='iexact')
     nome_uf = filters.CharFilter(field_name='estado__nome_uf__unaccent', lookup_expr='iexact')
-    nome_municipio = filters.CharFilter(field_name='cidade__nome_municipio__unaccent', lookup_expr='iexact')
-    situacao_adesao = filters.CharFilter(field_name='usuario__estado_processo',
-                                         lookup_expr='istartswith')
-    data_adesao = filters.DateFilter(field_name='usuario__data_publicacao_acordo')
-    data_adesao_min = filters.DateFilter(field_name='usuario__data_publicacao_acordo', lookup_expr=('gte'))
-    data_adesao_max = filters.DateFilter(field_name='usuario__data_publicacao_acordo', lookup_expr=('lte'))
+    nome_municipio = filters.CharFilter(field_name='ente_federado__nome__unaccent', lookup_expr='iexact')
+    situacao_adesao = filters.CharFilter(field_name='estado_processo', lookup_expr='istartswith')
+    data_adesao = filters.DateFilter(field_name='data_publicacao_acordo')
+    data_adesao_min = filters.DateFilter(field_name='data_publicacao_acordo', lookup_expr=('gte'))
+    data_adesao_max = filters.DateFilter(field_name='data_publicacao_acordo', lookup_expr=('lte'))
     municipal = filters.BooleanFilter(method='municipal_filter')
     estadual = filters.BooleanFilter(method='estadual_filter')
     ente_federado = filters.CharFilter(method='ente_federado_filter')
