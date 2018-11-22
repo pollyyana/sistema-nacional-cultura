@@ -781,7 +781,6 @@ def test_filtrar_por_nome_ente_federado_nome_municipio(client, sistema_cultura):
     municipio = sistema_cultura.ente_federado.nome
     url = url_sistemadeculturalocal + f"?ente_federado={municipio}"
 
-    __import__('ipdb').set_trace()
     response = client.get(url)
     municipio_resp = response.data['_embedded']['items'][0]['ente_federado']['localizacao']['cidade']['nome_municipio']
 

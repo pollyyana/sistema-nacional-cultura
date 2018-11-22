@@ -3,10 +3,19 @@ from django.db.models import Q
 from django_filters import rest_framework as filters
 from django_filters import Filter
 
+from adesao.models import Municipio
+from adesao.models import SistemaCultura
+
 from planotrabalho.models import PlanoTrabalho
 from planotrabalho.models import ConselhoCultural
-from adesao.models import Municipio
 from planotrabalho.models import SituacoesArquivoPlano
+
+class SistemaCulturaFilter(filters.FilterSet):
+    ente_federado = filters.CharFilter(field_name='ente_federado__nome', lookup_expr='istartswith')
+
+    class Meta:
+        model = SistemaCultura
+        fields = "__all__"
 
 class MunicipioFilter(filters.FilterSet):
 

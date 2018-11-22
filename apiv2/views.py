@@ -9,11 +9,16 @@ from rest_framework.response import Response
 from adesao.models import SistemaCultura
 from adesao.models import Municipio
 from planotrabalho.models import PlanoTrabalho
+
 from .serializers import MunicipioSerializer
+from .serializers import MunicipioSerializer as SistemaCulturaSerializer
 from .serializers import PlanoTrabalhoSerializer
+
+from .filters import SistemaCulturaFilter
 from .filters import MunicipioFilter
 from .filters import PlanoTrabalhoFilter
-from .metadata import MunicipioMetadata
+
+from .metadata import MunicipioMetadata as SistemaCulturaMetadata
 from .metadata import PlanoTrabalhoMetadata
 
 
@@ -23,11 +28,11 @@ def swagger_index(request):
 
 class SistemaCulturaAPIList(generics.ListAPIView):
     queryset = SistemaCultura.sistema.all()
-    serializer_class = MunicipioSerializer
-    metadata_class = MunicipioMetadata
+    serializer_class = SistemaCulturaSerializer
+    metadata_class = SistemaCulturaMetadata
 
     filter_backends = (DjangoFilterBackend, filters.OrderingFilter,)
-    filterset_class = MunicipioFilter
+    filterset_class = SistemaCulturaFilter
     ordering_fields = ('ente_federado__nome', 'estado__nome_uf')
 
     def get_extra_counts(self): 
@@ -41,7 +46,7 @@ class SistemaCulturaAPIList(generics.ListAPIView):
         )
 
     def list(self, request):
-        response = super(MunicipioList, self).list(self, request)
+        response = super().list(self, request)
         extra_counts = self.get_extra_counts()
         response.data['municipios'] = extra_counts['municipios']
         response.data['municipios_aderidos'] = extra_counts['municipios_aderidos']
