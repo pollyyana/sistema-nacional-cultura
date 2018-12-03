@@ -22,6 +22,7 @@ from django.conf import settings
 from templated_email.generic_views import TemplatedEmailFormViewMixin
 
 from adesao.models import (
+    SistemaCultura,
     Municipio,
     Responsavel,
     Secretario,
@@ -29,6 +30,7 @@ from adesao.models import (
     Historico,
     Uf,
     Cidade,
+    SistemaCultura
 )
 from planotrabalho.models import Conselheiro, PlanoTrabalho
 from adesao.forms import CadastrarUsuarioForm, CadastrarMunicipioForm
@@ -106,8 +108,7 @@ def exportar_csv(request):
     writer = csv.writer(response)
     writer.writerow(
         [
-            "UF",
-            "Município",
+            "Nome",
             "Cod.IBGE",
             "Situação",
             "Endereço",
@@ -118,29 +119,35 @@ def exportar_csv(request):
         ]
     )
 
-    for municipio in Municipio.objects.all():
-        uf = municipio.estado.sigla
-        if municipio.cidade:
-            cidade = municipio.cidade.nome_municipio
-            cod_ibge = municipio.cidade.codigo_ibge
+    for sistema in SistemaCultura.sistema.all():
+        if sistema.ente_federado:
+            nome = sistema.ente_federado.nome
+            cod_ibge = sistema.ente_federado.cod_ibge
         else:
-            cidade = municipio.estado.nome_uf
-            cod_ibge = ""
-        try:
-            estado_processo = municipio.usuario.get_estado_processo_display()
-            if estado_processo != "Publicado no DOU":
-                continue
-        except ObjectDoesNotExist:
-            estado_processo = "Publicado no DOU"
-        endereco = municipio.endereco
-        bairro = municipio.bairro
-        cep = municipio.cep
-        telefone = municipio.telefone_um
-        email = municipio.email_institucional_prefeito
+            nome = "Nome não cadastrado"
+            cod_ibge = "Código não cadastrado"
+
+        estado_processo = sistema.get_estado_processo_display()
+
+        if sistema.sede:
+            endereco = sistema.sede.endereco
+            bairro = sistema.sede.bairro
+            cep = sistema.sede.cep
+            telefone = sistema.sede.telefone_um
+        else:
+            endereco = "Não cadastrado"
+            bairro = "Não cadastrado"
+            cep = "Não cadastrado"
+            telefone = "Não cadastrado"
+
+        if sistema.gestor:
+            email = sistema.gestor.email_institucional
+        else:
+            email = "Não cadastrado"
+
         writer.writerow(
             [
-                uf,
-                cidade,
+                nome,
                 cod_ibge,
                 estado_processo,
                 endereco,
@@ -163,97 +170,8 @@ def exportar_ods(request):
     ] = 'attachment; filename="dados-municipios-cadastrados-snc.ods"'
 
     workbook = xlwt.Workbook()
-    planilha = workbook.add_sheet("SNC")
-    planilha.write(0, 0, "UF")
-    planilha.write(0, 1, "Ente Federado")
-    planilha.write(0, 2, "Cod.IBGE")
-    planilha.write(0, 3, "Situação")
-    planilha.write(0, 4, "Endereço")
-    planilha.write(0, 5, "Bairro")
-    planilha.write(0, 6, "CEP")
-    planilha.write(0, 7, "Telefone")
-    planilha.write(0, 8, "Email Prefeito")
-    planilha.write(0, 9, "Email do Cadastrador")
-    planilha.write(0, 10, "Email do Responsável")
-    planilha.write(0, 11, "Localização do processo")
-    planilha.write(0, 12, "Possui Lei do Sistema de Cultura")
-    planilha.write(0, 13, "Possui Órgão Gestor")
-    planilha.write(0, 14, "Possui Conselho de Política Cultural")
-    planilha.write(0, 15, "Possui Fundo de Cultura")
-    planilha.write(0, 16, "Possui Plano de Cultura")
-
-    for i, municipio in enumerate(Municipio.objects.all().order_by("-cidade"), start=1):
-        uf = municipio.estado.sigla
-        if municipio.cidade:
-            cidade = municipio.cidade.nome_municipio
-            cod_ibge = municipio.cidade.codigo_ibge
-        else:
-            cidade = municipio.estado.nome_uf
-            cod_ibge = municipio.estado.codigo_ibge
-        try:
-            estado_processo = municipio.usuario.get_estado_processo_display()
-        except ObjectDoesNotExist:
-            # Documentando: isso foi colocado aqui pois, os municipios migrados
-            # fizeram adesão sem cadastrador e consequentemente estado do processo
-            estado_processo = "Publicado no DOU"
-        endereco = municipio.endereco
-        bairro = municipio.bairro
-        cep = municipio.cep
-        telefone = municipio.telefone_um
-        if municipio.email_institucional_prefeito != "":
-            email_prefeito = municipio.email_institucional_prefeito
-        else:
-            email_prefeito = "Não cadastrado"
-        try:
-            # email_cadastrador = Usuario.objects.get(municipio_id=municipio.id).user.email
-            email_cadastrador = municipio.usuario.user.email
-        except ObjectDoesNotExist:
-            email_cadastrador = "Não cadastrado"
-        try:
-            if municipio.usuario.responsavel:
-                email_responsavel = (
-                    municipio.usuario.responsavel.email_institucional_responsavel
-                )
-            else:
-                email_responsavel = "Não cadastrado"
-        except ObjectDoesNotExist:
-            email_responsavel = "Não cadastrado"
-
-        local = municipio.localizacao
-
-        planilha.write(i, 0, uf)
-        planilha.write(i, 1, cidade)
-        planilha.write(i, 2, cod_ibge)
-        planilha.write(i, 3, estado_processo)
-        planilha.write(i, 4, endereco)
-        planilha.write(i, 5, bairro)
-        planilha.write(i, 6, cep)
-        planilha.write(i, 7, telefone)
-        planilha.write(i, 8, email_prefeito)
-        planilha.write(i, 9, email_cadastrador)
-        planilha.write(i, 10, email_responsavel)
-        planilha.write(i, 11, local)
-        planilha.write(
-            i, 12, verificar_anexo(municipio, "criacao_sistema", "lei_sistema_cultura")
-        )
-        planilha.write(
-            i,
-            13,
-            verificar_anexo(
-                municipio, "orgao_gestor", "relatorio_atividade_secretaria"
-            ),
-        )
-        planilha.write(
-            i,
-            14,
-            verificar_anexo(municipio, "conselho_cultural", "ata_regimento_aprovado"),
-        )
-        planilha.write(
-            i, 15, verificar_anexo(municipio, "fundo_cultura", "lei_fundo_cultura")
-        )
-        planilha.write(
-            i, 16, verificar_anexo(municipio, "plano_cultura", "lei_plano_cultura")
-        )
+    planilha = workbook.add_worksheet("SNC")
+    preenche_planilha(planilha)
 
     workbook.save(response)
 
@@ -264,104 +182,10 @@ def exportar_xls(request):
 
     output = BytesIO()
 
-    # workbook = xlwt.Workbook()
     workbook = xlsxwriter.Workbook(output)
-    # planilha = workbook.add_sheet('SNC')
     planilha = workbook.add_worksheet("SNC")
+    ultima_linha = preenche_planilha(planilha)
 
-    planilha.write(0, 0, "UF")
-    planilha.write(0, 1, "Ente Federado")
-    planilha.write(0, 2, "Cod.IBGE")
-    planilha.write(0, 3, "Situação")
-    planilha.write(0, 4, "Endereço")
-    planilha.write(0, 5, "Bairro")
-    planilha.write(0, 6, "CEP")
-    planilha.write(0, 7, "Telefone")
-    planilha.write(0, 8, "Email Prefeito")
-    planilha.write(0, 9, "Email do Cadastrador")
-    planilha.write(0, 10, "Email do Responsável")
-    planilha.write(0, 11, "Localização do processo")
-    planilha.write(0, 12, "Possui Lei do Sistema de Cultura")
-    planilha.write(0, 13, "Possui Órgão Gestor")
-    planilha.write(0, 14, "Possui Conselho de Política Cultural")
-    planilha.write(0, 15, "Possui Fundo de Cultura")
-    planilha.write(0, 16, "Possui Plano de Cultura")
-    ultima_linha = 0
-    for i, municipio in enumerate(Municipio.objects.all().order_by("-cidade"), start=1):
-        uf = municipio.estado.sigla
-        if municipio.cidade:
-            cidade = municipio.cidade.nome_municipio
-            cod_ibge = municipio.cidade.codigo_ibge
-        else:
-            cidade = municipio.estado.nome_uf
-            cod_ibge = municipio.estado.codigo_ibge
-        try:
-            estado_processo = municipio.usuario.get_estado_processo_display()
-        except ObjectDoesNotExist:
-            # Documentando: isso foi colocado aqui pois, os municipios migrados
-            # fizeram adesão sem cadastrador e consequentemente estado do processo
-            estado_processo = "Publicado no DOU"
-        endereco = municipio.endereco
-        bairro = municipio.bairro
-        cep = municipio.cep
-        telefone = municipio.telefone_um
-        if municipio.email_institucional_prefeito != "":
-            email_prefeito = municipio.email_institucional_prefeito
-        else:
-            email_prefeito = "Não cadastrado"
-        try:
-            # email_cadastrador = Usuario.objects.get(municipio_id=municipio.id).user.email
-            email_cadastrador = municipio.usuario.user.email
-        except ObjectDoesNotExist:
-            email_cadastrador = "Não cadastrado"
-        try:
-            if municipio.usuario.responsavel:
-                email_responsavel = (
-                    municipio.usuario.responsavel.email_institucional_responsavel
-                )
-            else:
-                email_responsavel = "Não cadastrado"
-        except ObjectDoesNotExist:
-            email_responsavel = "Não cadastrado"
-
-        local = municipio.localizacao
-
-        planilha.write(i, 0, uf)
-        planilha.write(i, 1, cidade)
-        planilha.write(i, 2, cod_ibge)
-        planilha.write(i, 3, estado_processo)
-        planilha.write(i, 4, endereco)
-        planilha.write(i, 5, bairro)
-        planilha.write(i, 6, cep)
-        planilha.write(i, 7, telefone)
-        planilha.write(i, 8, email_prefeito)
-        planilha.write(i, 9, email_cadastrador)
-        planilha.write(i, 10, email_responsavel)
-        planilha.write(i, 11, local)
-        planilha.write(
-            i, 12, verificar_anexo(municipio, "criacao_sistema", "lei_sistema_cultura")
-        )
-        planilha.write(
-            i,
-            13,
-            verificar_anexo(
-                municipio, "orgao_gestor", "relatorio_atividade_secretaria"
-            ),
-        )
-        planilha.write(
-            i,
-            14,
-            verificar_anexo(municipio, "conselho_cultural", "ata_regimento_aprovado"),
-        )
-        planilha.write(
-            i, 15, verificar_anexo(municipio, "fundo_cultura", "lei_fundo_cultura")
-        )
-        planilha.write(
-            i, 16, verificar_anexo(municipio, "plano_cultura", "lei_plano_cultura")
-        )
-        ultima_linha = i
-
-    # workbook.save(response)
     planilha.autofilter(0, 0, ultima_linha, 16)
     workbook.close()
     output.seek(0)
@@ -590,110 +414,25 @@ class OficioAlteracao(WeasyTemplateView):
         return context
 
 
-class ConsultarMunicipios(ListView):
+class ConsultarEnte(ListView):
     template_name = "consultar/consultar.html"
     paginate_by = "25"
 
     def get_queryset(self):
-        ente_federado = self.request.GET.get("municipio", None)
-        sistema = self.request.GET.get("sistema", None)
-        orgao = self.request.GET.get("orgao", None)
-        conselho = self.request.GET.get("conselho", None)
-        fundo = self.request.GET.get("fundo", None)
-        plano = self.request.GET.get("plano", None)
+        tipo = self.kwargs['tipo']
+        ente_federado = self.request.GET.get("ente_federado", None)
 
-        usuarios = Municipio.objects.all()
+        sistemas = SistemaCultura.sistema.filter(estado_processo='6')
 
-        if sistema:
-            usuarios = usuarios.filter(
-                usuario__plano_trabalho__criacao_sistema__lei_sistema_cultura__isnull=False
-            ).exclude(usuario__plano_trabalho__criacao_sistema__lei_sistema_cultura="")
-
-        if orgao:
-            usuarios = usuarios.filter(
-                usuario__plano_trabalho__orgao_gestor__relatorio_atividade_secretaria__isnull=False
-            ).exclude(
-                usuario__plano_trabalho__orgao_gestor__relatorio_atividade_secretaria=""
-            )
-
-        if conselho:
-            usuarios = usuarios.filter(
-                usuario__plano_trabalho__conselho_cultural__ata_regimento_aprovado__isnull=False
-            ).exclude(
-                usuario__plano_trabalho__conselho_cultural__ata_regimento_aprovado=""
-            )
-
-        if fundo:
-            usuarios = usuarios.filter(
-                usuario__plano_trabalho__fundo_cultura__lei_fundo_cultura__isnull=False
-            ).exclude(usuario__plano_trabalho__fundo_cultura__lei_fundo_cultura="")
-
-        if plano:
-            usuarios = usuarios.filter(
-                usuario__plano_trabalho__plano_cultura__lei_plano_cultura__isnull=False
-            ).exclude(usuario__plano_trabalho__plano_cultura__lei_plano_cultura="")
+        if tipo == 'municipio':
+            sistemas = sistemas.filter(ente_federado__cod_ibge__gt=100)
+        elif tipo == 'estado':
+            sistemas = sistemas.filter(ente_federado__cod_ibge__lte=100)
 
         if ente_federado:
-            return usuarios.filter(cidade__nome_municipio__icontains=ente_federado)
+            sistemas = sistemas.filter(ente_federado__nome__icontains=ente_federado)
 
-        return usuarios.filter(usuario__estado_processo="6").order_by(
-            "cidade__nome_municipio"
-        )
-
-
-class ConsultarEstados(ListView):
-    template_name = "consultar/consultar_estados.html"
-    paginate_by = "27"
-
-    def get_queryset(self):
-        ente_federado = self.request.GET.get("estado", None)
-        sistema = self.request.GET.get("sistema", None)
-        orgao = self.request.GET.get("orgao", None)
-        conselho = self.request.GET.get("conselho", None)
-        fundo = self.request.GET.get("fundo", None)
-        plano = self.request.GET.get("plano", None)
-
-        usuarios = Municipio.objects.all()
-
-        if sistema:
-            usuarios = usuarios.filter(
-                usuario__plano_trabalho__criacao_sistema__lei_sistema_cultura__isnull=False
-            ).exclude(usuario__plano_trabalho__criacao_sistema__lei_sistema_cultura="")
-
-        if orgao:
-            usuarios = usuarios.filter(
-                usuario__plano_trabalho__orgao_gestor__relatorio_atividade_secretaria__isnull=False
-            ).exclude(
-                usuario__plano_trabalho__orgao_gestor__relatorio_atividade_secretaria=""
-            )
-
-        if conselho:
-            usuarios = usuarios.filter(
-                usuario__plano_trabalho__conselho_cultural__ata_regimento_aprovado__isnull=False
-            ).exclude(
-                usuario__plano_trabalho__conselho_cultural__ata_regimento_aprovado=""
-            )
-
-        if fundo:
-            usuarios = usuarios.filter(
-                usuario__plano_trabalho__fundo_cultura__lei_fundo_cultura__isnull=False
-            ).exclude(usuario__plano_trabalho__fundo_cultura__lei_fundo_cultura="")
-
-        if plano:
-            usuarios = usuarios.filter(
-                usuario__plano_trabalho__plano_cultura__lei_plano_cultura__isnull=False
-            ).exclude(usuario__plano_trabalho__plano_cultura__lei_plano_cultura="")
-
-        if ente_federado:
-            usuarios = usuarios.filter(
-                Q(cidade__isnull=True),
-                Q(estado__nome_uf__icontains=ente_federado)
-                | Q(estado__sigla__iexact=ente_federado),
-            )
-
-        return usuarios.filter(estado__isnull=False, cidade__isnull=True).order_by(
-            "estado"
-        )
+        return sistemas
 
 
 class RelatorioAderidos(ListView):
@@ -733,24 +472,8 @@ class RelatorioAderidos(ListView):
 
 
 class Detalhar(DetailView):
-    model = Municipio
+    model = SistemaCultura
     template_name = "consultar/detalhar.html"
-
-    def get_context_data(self, **kwargs):
-        context = super(Detalhar, self).get_context_data(**kwargs)
-        try:
-            planotrabalho = Usuario.objects.get(municipio_id=self.kwargs["pk"])
-            if planotrabalho.plano_trabalho_id:
-                conselhocultural = PlanoTrabalho.objects.get(
-                    id=planotrabalho.plano_trabalho_id
-                )
-                context["conselheiros"] = Conselheiro.objects.filter(
-                    conselho_id=conselhocultural.conselho_cultural_id, situacao="1"
-                )  # Situação ativo
-            return context
-        except:
-            context["conselheiros"] = None
-            return context
 
 
 class ConsultarPlanoTrabalhoMunicipio(ListView):
