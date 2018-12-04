@@ -8,10 +8,12 @@ from rest_framework.response import Response
 
 from adesao.models import SistemaCultura
 from adesao.models import Municipio
+from adesao.models import EnteFederado
 from planotrabalho.models import PlanoTrabalho
 
 from .serializers import MunicipioSerializer
-from .serializers import MunicipioSerializer as SistemaCulturaSerializer
+# from .serializers import MunicipioSerializer as SistemaCulturaSerializer
+from .serializers import SistemaCulturaSerializer
 from .serializers import PlanoTrabalhoSerializer
 
 from .filters import SistemaCulturaFilter
@@ -33,25 +35,24 @@ class SistemaCulturaAPIList(generics.ListAPIView):
 
     filter_backends = (DjangoFilterBackend, filters.OrderingFilter,)
     filterset_class = SistemaCulturaFilter
-    ordering_fields = ('ente_federado__nome', 'estado__nome_uf')
+    ordering_fields = ('ente_federado__nome',)
 
-    def get_extra_counts(self): 
-        queryset = self.filter_queryset(self.get_queryset())
+    # def get_extra_counts(self): 
+    #     queryset = self.filter_queryset(self.get_queryset())
         
-        return queryset.aggregate(
-            municipios=Count('pk', filter=Q(cidade__isnull=False)),
-            municipios_aderidos=Count('pk', filter=(Q(usuario__estado_processo=6) & Q(cidade__isnull=False))),
-            estados=Count('pk', filter=Q(cidade__isnull=True)),
-            estados_aderidos=Count('pk', filter=(Q(usuario__estado_processo=6) & Q(cidade__isnull=True))),
-        )
+    #     return queryset.aggregate(
+    #         municipios=Count('pk', filter=Q(ente_federado__cod_ibge__gt=100)),
+    #         municipios_aderidos=Count('pk', filter=(Q(estado_processo=6) & Q(ente_federado__cod_ibge__gt=100))),
+    #         estados=Count('pk', filter=Q(ente_federado__cod_ibge__lte=100)),
+    #         estados_aderidos=Count('pk', filter=(Q(estado_processo=6) & Q(ente_federado__cod_ibge__lte=100))),
+    #     )
 
     def list(self, request):
         response = super().list(self, request)
-        extra_counts = self.get_extra_counts()
-        response.data['municipios'] = extra_counts['municipios']
-        response.data['municipios_aderidos'] = extra_counts['municipios_aderidos']
-        response.data['estados'] = extra_counts['estados']
-        response.data['estados_aderidos'] = extra_counts['estados_aderidos']
+        response.data['municipios'] = EnteFederado.objects.filter(cod_ibge__gt=100).count()
+        response.data['municipios_aderidos'] = SistemaCultura.sistema.filter(estado_processo=6).filter(ente_federado__cod_ibge__gt=100).count()
+        response.data['estados'] = EnteFederado.objects.filter(cod_ibge__lte=100).count()
+        response.data['estados_aderidos'] = SistemaCultura.sistema.filter(ente_federado__cod_ibge__lte=100).filter(estado_processo=6).count()
         return response
 
 

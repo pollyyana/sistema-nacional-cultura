@@ -14,6 +14,10 @@ from planotrabalho.models import FundoCultura
 from planotrabalho.models import PlanoCultura
 from planotrabalho.models import Conselheiro
 
+from adesao.models import SistemaCultura
+from planotrabalho.models import Componente
+from adesao.models import EnteFederado
+
 
 # Criacao do Sistema
 class CriacaoSistemaSerializer(hal_serializers.HalModelSerializer):
@@ -72,6 +76,27 @@ class PlanoCulturaSerializer(hal_serializers.HalModelSerializer):
                   'lei_plano_cultura', 'situacao')
 
 
+class ComponenteSCSerializer(serializers.ModelSerializer):
+    situacao = serializers.ReadOnlyField(source='situacao')
+
+    class Meta:
+        model = Componente
+
+
+class PlanoTrabalhoSCSerializer(hal_serializers.HalModelSerializer):
+    criacao_lei_sistema = ComponenteSCSerializer(source='legislacao')
+    criacao_orgao_gestor = ComponenteSCSerializer(source='orgao_gestor')
+    criacao_plano_cultura = ComponenteSCSerializer(source='plano')
+    criacao_fundo_cultura = ComponenteSCSerializer(source='fundo_cultura')
+    criacao_conselho_cultural = ComponenteSCSerializer(source='conselho')
+    # _embedded = serializers.SerializerMethodField(method_name='get_embedded')
+    # self = HalHyperlinkedIdentityField(view_name='api:planotrabalho-detail')
+
+    class Meta:
+        model = SistemaCultura
+        fields = ('id', 'self', 'criacao_lei_sistema', 'criacao_orgao_gestor',
+                  'criacao_fundo_cultura', 'criacao_conselho_cultural')
+
 class PlanoTrabalhoSerializer(hal_serializers.HalModelSerializer):
     criacao_lei_sistema_cultura = serializers.SerializerMethodField(source='criacao_sistema')
     criacao_orgao_gestor = serializers.SerializerMethodField(source='orgao_gestor')
@@ -82,7 +107,7 @@ class PlanoTrabalhoSerializer(hal_serializers.HalModelSerializer):
     self = HalHyperlinkedIdentityField(view_name='api:planotrabalho-detail')
 
     class Meta:
-        model = PlanoTrabalho
+        model = SistemaCultura
         fields = ('id', 'self', 'criacao_lei_sistema_cultura',
                   'criacao_orgao_gestor', 'criacao_conselho_cultural',
                   'criacao_fundo_cultura', 'criacao_plano_cultura', '_embedded'
@@ -164,6 +189,21 @@ class MunicipioLinkSerializer(hal_serializers.HalModelSerializer):
     class Meta:
         model = Municipio
         fields = ('self',)
+
+
+class EnteFederadoSerializer(hal_serializers.HalModelSerializer):
+    
+    class Meta:
+        model = EnteFederado
+        fields = ("cod_ibge", "nome", "territorio", "populacao", "idh", "is_municipio")
+
+
+class SistemaCulturaSerializer(hal_serializers.HalModelSerializer):
+    # ente_federado = serializers.CharField(source='ente_federado')
+
+    class Meta:
+        model = SistemaCultura
+        fields = ("id", "ente_federado")
 
 
 class MunicipioSerializer(hal_serializers.HalModelSerializer):
