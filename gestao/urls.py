@@ -79,6 +79,10 @@ urlpatterns = [
             login_url='adesao:login'), name='alterar_usuario'),
 
     # UF e Município aninhados
+    path("chain/ente",
+        views.EnteChain.as_view(),
+        name='ente_chain'),
+
     url(r'^chain/cidade$',
         views.CidadeChain.as_view(),
         name='cidade_chain'),
@@ -102,6 +106,9 @@ urlpatterns = [
         login_url='adesao:login'), name='listar_documentos'),
 
     # Tela de alteração de upload do plano de trabalho
+    path("inserir-documentos/fundo/alterar/<int:pk>", staff_member_required(
+        views.AlterarFundoCultura.as_view(),
+        login_url='adesao:login'), name='alterar_fundo'),
     path("inserir-documentos/<str:componente>/alterar/<int:pk>", staff_member_required(
         views.AlterarComponente.as_view(),
         login_url='adesao:login'), name='alterar_componente'), 

@@ -4,10 +4,12 @@ from django.contrib.auth.forms import UserCreationForm
 from django.utils.crypto import get_random_string
 from django.forms import ModelForm
 from django.template.defaultfilters import filesizeformat
+from django.forms import formset_factory
 
 from dal import autocomplete
 
-from .models import Usuario, Municipio, Responsavel, Secretario
+from .models import Usuario, Municipio, Responsavel
+from .models import Secretario, Funcionario, SistemaCultura, Sede, Gestor
 from .utils import validar_cpf, validar_cnpj, limpar_mascara
 import re
 
@@ -109,6 +111,63 @@ class CadastrarUsuarioForm(UserCreationForm):
 
         return user
 
+class CadastrarGestor(ModelForm):
+
+    termo_posse = RestrictedFileField(
+        content_types=content_types,
+        max_upload_size=5242880)
+    rg_copia = RestrictedFileField(
+        content_types=content_types,
+        max_upload_size=5242880)
+    cpf_copia = RestrictedFileField(
+        content_types=content_types,
+        max_upload_size=5242880)
+
+    def clean_cpf(self):
+        if not validar_cpf(self.cleaned_data['cpf']):
+            raise forms.ValidationError('Por favor, digite um CPF válido!')
+
+        return self.cleaned_data['cpf']
+
+    class Meta:
+        model = Gestor
+        exclude = ('tipo_funcionario',)
+
+class CadastrarSede(ModelForm):
+
+    def clean_cnpj(self):
+        if not validar_cnpj(self.cleaned_data['cnpj']):
+            raise forms.ValidationError('Por favor, digite um CNPJ válido!')
+
+        return self.cleaned_data['cnpj']
+
+    class Meta:
+        model = Sede
+        fields = '__all__'
+
+
+class CadastrarSistemaCulturaForm(ModelForm):
+
+    def clean(self):
+        super(CadastrarSistemaCulturaForm, self).clean()
+
+        if 'ente_federado' in self.changed_data:
+            sistema_cultura = SistemaCultura.sistema.filter(
+                ente_federado=self.cleaned_data['ente_federado'])
+
+            if sistema_cultura:
+                self.add_error('ente_federado', 'Este ente federado já foi cadastrado!')
+
+    class Meta:
+        model = SistemaCultura
+        fields = ('ente_federado',)
+        widgets = {'ente_federado': autocomplete.ModelSelect2(url='gestao:ente_chain')}
+
+
+SedeFormSet = formset_factory(CadastrarSistemaCulturaForm, CadastrarSede, extra=2)
+
+GestorFormSet = formset_factory(CadastrarSistemaCulturaForm, CadastrarGestor, extra=2)
+
 
 class CadastrarMunicipioForm(ModelForm):
     termo_posse_prefeito = RestrictedFileField(
@@ -158,25 +217,13 @@ class CadastrarMunicipioForm(ModelForm):
                    'estado': autocomplete.ModelSelect2(url='gestao:uf_chain')}
 
 
-class CadastrarSecretarioForm(ModelForm):
-    def clean_cpf_secretario(self):
-        if not validar_cpf(self.cleaned_data['cpf_secretario']):
+class CadastrarFuncionarioForm(ModelForm):
+    def clean_cpf(self):
+        if not validar_cpf(self.cleaned_data['cpf']):
             raise forms.ValidationError('Por favor, digite um CPF válido!')
 
-        return self.cleaned_data['cpf_secretario']
+        return self.cleaned_data['cpf']
 
     class Meta:
-        model = Secretario
-        fields = '__all__'
-
-
-class CadastrarResponsavelForm(ModelForm):
-    def clean_cpf_responsavel(self):
-        if not validar_cpf(self.cleaned_data['cpf_responsavel']):
-            raise forms.ValidationError('Por favor, digite um CPF válido!')
-
-        return self.cleaned_data['cpf_responsavel']
-
-    class Meta:
-        model = Responsavel
-        fields = '__all__'
+        model = Funcionario
+        exclude = ('tipo_funcionario',)

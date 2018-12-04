@@ -6,7 +6,7 @@ from io import BytesIO
 from datetime import timedelta
 from threading import Thread
 
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.http import Http404, HttpResponse
 from django.views.generic.edit import CreateView, UpdateView
 from django.views.generic import ListView, DetailView
@@ -30,11 +30,12 @@ from adesao.models import (
     Historico,
     Uf,
     Cidade,
-    SistemaCultura
+    Funcionario
 )
 from planotrabalho.models import Conselheiro, PlanoTrabalho
-from adesao.forms import CadastrarUsuarioForm, CadastrarMunicipioForm
-from adesao.forms import CadastrarResponsavelForm, CadastrarSecretarioForm
+from adesao.forms import CadastrarUsuarioForm, CadastrarMunicipioForm, CadastrarSistemaCulturaForm
+from adesao.forms import SedeFormSet, GestorFormSet
+from adesao.forms import CadastrarFuncionarioForm
 from adesao.utils import enviar_email_conclusao, verificar_anexo
 
 from django_weasyprint import WeasyTemplateView
@@ -59,6 +60,15 @@ def home(request):
     situacao = request.user.usuario.estado_processo
     historico = Historico.objects.filter(usuario=request.user.usuario)
     historico = historico.order_by("-data_alteracao")
+    sistemas_cultura = request.user.usuario.sistema_cultura.all().distinct('ente_federado')
+
+    if sistemas_cultura.count() > 1:
+        request.session['sistemas'] = list(sistemas_cultura.values('id', 'ente_federado__nome'))
+    elif sistemas_cultura.count() == 1:
+        request.session['sistema_cultura_selecionado'] = {'id': sistemas_cultura[0].id,
+            'estado_processo': sistemas_cultura[0].estado_processo,
+            'secretario': sistemas_cultura[0].secretario.id if sistemas_cultura[0].secretario else None,
+            'responsavel': sistemas_cultura[0].responsavel.id if sistemas_cultura[0].responsavel else None}
 
     if request.user.is_staff:
         return redirect("gestao:acompanhar_adesao")
@@ -72,6 +82,17 @@ def home(request):
         )
         enviar_email_conclusao(request.user, message_txt, message_html)
     return render(request, "home.html", {"historico": historico})
+
+
+def define_sistema_sessao(request, sistema):
+    sistema_cultura = SistemaCultura.objects.get(id=sistema)
+
+    request.session['sistema_cultura_selecionado'] = {'id': sistema_cultura.id,
+        'estado_processo': sistema_cultura.estado_processo,
+        'secretario': sistema_cultura.secretario.id if sistema_cultura.secretario else None,
+        'responsavel': sistema_cultura.responsavel.id if sistema_cultura.responsavel else None}
+
+    return redirect("adesao:alterar_sistema", pk=sistema)
 
 
 def ativar_usuario(request, codigo):
@@ -94,8 +115,8 @@ def sucesso_usuario(request):
     return render(request, "usuario/mensagem_sucesso.html")
 
 
-def sucesso_responsavel(request):
-    return render(request, "responsavel/mensagem_sucesso.html")
+def sucesso_funcionario(request, **kwargs):
+    return render(request, "mensagem_sucesso.html")
 
 
 def exportar_csv(request):
@@ -240,6 +261,109 @@ def sucesso_municipio(request):
     return render(request, "prefeitura/mensagem_sucesso_prefeitura.html")
 
 
+class CadastrarSistemaCultura(CreateView):
+    form_class = CadastrarSistemaCulturaForm
+    model = SistemaCultura
+    template_name = "cadastrar_sistema.html"
+    templated_email_template_name = "adesao"
+    templated_email_from_email = "naoresponda@cultura.gov.br"
+    success_url = reverse_lazy("adesao:sucesso_municipio")
+
+    def form_valid(self, form):
+        context = self.get_context_data()
+
+        form_sistema = context['form_sistema']
+        form_sede = context['form_sede']
+        form_gestor = context['form_gestor']
+
+        if form_sistema.is_valid() and form_gestor.is_valid() and form_sede.is_valid():
+            sede = form_sede.save()
+
+            form_gestor.instance.tipo_funcionario = 2
+            gestor = form_gestor.save()
+
+            form_sistema.instance.sede = sede
+            form_sistema.instance.gestor = gestor
+            form_sistema.instance.cadastrador = self.request.user.usuario
+
+            sistema = form_sistema.save()
+
+            if not self.request.session.get('sistemas', False):
+                self.request.session['sistemas'] = list()
+
+            self.request.session['sistemas'].append({"id": sistema.id, "ente_federado__nome": sistema.ente_federado.nome})
+            self.request.session.modified = True
+
+            return redirect(self.success_url)
+        else:
+            return self.render_to_response(self.get_context_data(form=form))
+
+    def form_invalid(self, form):
+        return self.render_to_response(self.get_context_data(form=form))
+
+    def get_context_data(self, **kwargs):
+        context = super(CadastrarSistemaCultura, self).get_context_data(**kwargs)
+        if self.request.POST:
+            context['form_sistema'] = CadastrarSistemaCulturaForm(self.request.POST, self.request.FILES)
+            context['form_sede'] = SedeFormSet(self.request.POST, self.request.FILES)
+            context['form_gestor'] = GestorFormSet(self.request.POST, self.request.FILES)
+        else:
+            context['form_sistema'] = CadastrarSistemaCulturaForm()
+            context['form_sede'] = SedeFormSet()
+            context['form_gestor'] = GestorFormSet()
+        return context
+
+    def templated_email_get_recipients(self, form):
+        return [settings.RECEIVER_EMAIL]
+
+    def templated_email_get_context_data(self, **kwargs):
+        context = super().templated_email_get_context_data(**kwargs)
+        context["object"] = self.object
+        return context
+
+
+class AlterarSistemaCultura(UpdateView):
+    form_class = CadastrarSistemaCulturaForm
+    model = SistemaCultura
+    template_name = "cadastrar_sistema.html"
+    success_url = reverse_lazy("adesao:sucesso_municipio")
+
+    def form_valid(self, form):
+        context = self.get_context_data()
+
+        form_sistema = context['form_sistema']
+        form_sede = context['form_sede']
+        form_gestor = context['form_gestor']
+
+        if form_sistema.is_valid() and form_gestor.is_valid() and form_sede.is_valid():
+            sede = form_sede.save()
+            gestor = form_gestor.save()
+
+            form_sistema.instance.sede = sede
+            form_sistema.instance.gestor = gestor
+            form_sistema.instance.cadastrador = self.request.user.usuario
+            sistema = form_sistema.save()
+
+            return redirect(self.success_url)
+        else:
+            return self.render_to_response(self.get_context_data(form=form))
+
+    def form_invalid(self, form):
+        return self.render_to_response(self.get_context_data(form=form))
+
+    def get_context_data(self, **kwargs):
+        context = super(AlterarSistemaCultura, self).get_context_data(**kwargs)
+        if self.request.POST:
+            context['form_sistema'] = CadastrarSistemaCulturaForm(self.request.POST, instance=self.object)
+            context['form_sede'] = SedeFormSet(self.request.POST, instance=self.object.sede)
+            context['form_gestor'] = GestorFormSet(self.request.POST, instance=self.object.gestor)
+        else:
+            context['form_sistema'] = CadastrarSistemaCulturaForm(instance=self.object)
+            context['form_sede'] = SedeFormSet(instance=self.object.sede)
+            context['form_gestor'] = GestorFormSet(instance=self.object.gestor)
+        return context
+
+
 class CadastrarMunicipio(TemplatedEmailFormViewMixin, CreateView):
     form_class = CadastrarMunicipioForm
     model = Municipio
@@ -298,87 +422,80 @@ class AlterarMunicipio(UpdateView):
         return kwargs
 
 
-class CadastrarResponsavel(CreateView):
-    form_class = CadastrarResponsavelForm
-    template_name = "responsavel/cadastrar_responsavel.html"
-    success_url = reverse_lazy("adesao:sucesso_responsavel")
+class CadastrarFuncionario(CreateView):
+    form_class = CadastrarFuncionarioForm
+    template_name = "cadastrar_funcionario.html"
+
+    def get_sistema_cultura(self):
+        return get_object_or_404(SistemaCultura, pk=int(self.kwargs['sistema']))
 
     def form_valid(self, form):
-        self.request.user.usuario.responsavel = form.save()
-        self.request.user.usuario.save()
-        return super(CadastrarResponsavel, self).form_valid(form)
+        LISTA_TIPOS_FUNCIONARIOS = {
+            'secretario': 0,
+            'responsavel': 1
+        }
+        tipo_funcionario = self.kwargs['tipo']
+        form.instance.tipo_funcionario = LISTA_TIPOS_FUNCIONARIOS[tipo_funcionario]
+        sistema = self.get_sistema_cultura()
+        setattr(sistema, tipo_funcionario, form.save())
+        sistema.save()
+
+        funcionario = getattr(sistema, tipo_funcionario)
+        self.request.session['sistema_cultura_selecionado']['id'] = sistema.id
+        self.request.session['sistema_cultura_selecionado'][tipo_funcionario] = funcionario.id
+        self.request.session.modified = True
+
+        return super(CadastrarFuncionario, self).form_valid(form)
+
+    def form_invalid(self, form):
+        return self.render_to_response(self.get_context_data(form=form))
 
     def dispatch(self, *args, **kwargs):
-        responsavel = self.request.user.usuario.responsavel
-        if responsavel:
-            return redirect("adesao:alterar_responsavel", pk=responsavel.id)
+        funcionario = getattr(self.get_sistema_cultura(), self.kwargs['tipo'])
+        if funcionario:
+            return redirect("adesao:alterar_funcionario", tipo=self.kwargs['tipo'], pk=funcionario.id)
 
-        return super(CadastrarResponsavel, self).dispatch(*args, **kwargs)
+        return super(CadastrarFuncionario, self).dispatch(*args, **kwargs)
+
+    def get_success_url(self):
+        return reverse_lazy('adesao:sucesso_funcionario')
 
 
 @login_required
 def importar_secretario(request):
-    secretario = request.user.usuario.secretario
-    # TODO: Refatorar essa importação depois que a migração for realizada
-    responsavel = Responsavel()
-    if secretario:
-        responsavel.cpf_responsavel = secretario.cpf_secretario
-        responsavel.rg_responsavel = secretario.rg_secretario
-        responsavel.orgao_expeditor_rg = secretario.orgao_expeditor_rg
-        responsavel.estado_expeditor = secretario.estado_expeditor
-        responsavel.nome_responsavel = secretario.nome_secretario
-        responsavel.cargo_responsavel = secretario.cargo_secretario
-        responsavel.instituicao_responsavel = secretario.instituicao_secretario
-        responsavel.telefone_um = secretario.telefone_um
-        responsavel.telefone_dois = secretario.telefone_dois
-        responsavel.telefone_tres = secretario.telefone_tres
-        responsavel.email_institucional_responsavel = (
-            secretario.email_institucional_secretario
-        )
-        try:
-            responsavel.full_clean()
-            responsavel.save()
-        except ValidationError:
-            return redirect("adesao:responsavel")
-        request.user.usuario.responsavel = responsavel
-        request.user.usuario.save()
-    return redirect("adesao:responsavel")
+    secretario_id = request.session['sistema_cultura_selecionado']['secretario']
+    sistema_id = request.session['sistema_cultura_selecionado']['id']
+
+    try:
+        sistema = SistemaCultura.sistema.get(id=sistema_id)
+        secretario = Funcionario.objects.get(id=secretario_id)
+
+        responsavel = secretario
+        responsavel.tipo_funcionario = 1
+
+        responsavel.full_clean()
+        responsavel.save()
+
+    except (ValidationError, ObjectDoesNotExist) as error:
+        return redirect("adesao:cadastrar_funcionario", 
+            sistema=sistema.id, tipo='responsavel')
+
+    sistema.responsavel = responsavel
+    sistema.save()
+
+    request.session['sistema_cultura_selecionado']['responsavel'] = sistema.responsavel.id
+    request.session['sistema_cultura_selecionado']['id'] = sistema.id
+    request.session.modified = True
+
+    return redirect("adesao:cadastrar_funcionario", 
+        sistema=sistema.id, tipo='responsavel')
 
 
-class AlterarResponsavel(UpdateView):
-    form_class = CadastrarResponsavelForm
-    model = Responsavel
-    template_name = "responsavel/cadastrar_responsavel.html"
-    success_url = reverse_lazy("adesao:sucesso_responsavel")
-
-
-def sucesso_secretario(request):
-    return render(request, "secretario/mensagem_sucesso_secretario.html")
-
-
-class CadastrarSecretario(CreateView):
-    form_class = CadastrarSecretarioForm
-    template_name = "secretario/cadastrar_secretario.html"
-    success_url = reverse_lazy("adesao:sucesso_secretario")
-
-    def form_valid(self, form):
-        self.request.user.usuario.secretario = form.save()
-        self.request.user.usuario.save()
-        return super(CadastrarSecretario, self).form_valid(form)
-
-    def dispatch(self, *args, **kwargs):
-        secretario = self.request.user.usuario.secretario
-        if secretario:
-            return redirect("adesao:alterar_secretario", pk=secretario.id)
-
-        return super(CadastrarSecretario, self).dispatch(*args, **kwargs)
-
-
-class AlterarSecretario(UpdateView):
-    form_class = CadastrarSecretarioForm
-    model = Secretario
-    template_name = "secretario/cadastrar_secretario.html"
-    success_url = reverse_lazy("adesao:sucesso_secretario")
+class AlterarFuncionario(UpdateView):
+    form_class = CadastrarFuncionarioForm
+    model = Funcionario
+    template_name = "cadastrar_funcionario.html"
+    success_url = reverse_lazy("adesao:sucesso_funcionario")
 
 
 class MinutaAcordo(WeasyTemplateView):

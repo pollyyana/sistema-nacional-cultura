@@ -8,7 +8,7 @@ from django.shortcuts import reverse
 
 from model_mommy import mommy
 
-from adesao.models import Municipio
+from adesao.models import Municipio, Funcionario, EnteFederado, Gestor, Sede, SistemaCultura
 
 pytestmark = pytest.mark.django_db
 
@@ -207,3 +207,370 @@ def test_consultar_informações_estados(client):
 
     assert len(response.context_data["object_list"]) == 1
     assert response.context_data["object_list"][0] == estado
+
+
+def test_cadastrar_funcionario_tipo_responsavel(login, client):
+
+    sistema_cultura = mommy.make("SistemaCultura", cadastrador=login)
+
+    funcionario = Funcionario(cpf="381.390.630-29", rg="48.464.068-9",
+        orgao_expeditor_rg="SSP", estado_expeditor=29,
+        nome="Joao silva", email_institucional="joao@email.com")
+
+    url = reverse("adesao:home")
+    client.get(url)
+
+    url = reverse("adesao:cadastrar_funcionario",
+        kwargs={"tipo": "responsavel", "sistema": sistema_cultura.id})
+
+    response = client.post(
+        url,
+        {
+            "cpf": funcionario.cpf,
+            "rg": funcionario.rg,
+            "orgao_expeditor_rg": funcionario.orgao_expeditor_rg,
+            "estado_expeditor": 29,
+            "nome": funcionario.nome,
+            "email_institucional": funcionario.email_institucional,
+            "telefone_um": "999999999"
+        },
+    )
+
+    funcionario_salvo = Funcionario.objects.last()
+    sistema_cultura_atualizado = SistemaCultura.sistema.get(
+        ente_federado=sistema_cultura.ente_federado)
+
+    assert sistema_cultura_atualizado.responsavel == funcionario_salvo
+    assert funcionario_salvo.cpf == funcionario.cpf
+    assert funcionario_salvo.rg == funcionario.rg
+    assert funcionario_salvo.orgao_expeditor_rg == funcionario.orgao_expeditor_rg
+    assert funcionario_salvo.estado_expeditor == funcionario.estado_expeditor
+    assert funcionario_salvo.nome == funcionario.nome
+    assert funcionario_salvo.email_institucional == funcionario.email_institucional
+    assert funcionario_salvo.tipo_funcionario == 1
+    assert client.session['sistema_cultura_selecionado']['id'] == sistema_cultura_atualizado.id
+    assert client.session['sistema_cultura_selecionado']['responsavel'] == funcionario_salvo.id
+
+
+def test_cadastrar_funcionario_tipo_secretario(login, client):
+
+    sistema_cultura = mommy.make("SistemaCultura", cadastrador=login)
+
+    funcionario = Funcionario(cpf="381.390.630-29", rg="48.464.068-9",
+        orgao_expeditor_rg="SSP", estado_expeditor=29,
+        nome="Joao silva", email_institucional="joao@email.com")
+
+    url = reverse("adesao:home")
+    client.get(url)
+
+    url = reverse("adesao:cadastrar_funcionario",
+        kwargs={"tipo": "secretario", "sistema": sistema_cultura.id})
+
+    response = client.post(
+        url,
+        {
+            "cpf": funcionario.cpf,
+            "rg": funcionario.rg,
+            "orgao_expeditor_rg": funcionario.orgao_expeditor_rg,
+            "estado_expeditor": 29,
+            "nome": funcionario.nome,
+            "email_institucional": funcionario.email_institucional,
+            "telefone_um": "999999999"
+        },
+    )
+
+    funcionario_salvo = Funcionario.objects.last()
+    sistema_cultura_atualizado = SistemaCultura.sistema.get(
+        ente_federado=sistema_cultura.ente_federado)
+
+    assert sistema_cultura_atualizado.secretario == funcionario_salvo
+    assert funcionario_salvo.cpf == funcionario.cpf
+    assert funcionario_salvo.rg == funcionario.rg
+    assert funcionario_salvo.orgao_expeditor_rg == funcionario.orgao_expeditor_rg
+    assert funcionario_salvo.estado_expeditor == funcionario.estado_expeditor
+    assert funcionario_salvo.nome == funcionario.nome
+    assert funcionario_salvo.email_institucional == funcionario.email_institucional
+    assert funcionario_salvo.tipo_funcionario == 0
+    assert client.session['sistema_cultura_selecionado']['id'] == sistema_cultura_atualizado.id
+    assert client.session['sistema_cultura_selecionado']['secretario'] == funcionario_salvo.id
+
+
+def test_alterar_funcionario_tipo_secretario(login, client):
+
+    secretario = mommy.make("Funcionario", tipo_funcionario=0)
+    sistema_cultura = mommy.make("SistemaCultura", secretario=secretario)
+
+    url = reverse("adesao:alterar_funcionario",
+        kwargs={"tipo": "secretario", "pk": sistema_cultura.secretario.id})
+
+    funcionario = Funcionario(cpf="381.390.630-29", rg="48.464.068-9",
+        orgao_expeditor_rg="SSP", estado_expeditor=29,
+        nome="Joao silva", email_institucional="joao@email.com")
+
+    response = client.post(
+        url,
+        {
+            "cpf": funcionario.cpf,
+            "rg": funcionario.rg,
+            "orgao_expeditor_rg": funcionario.orgao_expeditor_rg,
+            "estado_expeditor": 29,
+            "nome": funcionario.nome,
+            "email_institucional": funcionario.email_institucional,
+            "telefone_um": "999999999"
+        },
+    )
+
+    sistema_cultura_atualizado = SistemaCultura.sistema.get(
+        ente_federado=sistema_cultura.ente_federado)
+
+    assert sistema_cultura_atualizado.secretario.cpf == funcionario.cpf
+    assert sistema_cultura_atualizado.secretario.rg == funcionario.rg
+    assert sistema_cultura_atualizado.secretario.orgao_expeditor_rg == funcionario.orgao_expeditor_rg
+    assert sistema_cultura_atualizado.secretario.estado_expeditor == funcionario.estado_expeditor
+    assert sistema_cultura_atualizado.secretario.nome == funcionario.nome
+    assert sistema_cultura_atualizado.secretario.email_institucional == funcionario.email_institucional
+    assert sistema_cultura_atualizado.secretario.tipo_funcionario == 0
+
+
+def test_alterar_funcionario_tipo_responsavel(login, client):
+
+    responsavel = mommy.make("Funcionario",tipo_funcionario=1)
+    sistema_cultura = mommy.make("SistemaCultura", responsavel=responsavel)
+
+    url = reverse("adesao:alterar_funcionario",
+        kwargs={"tipo": "responsavel", "pk": sistema_cultura.responsavel.id})
+
+    funcionario = Funcionario(cpf="381.390.630-29", rg="48.464.068-9",
+        orgao_expeditor_rg="SSP", estado_expeditor=29,
+        nome="Joao silva", email_institucional="joao@email.com")
+
+    response = client.post(
+        url,
+        {
+            "cpf": funcionario.cpf,
+            "rg": funcionario.rg,
+            "orgao_expeditor_rg": funcionario.orgao_expeditor_rg,
+            "estado_expeditor": 29,
+            "nome": funcionario.nome,
+            "email_institucional": funcionario.email_institucional,
+            "telefone_um": "999999999"
+        },
+    )
+
+    sistema_cultura_atualizado = SistemaCultura.sistema.get(
+        ente_federado=sistema_cultura.ente_federado)
+
+    assert sistema_cultura_atualizado.responsavel.cpf == funcionario.cpf
+    assert sistema_cultura_atualizado.responsavel.rg == funcionario.rg
+    assert sistema_cultura_atualizado.responsavel.orgao_expeditor_rg == funcionario.orgao_expeditor_rg
+    assert sistema_cultura_atualizado.responsavel.estado_expeditor == funcionario.estado_expeditor
+    assert sistema_cultura_atualizado.responsavel.nome == funcionario.nome
+    assert sistema_cultura_atualizado.responsavel.email_institucional == funcionario.email_institucional
+    assert sistema_cultura_atualizado.responsavel.tipo_funcionario == 1
+
+
+def test_cadastrar_funcionario_dados_invalidos(login, client, sistema_cultura):
+
+    url = reverse("adesao:cadastrar_funcionario",
+        kwargs={"tipo": "secretario", "sistema": sistema_cultura.id})
+
+    funcionario = Funcionario(cpf="123456", rg="48.464.068-9",
+        orgao_expeditor_rg="SSP", estado_expeditor=29,
+        nome="Joao silva", email_institucional="joao@email.com")
+
+    response = client.post(
+        url,
+        {
+            "cpf": funcionario.cpf,
+            "rg": funcionario.rg,
+            "orgao_expeditor_rg": funcionario.orgao_expeditor_rg,
+            "estado_expeditor": 29,
+            "nome": funcionario.nome,
+            "email_institucional": funcionario.email_institucional,
+            "telefone_um": "999999999"
+        },
+    )
+
+    assert response.status_code == 200
+    
+
+def test_cadastrar_sistema_cultura_dados_validos(login, client, sistema_cultura):
+    ente_federado = mommy.make("EnteFederado", cod_ibge=20563)
+    gestor = Gestor(cpf="590.328.900-26", rg="1234567", orgao_expeditor_rg="ssp", estado_expeditor=29,
+        nome="nome", telefone_um="123456", email_institucional="email@email.com", tipo_funcionario=2)
+    sede = Sede(cnpj="70.658.964/0001-07", endereco="endereco", complemento="complemento",
+        cep="72430101", bairro="bairro", telefone_um="123456")
+
+    url = reverse("adesao:home")
+    client.get(url)
+
+    url = reverse("adesao:cadastrar_sistema")
+
+    response = client.post(
+        url,
+        {
+            "ente_federado": ente_federado.pk,
+            "cpf": gestor.cpf,
+            "rg": gestor.rg,
+            "nome": gestor.nome,
+            "orgao_expeditor_rg": gestor.orgao_expeditor_rg,
+            "estado_expeditor": gestor.estado_expeditor,
+            "telefone_um": gestor.telefone_um,
+            "email_institucional": gestor.email_institucional,
+            "tipo_funcionario": gestor.tipo_funcionario,
+            "termo_posse": SimpleUploadedFile(
+                "test_file.pdf", bytes("test text", "utf-8")
+            ),
+            "cpf_copia": SimpleUploadedFile(
+                "test_file2.pdf", bytes("test text", "utf-8")
+            ),
+            "rg_copia": SimpleUploadedFile(
+                "test_file2.pdf", bytes("test text", "utf-8")
+            ),
+            "cnpj": sede.cnpj,
+            "endereco": sede.endereco,
+            "complemento": sede.complemento,
+            "cep": sede.cep,
+            "bairro": sede.bairro,
+            "telefone_um": sede.telefone_um,
+        },
+    )
+
+    gestor_salvo = Gestor.objects.last()
+    sede_salva = Sede.objects.last()
+    sistema_salvo = SistemaCultura.sistema.get(ente_federado__nome=ente_federado.nome)
+
+    assert sistema_salvo.ente_federado.cod_ibge == ente_federado.cod_ibge
+    assert sistema_salvo.gestor == gestor_salvo
+    assert sistema_salvo.sede == sede_salva
+    assert sistema_salvo.cadastrador == login
+    assert client.session['sistemas'][-1] == {"id": sistema_salvo.id, 
+        "ente_federado__nome": sistema_salvo.ente_federado.nome}
+
+
+def test_cadastrar_sistema_cultura_com_cadastrador_ja_possui_sistema(login, client):
+    ente_federado = mommy.make("EnteFederado", cod_ibge=20563)
+    gestor = Gestor(cpf="590.328.900-26", rg="1234567", orgao_expeditor_rg="ssp", estado_expeditor=29,
+        nome="nome", telefone_um="123456", email_institucional="email@email.com", tipo_funcionario=2)
+    sede = Sede(cnpj="70.658.964/0001-07", endereco="endereco", complemento="complemento",
+        cep="72430101", bairro="bairro", telefone_um="123456")
+
+    sistema_cultura = mommy.make("SistemaCultura", _fill_optional='ente_federado', 
+        cadastrador=login)
+
+    url = reverse("adesao:home")
+    client.get(url)
+
+    url = reverse("adesao:cadastrar_sistema")
+
+    response = client.post(
+        url,
+        {
+            "ente_federado": ente_federado.pk,
+            "cpf": gestor.cpf,
+            "rg": gestor.rg,
+            "nome": gestor.nome,
+            "orgao_expeditor_rg": gestor.orgao_expeditor_rg,
+            "estado_expeditor": gestor.estado_expeditor,
+            "telefone_um": gestor.telefone_um,
+            "email_institucional": gestor.email_institucional,
+            "tipo_funcionario": gestor.tipo_funcionario,
+            "cnpj": sede.cnpj,
+            "endereco": sede.endereco,
+            "complemento": sede.complemento,
+            "cep": sede.cep,
+            "bairro": sede.bairro,
+            "telefone_um": sede.telefone_um,
+            "termo_posse": SimpleUploadedFile(
+                "test_file.pdf", bytes("test text", "utf-8")
+            ),
+            "cpf_copia": SimpleUploadedFile(
+                "test_file2.pdf", bytes("test text", "utf-8")
+            ),
+            "rg_copia": SimpleUploadedFile(
+                "test_file2.pdf", bytes("test text", "utf-8")
+            ),
+        },
+    )
+
+    gestor_salvo = Gestor.objects.last()
+    sede_salva = Sede.objects.last()
+    sistema_salvo = SistemaCultura.objects.get(ente_federado=ente_federado)
+
+    assert sistema_salvo.ente_federado.cod_ibge == ente_federado.cod_ibge
+    assert sistema_salvo.gestor == gestor_salvo
+    assert sistema_salvo.sede == sede_salva
+    assert sistema_salvo.cadastrador == login
+    assert login.sistema_cultura.count() == 2
+    assert client.session['sistemas'][-1] == {"id": sistema_salvo.id, 
+        "ente_federado__nome": sistema_salvo.ente_federado.nome}
+
+
+def test_session_user_sem_sistema_cultura(login, client):
+
+    url = reverse("adesao:home")
+    response = client.get(url)
+
+    assert 'sistemas' not in client.session
+    assert 'sistema_cultura_selecionado' not in client.session
+
+
+def test_session_user_com_um_sistema_cultura(login, client):
+
+    sistema = mommy.make("SistemaCultura", _fill_optional=['ente_federado', 'secretario', 'responsavel'],
+        cadastrador=login)
+
+    url = reverse("adesao:home")
+    response = client.get(url)
+
+    assert 'sistemas' not in client.session
+    assert client.session['sistema_cultura_selecionado']['id'] == sistema.id
+    assert client.session['sistema_cultura_selecionado']['estado_processo'] == sistema.estado_processo
+    assert client.session['sistema_cultura_selecionado']['secretario'] == sistema.secretario.id
+    assert client.session['sistema_cultura_selecionado']['responsavel'] == sistema.responsavel.id
+
+
+def test_session_user_com_mais_de_um_sistema_cultura(login, client):
+
+    sistema_1 = mommy.make("SistemaCultura", _fill_optional=['ente_federado', 'secretario', 'responsavel'],
+        cadastrador=login)
+    sistema_2 = mommy.make("SistemaCultura", _fill_optional=['ente_federado', 'secretario', 'responsavel'],
+        cadastrador=login)
+
+    url = reverse("adesao:home")
+    response = client.get(url)
+
+    assert 'sistema_cultura_selecionado' not in client.session
+    assert client.session['sistemas'][0]['id'] == sistema_1.id
+    assert client.session['sistemas'][0]['ente_federado__nome'] == sistema_1.ente_federado.nome
+    assert client.session['sistemas'][1]['id'] == sistema_2.id
+    assert client.session['sistemas'][1]['ente_federado__nome'] == sistema_2.ente_federado.nome
+    assert len(client.session['sistemas']) == 2
+
+
+def test_importar_secretario(client, login):
+    sistema_cultura = mommy.make("SistemaCultura", _fill_optional='secretario',
+        cadastrador=login)
+
+    url = reverse("adesao:home")
+    client.get(url)
+
+    url = reverse("adesao:importar_secretario")
+    response = client.get(url)
+
+    sistema_atualizado = SistemaCultura.sistema.get(ente_federado=sistema_cultura.ente_federado)
+
+    assert sistema_atualizado.responsavel == sistema_atualizado.secretario
+
+
+def test_importar_secretario_id_invalido(client, login):
+    sistema_cultura = mommy.make("SistemaCultura", cadastrador=login)
+
+    url = reverse("adesao:home")
+    client.get(url)
+
+    url = reverse("adesao:importar_secretario")
+    response = client.get(url)
+
+    assert response.url == reverse("adesao:cadastrar_funcionario", kwargs={"sistema": sistema_cultura.id,
+        "tipo": "responsavel"})

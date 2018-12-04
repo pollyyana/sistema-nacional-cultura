@@ -32,6 +32,7 @@ from adesao.models import Cidade
 from adesao.models import Municipio
 from adesao.models import Historico
 from adesao.models import SistemaCultura
+from adesao.models import EnteFederado
 
 from planotrabalho.models import PlanoTrabalho
 from planotrabalho.models import CriacaoSistema
@@ -41,6 +42,7 @@ from planotrabalho.models import OrgaoGestor
 from planotrabalho.models import ConselhoCultural
 from planotrabalho.models import SituacoesArquivoPlano
 from planotrabalho.models import Componente
+from planotrabalho.models import FundoDeCultura
 
 from gestao.utils import empty_to_none
 
@@ -54,7 +56,10 @@ from .forms import AlterarCadastradorForm
 from .forms import AlterarUsuarioForm
 from .forms import AlterarComponenteForm
 from .forms import AlterarDadosEnte
-from .forms import CriarComponenteForm
+
+from planotrabalho.forms import CriarComponenteForm
+from planotrabalho.forms import CriarFundoForm
+
 from .forms import CadastradorEnte
 
 from itertools import chain
@@ -101,13 +106,20 @@ class CidadeChain(autocomplete.Select2QuerySetView):
                 .values_list('pk', 'nome_municipio', named=True)
         return choices
 
+
+class EnteChain(autocomplete.Select2QuerySetView):
+    def get_queryset(self):
+        """ Filtra todas as cidade de uma determinada UF """
+        choices = EnteFederado.objects.filter(Q(nome__unaccent__icontains=self.q))\
+            .values_list('pk', 'nome', named=True)
+
         return choices
 
     def get_result_label(self, item):
-        return item.nome_municipio
+        return item.nome
 
     def get_selected_result_label(self, item):
-        return item.nome_municipio
+        return item.nome
 
 
 class UfChain(autocomplete.Select2QuerySetView):
@@ -115,8 +127,7 @@ class UfChain(autocomplete.Select2QuerySetView):
         """ Filtra todas as uf passando nome ou sigla """
 
         choices = Uf.objects.filter(
-                    Q(sigla__iexact=self.q) |
-                    Q(nome_uf__unaccent__icontains=self.q)
+                    Q(sigla__iexact=self.q) | Q(nome_uf__icontains=self.q)
                 ).values_list('pk', 'sigla', named=True)
         return choices
 
@@ -537,7 +548,6 @@ class ListarDocumentosComponentes(ListView):
 
 
 class InserirComponente(CreateView):
-    form_class = CriarComponenteForm
 
     def get_template_names(self):
         return ['gestao/inserir_documentos/inserir_%s.html' % self.kwargs['componente']]
@@ -545,9 +555,17 @@ class InserirComponente(CreateView):
     def get_form_kwargs(self):
         kwargs = super(InserirComponente, self).get_form_kwargs()
         pk = self.kwargs['pk']
-        kwargs['nome_componente'] = self.kwargs['componente']
+        kwargs['tipo'] = self.kwargs['componente']
         kwargs['sistema'] = SistemaCultura.sistema.get(pk=pk)
         return kwargs
+
+    def get_form_class(self):
+        if self.kwargs['componente'] == 'fundo_cultura':
+            form_class = CriarFundoForm
+        else:
+            form_class = CriarComponenteForm
+
+        return form_class
 
     def get_success_url(self):
         messages.success(self.request, 'Sistema da Cultura inserido com sucesso')
@@ -564,6 +582,24 @@ class AlterarComponente(UpdateView):
     def get_success_url(self):
         messages.success(self.request, 'Sistema da Cultura alterado com sucesso')
         return reverse_lazy('gestao:listar_documentos',kwargs={'template': 'listar_%s' % self.kwargs['componente']})
+
+
+class AlterarFundoCultura(UpdateView):
+    form_class = CriarFundoForm
+    model = FundoDeCultura
+    template_name = 'gestao/inserir_documentos/inserir_fundo_cultura.html'
+
+    def get_form_kwargs(self):
+        kwargs = super(AlterarFundoCultura, self).get_form_kwargs()
+        sistema_id = self.object.fundo_cultura.last().id
+        self.sistema = SistemaCultura.objects.get(id=sistema_id)
+        kwargs['sistema'] = self.sistema
+        kwargs['tipo'] = 'fundo_cultura'
+        return kwargs
+
+    def get_success_url(self):
+        messages.success(self.request, 'Sistema da Cultura alterado com sucesso')
+        return reverse_lazy('gestao:listar_documentos',kwargs={'template': 'listar_fundo_cultura'})
 
 
 class Prorrogacao(ListView):
