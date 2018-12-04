@@ -17,6 +17,7 @@ from planotrabalho.models import Conselheiro
 from adesao.models import SistemaCultura
 from planotrabalho.models import Componente
 from adesao.models import EnteFederado
+from adesao.models import Sede
 
 
 # Criacao do Sistema
@@ -191,19 +192,27 @@ class MunicipioLinkSerializer(hal_serializers.HalModelSerializer):
         fields = ('self',)
 
 
+class SedeSerializer(hal_serializers.HalModelSerializer):
+
+    class Meta:
+        model = Sede
+        fields = ("cnpj", "endereco", "cep", "bairro", "complemento")
+
+
 class EnteFederadoSerializer(hal_serializers.HalModelSerializer):
-    
+
     class Meta:
         model = EnteFederado
         fields = ("cod_ibge", "nome", "territorio", "populacao", "idh", "is_municipio")
 
 
 class SistemaCulturaSerializer(hal_serializers.HalModelSerializer):
-    # ente_federado = serializers.CharField(source='ente_federado')
+    ente_federado = EnteFederadoSerializer()
+    sede = SedeSerializer()
 
     class Meta:
         model = SistemaCultura
-        fields = ("id", "ente_federado")
+        fields = ("id", "data_publicacao_acordo", "estado_processo", "ente_federado", "sede")
 
 
 class MunicipioSerializer(hal_serializers.HalModelSerializer):
