@@ -98,19 +98,24 @@
     </p>
   {% else %}
     <p style="text-align: justify;">
-      Para visualizar a publicação do Acordo de Cooperação no Diário Oficial da União,
-      siga os seguintes passos:
-
-      <ol>
-        <li>Insira o nome do seu município em "Informe o termo"</li>
-        <li>Selecione "DOU3"</li>
-        <li>Informe a data de {{ request.user.usuario.data_publicacao_acordo }} em "Data Inicial e Data Final"</li>
-      </ol>
+      <a href="{{ request.user.usuario.link_publicacao_acordo }}"> Clique aqui</a> para visualizar a publicação do Acordo de Cooperação no Diário Oficial da União
     </p>
 
     <p style="text-align: justify;">
       <a href="http://portal.in.gov.br" target="_blank">Clique aqui para efetuar a pesquisa</a>
     </p>
+    <p>
+      <strong>EQUIPE SNC</strong>
+    </p>
+    <p>
+      Coordenação-Geral do SNC - CGSNC
+      SDC / MINISTÉRIO DA CULTURA
+      SCS Q. 09, Lote C, Bloco B, 9º andar 
+      Edifício Parque Cidade Corporate
+      CEP: 70.308-200    Brasília-DF
+      E-mail: snc@cultura.gov.br
+    </p>
+
   {% endif %}
 
 {% endif %}
