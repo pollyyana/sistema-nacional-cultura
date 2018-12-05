@@ -18,6 +18,7 @@ from adesao.models import SistemaCultura
 from planotrabalho.models import Componente
 from adesao.models import EnteFederado
 from adesao.models import Sede
+from adesao.models import Gestor
 
 
 # Criacao do Sistema
@@ -206,13 +207,22 @@ class EnteFederadoSerializer(hal_serializers.HalModelSerializer):
         fields = ("cod_ibge", "nome", "territorio", "populacao", "idh", "is_municipio")
 
 
+class GestorSerializer(hal_serializers.HalModelSerializer):
+
+    class Meta:
+        model = Gestor
+        fields = ("email_institucional", "nome", "termo_posse")
+
+
 class SistemaCulturaSerializer(hal_serializers.HalModelSerializer):
     ente_federado = EnteFederadoSerializer()
-    sede = SedeSerializer()
+    governo = GestorSerializer(source='gestor')
+    situacao_adesao = serializers.CharField(source='get_estado_processo_display')
+    data_adesao = serializers.DateField(source='data_publicacao_acordo')
 
     class Meta:
         model = SistemaCultura
-        fields = ("id", "data_publicacao_acordo", "estado_processo", "ente_federado", "sede")
+        fields = ("data_adesao", "situacao_adesao", "ente_federado", "governo", "id")
 
 
 class MunicipioSerializer(hal_serializers.HalModelSerializer):
