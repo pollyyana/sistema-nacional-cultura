@@ -56,9 +56,10 @@ class SistemaCulturaAPIList(generics.ListAPIView):
         return response
 
 
-class MunicipioDetail(generics.RetrieveAPIView):
-    queryset = Municipio.objects.filter().order_by('-id')
-    serializer_class = MunicipioSerializer
+class SistemaCulturaDetail(generics.RetrieveAPIView):
+    queryset = SistemaCultura.objects.filter()
+    serializer_class = SistemaCulturaSerializer
+
 
 
 class PlanoTrabalhoList(generics.ListAPIView):
