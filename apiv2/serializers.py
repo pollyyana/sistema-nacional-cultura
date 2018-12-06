@@ -48,7 +48,7 @@ class ConselhoCulturalSerializer(hal_serializers.HalModelSerializer):
 
 
 class ConselheiroSerializer(hal_serializers.HalModelSerializer):
-    situacao = serializers.SerializerMethodField(source='situacao')
+    situacao = serializers.SerializerMethodField()
 
     class Meta:
         model = Conselheiro
@@ -194,10 +194,29 @@ class MunicipioLinkSerializer(hal_serializers.HalModelSerializer):
 
 
 class SedeSerializer(hal_serializers.HalModelSerializer):
+    telefones = serializers.SerializerMethodField(source='telefones')
+    localizacao = serializers.SerializerMethodField(source='localizacao')
 
     class Meta:
         model = Sede
-        fields = ("cnpj", "endereco", "cep", "bairro", "complemento")
+        fields = ("localizacao", "telefones", "endereco_eletronico")
+
+    def get_telefones(self, obj):
+        return {
+            "telefone_um": obj.telefone_um,
+            "telefone_dois": obj.telefone_dois,
+            "telefone_tres": obj.telefone_tres
+        }
+
+    def get_localizacao(self, obj):
+        
+        return {
+            "cnpj": obj.cnpj,
+            "endereco": obj.endereco,
+            "cep": obj.cep,
+            "bairro": obj.bairro,
+            "complemento": obj.complemento
+            }
 
 
 class EnteFederadoSerializer(hal_serializers.HalModelSerializer):
@@ -208,10 +227,12 @@ class EnteFederadoSerializer(hal_serializers.HalModelSerializer):
 
 
 class GestorSerializer(hal_serializers.HalModelSerializer):
+    termo_posse_prefeito = serializers.CharField(source='termo_posse')
+    nome_prefeito = serializers.CharField(source='nome')
 
     class Meta:
         model = Gestor
-        fields = ("email_institucional", "nome", "termo_posse")
+        fields = ("email_institucional", "nome_prefeito", "termo_posse_prefeito")
 
 
 class SistemaCulturaSerializer(hal_serializers.HalModelSerializer):
@@ -219,10 +240,32 @@ class SistemaCulturaSerializer(hal_serializers.HalModelSerializer):
     governo = GestorSerializer(source='gestor')
     situacao_adesao = serializers.CharField(source='get_estado_processo_display')
     data_adesao = serializers.DateField(source='data_publicacao_acordo')
+    conselho = serializers.SerializerMethodField()
+    sede = SedeSerializer()
 
     class Meta:
         model = SistemaCultura
-        fields = ("data_adesao", "situacao_adesao", "ente_federado", "governo", "id")
+        fields = (
+            "id", "data_adesao", "situacao_adesao",
+            "ente_federado", "governo", "conselho", "situacao_adesao", "sede"
+            )
+
+    def get_conselho(self, obj):
+        return ("")
+        # print(obj.conselho)
+        # return ("asdasd")
+        # try:
+        #     conselho = obj.conselho
+        #     assert conselho
+        # except (Usuario.DoesNotExist, AssertionError):
+        #     return None
+
+        # context = {}
+        # context['request'] = self.context['request']
+        # serializer = ConselheiroSerializer(instance=conselho, context=context)
+
+        # return serializer.data
+
 
 
 class MunicipioSerializer(hal_serializers.HalModelSerializer):
