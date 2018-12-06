@@ -3,19 +3,27 @@ from django.db.models import Q
 from django_filters import rest_framework as filters
 from django_filters import Filter
 
-from adesao.models import Municipio
-from adesao.models import SistemaCultura
+from adesao.models import SistemaCultura, UFS, Municipio
 
 from planotrabalho.models import PlanoTrabalho
 from planotrabalho.models import ConselhoCultural
 from planotrabalho.models import SituacoesArquivoPlano
 
+
 class SistemaCulturaFilter(filters.FilterSet):
     ente_federado = filters.CharFilter(field_name='ente_federado__nome', lookup_expr='istartswith')
+    estado_sigla = filters.CharFilter(method='sigla_filter')
 
     class Meta:
         model = SistemaCultura
         fields = "__all__"
+
+    def sigla_filter(self, queryset, name, value):
+        inverseUf = {value: key for key, value in UFS.items()}
+        cod_ibge = inverseUf[value]
+   
+        return queryset.filter(Q(ente_federado__cod_ibge__startswith=cod_ibge))
+
 
 class MunicipioFilter(filters.FilterSet):
 
