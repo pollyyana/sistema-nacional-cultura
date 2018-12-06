@@ -78,11 +78,12 @@ class PlanoCulturaSerializer(hal_serializers.HalModelSerializer):
                   'lei_plano_cultura', 'situacao')
 
 
-class ComponenteSCSerializer(serializers.ModelSerializer):
-    situacao = serializers.ReadOnlyField(source='situacao')
+class ComponenteSCSerializer(hal_serializers.HalModelSerializer):
+    situacao = serializers.CharField(source='get_situacao_display')
 
     class Meta:
         model = Componente
+        fields = ('situacao', 'data_envio', 'arquivo')
 
 
 class PlanoTrabalhoSCSerializer(hal_serializers.HalModelSerializer):
@@ -92,12 +93,12 @@ class PlanoTrabalhoSCSerializer(hal_serializers.HalModelSerializer):
     criacao_fundo_cultura = ComponenteSCSerializer(source='fundo_cultura')
     criacao_conselho_cultural = ComponenteSCSerializer(source='conselho')
     # _embedded = serializers.SerializerMethodField(method_name='get_embedded')
-    # self = HalHyperlinkedIdentityField(view_name='api:planotrabalho-detail')
+    self = HalHyperlinkedIdentityField(view_name='api:sistemacultura-detail')
 
     class Meta:
         model = SistemaCultura
-        fields = ('id', 'self', 'criacao_lei_sistema', 'criacao_orgao_gestor',
-                  'criacao_fundo_cultura', 'criacao_conselho_cultural')
+        fields = ('self', 'id', 'self', 'criacao_lei_sistema', 'criacao_orgao_gestor', 'criacao_plano_cultura', 'criacao_fundo_cultura', 'criacao_conselho_cultural')
+
 
 class PlanoTrabalhoSerializer(hal_serializers.HalModelSerializer):
     criacao_lei_sistema_cultura = serializers.SerializerMethodField(source='criacao_sistema')
@@ -236,6 +237,8 @@ class GestorSerializer(hal_serializers.HalModelSerializer):
 
 
 class SistemaCulturaSerializer(hal_serializers.HalModelSerializer):
+    self = HalHyperlinkedIdentityField(view_name='api:sistemacultura-detail')
+    acoes_plano_trabalho = serializers.SerializerMethodField()
     ente_federado = EnteFederadoSerializer()
     governo = GestorSerializer(source='gestor')
     situacao_adesao = serializers.CharField(source='get_estado_processo_display')
@@ -246,9 +249,15 @@ class SistemaCulturaSerializer(hal_serializers.HalModelSerializer):
     class Meta:
         model = SistemaCultura
         fields = (
-            "id", "data_adesao", "situacao_adesao",
-            "ente_federado", "governo", "conselho", "situacao_adesao", "sede"
-            )
+            "id",
+            "self",
+            "data_adesao",
+            "situacao_adesao",
+            "acoes_plano_trabalho",
+            "ente_federado",
+            "governo",
+            "conselho",
+            "sede")
 
     def get_conselho(self, obj):
         return ("")
@@ -266,6 +275,9 @@ class SistemaCulturaSerializer(hal_serializers.HalModelSerializer):
 
         # return serializer.data
 
+    def get_acoes_plano_trabalho(self, obj):
+        planotrabalho = PlanoTrabalhoSCSerializer(instance=obj, context=self.context)
+        return planotrabalho.data
 
 
 class MunicipioSerializer(hal_serializers.HalModelSerializer):
