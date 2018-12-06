@@ -249,6 +249,7 @@ class SistemaCulturaSerializer(hal_serializers.HalModelSerializer):
     ente_federado = EnteFederadoSerializer()
     governo = GestorSerializer(source='gestor')
     situacao_adesao = serializers.CharField(source='get_estado_processo_display')
+    cod_situacao_adesao = serializers.CharField(source='estado_processo')
     data_adesao = serializers.DateField(source='data_publicacao_acordo')
     conselho = serializers.SerializerMethodField()
     sede = SedeSerializer()
@@ -260,6 +261,7 @@ class SistemaCulturaSerializer(hal_serializers.HalModelSerializer):
             "self",
             "data_adesao",
             "situacao_adesao",
+            "cod_situacao_adesao",
             "acoes_plano_trabalho",
             "ente_federado",
             "governo",

@@ -1,18 +1,18 @@
 from django.db.models import Q
 
 from django_filters import rest_framework as filters
-from django_filters import Filter
 
 from adesao.models import SistemaCultura, UFS, Municipio
 
 from planotrabalho.models import PlanoTrabalho
-from planotrabalho.models import ConselhoCultural
 from planotrabalho.models import SituacoesArquivoPlano
 
 
 class SistemaCulturaFilter(filters.FilterSet):
     ente_federado = filters.CharFilter(field_name='ente_federado__nome', lookup_expr='istartswith')
     estado_sigla = filters.CharFilter(method='sigla_filter')
+    cnpj_prefeitura = filters.CharFilter(field_name='sede__cnpj', lookup_expr='contains')
+    situacao_adesao = filters.CharFilter(field_name='estado_processo', lookup_expr='exact')
 
     class Meta:
         model = SistemaCultura
