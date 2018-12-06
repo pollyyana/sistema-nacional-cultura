@@ -224,7 +224,14 @@ class EnteFederadoSerializer(hal_serializers.HalModelSerializer):
 
     class Meta:
         model = EnteFederado
-        fields = ("cod_ibge", "nome", "territorio", "populacao", "idh", "is_municipio")
+        fields = (
+            "cod_ibge",
+            "nome",
+            "territorio",
+            "populacao",
+            "idh",
+            "is_municipio",
+            "sigla")
 
 
 class GestorSerializer(hal_serializers.HalModelSerializer):
