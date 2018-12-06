@@ -19,8 +19,11 @@ class SistemaCulturaFilter(filters.FilterSet):
         fields = "__all__"
 
     def sigla_filter(self, queryset, name, value):
-        inverseUf = {value: key for key, value in UFS.items()}
-        cod_ibge = inverseUf[value]
+        try:
+            inverseUf = {value: key for key, value in UFS.items()}
+            cod_ibge = inverseUf[value]
+        except Exception:
+            cod_ibge = value
    
         return queryset.filter(Q(ente_federado__cod_ibge__startswith=cod_ibge))
 
