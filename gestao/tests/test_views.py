@@ -1743,6 +1743,36 @@ def test_se_o_ente_permanece_na_mesma_pagina_apos_adicionar_prazo(client, login_
     assert request.status_code == 302
     assert response.context_data["object_list"][0] == users[0]
 
+def test_verificacao_se_prazo_foi_alterado(client, login_staff):
+    """Verifica se o prazo"""
+    prazo = 2
+    user = mommy.make(
+        "Usuario",
+        prazo=prazo,
+        estado_processo=6,
+        data_publicacao_acordo=datetime.date(2018, 1, 1),
+        _fill_optional=["plano_trabalho"]
+    )
+
+    uf = mommy.make("Uf", nome_uf="Acre", sigla="AC")
+    user.municipio = mommy.make(
+        "Municipio",
+        cidade=mommy.make("Cidade", nome_municipio="AAAAAA", uf=uf),
+        estado=uf,
+        cnpj_prefeitura="13.348.479/0001-01",
+    )
+    user.save()
+
+    url = reverse("gestao:aditivar_prazo", kwargs={"id": str(user.id), "page": "1"})
+    request = client.post(url)
+    url_apos_redirect = request.url
+
+    response = client.get(url_apos_redirect)
+
+    user.refresh_from_db()
+    assert user.prazo == prazo + 2
+    
+
 
 def test_pesquisa_de_ente_federado_sem_acento_tela_adicionar_prazo(client, login_staff):
     """ Testa a pesquisa por nome do ente federado (sem acento) - Deve retornar o nome

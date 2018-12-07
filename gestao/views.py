@@ -199,7 +199,7 @@ def aditivar_prazo(request, id,page):
     if request.method == "POST":
         user = Usuario.objects.get(id=id)
         print(page)
-        user.prazo = user.prazo + 1
+        user.prazo = user.prazo + 2
         user.save()
 
         if user.municipio.cidade:
