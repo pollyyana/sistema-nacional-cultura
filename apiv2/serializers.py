@@ -5,8 +5,6 @@ from drf_hal_json import serializers as hal_serializers
 from adesao.models import Municipio
 from adesao.models import Uf
 from adesao.models import Cidade
-from adesao.models import Usuario
-from planotrabalho.models import PlanoTrabalho
 from planotrabalho.models import CriacaoSistema
 from planotrabalho.models import OrgaoGestor
 from planotrabalho.models import ConselhoCultural
@@ -93,49 +91,44 @@ class PlanoTrabalhoSCSerializer(hal_serializers.HalModelSerializer):
     criacao_fundo_cultura = ComponenteSCSerializer(source='fundo_cultura')
     criacao_conselho_cultural = ComponenteSCSerializer(source='conselho')
     # _embedded = serializers.SerializerMethodField(method_name='get_embedded')
-    self = HalHyperlinkedIdentityField(view_name='api:sistemacultura-detail')
-
-    class Meta:
-        model = SistemaCultura
-        fields = ('self', 'id', 'self', 'criacao_lei_sistema', 'criacao_orgao_gestor', 'criacao_plano_cultura', 'criacao_fundo_cultura', 'criacao_conselho_cultural')
-
-
-class PlanoTrabalhoSerializer(hal_serializers.HalModelSerializer):
-    criacao_lei_sistema_cultura = serializers.SerializerMethodField(source='criacao_sistema')
-    criacao_orgao_gestor = serializers.SerializerMethodField(source='orgao_gestor')
-    criacao_plano_cultura = serializers.SerializerMethodField(source='plano_cultura')
-    criacao_fundo_cultura = serializers.SerializerMethodField(source='fundo_cultura')
-    criacao_conselho_cultural = serializers.SerializerMethodField(source='conselho_cultural')
-    _embedded = serializers.SerializerMethodField(method_name='get_embedded')
     self = HalHyperlinkedIdentityField(view_name='api:planotrabalho-detail')
 
     class Meta:
         model = SistemaCultura
-        fields = ('id', 'self', 'criacao_lei_sistema_cultura',
-                  'criacao_orgao_gestor', 'criacao_conselho_cultural',
-                  'criacao_fundo_cultura', 'criacao_plano_cultura', '_embedded'
-                )
+        fields = (
+            'id',
+            'self',
+            'criacao_lei_sistema',
+            'criacao_orgao_gestor',
+            'criacao_plano_cultura',
+            'criacao_fundo_cultura',
+            'criacao_conselho_cultural')
 
-    def get_sistema_cultura_local(self, obj):
 
-        try:
-            obj.usuario
-        except Usuario.DoesNotExist:
-            return None
+class PlanoTrabalhoSerializer(hal_serializers.HalModelSerializer):
+    criacao_lei_sistema_cultura = \
+        serializers.SerializerMethodField(source='criacao_sistema')
+    criacao_orgao_gestor = serializers.SerializerMethodField(source='orgao_gestor')
+    criacao_plano_cultura = serializers.SerializerMethodField(source='plano_cultura')
+    criacao_fundo_cultura = serializers.SerializerMethodField(source='fundo_cultura')
+    criacao_conselho_cultural = \
+        serializers.SerializerMethodField(source='conselho_cultural')
+    sistema_cultura_local = \
+        HalHyperlinkedIdentityField(view_name='api:sistemacultura-detail')
+    self = HalHyperlinkedIdentityField(view_name='api:planotrabalho-detail')
 
-        if obj.usuario.municipio is not None:
-            context = {}
-            context['request'] = self.context['request']
-            serializer = MunicipioLinkSerializer(obj.usuario.municipio, context=context)
-            return serializer.data
-        else:
-            return None
-
-    def get_embedded(self, obj):
-        municipio = self.get_sistema_cultura_local(obj=obj)
-        embedded = ({'sistema_cultura_local': municipio})
-
-        return embedded
+    class Meta:
+        model = SistemaCultura
+        fields = (
+            'id',
+            'self',
+            'criacao_lei_sistema_cultura',
+            'criacao_orgao_gestor',
+            'criacao_conselho_cultural',
+            'criacao_fundo_cultura',
+            'criacao_plano_cultura',
+            'sistema_cultura_local'
+            )
 
     def get_criacao_orgao_gestor(self, obj):
         if obj.orgao_gestor is not None:
@@ -210,7 +203,7 @@ class SedeSerializer(hal_serializers.HalModelSerializer):
         }
 
     def get_localizacao(self, obj):
-        
+
         return {
             "cnpj": obj.cnpj,
             "endereco": obj.endereco,
@@ -289,124 +282,33 @@ class SistemaCulturaSerializer(hal_serializers.HalModelSerializer):
         return planotrabalho.data
 
 
-class MunicipioSerializer(hal_serializers.HalModelSerializer):
-    ente_federado = serializers.SerializerMethodField()
-    governo = serializers.SerializerMethodField()
-    conselho = serializers.SerializerMethodField()
-    _embedded = serializers.SerializerMethodField(method_name='get_embedded')
-    situacao_adesao = serializers.SerializerMethodField()
-    data_adesao = serializers.DateField(source='usuario.data_publicacao_acordo')
-    self = HalHyperlinkedIdentityField(view_name='api:sistemacultura-detail')
+class SistemaCulturaDetailSerializer(PlanoTrabalhoSCSerializer):
+    self = HalHyperlinkedIdentityField(view_name='api:planotrabalho-detail')
+    sistema_cultura_local = \
+        HalHyperlinkedIdentityField(view_name='api:sistemacultura-detail')
 
     class Meta:
-        model = Municipio
-        fields = ('id', 'self', '_embedded', 'ente_federado', 'governo',
-                  'conselho', 'situacao_adesao', 'data_adesao')
+        model = SistemaCultura
+        fields = (
+            "self",
+            "id",
+            "criacao_lei_sistema",
+            "criacao_orgao_gestor",
+            "criacao_conselho_cultural",
+            "criacao_fundo_cultura",
+            "criacao_plano_cultura",
+            "sistema_cultura_local"
+            )
 
-    def get_conselho(self, obj):
+    def to_representation(self, instance):
+        context = super(SistemaCulturaDetailSerializer, self).\
+            to_representation(instance)
+        embedded = context.pop('_embedded')
 
-        try:
-            conselho = obj.usuario.plano_trabalho.conselho_cultural
-            conselheiros = conselho.conselheiro_set.filter(conselho_id=conselho)
-        except AttributeError:
-            return None
+        responseContext = context.copy()
+        responseContext.update(embedded)
 
-        lista = list(range(len(conselheiros)))
-
-        for i in range(len(conselheiros)):
-            while i <= len(conselheiros):
-                serializer = ConselheiroSerializer(conselheiros[i])
-                lista[i] = serializer.data
-                break
-
-        if conselheiros is None:
-            return None
-
-        else:
-            return ({'conselheiros': lista})
-
-    def get_embedded(self, obj):
-        embedded = ({'acoes_plano_trabalho': self.get_acoes_plano_trabalho(obj=obj)})
-
-        return embedded
-
-    def get_acoes_plano_trabalho(self, obj):
-
-        try:
-            plano_trabalho = obj.usuario.plano_trabalho
-            assert plano_trabalho
-        except (Usuario.DoesNotExist, AssertionError):
-            return None
-
-        context = {}
-        context['request'] = self.context['request']
-        serializer = PlanoTrabalhoSerializer(instance=plano_trabalho, context=context)
-
-        return serializer.data
-
-    def get_ente_federado(self, obj):
-        localizacao = Localizacao(estado=obj.estado, cidade=obj.cidade,
-                cep=obj.cep, bairro=obj.bairro, endereco=obj.endereco, complemento=obj.complemento)
-        telefones = Telefones(telefone_um=obj.telefone_um, telefone_dois=obj.telefone_dois,
-                telefone_tres=obj.telefone_tres)
-        ente_federado = EnteFederado(cnpj_prefeitura=obj.cnpj_prefeitura,localizacao=localizacao,
-                endereco_eletronico=obj.endereco_eletronico, telefones=telefones)
-        serializer = EnteFederadoSerializer(ente_federado)
-
-        return serializer.data
-
-    def get_governo(self, obj):
-        governo = Governo(nome_prefeito=obj.nome_prefeito,
-                          email_institucional_prefeito=obj.email_institucional_prefeito,
-                          termo_posse_prefeito=obj.termo_posse_prefeito)
-        serializer = GovernoSerializer(governo)
-
-        return serializer.data
-
-    def get_situacao_adesao(self, obj):
-        try:
-            processo = obj.usuario.get_estado_processo_display()
-            serializer = {'situacao_adesao': processo}
-        except AttributeError:
-            serializer = None
-        return serializer
-
-
-""" Classes para estruturar os objetos de adesoes"""
-
-
-class EnteFederado(object):
-    def __init__(self, cnpj_prefeitura, localizacao, endereco_eletronico, telefones):
-        self.cnpj_prefeitura = cnpj_prefeitura
-        self.localizacao = localizacao
-        self.endereco_eletronico = endereco_eletronico
-        self.telefones = telefones
-
-
-class Localizacao(object):
-    def __init__(self, estado, cidade, cep, bairro, endereco, complemento):
-        self.estado = estado
-        self.cidade = cidade
-        self.cep = cep
-        self.bairro = bairro
-        self.endereco = endereco
-        self.complemento = complemento
-
-
-class Telefones(object):
-    def __init__(self, telefone_um, telefone_dois, telefone_tres):
-        self.telefone_um = telefone_um
-        self.telefone_dois = telefone_dois
-        self.telefone_tres = telefone_tres
-
-
-class Governo(object):
-    def __init__(self, nome_prefeito, email_institucional_prefeito,
-                 termo_posse_prefeito):
-        self.nome_prefeito = nome_prefeito
-        self.email_institucional_prefeito = email_institucional_prefeito
-        self.termo_posse_prefeito = termo_posse_prefeito
-
+        return responseContext
 
 """Serializers das classes de estruturação de adesoes"""
 
