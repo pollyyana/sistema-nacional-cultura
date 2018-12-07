@@ -5,6 +5,7 @@ from django.core.files.uploadedfile import SimpleUploadedFile
 from django.core import mail
 from django.conf import settings
 from django.shortcuts import reverse
+from django.forms.models import model_to_dict
 
 from model_mommy import mommy
 
@@ -211,7 +212,8 @@ def test_consultar_informações_estados(client):
 
 def test_cadastrar_funcionario_tipo_responsavel(login, client):
 
-    sistema_cultura = mommy.make("SistemaCultura", cadastrador=login)
+    sistema_cultura = mommy.make("SistemaCultura", _fill_optional='ente_federado',
+        cadastrador=login)
 
     funcionario = Funcionario(cpf="381.390.630-29", rg="48.464.068-9",
         orgao_expeditor_rg="SSP", estado_expeditor=29,
@@ -248,13 +250,14 @@ def test_cadastrar_funcionario_tipo_responsavel(login, client):
     assert funcionario_salvo.nome == funcionario.nome
     assert funcionario_salvo.email_institucional == funcionario.email_institucional
     assert funcionario_salvo.tipo_funcionario == 1
-    assert client.session['sistema_cultura_selecionado']['id'] == sistema_cultura_atualizado.id
-    assert client.session['sistema_cultura_selecionado']['responsavel'] == funcionario_salvo.id
+    assert client.session['sistema_cultura_selecionado'] == model_to_dict(sistema_cultura_atualizado, 
+        exclude=['data_criacao', 'alterado_em'])
 
 
 def test_cadastrar_funcionario_tipo_secretario(login, client):
 
-    sistema_cultura = mommy.make("SistemaCultura", cadastrador=login)
+    sistema_cultura = mommy.make("SistemaCultura", _fill_optional='ente_federado',
+        cadastrador=login)
 
     funcionario = Funcionario(cpf="381.390.630-29", rg="48.464.068-9",
         orgao_expeditor_rg="SSP", estado_expeditor=29,
@@ -291,8 +294,8 @@ def test_cadastrar_funcionario_tipo_secretario(login, client):
     assert funcionario_salvo.nome == funcionario.nome
     assert funcionario_salvo.email_institucional == funcionario.email_institucional
     assert funcionario_salvo.tipo_funcionario == 0
-    assert client.session['sistema_cultura_selecionado']['id'] == sistema_cultura_atualizado.id
-    assert client.session['sistema_cultura_selecionado']['secretario'] == funcionario_salvo.id
+    assert client.session['sistema_cultura_selecionado'] == model_to_dict(sistema_cultura_atualizado, 
+        exclude=['data_criacao', 'alterado_em'])
 
 
 def test_alterar_funcionario_tipo_secretario(login, client):
@@ -511,7 +514,6 @@ def test_session_user_sem_sistema_cultura(login, client):
     url = reverse("adesao:home")
     response = client.get(url)
 
-    assert 'sistemas' not in client.session
     assert 'sistema_cultura_selecionado' not in client.session
 
 
@@ -523,11 +525,8 @@ def test_session_user_com_um_sistema_cultura(login, client):
     url = reverse("adesao:home")
     response = client.get(url)
 
-    assert 'sistemas' not in client.session
-    assert client.session['sistema_cultura_selecionado']['id'] == sistema.id
-    assert client.session['sistema_cultura_selecionado']['estado_processo'] == sistema.estado_processo
-    assert client.session['sistema_cultura_selecionado']['secretario'] == sistema.secretario.id
-    assert client.session['sistema_cultura_selecionado']['responsavel'] == sistema.responsavel.id
+    assert client.session['sistema_cultura_selecionado'] == model_to_dict(sistema, 
+        exclude=['data_criacao', 'alterado_em'])
 
 
 def test_session_user_com_mais_de_um_sistema_cultura(login, client):
