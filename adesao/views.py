@@ -18,6 +18,7 @@ from django.template.loader import render_to_string
 from django.core.exceptions import ValidationError, ObjectDoesNotExist
 from django.db.models import Q, Count
 from django.conf import settings
+from django.forms.models import model_to_dict
 
 from templated_email.generic_views import TemplatedEmailFormViewMixin
 
@@ -36,7 +37,7 @@ from planotrabalho.models import Conselheiro, PlanoTrabalho
 from adesao.forms import CadastrarUsuarioForm, CadastrarMunicipioForm, CadastrarSistemaCulturaForm
 from adesao.forms import SedeFormSet, GestorFormSet
 from adesao.forms import CadastrarFuncionarioForm
-from adesao.utils import enviar_email_conclusao, verificar_anexo
+from adesao.utils import enviar_email_conclusao, verificar_anexo, atualiza_session
 
 from django_weasyprint import WeasyTemplateView
 
@@ -62,13 +63,10 @@ def home(request):
     historico = historico.order_by("-data_alteracao")
     sistemas_cultura = request.user.usuario.sistema_cultura.all().distinct('ente_federado')
 
-    if sistemas_cultura.count() > 1:
-        request.session['sistemas'] = list(sistemas_cultura.values('id', 'ente_federado__nome'))
-    elif sistemas_cultura.count() == 1:
-        request.session['sistema_cultura_selecionado'] = {'id': sistemas_cultura[0].id,
-            'estado_processo': sistemas_cultura[0].estado_processo,
-            'secretario': sistemas_cultura[0].secretario.id if sistemas_cultura[0].secretario else None,
-            'responsavel': sistemas_cultura[0].responsavel.id if sistemas_cultura[0].responsavel else None}
+    request.session['sistemas'] = list(sistemas_cultura.values('id', 'ente_federado__nome'))
+
+    if sistemas_cultura.count() == 1:
+        request.session['sistema_cultura_selecionado'] = model_to_dict(sistemas_cultura[0], exclude=['data_criacao', 'alterado_em'])
 
     if request.user.is_staff:
         return redirect("gestao:acompanhar_adesao")
@@ -85,12 +83,9 @@ def home(request):
 
 
 def define_sistema_sessao(request, sistema):
-    sistema_cultura = SistemaCultura.objects.get(id=sistema)
+    sistema_cultura = SistemaCultura.sistema.get(id=sistema)
 
-    request.session['sistema_cultura_selecionado'] = {'id': sistema_cultura.id,
-        'estado_processo': sistema_cultura.estado_processo,
-        'secretario': sistema_cultura.secretario.id if sistema_cultura.secretario else None,
-        'responsavel': sistema_cultura.responsavel.id if sistema_cultura.responsavel else None}
+    request.session['sistema_cultura_selecionado'] = model_to_dict(sistema_cultura, exclude=['data_criacao', 'alterado_em'])
 
     return redirect("adesao:alterar_sistema", pk=sistema)
 
@@ -292,7 +287,7 @@ class CadastrarSistemaCultura(CreateView):
                 self.request.session['sistemas'] = list()
 
             self.request.session['sistemas'].append({"id": sistema.id, "ente_federado__nome": sistema.ente_federado.nome})
-            self.request.session.modified = True
+            atualiza_session(ente=sistema.ente_federado.id, request=self.request)
 
             return redirect(self.success_url)
         else:
@@ -441,9 +436,7 @@ class CadastrarFuncionario(CreateView):
         sistema.save()
 
         funcionario = getattr(sistema, tipo_funcionario)
-        self.request.session['sistema_cultura_selecionado']['id'] = sistema.id
-        self.request.session['sistema_cultura_selecionado'][tipo_funcionario] = funcionario.id
-        self.request.session.modified = True
+        atualiza_session(ente=sistema.ente_federado.id, request=self.request)
 
         return super(CadastrarFuncionario, self).form_valid(form)
 

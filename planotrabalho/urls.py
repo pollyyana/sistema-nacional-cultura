@@ -30,7 +30,7 @@ urlpatterns = [
     url(r'^conselheiros/$',
         login_required(views.get_conselheiros),
         name='get_conselheiros'),
-    url(r'^conselheiro/criar/$',
+    path('<int:conselho>/conselheiro/criar',
         login_required(views.CriarConselheiro.as_view()),
         name="criar_conselheiro"),
     url(r'^conselheiro/listar/$',

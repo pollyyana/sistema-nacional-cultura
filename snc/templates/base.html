@@ -231,12 +231,13 @@
                                 <span>Plano de Trabalho</span>
                               </a>
                             </li>
-
-                            <li class="navTreeItem visualNoMarker navTreeFolderish section-assunto-d">
-                              <a  href="{% url 'planotrabalho:listar_conselheiros' %}" title="" class="state-published navTreeFolderish contenttype-folder ">
-                                <span>Conselheiros</span>
-                              </a>
-                            </li>
+                            {% if request.session.sistema_cultura_selecionado.conselho %}
+                              <li class="navTreeItem visualNoMarker navTreeFolderish section-assunto-d">
+                                <a  href="{% url 'planotrabalho:listar_conselheiros' %}" title="" class="state-published navTreeFolderish contenttype-folder ">
+                                  <span>Conselheiros</span>
+                                </a>
+                              </li>
+                            {% endif %}
                           {% endif %}
                         {% endif %}
                       </ul>
@@ -291,7 +292,7 @@
           {% block content2 %}{% endblock content2 %}
 
             <!-- Column 2 -->
-            {% if request.session.sistema_cultura.estado_processo == '1' %}
+            {% if request.session.sistema_cultura_selecionado.estado_processo == '1' %}
             <div id="portal-column-two" class="cell width-1:4 position-3:4">
 
                 <div id="" class="portletWrapper kssattr-portlethash">

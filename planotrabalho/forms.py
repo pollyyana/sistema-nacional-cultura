@@ -135,7 +135,7 @@ class CriarConselheiroForm(ModelForm):
     outros = forms.CharField(required=False)
 
     def __init__(self, *args, **kwargs):
-        self.usuario = kwargs.pop('user')
+        self.conselho_id = kwargs.pop('conselho')
         super(CriarConselheiroForm, self).__init__(*args, **kwargs)
 
     def clean_segmento(self):
@@ -150,7 +150,8 @@ class CriarConselheiroForm(ModelForm):
 
     def save(self, commit=True, *args, **kwargs):
         conselheiro = super(CriarConselheiroForm, self).save(commit=False)
-        conselheiro.conselho = self.usuario.plano_trabalho.conselho_cultural
+        conselho = Componente.objects.get(id=self.conselho_id)
+        conselheiro.conselho = conselho
         conselheiro.data_cadastro = datetime.datetime.now()
         conselheiro.data_situacao = datetime.datetime.now()
         conselheiro.situacao = 1  # Situação 1 = Habilitado

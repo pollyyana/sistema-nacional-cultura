@@ -28,6 +28,8 @@ from .forms import DesabilitarConselheiroForm
 from .forms import CriarConselheiroForm
 from .forms import AlterarConselheiroForm
 
+from adesao.utils import atualiza_session
+
 
 class PlanoTrabalho(DetailView):
     model = SistemaCultura
@@ -45,7 +47,6 @@ class PlanoTrabalho(DetailView):
 
 class CadastrarComponente(CreateView):
     template_name = 'planotrabalho/cadastrar_componente.html'
-    success_url = reverse_lazy("adesao:home")
 
     def dispatch(self, *args, **kwargs):
         sistema_id = self.request.session['sistema_cultura_selecionado']['id']
@@ -73,6 +74,14 @@ class CadastrarComponente(CreateView):
         kwargs['sistema'] = self.sistema
         kwargs['tipo'] = self.kwargs['tipo']
         return kwargs
+
+    def get_success_url(self):
+        return reverse_lazy('planotrabalho:planotrabalho', kwargs={'pk': self.sistema.id})
+
+    def form_valid(self, form):
+        super(CadastrarComponente, self).form_valid(form)
+        atualiza_session(ente=self.sistema.ente_federado.id, request=self.request)
+        return redirect(reverse_lazy('planotrabalho:planotrabalho', kwargs={'pk': self.sistema.id}))
 
 
 class AlterarComponente(UpdateView):
@@ -136,7 +145,7 @@ class CriarConselheiro(CreateView):
 
     def get_form_kwargs(self):
         kwargs = super(CriarConselheiro, self).get_form_kwargs()
-        kwargs['user'] = self.request.user.usuario
+        kwargs['conselho'] = self.request.session['sistema_cultura_selecionado']['conselho']
         return kwargs
 
     def get_success_url(self):
@@ -149,8 +158,8 @@ class ListarConselheiros(ListView):
     paginate_by = 12
 
     def get_queryset(self):
-        q = self.request.user.usuario.plano_trabalho.conselho_cultural.id
-        conselheiros = Conselheiro.objects.filter(conselho=q, situacao=1)  # 1 = Habilitado
+        q = self.request.session['sistema_cultura_selecionado']['conselho']
+        conselheiros = Conselheiro.objects.filter(conselho__id=q, situacao=1)  # 1 = Habilitado
 
         return conselheiros
 
