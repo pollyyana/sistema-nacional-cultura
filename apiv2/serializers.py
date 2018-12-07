@@ -78,10 +78,11 @@ class PlanoCulturaSerializer(hal_serializers.HalModelSerializer):
 
 class ComponenteSCSerializer(hal_serializers.HalModelSerializer):
     situacao = serializers.CharField(source='get_situacao_display')
+    cod_situacao = serializers.CharField(source='situacao')
 
     class Meta:
         model = Componente
-        fields = ('situacao', 'data_envio', 'arquivo')
+        fields = ('cod_situacao', 'situacao', 'data_envio', 'arquivo')
 
 
 class PlanoTrabalhoSCSerializer(hal_serializers.HalModelSerializer):
@@ -105,86 +106,18 @@ class PlanoTrabalhoSCSerializer(hal_serializers.HalModelSerializer):
             'criacao_conselho_cultural')
 
 
-class PlanoTrabalhoSerializer(hal_serializers.HalModelSerializer):
-    criacao_lei_sistema_cultura = \
-        serializers.SerializerMethodField(source='criacao_sistema')
-    criacao_orgao_gestor = serializers.SerializerMethodField(source='orgao_gestor')
-    criacao_plano_cultura = serializers.SerializerMethodField(source='plano_cultura')
-    criacao_fundo_cultura = serializers.SerializerMethodField(source='fundo_cultura')
-    criacao_conselho_cultural = \
-        serializers.SerializerMethodField(source='conselho_cultural')
-    sistema_cultura_local = \
-        HalHyperlinkedIdentityField(view_name='api:sistemacultura-detail')
-    self = HalHyperlinkedIdentityField(view_name='api:planotrabalho-detail')
+class PlanoTrabalhoSerializer(PlanoTrabalhoSCSerializer):
 
     class Meta:
         model = SistemaCultura
         fields = (
             'id',
             'self',
-            'criacao_lei_sistema_cultura',
+            'criacao_lei_sistema',
             'criacao_orgao_gestor',
-            'criacao_conselho_cultural',
-            'criacao_fundo_cultura',
             'criacao_plano_cultura',
-            'sistema_cultura_local'
-            )
-
-    def get_criacao_orgao_gestor(self, obj):
-        if obj.orgao_gestor is not None:
-            serializer = OrgaoGestorSerializer(obj.orgao_gestor)
-            return serializer.data
-        else:
-            return None
-
-    def get_criacao_plano_cultura(self, obj):
-        if obj.plano_cultura is not None:
-            serializer = PlanoCulturaSerializer(obj.plano_cultura)
-            return serializer.data
-        else:
-            return None
-
-    def get_criacao_fundo_cultura(self, obj):
-        if obj.fundo_cultura is not None:
-            serializer = FundoCulturaSerializer(obj.fundo_cultura)
-            return serializer.data
-        else:
-            return None
-
-    def get_criacao_lei_sistema_cultura(self, obj):
-        if obj.criacao_sistema is not None:
-            serializer = CriacaoSistemaSerializer(obj.criacao_sistema)
-            return serializer.data
-        else:
-            return None
-
-    def get_criacao_conselho_cultural(self, obj):
-        if obj.conselho_cultural is not None:
-            serializer = ConselhoCulturalSerializer(obj.conselho_cultural)
-            return serializer.data
-        else:
-            return None
-
-
-# Cidade
-class CidadeSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Cidade
-        fields = ('codigo_ibge', 'nome_municipio')
-
-
-class UfSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Uf
-        fields = ('codigo_ibge', 'sigla', 'nome_uf')
-
-
-class MunicipioLinkSerializer(hal_serializers.HalModelSerializer):
-    self = HalHyperlinkedIdentityField(view_name='api:sistemacultura-detail')
-
-    class Meta:
-        model = Municipio
-        fields = ('self',)
+            'criacao_fundo_cultura',
+            'criacao_conselho_cultural')
 
 
 class SedeSerializer(hal_serializers.HalModelSerializer):
@@ -307,35 +240,5 @@ class SistemaCulturaDetailSerializer(PlanoTrabalhoSCSerializer):
 
         responseContext = context.copy()
         responseContext.update(embedded)
-
+ 
         return responseContext
-
-"""Serializers das classes de estruturação de adesoes"""
-
-
-class LocalizacaoSerializer(serializers.Serializer):
-    estado = UfSerializer()
-    cidade = CidadeSerializer()
-    cep = serializers.CharField()
-    bairro = serializers.CharField()
-    endereco = serializers.CharField()
-    complemento = serializers.CharField()
-
-
-class TelefonesSerializer(serializers.Serializer):
-    telefone_um = serializers.CharField()
-    telefone_dois = serializers.CharField()
-    telefone_tres = serializers.CharField()
-
-
-class EnteFederadoSerializer(serializers.Serializer):
-    cnpj_prefeitura = serializers.CharField()
-    localizacao = LocalizacaoSerializer()
-    telefones = TelefonesSerializer()
-    endereco_eletronico = serializers.CharField()
-
-
-class GovernoSerializer(serializers.Serializer):
-    nome_prefeito = serializers.CharField()
-    email_institucional_prefeito = serializers.CharField()
-    termo_posse_prefeito = serializers.FileField()

@@ -49,7 +49,7 @@ class SistemaCulturaDetail(generics.RetrieveAPIView):
 
 
 class PlanoTrabalhoList(generics.ListAPIView):
-    queryset = PlanoTrabalho.objects.filter().order_by('-id')
+    queryset = SistemaCultura.sistema.all()
     serializer_class = PlanoTrabalhoSerializer
     metadata_class = PlanoTrabalhoMetadata
 
