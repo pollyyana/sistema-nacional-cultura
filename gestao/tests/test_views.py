@@ -1459,6 +1459,23 @@ def test_pesquisa_por_ente_federado_com_arquivo_lei_sistema(client, login_staff)
         response.context_data["object_list"][0].ente_federado.nome == "Abaeté"
     )
 
+def test_permitir_busca_sem_acento_na_barra_de_pesquisa(client, login_staff):
+    """ Testa a pesquisa pelo nome (sem acento) de Municipio e Estado
+    """
+
+    sistema = mommy.make(
+        "SistemaCultura", ente_federado__cod_ibge=123456, ente_federado__nome="Abaeté", 
+    )
+
+
+    url = reverse("gestao:acompanhar_adesao") + "?q=Abaete"
+    response = client.get(url)
+
+    assert response.context_data["object_list"][0] == sistema
+    assert (
+        response.context_data["object_list"][0].ente_federado.nome == "Abaeté"
+    )
+
 
 def test_pesquisa_por_ente_federado_com_arquivo_plano_cultura(client, login_staff):
     """ Testa a pesquisa pelo nome (sem acento) de um Ente Federado
