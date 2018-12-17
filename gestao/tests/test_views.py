@@ -1460,7 +1460,7 @@ def test_pesquisa_por_ente_federado_com_arquivo_lei_sistema(client, login_staff)
     )
 
 def test_permitir_busca_sem_acento_na_barra_de_pesquisa(client, login_staff):
-    """ Testa a pesquisa pelo nome (sem acento) de Municipio e Estado
+    """ Testa a pesquisa pelo nome (sem acento) de Municipio e Estado.
     """
 
     sistema = mommy.make(
