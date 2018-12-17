@@ -81,55 +81,6 @@ class CriarFundoForm(CriarComponenteForm):
         fields = ('cnpj', 'arquivo', 'data_publicacao')
 
 
-class ConselhoCulturalForm(ModelForm):
-    arquivo = forms.FileField(required=True, widget=FileInput)
-    data_publicacao = forms.DateField(required=True)
-
-    def __init__(self, *args, **kwargs):
-        self.usuario = kwargs.pop('user')
-        super(ConselhoCulturalForm, self).__init__(*args, **kwargs)
-
-    def clean(self):
-        limite = add_anos(self.usuario.data_publicacao_acordo, self.usuario.prazo)
-        hoje = datetime.date.today()
-        if hoje > limite:
-            self.add_error('arquivo', '''Não foi possível salvar.
-                Você ultrapassou a data limite de envio: ''' + limite.strftime("%d/%m/%Y"))
-
-    def save(self, commit=True, *args, **kwargs):
-        conselho = super(ConselhoCulturalForm, self).save(commit=False)
-        if 'arquivo' in self.changed_data:
-            conselho.situacao_id = 1
-
-        if commit:
-            conselho.planotrabalho = self.usuario.plano_trabalho
-            conselho.save()
-            self.usuario.plano_trabalho.conselho_cultural = conselho
-            self.usuario.plano_trabalho.save()
-
-            nomes = self.data.getlist('conselheiro')
-            emails = self.data.getlist('email')
-            segmentos = self.data.getlist('segmento')
-            outros_segmentos = self.data.getlist('outros_segmento')
-            for nome, email, segmento, outros_segmento in zip(nomes, emails, segmentos, outros_segmentos):
-                if nome and email and segmento:
-                    try:
-                        conselheiro = Conselheiro.objects.get(email=email, conselho=conselho)
-                        conselheiro.nome, conselheiro.email, conselheiro.conselho = nome, email, conselho
-                        conselheiro.segmento = segmento if segmento != 'Outros' else outros_segmento
-                        conselheiro.save()
-                    except Conselheiro.DoesNotExist:
-                        Conselheiro.objects.get_or_create(nome=nome, email=email, segmento=segmento, conselho=conselho)
-                else:
-                    Conselheiro.objects.filter(nome=nome, email=email, conselho=conselho).delete()
-            Conselheiro.objects.filter(conselho=conselho).exclude(email__in=emails).delete()
-        return conselho
-
-    class Meta:
-        model = ConselhoCultural
-        fields = ['arquivo', 'data_publicacao']
-
-
 class CriarConselheiroForm(ModelForm):
     segmento = forms.ChoiceField(choices=SETORIAIS)
     outros = forms.CharField(required=False)
@@ -178,7 +129,6 @@ class AlterarConselheiroForm(ModelForm):
     situacao = forms.ChoiceField(choices=SITUACAO_CONSELHEIRO, required=True)
 
     def __init__(self, *args, **kwargs):
-        self.usuario = kwargs.pop('user')
         super(AlterarConselheiroForm, self).__init__(*args, **kwargs)
         self.fields['situacao'].required = False
 
@@ -194,7 +144,6 @@ class AlterarConselheiroForm(ModelForm):
 
     def save(self, commit=True, *args, **kwargs):
         conselheiro = super(AlterarConselheiroForm, self).save(commit=False)
-        conselheiro.conselho = self.usuario.plano_trabalho.conselho_cultural
 
         if self.cleaned_data['segmento'] == '21':  # outros
             outros = self.cleaned_data['outros']  # texto livre
@@ -214,13 +163,8 @@ class AlterarConselheiroForm(ModelForm):
 
 class DesabilitarConselheiroForm(ModelForm):
 
-    def __init__(self, *args, **kwargs):
-        self.usuario = kwargs.pop('user')
-        super(DesabilitarConselheiroForm, self).__init__(*args, **kwargs)
-
     def save(self, commit=True, *args, **kwargs):
         conselheiro = super(DesabilitarConselheiroForm, self).save(commit=False)
-        conselheiro.conselho = self.usuario.plano_trabalho.conselho_cultural
 
         conselheiro.data_situacao = datetime.datetime.now()
         conselheiro.situacao = 0  # Situação 0 = Desabilitado

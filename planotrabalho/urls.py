@@ -21,12 +21,6 @@ urlpatterns = [
         login_required(views.AlterarComponente.as_view()),
         name='alterar_componente'),
 
-    url(r'^conselho/$',
-        login_required(views.CadastrarConselho.as_view()),
-        name='conselho'),
-    url(r'^conselho/(?P<pk>[0-9]+)/$',
-        login_required(views.AlterarConselho.as_view()),
-        name='alterar_conselho'),
     url(r'^conselheiros/$',
         login_required(views.get_conselheiros),
         name='get_conselheiros'),
