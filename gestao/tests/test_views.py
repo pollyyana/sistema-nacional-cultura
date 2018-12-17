@@ -1463,12 +1463,10 @@ def test_permitir_busca_sem_acento_na_barra_de_pesquisa(client, login_staff):
     """ Testa a pesquisa pelo nome (sem acento) de Municipio e Estado.
     """
 
-    sistema = mommy.make(
-        "SistemaCultura", ente_federado__cod_ibge=123456, ente_federado__nome="Abaeté", 
-    )
+    ente = mommy.make("EnteFederado", nome="Abaeté", cod_ibge=12345)
+    sistema = mommy.make("SistemaCultura", ente_federado=ente)
 
-
-    url = reverse("gestao:acompanhar_adesao") + "?q=Abaete"
+    url = reverse("gestao:acompanhar_adesao") + "?ente_federado=Abaete"
     response = client.get(url)
 
     assert response.context_data["object_list"][0] == sistema
