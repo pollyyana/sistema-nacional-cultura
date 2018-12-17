@@ -3,6 +3,7 @@ import re
 from threading import Thread
 
 from django.core.mail import send_mail
+from django.forms.models import model_to_dict
 from adesao.models import SistemaCultura
 
 
@@ -176,3 +177,9 @@ def preenche_planilha(planilha):
         ultima_linha = i
 
     return ultima_linha
+
+
+def atualiza_session(ente, request):
+    sistema = SistemaCultura.sistema.get(ente_federado__id=ente)
+    request.session['sistema_cultura_selecionado'] = model_to_dict(sistema, exclude=['data_criacao', 'alterado_em'])
+    request.session.modified = True

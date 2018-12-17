@@ -7,6 +7,7 @@ from django.core.files.uploadedfile import SimpleUploadedFile
 from adesao.models import SistemaCultura
 from planotrabalho.models import Componente
 from planotrabalho.models import FundoDeCultura
+from planotrabalho.models import Conselheiro
 
 from model_mommy import mommy
 
@@ -201,3 +202,59 @@ def test_alterar_fundo_cultura(client, login):
     assert sistema_atualizado.fundo_cultura.data_publicacao == datetime.date(2018, 6, 25)
     assert sistema_atualizado.fundo_cultura.cnpj == "56.385.239/0001-81"
     assert sistema_atualizado.fundo_cultura.tipo == 2
+
+
+def teste_criar_conselheiro(client, login):
+
+    sistema = mommy.make("SistemaCultura", _fill_optional='conselho', cadastrador=login)
+
+    url = reverse("adesao:home")
+    client.get(url)
+
+    url = reverse("planotrabalho:criar_conselheiro", kwargs={'conselho': sistema.conselho.id})
+    response = client.post(url, data={"nome": "teste",
+        "segmento": "20", "email": "email@email.com"})
+
+    conselheiro = Conselheiro.objects.last()
+
+    assert conselheiro.nome == "teste"
+    assert conselheiro.segmento == "Teatro"
+    assert conselheiro.email == "email@email.com"
+    assert conselheiro.conselho == sistema.conselho
+
+
+def teste_alterar_conselheiro(client, login):
+
+    sistema = mommy.make("SistemaCultura", _fill_optional='conselho', cadastrador=login)
+    conselheiro = mommy.make("Conselheiro", conselho=sistema.conselho)
+
+    url = reverse("adesao:home")
+    client.get(url)
+
+    url = reverse("planotrabalho:alterar_conselheiro", kwargs={'pk': conselheiro.id})
+    response = client.post(url, data={"nome": "teste",
+        "segmento": "20", "email": "email@email.com"})
+
+    conselheiro.refresh_from_db()
+
+    assert conselheiro.nome == "teste"
+    assert conselheiro.segmento == "Teatro"
+    assert conselheiro.email == "email@email.com"
+    assert conselheiro.conselho == sistema.conselho
+
+
+def teste_remover_conselheiro(client, login):
+
+    sistema = mommy.make("SistemaCultura", _fill_optional='conselho', cadastrador=login)
+    conselheiro = mommy.make("Conselheiro", conselho=sistema.conselho)
+
+    url = reverse("adesao:home")
+    client.get(url)
+
+    url = reverse("planotrabalho:remover_conselheiro", kwargs={'pk': conselheiro.id})
+    
+    response = client.post(url)
+
+    conselheiro.refresh_from_db()
+
+    assert conselheiro.situacao == '0'

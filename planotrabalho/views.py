@@ -23,10 +23,11 @@ from adesao.models import SistemaCultura
 
 from .forms import CriarComponenteForm
 from .forms import CriarFundoForm
-from .forms import ConselhoCulturalForm
 from .forms import DesabilitarConselheiroForm
 from .forms import CriarConselheiroForm
 from .forms import AlterarConselheiroForm
+
+from adesao.utils import atualiza_session
 
 
 class PlanoTrabalho(DetailView):
@@ -45,7 +46,6 @@ class PlanoTrabalho(DetailView):
 
 class CadastrarComponente(CreateView):
     template_name = 'planotrabalho/cadastrar_componente.html'
-    success_url = reverse_lazy("adesao:home")
 
     def dispatch(self, *args, **kwargs):
         sistema_id = self.request.session['sistema_cultura_selecionado']['id']
@@ -73,6 +73,14 @@ class CadastrarComponente(CreateView):
         kwargs['sistema'] = self.sistema
         kwargs['tipo'] = self.kwargs['tipo']
         return kwargs
+
+    def get_success_url(self):
+        return reverse_lazy('planotrabalho:planotrabalho', kwargs={'pk': self.sistema.id})
+
+    def form_valid(self, form):
+        super(CadastrarComponente, self).form_valid(form)
+        atualiza_session(ente=self.sistema.ente_federado.id, request=self.request)
+        return redirect(reverse_lazy('planotrabalho:planotrabalho', kwargs={'pk': self.sistema.id}))
 
 
 class AlterarComponente(UpdateView):
@@ -109,34 +117,13 @@ class AlterarFundoCultura(UpdateView):
         return reverse_lazy('planotrabalho:planotrabalho', kwargs={'pk': self.sistema.id})
 
 
-class CadastrarConselho(CreateView):
-    form_class = ConselhoCulturalForm
-    template_name = 'planotrabalho/cadastrar_conselho.html'
-
-    def get_form_kwargs(self):
-        kwargs = super(CadastrarConselho, self).get_form_kwargs()
-        kwargs['user'] = self.request.user.usuario
-        return kwargs
-
-    def dispatch(self, *args, **kwargs):
-        conselho = self.request.user.usuario.plano_trabalho.conselho_cultural
-        if conselho:
-            return redirect('planotrabalho:alterar_conselho', pk=conselho.id)
-
-        return super(CadastrarConselho, self).dispatch(*args, **kwargs)
-
-    def get_success_url(self):
-        trabalho = self.request.user.usuario.plano_trabalho.id
-        return reverse_lazy('planotrabalho:planotrabalho', args=[trabalho])
-
-
 class CriarConselheiro(CreateView):
     form_class = CriarConselheiroForm
     template_name = 'planotrabalho/cadastrar_conselheiros.html'
 
     def get_form_kwargs(self):
         kwargs = super(CriarConselheiro, self).get_form_kwargs()
-        kwargs['user'] = self.request.user.usuario
+        kwargs['conselho'] = self.request.session['sistema_cultura_selecionado']['conselho']
         return kwargs
 
     def get_success_url(self):
@@ -149,8 +136,8 @@ class ListarConselheiros(ListView):
     paginate_by = 12
 
     def get_queryset(self):
-        q = self.request.user.usuario.plano_trabalho.conselho_cultural.id
-        conselheiros = Conselheiro.objects.filter(conselho=q, situacao=1)  # 1 = Habilitado
+        q = self.request.session['sistema_cultura_selecionado']['conselho']
+        conselheiros = Conselheiro.objects.filter(conselho__id=q, situacao=1)  # 1 = Habilitado
 
         return conselheiros
 
@@ -164,11 +151,6 @@ class AlterarConselheiro(UpdateView):
         conselheiro = Conselheiro.objects.filter(id=pk)
 
         return conselheiro
-
-    def get_form_kwargs(self):
-        kwargs = super(AlterarConselheiro, self).get_form_kwargs()
-        kwargs['user'] = self.request.user.usuario
-        return kwargs
 
     def get_success_url(self):
         return reverse_lazy('planotrabalho:listar_conselheiros')
@@ -184,28 +166,8 @@ class DesabilitarConselheiro(UpdateView):
 
         return conselheiro
 
-    def get_form_kwargs(self):
-        kwargs = super(DesabilitarConselheiro, self).get_form_kwargs()
-        kwargs['user'] = self.request.user.usuario
-        return kwargs
-
     def get_success_url(self):
         return reverse_lazy('planotrabalho:listar_conselheiros')
-
-
-class AlterarConselho(UpdateView):
-    form_class = ConselhoCulturalForm
-    model = ConselhoCultural
-    template_name = 'planotrabalho/cadastrar_conselho.html'
-
-    def get_form_kwargs(self):
-        kwargs = super(AlterarConselho, self).get_form_kwargs()
-        kwargs['user'] = self.request.user.usuario
-        return kwargs
-
-    def get_success_url(self):
-        trabalho = self.request.user.usuario.plano_trabalho.id
-        return reverse_lazy('planotrabalho:planotrabalho', args=[trabalho])
 
 
 def get_conselheiros(request):
