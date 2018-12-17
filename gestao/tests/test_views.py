@@ -1798,3 +1798,18 @@ def test_historico_diligencias_componentes(client, login_staff):
 
     assert len(historico) == 1
     assert historico[0].diligencia == diligencia
+
+def test_ente_federado_nao_encontrado(client, login_staff):
+    """ Testa se pesquisa retorna um ente federado.
+    """
+
+    sistema = mommy.make(
+        "SistemaCultura", ente_federado__cod_ibge=123456, ente_federado__nome="abaete", 
+    )
+
+
+    url = reverse("gestao:acompanhar_adesao") + "?ente_federado=aaaa"
+    response = client.get(url)
+
+    assert len(response.context_data["object_list"]) == 0
+  
