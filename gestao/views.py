@@ -272,7 +272,7 @@ class AcompanharSistemaCultura(ListView):
 
         if ente_federado:
             sistemas = SistemaCultura.objects.filter(
-                ente_federado__nome__icontains=ente_federado)
+                ente_federado__nome__unaccent__icontains=ente_federado)
         else:
             sistemas = SistemaCultura.objects.all()
 
