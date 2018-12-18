@@ -1,12 +1,5 @@
 <p style="text-align: justify;">
-  <strong>
-    {% if request.user.usuario.municipio.cidade %}
-      {{ request.user.usuario.municipio.cidade }}-
-      {{ request.user.usuario.municipio.estado }}
-    {% else %}
-      {{ request.user.usuario.municipio.estado.nome_uf }}
-    {% endif %}
-  </strong>,
+  <strong>{{ request.session.sistema_ente.nome }}</strong>, 
   sua Adesão ao Sistema Nacional de Cultura – SNC está quase concluída.
   Para efetivar a adesão, é necessário que o Acordo de Cooperação Federativa 
   (disponível na plataforma do SNC após conclusão do cadastro do ente federado) 

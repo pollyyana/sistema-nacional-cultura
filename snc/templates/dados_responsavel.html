@@ -3,22 +3,22 @@
 <ul>
       <li>
           Nome:
-          <a class="link-plain" href="#">{{ request.user.usuario.responsavel.nome_responsavel }}</a>
+          <a class="link-plain" href="#">{{ request.session.sistema_responsavel.nome }}</a>
 
       </li>
       <li>
           CNPJ:
-          <a class="link-plain" href="#">{{ request.user.usuario.responsavel.cpf_responsavel }}</a>
+          <a class="link-plain" href="#">{{ request.session.sistema_responsavel.cpf }}</a>
 
       </li>
       <li>
           Cargo:
-          <a class="link-plain" href="#">{{ request.user.usuario.responsavel.cargo_responsavel }}</a>
+          <a class="link-plain" href="#">{{ request.session.sistema_responsavel.cargo }}</a>
 
       </li>
       <li>
           Instituição:
-          <a class="link-plain" href="#">{{ request.user.usuario.responsavel.instituicao_responsavel }}</a>
+          <a class="link-plain" href="#">{{ request.session.sistema_responsavel.instituicao }}</a>
 
       </li>
 </ul>
