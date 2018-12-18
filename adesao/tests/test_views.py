@@ -212,8 +212,8 @@ def test_consultar_informações_estados(client):
 
 def test_cadastrar_funcionario_tipo_responsavel(login, client):
 
-    sistema_cultura = mommy.make("SistemaCultura", _fill_optional='ente_federado',
-        cadastrador=login)
+    sistema_cultura = mommy.make("SistemaCultura", _fill_optional=['ente_federado',
+        'sede', 'gestor'], cadastrador=login)
 
     funcionario = Funcionario(cpf="381.390.630-29", rg="48.464.068-9",
         orgao_expeditor_rg="SSP", estado_expeditor=29,
@@ -256,8 +256,8 @@ def test_cadastrar_funcionario_tipo_responsavel(login, client):
 
 def test_cadastrar_funcionario_tipo_secretario(login, client):
 
-    sistema_cultura = mommy.make("SistemaCultura", _fill_optional='ente_federado',
-        cadastrador=login)
+    sistema_cultura = mommy.make("SistemaCultura", _fill_optional=['ente_federado',
+        'gestor', 'sede'], cadastrador=login)
 
     funcionario = Funcionario(cpf="381.390.630-29", rg="48.464.068-9",
         orgao_expeditor_rg="SSP", estado_expeditor=29,
@@ -458,8 +458,8 @@ def test_cadastrar_sistema_cultura_com_cadastrador_ja_possui_sistema(login, clie
     sede = Sede(cnpj="70.658.964/0001-07", endereco="endereco", complemento="complemento",
         cep="72430101", bairro="bairro", telefone_um="123456")
 
-    sistema_cultura = mommy.make("SistemaCultura", _fill_optional='ente_federado', 
-        cadastrador=login)
+    sistema_cultura = mommy.make("SistemaCultura", _fill_optional=['ente_federado', 
+        'sede', 'gestor'], cadastrador=login)
 
     url = reverse("adesao:home")
     client.get(url)
@@ -519,14 +519,18 @@ def test_session_user_sem_sistema_cultura(login, client):
 
 def test_session_user_com_um_sistema_cultura(login, client):
 
-    sistema = mommy.make("SistemaCultura", _fill_optional=['ente_federado', 'secretario', 'responsavel'],
-        cadastrador=login)
+    sistema = mommy.make("SistemaCultura", _fill_optional=['ente_federado', 'secretario', 'responsavel',
+        'gestor', 'sede'], gestor__tipo_funcionario=0, cadastrador=login)
 
     url = reverse("adesao:home")
     response = client.get(url)
 
     assert client.session['sistema_cultura_selecionado'] == model_to_dict(sistema, 
         exclude=['data_criacao', 'alterado_em'])
+    assert client.session['sistema_situacao'] == sistema.get_estado_processo_display()
+    assert client.session['sistema_sede'] == model_to_dict(sistema.sede)
+    assert client.session['sistema_gestor'] == model_to_dict(sistema.gestor, exclude=['termo_posse', 'rg_copia', 'cpf_copia'])
+    assert client.session['sistema_ente'] == model_to_dict(sistema.ente_federado, fields=['nome'])
 
 
 def test_session_user_com_mais_de_um_sistema_cultura(login, client):
@@ -548,7 +552,7 @@ def test_session_user_com_mais_de_um_sistema_cultura(login, client):
 
 
 def test_importar_secretario(client, login):
-    sistema_cultura = mommy.make("SistemaCultura", _fill_optional='secretario',
+    sistema_cultura = mommy.make("SistemaCultura", _fill_optional=['ente_federado', 'sede', 'gestor', 'secretario'],
         cadastrador=login)
 
     url = reverse("adesao:home")
@@ -563,7 +567,8 @@ def test_importar_secretario(client, login):
 
 
 def test_importar_secretario_id_invalido(client, login):
-    sistema_cultura = mommy.make("SistemaCultura", cadastrador=login)
+    sistema_cultura = mommy.make("SistemaCultura", _fill_optional=['ente_federado', 'sede', 'gestor'],
+        cadastrador=login)
 
     url = reverse("adesao:home")
     client.get(url)

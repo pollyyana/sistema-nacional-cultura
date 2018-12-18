@@ -79,7 +79,8 @@ class CadastrarComponente(CreateView):
 
     def form_valid(self, form):
         super(CadastrarComponente, self).form_valid(form)
-        atualiza_session(ente=self.sistema.ente_federado.id, request=self.request)
+        sistema_atualizado = SistemaCultura.sistema.get(ente_federado__id=self.sistema.ente_federado.id)
+        atualiza_session(sistema_atualizado, self.request)
         return redirect(reverse_lazy('planotrabalho:planotrabalho', kwargs={'pk': self.sistema.id}))
 
 

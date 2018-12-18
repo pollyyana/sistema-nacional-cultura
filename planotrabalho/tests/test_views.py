@@ -14,7 +14,7 @@ from model_mommy import mommy
 
 def test_cadastrar_componente_tipo_legislacao(client, login):
 
-    sistema_cultura = mommy.make("SistemaCultura", _fill_optional=['ente_federado'],
+    sistema_cultura = mommy.make("SistemaCultura", _fill_optional=['ente_federado', 'sede', 'gestor'],
         cadastrador=login)
 
     url = reverse("adesao:home")
@@ -39,7 +39,7 @@ def test_cadastrar_componente_tipo_legislacao(client, login):
 
 def test_cadastrar_componente_tipo_orgao_gestor(client, login):
 
-    sistema_cultura = mommy.make("SistemaCultura", _fill_optional=['ente_federado'],
+    sistema_cultura = mommy.make("SistemaCultura", _fill_optional=['ente_federado', 'sede', 'gestor'],
         cadastrador=login)
 
     url = reverse("adesao:home")
@@ -64,7 +64,7 @@ def test_cadastrar_componente_tipo_orgao_gestor(client, login):
 
 def test_cadastrar_componente_tipo_fundo_cultura(client, login):
 
-    sistema_cultura = mommy.make("SistemaCultura", _fill_optional=['ente_federado'],
+    sistema_cultura = mommy.make("SistemaCultura", _fill_optional=['ente_federado', 'sede', 'gestor'],
         cadastrador=login)
 
     url = reverse("adesao:home")
@@ -90,7 +90,7 @@ def test_cadastrar_componente_tipo_fundo_cultura(client, login):
 
 def test_cadastrar_componente_tipo_conselho(client, login):
 
-    sistema_cultura = mommy.make("SistemaCultura", _fill_optional=['ente_federado'],
+    sistema_cultura = mommy.make("SistemaCultura", _fill_optional=['ente_federado', 'sede', 'gestor'],
         cadastrador=login)
 
     url = reverse("adesao:home")
@@ -115,7 +115,7 @@ def test_cadastrar_componente_tipo_conselho(client, login):
 
 def test_cadastrar_componente_tipo_plano(client, login):
 
-    sistema_cultura = mommy.make("SistemaCultura", _fill_optional=['ente_federado'],
+    sistema_cultura = mommy.make("SistemaCultura", _fill_optional=['ente_federado', 'sede', 'gestor'],
         cadastrador=login)
 
     url = reverse("adesao:home")
@@ -140,7 +140,7 @@ def test_cadastrar_componente_tipo_plano(client, login):
 
 def test_alterar_componente(client, login):
 
-    sistema_cultura = mommy.make("SistemaCultura", _fill_optional=['ente_federado', 'legislacao'],
+    sistema_cultura = mommy.make("SistemaCultura", _fill_optional=['ente_federado', 'legislacao', 'sede', 'gestor'],
         cadastrador=login)
 
     url = reverse("adesao:home")
@@ -171,7 +171,7 @@ def test_alterar_componente(client, login):
 
 def test_alterar_fundo_cultura(client, login):
 
-    sistema_cultura = mommy.make("SistemaCultura", _fill_optional=['ente_federado', 'fundo_cultura'],
+    sistema_cultura = mommy.make("SistemaCultura", _fill_optional=['ente_federado', 'fundo_cultura', 'sede', 'gestor'],
         cadastrador=login)
 
     url = reverse("adesao:home")
@@ -206,7 +206,8 @@ def test_alterar_fundo_cultura(client, login):
 
 def teste_criar_conselheiro(client, login):
 
-    sistema = mommy.make("SistemaCultura", _fill_optional='conselho', cadastrador=login)
+    sistema = mommy.make("SistemaCultura", _fill_optional=['ente_federado', 'conselho', 'sede', 'gestor'], 
+        cadastrador=login)
 
     url = reverse("adesao:home")
     client.get(url)
@@ -225,7 +226,8 @@ def teste_criar_conselheiro(client, login):
 
 def teste_alterar_conselheiro(client, login):
 
-    sistema = mommy.make("SistemaCultura", _fill_optional='conselho', cadastrador=login)
+    sistema = mommy.make("SistemaCultura", _fill_optional=['ente_federado', 'conselho', 'sede', 'gestor'], 
+        cadastrador=login)
     conselheiro = mommy.make("Conselheiro", conselho=sistema.conselho)
 
     url = reverse("adesao:home")
@@ -245,7 +247,8 @@ def teste_alterar_conselheiro(client, login):
 
 def teste_remover_conselheiro(client, login):
 
-    sistema = mommy.make("SistemaCultura", _fill_optional='conselho', cadastrador=login)
+    sistema = mommy.make("SistemaCultura", _fill_optional=['ente_federado', 'conselho', 'sede', 'gestor'], 
+        cadastrador=login)
     conselheiro = mommy.make("Conselheiro", conselho=sistema.conselho)
 
     url = reverse("adesao:home")

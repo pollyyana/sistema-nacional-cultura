@@ -66,7 +66,7 @@ def home(request):
     request.session['sistemas'] = list(sistemas_cultura.values('id', 'ente_federado__nome'))
 
     if sistemas_cultura.count() == 1:
-        request.session['sistema_cultura_selecionado'] = model_to_dict(sistemas_cultura[0], exclude=['data_criacao', 'alterado_em'])
+        atualiza_session(sistemas_cultura[0], request)
 
     if request.user.is_staff:
         return redirect("gestao:acompanhar_adesao")
@@ -82,12 +82,13 @@ def home(request):
     return render(request, "home.html", {"historico": historico})
 
 
-def define_sistema_sessao(request, sistema):
+def define_sistema_sessao(request):
+    sistema = request.POST.get('sistema')
     sistema_cultura = SistemaCultura.sistema.get(id=sistema)
 
-    request.session['sistema_cultura_selecionado'] = model_to_dict(sistema_cultura, exclude=['data_criacao', 'alterado_em'])
+    atualiza_session(sistema_cultura, request)
 
-    return redirect("adesao:alterar_sistema", pk=sistema)
+    return redirect("adesao:home")
 
 
 def ativar_usuario(request, codigo):
@@ -285,9 +286,14 @@ class CadastrarSistemaCultura(CreateView):
 
             if not self.request.session.get('sistemas', False):
                 self.request.session['sistemas'] = list()
+                sistema_atualizado = SistemaCultura.sistema.get(ente_federado__id=sistema.ente_federado.id)
+                atualiza_session(sistema_atualizado, self.request)
+            else:
+                if self.request.session.get('sistema_cultura_selecionado', False):
+                    self.request.session['sistema_cultura_selecionado'].clear()
+                    self.request.session.modified = True
 
             self.request.session['sistemas'].append({"id": sistema.id, "ente_federado__nome": sistema.ente_federado.nome})
-            atualiza_session(ente=sistema.ente_federado.id, request=self.request)
 
             return redirect(self.success_url)
         else:
@@ -436,7 +442,9 @@ class CadastrarFuncionario(CreateView):
         sistema.save()
 
         funcionario = getattr(sistema, tipo_funcionario)
-        atualiza_session(ente=sistema.ente_federado.id, request=self.request)
+
+        sistema_atualizado = SistemaCultura.sistema.get(ente_federado__id=sistema.ente_federado.id)
+        atualiza_session(sistema_atualizado, self.request)
 
         return super(CadastrarFuncionario, self).form_valid(form)
 
@@ -476,9 +484,8 @@ def importar_secretario(request):
     sistema.responsavel = responsavel
     sistema.save()
 
-    request.session['sistema_cultura_selecionado']['responsavel'] = sistema.responsavel.id
-    request.session['sistema_cultura_selecionado']['id'] = sistema.id
-    request.session.modified = True
+    sistema_atualizado = SistemaCultura.sistema.get(ente_federado__id=sistema.ente_federado.id)
+    atualiza_session(sistema_atualizado, request)
 
     return redirect("adesao:cadastrar_funcionario", 
         sistema=sistema.id, tipo='responsavel')
