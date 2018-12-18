@@ -1,4 +1,5 @@
 import math
+import re
 
 from django.db import models
 from django.contrib.auth.models import User
@@ -108,6 +109,14 @@ class EnteFederado(models.Model):
         if digits > 2:
             return True
         return False
+
+    @property
+    def sigla(self):
+        if self.is_municipio is False:
+            uf = re.search('\(([A-Z]+)\)', self.__str__())[0]
+            return re.search('[A-Z]+', uf)[0]
+            
+        return re.search('(\/[A-Z]*)', self.__str__())[0][1:]
 
     class Meta:
         indexes = [models.Index(fields=['cod_ibge']), ]

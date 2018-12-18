@@ -2,6 +2,8 @@ import pytest
 import random
 import datetime
 
+from django.urls import reverse
+
 from rest_framework import status
 from model_mommy import mommy
 from model_mommy.recipe import seq
@@ -15,30 +17,8 @@ from planotrabalho.models import SITUACAO_CONSELHEIRO
 
 pytestmark = pytest.mark.django_db
 
-url_sistemadeculturalocal = '/api/v1/sistemadeculturalocal/'
-url_acoesplanotrabalho = '/api/v1/acoesplanotrabalho/'
-
-
-@pytest.fixture
-def entes_municipais_estaduais():
-    estado = mommy.make('Uf')
-    cidade = mommy.make('Cidade')
-    estadual = mommy.make('Municipio', estado=estado)
-    municipio = mommy.make('Municipio', estado=estado, cidade=cidade)
-
-    yield estadual, municipio
-
-    estadual.delete()
-    municipio.delete()
-
-
-@pytest.fixture
-def sistema_de_cultura(plano_trabalho):
-    municipio = mommy.make('Municipio')
-    mommy.make('Usuario', municipio=municipio, plano_trabalho=plano_trabalho,
-               data_publicacao_acordo=datetime.date.today())
-
-    return municipio
+url_sistemadeculturalocal = reverse("api:sistemacultura-list")
+url_acoesplanotrabalho = reverse("api:planotrabalho-list")
 
 
 def test_municipios_list_endpoint_returning_200_OK(client):
@@ -781,14 +761,11 @@ def test_filtrar_por_nome_ente_federado_sigla_estado(client, entes_municipais_es
         assert item['ente_federado']['localizacao']['estado']['sigla'] == estadual.estado.sigla
 
 
-def test_filtrar_por_nome_ente_federado_nome_estado(client, entes_municipais_estaduais):
+def test_filtrar_por_nome_ente_federado_nome_estado(client, sistema_cultura):
     """ Testa retorno de sistemas de cultura passando o nome do ente federado
     como parâmetro, nesse caso o nome do estado"""
 
-    estadual, municipal = entes_municipais_estaduais
-    mommy.make('Municipio')
-
-    url = url_sistemadeculturalocal + '?ente_federado={}'.format(estadual.estado.nome_uf)
+    url = url_sistemadeculturalocal + '?ente_federado={}'.format(sistema_cultura.ente_federado.nome)
 
     response = client.get(url)
 
@@ -797,14 +774,12 @@ def test_filtrar_por_nome_ente_federado_nome_estado(client, entes_municipais_est
         assert item['ente_federado']['localizacao']['estado']['nome_uf'] == estadual.estado.nome_uf
 
 
-def test_filtrar_por_nome_ente_federado_nome_municipio(client, entes_municipais_estaduais):
+def test_filtrar_por_nome_ente_federado_nome_municipio(client, sistema_cultura):
     """ Testa retorno de sistemas de cultura passando o nome do ente federado
     como parâmetro, nesse caso a nome do município"""
 
-    estadual, municipal = entes_municipais_estaduais
-    mommy.make('Municipio')
-
-    url = url_sistemadeculturalocal + '?ente_federado={}'.format(municipal.cidade.nome_municipio)
+    municipio = sistema_cultura.ente_federado.nome
+    url = url_sistemadeculturalocal + f"?ente_federado={municipio}"
 
     response = client.get(url)
     municipio_resp = response.data['_embedded']['items'][0]['ente_federado']['localizacao']['cidade']['nome_municipio']

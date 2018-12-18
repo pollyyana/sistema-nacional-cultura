@@ -73,7 +73,7 @@ urlpatterns = [
     url(r'^exportar/dados.xls', views.exportar_xls, name='exportar_xls'),
 
     # API URLS
-    url(r'^api/', include('api.urls', namespace='api')),
+    path('api/', include('apiv2.urls', namespace='api/')),
 
     ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
