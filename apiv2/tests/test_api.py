@@ -30,7 +30,8 @@ def test_municipios_list_endpoint_returning_200_OK(client):
 
 def test_URL_sistema_cultura_local_retorna_10_sistemas(client):
 
-    mommy.make('Municipio', _quantity=12)
+    for ente in mommy.make('EnteFederado', _quantity=12, cod_ibge=seq(110)):
+        mommy.make('SistemaCultura', ente_federado=ente)
 
     request = client.get(url_sistemadeculturalocal,
                          content_type="application/hal+json")
@@ -959,7 +960,7 @@ def test_ordenar_resultados_da_api_de_forma_ascendente_por_nome_municipio(client
     """ Testa a ordenação ascendente do resultado da API por cidade(nome_municipio) """
 
     nomes_municipios = ['Brasilia', 'Zé Doca', 'Abaetetuba']
-    
+
     for nome in nomes_municipios:
         cidade =  mommy.make('Cidade', nome_municipio=nome)
         municipios = mommy.make('Municipio', cidade=cidade)
@@ -976,7 +977,7 @@ def test_ordenar_resultados_da_api_de_forma_ascendente_por_nome_municipio(client
 def test_ordenar_resultados_da_api_de_forma_descendente_por_nome_municipio(client):
     """ Testa a ordenação descendente do resultado da API por cidade(nome_municipio) """
     nomes_municipios = ['Brasilia', 'Zé Doca', 'Abaetetuba']
-    
+
     for nome in nomes_municipios:
         cidade =  mommy.make('Cidade', nome_municipio=nome)
         municipios = mommy.make('Municipio', cidade=cidade)
@@ -985,7 +986,7 @@ def test_ordenar_resultados_da_api_de_forma_descendente_por_nome_municipio(clien
     response = client.get(url)
 
     municipio = response.data['_embedded']['items']
-    
+
     assert municipio[0]['ente_federado']['localizacao']['cidade']['nome_municipio'] == nomes_municipios[1]
     assert municipio[1]['ente_federado']['localizacao']['cidade']['nome_municipio'] == nomes_municipios[0]
     assert municipio[2]['ente_federado']['localizacao']['cidade']['nome_municipio'] == nomes_municipios[2]
@@ -993,13 +994,13 @@ def test_ordenar_resultados_da_api_de_forma_descendente_por_nome_municipio(clien
 
 def test_ordenar_resultados_da_api_de_forma_ascendente_por_estado(client):
     """ Testa a ordenação ascendente do resultado da API por estado(nome_uf) """
-    
+
     nomes_estados = ['Distrito Federal', 'Bahia', 'Tocantins']
-    
+
     for nome in nomes_estados:
         uf = mommy.make('Uf', nome_uf=nome)
         municipios = mommy.make('Municipio', estado=uf)
-        
+
     url = url_sistemadeculturalocal + '?ordering=estado__nome_uf'
     response = client.get(url)
 
@@ -1013,13 +1014,13 @@ def test_ordenar_resultados_da_api_de_forma_ascendente_por_estado(client):
 
 def test_ordenar_resultados_da_api_de_forma_descendente_por_estado(client):
     """ Testa a ordenação descendente do resultado da API por estado(nome_uf) """
-    
+
     nomes_estados = ['Distrito Federal', 'Bahia', 'Tocantins']
-    
+
     for nome in nomes_estados:
         uf = mommy.make('Uf', nome_uf=nome)
         municipios = mommy.make('Municipio', estado=uf)
-        
+
     url = url_sistemadeculturalocal + '?ordering=-estado__nome_uf'
 
     response = client.get(url)
@@ -1029,7 +1030,7 @@ def test_ordenar_resultados_da_api_de_forma_descendente_por_estado(client):
     assert estado[0]['ente_federado']['localizacao']['estado']['nome_uf'] == nomes_estados[2]
     assert estado[1]['ente_federado']['localizacao']['estado']['nome_uf'] == nomes_estados[0]
     assert estado[2]['ente_federado']['localizacao']['estado']['nome_uf'] == nomes_estados[1]
-    
+
 
 @pytest.mark.parametrize("query,componente", [
     ("situacao_lei_id", "criacao_sistema"),
@@ -1132,7 +1133,7 @@ def test_filtra_componente_lei_por_multiplos_ids_situacao(client):
         criacao_sistema = mommy.make('CriacaoSistema')
         usuario.plano_trabalho.criacao_sistema = criacao_sistema
         usuario.plano_trabalho.save()
-    
+
     usuarios[0].plano_trabalho.criacao_sistema.situacao.id = 1
     usuarios[0].plano_trabalho.criacao_sistema.save()
 
@@ -1143,7 +1144,7 @@ def test_filtra_componente_lei_por_multiplos_ids_situacao(client):
     assert len(response.data['_embedded']['items']) == 2
     for componentes in response.data['_embedded']['items']:
         situacao = componentes['_embedded']['acoes_plano_trabalho']['criacao_lei_sistema_cultura']['situacao']
-        assert situacao == 'Avaliando anexo' or situacao == 'Em preenchimento' 
+        assert situacao == 'Avaliando anexo' or situacao == 'Em preenchimento'
 
 def test_filtra_componente_conselho_por_multiplos_ids_situacao(client):
     """ Testa retorno ao filtrar sistemas de cultura locais por múltiplos ids da situação
@@ -1158,7 +1159,7 @@ def test_filtra_componente_conselho_por_multiplos_ids_situacao(client):
         conselho_cultural = mommy.make('ConselhoCultural')
         usuario.plano_trabalho.conselho_cultural = conselho_cultural
         usuario.plano_trabalho.save()
-    
+
     usuarios[0].plano_trabalho.conselho_cultural.situacao.id = 1
     usuarios[0].plano_trabalho.conselho_cultural.save()
 
@@ -1169,7 +1170,7 @@ def test_filtra_componente_conselho_por_multiplos_ids_situacao(client):
     assert len(response.data['_embedded']['items']) == 2
     for componentes in response.data['_embedded']['items']:
         situacao = componentes['_embedded']['acoes_plano_trabalho']['criacao_conselho_cultural']['situacao']
-        assert situacao == 'Avaliando anexo' or situacao == 'Em preenchimento' 
+        assert situacao == 'Avaliando anexo' or situacao == 'Em preenchimento'
 
 
 def test_filtra_componente_fundo_por_multiplos_ids_situacao(client):
@@ -1185,7 +1186,7 @@ def test_filtra_componente_fundo_por_multiplos_ids_situacao(client):
         fundo_cultura = mommy.make('FundoCultura')
         usuario.plano_trabalho.fundo_cultura = fundo_cultura
         usuario.plano_trabalho.save()
-    
+
     usuarios[0].plano_trabalho.fundo_cultura.situacao.id = 1
     usuarios[0].plano_trabalho.fundo_cultura.save()
 
@@ -1196,7 +1197,7 @@ def test_filtra_componente_fundo_por_multiplos_ids_situacao(client):
     assert len(response.data['_embedded']['items']) == 2
     for componentes in response.data['_embedded']['items']:
         situacao = componentes['_embedded']['acoes_plano_trabalho']['criacao_fundo_cultura']['situacao']
-        assert situacao == 'Avaliando anexo' or situacao == 'Em preenchimento' 
+        assert situacao == 'Avaliando anexo' or situacao == 'Em preenchimento'
 
 def test_filtra_componente_orgao_por_multiplos_ids_situacao(client):
     """ Testa retorno ao filtrar sistemas de cultura locais por múltiplos ids da situação
@@ -1211,7 +1212,7 @@ def test_filtra_componente_orgao_por_multiplos_ids_situacao(client):
         orgao_gestor = mommy.make('OrgaoGestor')
         usuario.plano_trabalho.orgao_gestor = orgao_gestor
         usuario.plano_trabalho.save()
-    
+
     usuarios[0].plano_trabalho.orgao_gestor.situacao.id = 1
     usuarios[0].plano_trabalho.orgao_gestor.save()
 
@@ -1222,7 +1223,7 @@ def test_filtra_componente_orgao_por_multiplos_ids_situacao(client):
     assert len(response.data['_embedded']['items']) == 2
     for componentes in response.data['_embedded']['items']:
         situacao = componentes['_embedded']['acoes_plano_trabalho']['criacao_orgao_gestor']['situacao']
-        assert situacao == 'Avaliando anexo' or situacao == 'Em preenchimento' 
+        assert situacao == 'Avaliando anexo' or situacao == 'Em preenchimento'
 
 def test_filtra_componente_plano_por_multiplos_ids_situacao(client):
     """ Testa retorno ao filtrar sistemas de cultura locais por múltiplos ids da situação
@@ -1237,7 +1238,7 @@ def test_filtra_componente_plano_por_multiplos_ids_situacao(client):
         plano_cultura = mommy.make('PlanoCultura')
         usuario.plano_trabalho.plano_cultura = plano_cultura
         usuario.plano_trabalho.save()
-    
+
     usuarios[0].plano_trabalho.plano_cultura.situacao.id = 1
     usuarios[0].plano_trabalho.plano_cultura.save()
 
@@ -1248,7 +1249,7 @@ def test_filtra_componente_plano_por_multiplos_ids_situacao(client):
     assert len(response.data['_embedded']['items']) == 2
     for componentes in response.data['_embedded']['items']:
         situacao = componentes['_embedded']['acoes_plano_trabalho']['criacao_plano_cultura']['situacao']
-        assert situacao == 'Avaliando anexo' or situacao == 'Em preenchimento' 
+        assert situacao == 'Avaliando anexo' or situacao == 'Em preenchimento'
 
 
 def test_pesquisa_por_nome_municipio_para_municipios_com_acento_no_nome(client):
