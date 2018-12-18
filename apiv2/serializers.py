@@ -45,18 +45,6 @@ class ConselhoCulturalSerializer(hal_serializers.HalModelSerializer):
         fields = ('ata_regimento_aprovado', 'situacao')
 
 
-class ConselheiroSerializer(hal_serializers.HalModelSerializer):
-    situacao = serializers.SerializerMethodField()
-
-    class Meta:
-        model = Conselheiro
-        fields = ['nome', 'segmento', 'email', 'situacao',
-                  'data_cadastro', 'data_situacao']
-
-    def get_situacao(self, obj):
-        return obj.get_situacao_display()
-
-
 class FundoCulturaSerializer(hal_serializers.HalModelSerializer):
     situacao = serializers.ReadOnlyField(source='situacao.descricao')
 
@@ -83,6 +71,56 @@ class ComponenteSCSerializer(hal_serializers.HalModelSerializer):
     class Meta:
         model = Componente
         fields = ('cod_situacao', 'situacao', 'data_envio', 'arquivo')
+
+
+class ConselheirosSerializer(hal_serializers.HalModelSerializer):
+    situacao = serializers.SerializerMethodField(source='situacao')
+    cod_situacao = serializers.CharField(source='situacao')
+
+    class Meta:
+        model = Conselheiro
+        fields = (
+            'nome',
+            'email',
+            'segmento',
+            'cod_situacao',
+            'situacao',
+            'data_cadastro',
+            'data_situacao'
+        )
+
+    def get_situacao(self, obj):
+        return obj.get_situacao_display()
+
+
+class ConselhoComponenteSerializer(hal_serializers.HalModelSerializer):
+    conselho = serializers.SerializerMethodField(source='conselho')
+
+    class Meta:
+        model = Componente
+        fields = ('conselho', )
+
+    def get_conselho(self, obj):
+
+        context = {}
+        context['request'] = self.context['request']
+        serializer = ConselheirosSerializer(
+            many=True,
+            read_only=True,
+            instance=Conselheiro.objects.filter(
+                conselho_id=obj.id),
+            context=context)
+
+        return serializer.data
+
+    def to_representation(self, instance):
+        context = super(ConselhoComponenteSerializer, self).\
+            to_representation(instance)
+
+        conselheiros = context['conselho']['_embedded']['items']
+        return {
+            'conselheiros': conselheiros
+        }
 
 
 class PlanoTrabalhoSCSerializer(hal_serializers.HalModelSerializer):
@@ -177,7 +215,7 @@ class SistemaCulturaSerializer(hal_serializers.HalModelSerializer):
     situacao_adesao = serializers.CharField(source='get_estado_processo_display')
     cod_situacao_adesao = serializers.CharField(source='estado_processo')
     data_adesao = serializers.DateField(source='data_publicacao_acordo')
-    conselho = serializers.SerializerMethodField()
+    conselho = ConselhoComponenteSerializer()
     sede = SedeSerializer()
 
     class Meta:
@@ -193,22 +231,6 @@ class SistemaCulturaSerializer(hal_serializers.HalModelSerializer):
             "governo",
             "conselho",
             "sede")
-
-    def get_conselho(self, obj):
-        return ("")
-        # print(obj.conselho)
-        # return ("asdasd")
-        # try:
-        #     conselho = obj.conselho
-        #     assert conselho
-        # except (Usuario.DoesNotExist, AssertionError):
-        #     return None
-
-        # context = {}
-        # context['request'] = self.context['request']
-        # serializer = ConselheiroSerializer(instance=conselho, context=context)
-
-        # return serializer.data
 
     def get_acoes_plano_trabalho(self, obj):
         planotrabalho = PlanoTrabalhoSCSerializer(instance=obj, context=self.context)
