@@ -212,8 +212,8 @@ def test_consultar_informações_estados(client):
 
 def test_cadastrar_funcionario_tipo_responsavel(login, client):
 
-    sistema_cultura = mommy.make("SistemaCultura", _fill_optional='ente_federado',
-        cadastrador=login)
+    sistema_cultura = mommy.make("SistemaCultura", _fill_optional=['ente_federado',
+        'sede', 'gestor'], cadastrador=login)
 
     funcionario = Funcionario(cpf="381.390.630-29", rg="48.464.068-9",
         orgao_expeditor_rg="SSP", estado_expeditor=29,
@@ -256,8 +256,8 @@ def test_cadastrar_funcionario_tipo_responsavel(login, client):
 
 def test_cadastrar_funcionario_tipo_secretario(login, client):
 
-    sistema_cultura = mommy.make("SistemaCultura", _fill_optional='ente_federado',
-        cadastrador=login)
+    sistema_cultura = mommy.make("SistemaCultura", _fill_optional=['ente_federado',
+        'gestor', 'sede'], cadastrador=login)
 
     funcionario = Funcionario(cpf="381.390.630-29", rg="48.464.068-9",
         orgao_expeditor_rg="SSP", estado_expeditor=29,
@@ -458,8 +458,8 @@ def test_cadastrar_sistema_cultura_com_cadastrador_ja_possui_sistema(login, clie
     sede = Sede(cnpj="70.658.964/0001-07", endereco="endereco", complemento="complemento",
         cep="72430101", bairro="bairro", telefone_um="123456")
 
-    sistema_cultura = mommy.make("SistemaCultura", _fill_optional='ente_federado', 
-        cadastrador=login)
+    sistema_cultura = mommy.make("SistemaCultura", _fill_optional=['ente_federado', 
+        'sede', 'gestor'], cadastrador=login)
 
     url = reverse("adesao:home")
     client.get(url)
