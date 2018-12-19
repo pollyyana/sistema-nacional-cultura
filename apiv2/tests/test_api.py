@@ -10,7 +10,7 @@ from model_mommy.recipe import seq
 
 from planotrabalho.models import SituacoesArquivoPlano
 from planotrabalho.models import PlanoTrabalho
-from adesao.models import Municipio
+from adesao.models import SistemaCultura
 from adesao.models import LISTA_ESTADOS_PROCESSO
 from planotrabalho.forms import SETORIAIS
 from planotrabalho.models import SITUACAO_CONSELHEIRO
@@ -51,9 +51,11 @@ def test_404_recupera_ID_sistema_cultura_local(client):
 
 def test_recupera_ID_param_sistema_cultura_local(client, plano_trabalho):
 
-    sistema_de_cultura = Municipio.objects.first()
-    municipio_id = '{}/'.format(sistema_de_cultura.id)
-    url = url_sistemadeculturalocal + municipio_id
+    mommy.make('SistemaCultura', _quantity=5)
+
+    sistema_de_cultura = SistemaCultura.sistema.first()
+    sistema_id = '{}/'.format(sistema_de_cultura.id)
+    url = url_sistemadeculturalocal + sistema_id
 
     request = client.get(url, content_type="application/hal+json")
 
@@ -63,9 +65,11 @@ def test_recupera_ID_param_sistema_cultura_local(client, plano_trabalho):
 
 def test_entidades_principais_sistema_cultura_local(client, plano_trabalho):
 
-    sistema_de_cultura = Municipio.objects.first()
-    municipio_id = '{}/'.format(sistema_de_cultura.id)
-    url = url_sistemadeculturalocal + municipio_id
+    mommy.make('SistemaCultura', _quantity=5)
+    
+    sistema_de_cultura = SistemaCultura.sistema.first()
+    sistema_id = '{}/'.format(sistema_de_cultura.id)
+    url = url_sistemadeculturalocal + sistema_id
 
     request = client.get(url, content_type="application/hal+json")
 
