@@ -9,7 +9,6 @@ from model_mommy import mommy
 from model_mommy.recipe import seq
 
 from planotrabalho.models import SituacoesArquivoPlano
-from planotrabalho.models import PlanoTrabalho
 from adesao.models import SistemaCultura
 from adesao.models import LISTA_ESTADOS_PROCESSO
 from planotrabalho.forms import SETORIAIS
@@ -118,15 +117,15 @@ def test_campos_do_objeto_embedded_ao_retornar_sistema_cultura_local(client, sis
 
 def test_campos_do_objeto_conselho_ao_retornar_sistema_cultura_local(client, sistema_cultura):
 
-    sistema_de_cultura = SistemaCultura.sisteam.first()
-    municipio_id = '{}/'.format(sistema_de_cultura.id)
-    url = url_sistemadeculturalocal + municipio_id
+    sistema_de_cultura = SistemaCultura.sistema.first()
+    sistema_id = '{}/'.format(sistema_de_cultura.id)
+    url = url_sistemadeculturalocal + sistema_id
 
     request = client.get(url, content_type="application/hal+json")
 
     campos = set(["conselheiros"])
 
-    assert campos.symmetric_difference(request.data["conselho"]) == set()
+    assert campos.symmetric_difference(request.data["_embedded"]["conselho"]) == set()
 
 
 def test_planotrabalho_list_endpoint_returning_200_OK(client):
@@ -138,7 +137,7 @@ def test_planotrabalho_list_endpoint_returning_200_OK(client):
 
 def test_planotrabalho_list_retorna_lista_com_10(client):
 
-    mommy.make('PlanoTrabalho', 13)
+    mommy.make('SistemaCultura', 13, _fill_optional=True)
 
     request = client.get(url_acoesplanotrabalho,
                          content_type="application/hal+json")
@@ -156,9 +155,9 @@ def test_acoesplanotrabalho_retorna_404_para_id_nao_valido(client):
     assert request.status_code == status.HTTP_404_NOT_FOUND
 
 
-def test_acoesplanotrabalho_retorna_para_id_valido(client, plano_trabalho):
+def test_acoesplanotrabalho_retorna_para_id_valido(client, sistema_cultura):
 
-    plano_trabalho = PlanoTrabalho.objects.first()
+    plano_trabalho = SistemaCultura.sistema.first()
     plano_trabalho_id = '{}/'.format(plano_trabalho.id)
     url = url_acoesplanotrabalho + plano_trabalho_id
 
@@ -168,71 +167,56 @@ def test_acoesplanotrabalho_retorna_para_id_valido(client, plano_trabalho):
     assert request.data["id"] == plano_trabalho.id
 
 
-def test_campos_acoesplanotrabalho(client, plano_trabalho):
+def test_campos_acoesplanotrabalho(client, sistema_cultura):
 
-    plano_trabalho = PlanoTrabalho.objects.first()
+    plano_trabalho = SistemaCultura.sistema.first()
     plano_trabalho_id = '{}/'.format(plano_trabalho.id)
     url = url_acoesplanotrabalho + plano_trabalho_id
 
     request = client.get(url, content_type="application/hal+json")
 
-    campos = set(["criacao_lei_sistema_cultura", "criacao_orgao_gestor",
+    campos = set(["criacao_lei_sistema", "criacao_orgao_gestor",
                   "criacao_plano_cultura", "criacao_fundo_cultura",
-                  "criacao_conselho_cultural", "_links", "id", "_embedded"])
+                  "criacao_conselho_cultural", "_links", "id"])
 
     assert campos.symmetric_difference(request.data) == set()
 
 
-def test_objeto_embedded_acoesplanotrabalho(client, plano_trabalho):
+def test_objeto_criacao_lei_sistema_cultura_acoesplanotrabalho(client, sistema_cultura):
 
-    plano_trabalho = PlanoTrabalho.objects.first()
+    plano_trabalho = SistemaCultura.sistema.first()
     plano_trabalho_id = '{}/'.format(plano_trabalho.id)
     url = url_acoesplanotrabalho + plano_trabalho_id
 
     request = client.get(url, content_type="application/hal+json")
 
-    campos = set(["sistema_cultura_local"])
+    campos = set(["cod_situacao", "situacao", "data_envio", "arquivo"])
 
-    assert campos.symmetric_difference(request.data["_embedded"]) == set()
+    assert campos.symmetric_difference(request.data["criacao_lei_sistema"]) == set()
 
 
-def test_objeto_criacao_lei_sistema_cultura_acoesplanotrabalho(client, plano_trabalho):
+def test_objeto_criacao_orgao_gestor_acoesplanotrabalho(client, sistema_cultura):
 
-    plano_trabalho = PlanoTrabalho.objects.first()
+    plano_trabalho = SistemaCultura.sistema.first()
     plano_trabalho_id = '{}/'.format(plano_trabalho.id)
     url = url_acoesplanotrabalho + plano_trabalho_id
 
     request = client.get(url, content_type="application/hal+json")
 
-    campos = set(["lei_sistema_cultura", "situacao"])
-
-    assert campos.symmetric_difference(request.data["criacao_lei_sistema_cultura"]) == set()
-
-
-def test_objeto_criacao_orgao_gestor_acoesplanotrabalho(client, plano_trabalho):
-
-    plano_trabalho = PlanoTrabalho.objects.first()
-    plano_trabalho_id = '{}/'.format(plano_trabalho.id)
-    url = url_acoesplanotrabalho + plano_trabalho_id
-
-    request = client.get(url, content_type="application/hal+json")
-
-    campos = set(["relatorio_atividade_secretaria", "situacao"])
+    campos = set(["cod_situacao", "situacao", "data_envio", "arquivo"])
 
     assert campos.symmetric_difference(request.data["criacao_orgao_gestor"]) == set()
 
 
-def test_objeto_criacao_plano_cultura_acoesplanotrabalho(client, plano_trabalho):
+def test_objeto_criacao_plano_cultura_acoesplanotrabalho(client, sistema_cultura):
 
-    plano_trabalho = PlanoTrabalho.objects.first()
+    plano_trabalho = SistemaCultura.sistema.first()
     plano_trabalho_id = '{}/'.format(plano_trabalho.id)
     url = url_acoesplanotrabalho + plano_trabalho_id
 
     request = client.get(url, content_type="application/hal+json")
 
-    campos = set(["relatorio_diretrizes_aprovadas", "minuta_preparada",
-                  "ata_reuniao_aprovacao_plano", "ata_votacao_projeto_lei",
-                  "lei_plano_cultura", "situacao"])
+    campos = set(["cod_situacao", "situacao", "data_envio", "arquivo"])
 
     assert campos.symmetric_difference(request.data["criacao_plano_cultura"]) == set()
 
