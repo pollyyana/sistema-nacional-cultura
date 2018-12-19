@@ -49,9 +49,7 @@ def test_404_recupera_ID_sistema_cultura_local(client):
     assert request.status_code == status.HTTP_404_NOT_FOUND
 
 
-def test_recupera_ID_param_sistema_cultura_local(client, plano_trabalho):
-
-    mommy.make('SistemaCultura', _quantity=5)
+def test_recupera_ID_param_sistema_cultura_local(client, plano_trabalho, sistema_cultura):
 
     sistema_de_cultura = SistemaCultura.sistema.first()
     sistema_id = '{}/'.format(sistema_de_cultura.id)
@@ -63,49 +61,46 @@ def test_recupera_ID_param_sistema_cultura_local(client, plano_trabalho):
     assert request.data["id"] == sistema_de_cultura.id
 
 
-def test_entidades_principais_sistema_cultura_local(client, plano_trabalho):
+def test_entidades_principais_sistema_cultura_local(client, plano_trabalho, sistema_cultura):
 
-    mommy.make('SistemaCultura', _quantity=5)
-    
     sistema_de_cultura = SistemaCultura.sistema.first()
     sistema_id = '{}/'.format(sistema_de_cultura.id)
     url = url_sistemadeculturalocal + sistema_id
 
     request = client.get(url, content_type="application/hal+json")
 
-    entidades = set(["governo", "ente_federado", "conselho",
-                     "_embedded", "situacao_adesao", "data_adesao",
-                     "_links", "id"])
+    entidades = set(["data_adesao", "situacao_adesao",
+                        "cod_situacao_adesao", "_embedded",
+                        "_links", "id", "acoes_plano_trabalho"])
 
     assert entidades.symmetric_difference(request.data) == set()
 
 
-def test_campos_do_objeto_governo_ao_retornar_sistema_cultura_local(client,
-                                                                    plano_trabalho):
+def test_campos_do_objeto_governo_ao_retornar_sistema_cultura_local(client, plano_trabalho, sistema_cultura):
 
-    sistema_de_cultura = Municipio.objects.first()
-    municipio_id = '{}/'.format(sistema_de_cultura.id)
-    url = url_sistemadeculturalocal + municipio_id
+    sistema_de_cultura = SistemaCultura.sistema.first()
+    sistema_id = '{}/'.format(sistema_de_cultura.id)
+    url = url_sistemadeculturalocal + sistema_id
 
     request = client.get(url, content_type="application/hal+json")
 
-    campos = set(["nome_prefeito", "email_institucional_prefeito",
+    campos = set(["nome_prefeito", "email_institucional",
                   "termo_posse_prefeito"])
 
-    assert campos.symmetric_difference(request.data["governo"]) == set()
+    assert campos.symmetric_difference(request.data["_embedded"]["governo"]) == set()
 
 
-def test_campos_do_objeto_ente_federado_ao_retornar_sistema_cultura_local(client,
-                                                                          plano_trabalho):
-    sistema_de_cultura = Municipio.objects.first()
-    municipio_id = '{}/'.format(sistema_de_cultura.id)
-    url = url_sistemadeculturalocal + municipio_id
+def test_campos_do_objeto_ente_federado_ao_retornar_sistema_cultura_local(client, plano_trabalho, sistema_cultura):
+
+    sistema_de_cultura = SistemaCultura.sistema.first()
+    sistema_id = '{}/'.format(sistema_de_cultura.id)
+    url = url_sistemadeculturalocal + sistema_id
 
     request = client.get(url, content_type="application/hal+json")
 
-    campos = set(["cnpj_prefeitura", "endereco_eletronico", "telefones", "localizacao"])
+    campos = set(["cod_ibge", "nome", "territorio", "populacao", "idh", "is_municipio", "sigla"])
 
-    assert campos.symmetric_difference(request.data["ente_federado"]) == set()
+    assert campos.symmetric_difference(request.data["_embedded"]["ente_federado"]) == set()
 
 
 def test_campos_do_objeto_estado_ao_retornar_sistema_cultura_local(client,

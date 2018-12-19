@@ -182,12 +182,12 @@ def plano_trabalho(login):
 @pytest.fixture(scope='function')
 def sistema_cultura():
 
-    ente_federado = mommy.make("EnteFederado", cod_ibge=1234)
+    ente_federado = mommy.make("EnteFederado", cod_ibge=111, _fill_optional=True)
 
     sistema_cultura = mommy.make(
             "SistemaCultura",
             ente_federado=ente_federado,
-            _fill_optional=['cadastrador']
+            _fill_optional=True
             )
 
     yield sistema_cultura
