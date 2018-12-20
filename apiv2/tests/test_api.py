@@ -9,8 +9,7 @@ from model_mommy import mommy
 from model_mommy.recipe import seq
 
 from planotrabalho.models import SituacoesArquivoPlano
-from planotrabalho.models import PlanoTrabalho
-from adesao.models import Municipio
+from adesao.models import SistemaCultura
 from adesao.models import LISTA_ESTADOS_PROCESSO
 from planotrabalho.forms import SETORIAIS
 from planotrabalho.models import SITUACAO_CONSELHEIRO
@@ -49,11 +48,11 @@ def test_404_recupera_ID_sistema_cultura_local(client):
     assert request.status_code == status.HTTP_404_NOT_FOUND
 
 
-def test_recupera_ID_param_sistema_cultura_local(client, plano_trabalho):
+def test_recupera_ID_param_sistema_cultura_local(client, sistema_cultura):
 
-    sistema_de_cultura = Municipio.objects.first()
-    municipio_id = '{}/'.format(sistema_de_cultura.id)
-    url = url_sistemadeculturalocal + municipio_id
+    sistema_de_cultura = SistemaCultura.sistema.first()
+    sistema_id = '{}/'.format(sistema_de_cultura.id)
+    url = url_sistemadeculturalocal + sistema_id
 
     request = client.get(url, content_type="application/hal+json")
 
@@ -61,88 +60,72 @@ def test_recupera_ID_param_sistema_cultura_local(client, plano_trabalho):
     assert request.data["id"] == sistema_de_cultura.id
 
 
-def test_entidades_principais_sistema_cultura_local(client, plano_trabalho):
+def test_entidades_principais_sistema_cultura_local(client, sistema_cultura):
 
-    sistema_de_cultura = Municipio.objects.first()
-    municipio_id = '{}/'.format(sistema_de_cultura.id)
-    url = url_sistemadeculturalocal + municipio_id
+    sistema_de_cultura = SistemaCultura.sistema.first()
+    sistema_id = '{}/'.format(sistema_de_cultura.id)
+    url = url_sistemadeculturalocal + sistema_id
 
     request = client.get(url, content_type="application/hal+json")
 
-    entidades = set(["governo", "ente_federado", "conselho",
-                     "_embedded", "situacao_adesao", "data_adesao",
-                     "_links", "id"])
+    entidades = set(["data_adesao", "situacao_adesao",
+                        "cod_situacao_adesao", "_embedded",
+                        "_links", "id", "acoes_plano_trabalho"])
 
     assert entidades.symmetric_difference(request.data) == set()
 
 
-def test_campos_do_objeto_governo_ao_retornar_sistema_cultura_local(client,
-                                                                    plano_trabalho):
+def test_campos_do_objeto_governo_ao_retornar_sistema_cultura_local(client, sistema_cultura):
 
-    sistema_de_cultura = Municipio.objects.first()
-    municipio_id = '{}/'.format(sistema_de_cultura.id)
-    url = url_sistemadeculturalocal + municipio_id
+    sistema_de_cultura = SistemaCultura.sistema.first()
+    sistema_id = '{}/'.format(sistema_de_cultura.id)
+    url = url_sistemadeculturalocal + sistema_id
 
     request = client.get(url, content_type="application/hal+json")
 
-    campos = set(["nome_prefeito", "email_institucional_prefeito",
+    campos = set(["nome_prefeito", "email_institucional",
                   "termo_posse_prefeito"])
 
-    assert campos.symmetric_difference(request.data["governo"]) == set()
+    assert campos.symmetric_difference(request.data["_embedded"]["governo"]) == set()
 
 
-def test_campos_do_objeto_ente_federado_ao_retornar_sistema_cultura_local(client,
-                                                                          plano_trabalho):
-    sistema_de_cultura = Municipio.objects.first()
-    municipio_id = '{}/'.format(sistema_de_cultura.id)
-    url = url_sistemadeculturalocal + municipio_id
+def test_campos_do_objeto_ente_federado_ao_retornar_sistema_cultura_local(client, sistema_cultura):
 
-    request = client.get(url, content_type="application/hal+json")
-
-    campos = set(["cnpj_prefeitura", "endereco_eletronico", "telefones", "localizacao"])
-
-    assert campos.symmetric_difference(request.data["ente_federado"]) == set()
-
-
-def test_campos_do_objeto_estado_ao_retornar_sistema_cultura_local(client,
-                                                                          plano_trabalho):
-    sistema_de_cultura = Municipio.objects.first()
-    municipio_id = '{}/'.format(sistema_de_cultura.id)
-    url = url_sistemadeculturalocal + municipio_id
+    sistema_de_cultura = SistemaCultura.sistema.first()
+    sistema_id = '{}/'.format(sistema_de_cultura.id)
+    url = url_sistemadeculturalocal + sistema_id
 
     request = client.get(url, content_type="application/hal+json")
 
-    campos = set(["codigo_ibge", "sigla", "nome_uf"])
+    campos = set(["cod_ibge", "nome", "territorio", "populacao", "idh", "is_municipio", "sigla"])
 
-    assert campos.symmetric_difference(request.data["ente_federado"]["localizacao"]["estado"]) == set()
+    assert campos.symmetric_difference(request.data["_embedded"]["ente_federado"]) == set()
 
 
-def test_campos_do_objeto_embedded_ao_retornar_sistema_cultura_local(client,
-                                                                     plano_trabalho):
+def test_campos_do_objeto_embedded_ao_retornar_sistema_cultura_local(client, sistema_cultura):
 
-    sistema_de_cultura = Municipio.objects.first()
-    municipio_id = '{}/'.format(sistema_de_cultura.id)
-    url = url_sistemadeculturalocal + municipio_id
+    sistema_de_cultura = SistemaCultura.sistema.first()
+    sistema_id = '{}/'.format(sistema_de_cultura.id)
+    url = url_sistemadeculturalocal + sistema_id
 
     request = client.get(url, content_type="application/hal+json")
 
-    campos = set(["acoes_plano_trabalho"])
+    campos = set(["ente_federado", "governo", "sede", "conselho"])
 
     assert campos.symmetric_difference(request.data["_embedded"]) == set()
 
 
-def test_campos_do_objeto_conselho_ao_retornar_sistema_cultura_local(client,
-                                                                     plano_trabalho):
+def test_campos_do_objeto_conselho_ao_retornar_sistema_cultura_local(client, sistema_cultura):
 
-    sistema_de_cultura = Municipio.objects.first()
-    municipio_id = '{}/'.format(sistema_de_cultura.id)
-    url = url_sistemadeculturalocal + municipio_id
+    sistema_de_cultura = SistemaCultura.sistema.first()
+    sistema_id = '{}/'.format(sistema_de_cultura.id)
+    url = url_sistemadeculturalocal + sistema_id
 
     request = client.get(url, content_type="application/hal+json")
 
     campos = set(["conselheiros"])
 
-    assert campos.symmetric_difference(request.data["conselho"]) == set()
+    assert campos.symmetric_difference(request.data["_embedded"]["conselho"]) == set()
 
 
 def test_planotrabalho_list_endpoint_returning_200_OK(client):
@@ -154,7 +137,7 @@ def test_planotrabalho_list_endpoint_returning_200_OK(client):
 
 def test_planotrabalho_list_retorna_lista_com_10(client):
 
-    mommy.make('PlanoTrabalho', 13)
+    mommy.make('SistemaCultura', 13, _fill_optional=True)
 
     request = client.get(url_acoesplanotrabalho,
                          content_type="application/hal+json")
@@ -172,9 +155,9 @@ def test_acoesplanotrabalho_retorna_404_para_id_nao_valido(client):
     assert request.status_code == status.HTTP_404_NOT_FOUND
 
 
-def test_acoesplanotrabalho_retorna_para_id_valido(client, plano_trabalho):
+def test_acoesplanotrabalho_retorna_para_id_valido(client, sistema_cultura):
 
-    plano_trabalho = PlanoTrabalho.objects.first()
+    plano_trabalho = SistemaCultura.sistema.first()
     plano_trabalho_id = '{}/'.format(plano_trabalho.id)
     url = url_acoesplanotrabalho + plano_trabalho_id
 
@@ -184,84 +167,69 @@ def test_acoesplanotrabalho_retorna_para_id_valido(client, plano_trabalho):
     assert request.data["id"] == plano_trabalho.id
 
 
-def test_campos_acoesplanotrabalho(client, plano_trabalho):
+def test_campos_acoesplanotrabalho(client, sistema_cultura):
 
-    plano_trabalho = PlanoTrabalho.objects.first()
+    plano_trabalho = SistemaCultura.sistema.first()
     plano_trabalho_id = '{}/'.format(plano_trabalho.id)
     url = url_acoesplanotrabalho + plano_trabalho_id
 
     request = client.get(url, content_type="application/hal+json")
 
-    campos = set(["criacao_lei_sistema_cultura", "criacao_orgao_gestor",
+    campos = set(["criacao_lei_sistema", "criacao_orgao_gestor",
                   "criacao_plano_cultura", "criacao_fundo_cultura",
-                  "criacao_conselho_cultural", "_links", "id", "_embedded"])
+                  "criacao_conselho_cultural", "_links", "id"])
 
     assert campos.symmetric_difference(request.data) == set()
 
 
-def test_objeto_embedded_acoesplanotrabalho(client, plano_trabalho):
+def test_objeto_criacao_lei_sistema_cultura_acoesplanotrabalho(client, sistema_cultura):
 
-    plano_trabalho = PlanoTrabalho.objects.first()
+    plano_trabalho = SistemaCultura.sistema.first()
     plano_trabalho_id = '{}/'.format(plano_trabalho.id)
     url = url_acoesplanotrabalho + plano_trabalho_id
 
     request = client.get(url, content_type="application/hal+json")
 
-    campos = set(["sistema_cultura_local"])
+    campos = set(["cod_situacao", "situacao", "data_envio", "arquivo"])
 
-    assert campos.symmetric_difference(request.data["_embedded"]) == set()
+    assert campos.symmetric_difference(request.data["criacao_lei_sistema"]) == set()
 
 
-def test_objeto_criacao_lei_sistema_cultura_acoesplanotrabalho(client, plano_trabalho):
+def test_objeto_criacao_orgao_gestor_acoesplanotrabalho(client, sistema_cultura):
 
-    plano_trabalho = PlanoTrabalho.objects.first()
+    plano_trabalho = SistemaCultura.sistema.first()
     plano_trabalho_id = '{}/'.format(plano_trabalho.id)
     url = url_acoesplanotrabalho + plano_trabalho_id
 
     request = client.get(url, content_type="application/hal+json")
 
-    campos = set(["lei_sistema_cultura", "situacao"])
-
-    assert campos.symmetric_difference(request.data["criacao_lei_sistema_cultura"]) == set()
-
-
-def test_objeto_criacao_orgao_gestor_acoesplanotrabalho(client, plano_trabalho):
-
-    plano_trabalho = PlanoTrabalho.objects.first()
-    plano_trabalho_id = '{}/'.format(plano_trabalho.id)
-    url = url_acoesplanotrabalho + plano_trabalho_id
-
-    request = client.get(url, content_type="application/hal+json")
-
-    campos = set(["relatorio_atividade_secretaria", "situacao"])
+    campos = set(["cod_situacao", "situacao", "data_envio", "arquivo"])
 
     assert campos.symmetric_difference(request.data["criacao_orgao_gestor"]) == set()
 
 
-def test_objeto_criacao_plano_cultura_acoesplanotrabalho(client, plano_trabalho):
+def test_objeto_criacao_plano_cultura_acoesplanotrabalho(client, sistema_cultura):
 
-    plano_trabalho = PlanoTrabalho.objects.first()
+    plano_trabalho = SistemaCultura.sistema.first()
     plano_trabalho_id = '{}/'.format(plano_trabalho.id)
     url = url_acoesplanotrabalho + plano_trabalho_id
 
     request = client.get(url, content_type="application/hal+json")
 
-    campos = set(["relatorio_diretrizes_aprovadas", "minuta_preparada",
-                  "ata_reuniao_aprovacao_plano", "ata_votacao_projeto_lei",
-                  "lei_plano_cultura", "situacao"])
+    campos = set(["cod_situacao", "situacao", "data_envio", "arquivo"])
 
     assert campos.symmetric_difference(request.data["criacao_plano_cultura"]) == set()
 
 
-def test_objeto_criacao_fundo_cultura_acoesplanotrabalho(client, plano_trabalho):
+def test_objeto_criacao_fundo_cultura_acoesplanotrabalho(client, sistema_cultura):
 
-    plano_trabalho = PlanoTrabalho.objects.first()
+    plano_trabalho = SistemaCultura.sistema.first()
     plano_trabalho_id = '{}/'.format(plano_trabalho.id)
     url = url_acoesplanotrabalho + plano_trabalho_id
 
     request = client.get(url, content_type="application/hal+json")
 
-    campos = set(["cnpj_fundo_cultura", "lei_fundo_cultura", "situacao"])
+    campos = set(["cod_situacao", "situacao", "data_envio", "arquivo", "cnpj"])
 
     assert campos.symmetric_difference(request.data["criacao_fundo_cultura"]) == set()
 
@@ -693,105 +661,95 @@ def test_choices_situacao_conselheiro(client):
     assert request.data['conselho']['situacao']['choices'] == situacao_list
 
 
-def test_retorno_sistemas_cultura_municipios(client, entes_municipais_estaduais):
+def test_retorno_sistemas_cultura_municipios(client):
     """ Testa retorno de sistema culturas que são referentes a adesões
     de entes federados municipais """
-    estado, municipio = entes_municipais_estaduais
+
+    municipio = mommy.make('SistemaCultura', ente_federado__cod_ibge=123456, ente_federado__nome="Municipio")
+    estado = mommy.make('SistemaCultura', ente_federado__cod_ibge=11, ente_federado__nome="Estado")
+
     url = url_sistemadeculturalocal + '?municipal=true'
 
     response = client.get(url)
-    municipio_response = response.data['_embedded']['items'][0]['ente_federado']['localizacao']['cidade']['nome_municipio']
+    municipio_response = response.data['_embedded']['items'][0]['_embedded']['ente_federado']['nome']
 
     assert len(response.data['_embedded']['items']) == 1
-    assert municipio_response == municipio.cidade.nome_municipio
+    assert municipio_response == municipio.ente_federado.nome
 
 
-def test_retorno_sistemas_cultura_estados(client, entes_municipais_estaduais):
+def test_retorno_sistemas_cultura_estados(client):
     """ Testa retorno de sistema culturas que são referentes a adesões
     de entes federados estaduais """
 
-    estadual, municipio = entes_municipais_estaduais
+    municipio = mommy.make('SistemaCultura', ente_federado__cod_ibge=123456, ente_federado__nome="Municipio")
+    estado = mommy.make('SistemaCultura', ente_federado__cod_ibge=11, ente_federado__nome="Estado")
+
     url = url_sistemadeculturalocal + '?estadual=true'
 
     response = client.get(url)
-    municipio_response = response.data['_embedded']['items'][0]['ente_federado']['localizacao']['estado']['sigla']
+    estado_response = response.data['_embedded']['items'][0]['_embedded']['ente_federado']['nome']
 
     assert len(response.data['_embedded']['items']) == 1
-    assert municipio_response == estadual.estado.sigla
+    assert estado_response == estado.ente_federado.nome
 
 
-def test_retorno_sistemas_cultura_estadual_vazio(client, entes_municipais_estaduais):
+def test_retorno_sistemas_cultura_estadual_vazio(client):
     """ Testa retorno dos sistemas cultura ao fornecer o parâmetro estadual vazio """
 
-    estadual, municipal = entes_municipais_estaduais
+    municipio = mommy.make('SistemaCultura', ente_federado__cod_ibge=123456, ente_federado__nome="Municipio")
+    estado = mommy.make('SistemaCultura', ente_federado__cod_ibge=11, ente_federado__nome="Estado")
 
     url = url_sistemadeculturalocal + '?estadual=&municipal=true'
     response = client.get(url)
-    cidade = response.data['_embedded']['items'][0]['ente_federado']['localizacao']['cidade']
+    
+    municipio_response = response.data['_embedded']['items'][0]['_embedded']['ente_federado']['nome']
 
     assert len(response.data['_embedded']['items']) == 1
-    assert cidade['nome_municipio'] == municipal.cidade.nome_municipio
+    assert municipio_response == municipio.ente_federado.nome
 
 
-def test_retorno_sistemas_cultura_municipal_vazio(client, entes_municipais_estaduais):
+def test_retorno_sistemas_cultura_municipal_vazio(client):
     """ Testa retorno dos sistemas cultura ao fornecer o parâmetro municipal vazio """
 
-    estadual, municipal = entes_municipais_estaduais
+    municipio = mommy.make('SistemaCultura', ente_federado__cod_ibge=123456, ente_federado__nome="Municipio")
+    estado = mommy.make('SistemaCultura', ente_federado__cod_ibge=11, ente_federado__nome="Estado")
 
     url = url_sistemadeculturalocal + '?estadual=true&municipal='
     response = client.get(url)
-    cidade = response.data['_embedded']['items'][0]['ente_federado']['localizacao']['estado']
+    
+    estado_response = response.data['_embedded']['items'][0]['_embedded']['ente_federado']['nome']
 
     assert len(response.data['_embedded']['items']) == 1
-    assert cidade['sigla'] == estadual.estado.sigla
+    assert estado_response == estado.ente_federado.nome
 
 
-def test_filtrar_por_nome_ente_federado_sigla_estado(client, entes_municipais_estaduais):
+def test_filtrar_por_nome_ente_federado_sigla_estado(client, sistema_cultura):
     """ Testa retorno de sistemas de cultura passando o nome do ente federado
     como parâmetro, nesse caso a sigla do estado"""
 
-    estadual, municipal = entes_municipais_estaduais
-    mommy.make('Municipio')
-
-    url = url_sistemadeculturalocal + '?ente_federado={}'.format(estadual.estado.sigla)
+    url = url_sistemadeculturalocal + '?ente_federado=ba'
 
     response = client.get(url)
 
-    assert len(response.data['_embedded']['items']) == 2
-    for item in response.data['_embedded']['items']:
-        assert item['ente_federado']['localizacao']['estado']['sigla'] == estadual.estado.sigla
+    assert len(response.data['_embedded']['items']) == 1
+    assert response.data['_embedded']['items'][0]['_embedded']['ente_federado']['nome'] == sistema_cultura.ente_federado.nome
 
 
-def test_filtrar_por_nome_ente_federado_nome_estado(client, sistema_cultura):
+def test_filtrar_por_nome_ente_federado_nome(client, sistema_cultura):
     """ Testa retorno de sistemas de cultura passando o nome do ente federado
-    como parâmetro, nesse caso o nome do estado"""
+    como parâmetro"""
 
     url = url_sistemadeculturalocal + '?ente_federado={}'.format(sistema_cultura.ente_federado.nome)
 
     response = client.get(url)
 
-    assert len(response.data['_embedded']['items']) == 2
-    for item in response.data['_embedded']['items']:
-        assert item['ente_federado']['localizacao']['estado']['nome_uf'] == estadual.estado.nome_uf
-
-
-def test_filtrar_por_nome_ente_federado_nome_municipio(client, sistema_cultura):
-    """ Testa retorno de sistemas de cultura passando o nome do ente federado
-    como parâmetro, nesse caso a nome do município"""
-
-    municipio = sistema_cultura.ente_federado.nome
-    url = url_sistemadeculturalocal + f"?ente_federado={municipio}"
-
-    response = client.get(url)
-    municipio_resp = response.data['_embedded']['items'][0]['ente_federado']['localizacao']['cidade']['nome_municipio']
-
     assert len(response.data['_embedded']['items']) == 1
-    assert municipio_resp == municipal.cidade.nome_municipio
+    assert response.data['_embedded']['items'][0]['_embedded']['ente_federado']['nome'] == sistema_cultura.ente_federado.nome
 
 
-def test_filtrar_por_nome_ente_federado_vazio(client):
+def test_filtrar_por_nome_ente_federado_vazio(client, sistema_cultura):
     """ Testa retorno de sistemas de cultura ao passar o parâmetro vazio """
-    mommy.make('Municipio')
+
     url = url_sistemadeculturalocal + '?ente_federado='
 
     response = client.get(url)
@@ -802,15 +760,15 @@ def test_filtrar_por_nome_ente_federado_vazio(client):
 def test_counts_com_estado_e_municipio_aderidos(client):
     """ Testa as contagens em uma busca que retorna estado e municipio aderidos"""
 
-    estado = mommy.make('Uf', sigla="TO")
-    cidade = mommy.make('Cidade')
-    municipio_estado = mommy.make('Municipio', estado=estado)
-    municipio_cidade = mommy.make('Municipio', estado=estado, cidade=cidade)
+    municipio = mommy.make('SistemaCultura', ente_federado__cod_ibge=123456, ente_federado__nome="Tocantins")
+    estado = mommy.make('SistemaCultura', ente_federado__cod_ibge=11, ente_federado__nome="Tocantins")
 
-    mommy.make('Usuario', municipio=municipio_estado, estado_processo=6)
-    mommy.make('Usuario', municipio=municipio_cidade, estado_processo=6)
+    municipio_aderido = mommy.make('SistemaCultura', ente_federado__cod_ibge=123457, ente_federado__nome="Tocantins",
+        estado_processo=6)
+    estado_aderido = mommy.make('SistemaCultura', ente_federado__cod_ibge=12, ente_federado__nome="Tocantins",
+        estado_processo=6)
 
-    url = url_sistemadeculturalocal + '?ente_federado={}'.format("to")
+    url = url_sistemadeculturalocal + '?ente_federado=Tocantins'
 
     response = client.get(url)
     count_municipios = response.data['municipios']
@@ -818,36 +776,10 @@ def test_counts_com_estado_e_municipio_aderidos(client):
     count_municipios_aderidos = response.data['municipios_aderidos']
     count_estados_aderidos = response.data['estados_aderidos']
 
-    assert count_municipios == 1
-    assert count_estados == 1
+    assert count_municipios == 2
+    assert count_estados == 2
     assert count_municipios_aderidos == 1
     assert count_estados_aderidos == 1
-
-
-def test_counts_com_estado_e_municipio_não_aderidos(client):
-    """ Testa as contagens em uma busca que retorna estado e municipio
-    não aderidos"""
-
-    estado = mommy.make('Uf', sigla="TO")
-    cidade = mommy.make('Cidade')
-    municipio_estado = mommy.make('Municipio', estado=estado)
-    municipio_cidade = mommy.make('Municipio', estado=estado, cidade=cidade)
-
-    mommy.make('Usuario', municipio=municipio_estado, estado_processo=1)
-    mommy.make('Usuario', municipio=municipio_cidade, estado_processo=1)
-
-    url = url_sistemadeculturalocal + '?ente_federado={}'.format("to")
-
-    response = client.get(url)
-    count_municipios = response.data['municipios']
-    count_estados = response.data['estados']
-    count_municipios_aderidos = response.data['municipios_aderidos']
-    count_estados_aderidos = response.data['estados_aderidos']
-
-    assert count_municipios == 1
-    assert count_estados == 1
-    assert count_municipios_aderidos == 0
-    assert count_estados_aderidos == 0
 
 
 def test_counts_com_apenas_estados_não_aderidos(client):
@@ -873,6 +805,7 @@ def test_counts_com_apenas_estados_não_aderidos(client):
     assert count_estados == 2
     assert count_municipios_aderidos == 0
     assert count_estados_aderidos == 0
+
 
 def test_counts_com_um_municipio_não_aderido(client):
     """ Testa as contagens em uma busca que retorna um municipio não aderido"""
@@ -959,77 +892,36 @@ def test_counts_com_um_municipio_aderido(client):
 def test_ordenar_resultados_da_api_de_forma_ascendente_por_nome_municipio(client):
     """ Testa a ordenação ascendente do resultado da API por cidade(nome_municipio) """
 
-    nomes_municipios = ['Brasilia', 'Zé Doca', 'Abaetetuba']
+    nomes_entes = ['Brasilia', 'Zé Doca', 'Abaetetuba']
 
-    for nome in nomes_municipios:
-        cidade =  mommy.make('Cidade', nome_municipio=nome)
-        municipios = mommy.make('Municipio', cidade=cidade)
+    for nome in nomes_entes:
+        mommy.make('SistemaCultura', ente_federado__nome=nome)
 
-    url = url_sistemadeculturalocal + '?ordering=cidade__nome_municipio'
+    url = url_sistemadeculturalocal + '?ordering=ente_federado__nome'
     response = client.get(url)
 
-    municipio = response.data['_embedded']['items']
+    entes = response.data['_embedded']['items']
 
-    assert municipio[0]['ente_federado']['localizacao']['cidade']['nome_municipio'] == nomes_municipios[2]
-    assert municipio[1]['ente_federado']['localizacao']['cidade']['nome_municipio'] == nomes_municipios[0]
-    assert municipio[2]['ente_federado']['localizacao']['cidade']['nome_municipio'] == nomes_municipios[1]
+    assert entes[0]['ente_federado']['nome'] == nomes_entes[2]
+    assert entes[1]['ente_federado']['nome'] == nomes_entes[0]
+    assert entes[2]['ente_federado']['nome'] == nomes_entes[1]
+
 
 def test_ordenar_resultados_da_api_de_forma_descendente_por_nome_municipio(client):
     """ Testa a ordenação descendente do resultado da API por cidade(nome_municipio) """
-    nomes_municipios = ['Brasilia', 'Zé Doca', 'Abaetetuba']
+    nomes_entes = ['Brasilia', 'Zé Doca', 'Abaetetuba']
 
-    for nome in nomes_municipios:
-        cidade =  mommy.make('Cidade', nome_municipio=nome)
-        municipios = mommy.make('Municipio', cidade=cidade)
+    for nome in nomes_entes:
+        mommy.make('SistemaCultura', ente_federado__nome=nome)
 
-    url = url_sistemadeculturalocal + '?ordering=-cidade__nome_municipio'
+    url = url_sistemadeculturalocal + '?ordering=-ente_federado__nome'
     response = client.get(url)
 
-    municipio = response.data['_embedded']['items']
+    entes = response.data['_embedded']['items']
 
-    assert municipio[0]['ente_federado']['localizacao']['cidade']['nome_municipio'] == nomes_municipios[1]
-    assert municipio[1]['ente_federado']['localizacao']['cidade']['nome_municipio'] == nomes_municipios[0]
-    assert municipio[2]['ente_federado']['localizacao']['cidade']['nome_municipio'] == nomes_municipios[2]
-
-
-def test_ordenar_resultados_da_api_de_forma_ascendente_por_estado(client):
-    """ Testa a ordenação ascendente do resultado da API por estado(nome_uf) """
-
-    nomes_estados = ['Distrito Federal', 'Bahia', 'Tocantins']
-
-    for nome in nomes_estados:
-        uf = mommy.make('Uf', nome_uf=nome)
-        municipios = mommy.make('Municipio', estado=uf)
-
-    url = url_sistemadeculturalocal + '?ordering=estado__nome_uf'
-    response = client.get(url)
-
-    estado = response.data['_embedded']['items']
-
-    assert estado[0]['ente_federado']['localizacao']['estado']['nome_uf'] == nomes_estados[1]
-    assert estado[1]['ente_federado']['localizacao']['estado']['nome_uf'] == nomes_estados[0]
-    assert estado[2]['ente_federado']['localizacao']['estado']['nome_uf'] == nomes_estados[2]
-
-
-
-def test_ordenar_resultados_da_api_de_forma_descendente_por_estado(client):
-    """ Testa a ordenação descendente do resultado da API por estado(nome_uf) """
-
-    nomes_estados = ['Distrito Federal', 'Bahia', 'Tocantins']
-
-    for nome in nomes_estados:
-        uf = mommy.make('Uf', nome_uf=nome)
-        municipios = mommy.make('Municipio', estado=uf)
-
-    url = url_sistemadeculturalocal + '?ordering=-estado__nome_uf'
-
-    response = client.get(url)
-
-    estado = response.data['_embedded']['items']
-
-    assert estado[0]['ente_federado']['localizacao']['estado']['nome_uf'] == nomes_estados[2]
-    assert estado[1]['ente_federado']['localizacao']['estado']['nome_uf'] == nomes_estados[0]
-    assert estado[2]['ente_federado']['localizacao']['estado']['nome_uf'] == nomes_estados[1]
+    assert entes[0]['ente_federado']['localizacao']['cidade']['nome_municipio'] == nomes_entes[1]
+    assert entes[1]['ente_federado']['localizacao']['cidade']['nome_municipio'] == nomes_entes[0]
+    assert entes[2]['ente_federado']['localizacao']['cidade']['nome_municipio'] == nomes_entes[2]
 
 
 @pytest.mark.parametrize("query,componente", [
@@ -1077,99 +969,66 @@ def test_filtrar_componente_situacao_descricao_acoesplanotrabalho(client, plano_
 
 
 @pytest.mark.parametrize("query,componente", [
-    ("situacao_lei_id", "criacao_sistema"),
-    ("situacao_orgao_id", "orgao_gestor"),
-    ("situacao_fundo_id", "fundo_cultura"),
-    ("situacao_plano_id", "plano_cultura"),
-    ("situacao_conselho_id", "conselho_cultural"),
+    ("situacao_lei_sistema", "legislacao"),
+    ("situacao_orgao_gestor", "orgao_gestor"),
+    ("situacao_fundo_cultura", "fundo_cultura"),
+    ("situacao_plano_cultura", "plano"),
+    ("situacao_conselho_cultural", "conselho"),
     ])
-def test_filtra_por_situacao_id_componente_sistema_de_cultura(client, plano_trabalho,
-                                                              query, componente):
+def test_filtra_por_situacao_id_componente_sistema_de_cultura(client, query, componente):
     """ Testa retorno ao filtrar sistemas de cultura locais por id da situação
     dos componentes do plano de trabalho """
 
-    mommy.make('Municipio', _quantity=2)
-    situacao = getattr(plano_trabalho, componente).situacao
+    sistema_cultura = mommy.make("SistemaCultura", _fill_optional=['legislacao', 'orgao_gestor',
+        'fundo_cultura', 'plano', 'conselho'])
 
-    url = url_sistemadeculturalocal + '?{}={}'.format(query, situacao.id)
-
-    response = client.get(url)
-
-    assert len(response.data['_embedded']['items']) == 1
-
-
-@pytest.mark.parametrize("query,componente", [
-    ("situacao_lei_descricao", "criacao_sistema"),
-    ("situacao_orgao_descricao", "orgao_gestor"),
-    ("situacao_fundo_descricao", "fundo_cultura"),
-    ("situacao_plano_descricao", "plano_cultura"),
-    ("situacao_conselho_descricao", "conselho_cultural"),
-    ])
-def test_filtra_por_situacao_descricao_componente_sistema_de_cultura(client,
-                                                                     plano_trabalho,
-                                                                     query, componente):
-    """ Testa retorno ao filtrar sistemas de cultura locais por descrição da situação
-    dos componentes do plano de trabalho """
-
-    mommy.make('Municipio', _quantity=2)
-    situacao = getattr(plano_trabalho, componente).situacao
-
-    url = url_sistemadeculturalocal + '?{}={}'.format(query, situacao.descricao)
+    situacao = getattr(sistema_cultura, componente).situacao
+    url = url_sistemadeculturalocal + '?{}={}'.format(query, situacao)
 
     response = client.get(url)
 
     assert len(response.data['_embedded']['items']) == 1
+
 
 def test_filtra_componente_lei_por_multiplos_ids_situacao(client):
     """ Testa retorno ao filtrar sistemas de cultura locais por múltiplos ids da situação
-    do componente lei sistema cultura do plano de trabalho """
+    do componente lei sistema cultura """
 
-    usuarios = mommy.make('Usuario', _quantity=2, _fill_optional=['municipio', 'plano_trabalho'])
-    usuario_situacao_invalida =  mommy.make('Usuario', _fill_optional=['municipio', 'plano_trabalho'])
-    usuario_situacao_invalida.plano_trabalho.criacao_sistema = mommy.make('CriacaoSistema', situacao__id=5)
-    usuario_situacao_invalida.plano_trabalho.save()
+    situacoes = [0, 1, 5]
+    sistemas = mommy.make("SistemaCultura", _fill_optional='legislacao', _quantity=3)
+    for sistema, situacao in zip(sistemas, situacoes):
+        sistema.legislacao.situacao = situacao
+        sistema.legislacao.save()
 
-    for usuario in usuarios:
-        criacao_sistema = mommy.make('CriacaoSistema')
-        usuario.plano_trabalho.criacao_sistema = criacao_sistema
-        usuario.plano_trabalho.save()
-
-    usuarios[0].plano_trabalho.criacao_sistema.situacao.id = 1
-    usuarios[0].plano_trabalho.criacao_sistema.save()
-
-    url = url_sistemadeculturalocal + '?situacao_lei_id=0&situacao_lei_id=1'
+    url = url_sistemadeculturalocal + '?situacao_lei_sistema=0&situacao_lei_sistema=1'
 
     response = client.get(url)
 
     assert len(response.data['_embedded']['items']) == 2
+
     for componentes in response.data['_embedded']['items']:
-        situacao = componentes['_embedded']['acoes_plano_trabalho']['criacao_lei_sistema_cultura']['situacao']
+        situacao = componentes['acoes_plano_trabalho']['criacao_lei_sistema']['situacao']
         assert situacao == 'Avaliando anexo' or situacao == 'Em preenchimento'
+
 
 def test_filtra_componente_conselho_por_multiplos_ids_situacao(client):
     """ Testa retorno ao filtrar sistemas de cultura locais por múltiplos ids da situação
     do componente conselho cultural do plano de trabalho """
 
-    usuarios = mommy.make('Usuario', _quantity=2, _fill_optional=['municipio', 'plano_trabalho'])
-    usuario_situacao_invalida =  mommy.make('Usuario', _fill_optional=['municipio', 'plano_trabalho'])
-    usuario_situacao_invalida.plano_trabalho.conselho_cultural = mommy.make('ConselhoCultural', situacao__id=5)
-    usuario_situacao_invalida.plano_trabalho.save()
+    situacoes = [0, 1, 5]
+    sistemas = mommy.make("SistemaCultura", _fill_optional='conselho', _quantity=3)
+    for sistema, situacao in zip(sistemas, situacoes):
+        sistema.conselho.situacao = situacao
+        sistema.conselho.save()
 
-    for usuario in usuarios:
-        conselho_cultural = mommy.make('ConselhoCultural')
-        usuario.plano_trabalho.conselho_cultural = conselho_cultural
-        usuario.plano_trabalho.save()
-
-    usuarios[0].plano_trabalho.conselho_cultural.situacao.id = 1
-    usuarios[0].plano_trabalho.conselho_cultural.save()
-
-    url = url_sistemadeculturalocal + '?situacao_conselho_id=0&situacao_conselho_id=1'
+    url = url_sistemadeculturalocal + '?situacao_conselho_cultural=0&situacao_conselho_cultural=1'
 
     response = client.get(url)
 
     assert len(response.data['_embedded']['items']) == 2
+
     for componentes in response.data['_embedded']['items']:
-        situacao = componentes['_embedded']['acoes_plano_trabalho']['criacao_conselho_cultural']['situacao']
+        situacao = componentes['acoes_plano_trabalho']['criacao_conselho_cultural']['situacao']
         assert situacao == 'Avaliando anexo' or situacao == 'Em preenchimento'
 
 
@@ -1177,100 +1036,72 @@ def test_filtra_componente_fundo_por_multiplos_ids_situacao(client):
     """ Testa retorno ao filtrar sistemas de cultura locais por múltiplos ids da situação
     do componente fundo cultura do plano de trabalho """
 
-    usuarios = mommy.make('Usuario', _quantity=2, _fill_optional=['municipio', 'plano_trabalho'])
-    usuario_situacao_invalida =  mommy.make('Usuario', _fill_optional=['municipio', 'plano_trabalho'])
-    usuario_situacao_invalida.plano_trabalho.fundo_cultura = mommy.make('FundoCultura', situacao__id=5)
-    usuario_situacao_invalida.plano_trabalho.save()
+    situacoes = [0, 1, 5]
+    sistemas = mommy.make("SistemaCultura", _fill_optional='fundo_cultura', _quantity=3)
+    for sistema, situacao in zip(sistemas, situacoes):
+        sistema.fundo_cultura.situacao = situacao
+        sistema.fundo_cultura.save()
 
-    for usuario in usuarios:
-        fundo_cultura = mommy.make('FundoCultura')
-        usuario.plano_trabalho.fundo_cultura = fundo_cultura
-        usuario.plano_trabalho.save()
-
-    usuarios[0].plano_trabalho.fundo_cultura.situacao.id = 1
-    usuarios[0].plano_trabalho.fundo_cultura.save()
-
-    url = url_sistemadeculturalocal + '?situacao_fundo_id=0&situacao_fundo_id=1'
+    url = url_sistemadeculturalocal + '?situacao_fundo_cultura=0&situacao_fundo_cultura=1'
 
     response = client.get(url)
 
     assert len(response.data['_embedded']['items']) == 2
+
     for componentes in response.data['_embedded']['items']:
-        situacao = componentes['_embedded']['acoes_plano_trabalho']['criacao_fundo_cultura']['situacao']
+        situacao = componentes['acoes_plano_trabalho']['criacao_fundo_cultura']['situacao']
         assert situacao == 'Avaliando anexo' or situacao == 'Em preenchimento'
+
 
 def test_filtra_componente_orgao_por_multiplos_ids_situacao(client):
     """ Testa retorno ao filtrar sistemas de cultura locais por múltiplos ids da situação
     do componente órgão gestor do plano de trabalho """
 
-    usuarios = mommy.make('Usuario', _quantity=2, _fill_optional=['municipio', 'plano_trabalho'])
-    usuario_situacao_invalida =  mommy.make('Usuario', _fill_optional=['municipio', 'plano_trabalho'])
-    usuario_situacao_invalida.plano_trabalho.orgao_gestor = mommy.make('OrgaoGestor', situacao__id=5)
-    usuario_situacao_invalida.plano_trabalho.save()
+    situacoes = [0, 1, 5]
+    sistemas = mommy.make("SistemaCultura", _fill_optional='orgao_gestor', _quantity=3)
+    for sistema, situacao in zip(sistemas, situacoes):
+        sistema.orgao_gestor.situacao = situacao
+        sistema.orgao_gestor.save()
 
-    for usuario in usuarios:
-        orgao_gestor = mommy.make('OrgaoGestor')
-        usuario.plano_trabalho.orgao_gestor = orgao_gestor
-        usuario.plano_trabalho.save()
-
-    usuarios[0].plano_trabalho.orgao_gestor.situacao.id = 1
-    usuarios[0].plano_trabalho.orgao_gestor.save()
-
-    url = url_sistemadeculturalocal + '?situacao_orgao_id=0&situacao_orgao_id=1'
+    url = url_sistemadeculturalocal + '?situacao_orgao_gestor=0&situacao_orgao_gestor=1'
 
     response = client.get(url)
 
     assert len(response.data['_embedded']['items']) == 2
+
     for componentes in response.data['_embedded']['items']:
-        situacao = componentes['_embedded']['acoes_plano_trabalho']['criacao_orgao_gestor']['situacao']
+        situacao = componentes['acoes_plano_trabalho']['criacao_orgao_gestor']['situacao']
         assert situacao == 'Avaliando anexo' or situacao == 'Em preenchimento'
+
 
 def test_filtra_componente_plano_por_multiplos_ids_situacao(client):
     """ Testa retorno ao filtrar sistemas de cultura locais por múltiplos ids da situação
     do componente plano cultura do plano de trabalho """
 
-    usuarios = mommy.make('Usuario', _quantity=2, _fill_optional=['municipio', 'plano_trabalho'])
-    usuario_situacao_invalida =  mommy.make('Usuario', _fill_optional=['municipio', 'plano_trabalho'])
-    usuario_situacao_invalida.plano_trabalho.plano_cultura = mommy.make('PlanoCultura', situacao__id=5)
-    usuario_situacao_invalida.plano_trabalho.save()
+    situacoes = [0, 1, 5]
+    sistemas = mommy.make("SistemaCultura", _fill_optional='plano', _quantity=3)
+    for sistema, situacao in zip(sistemas, situacoes):
+        sistema.plano.situacao = situacao
+        sistema.plano.save()
 
-    for usuario in usuarios:
-        plano_cultura = mommy.make('PlanoCultura')
-        usuario.plano_trabalho.plano_cultura = plano_cultura
-        usuario.plano_trabalho.save()
-
-    usuarios[0].plano_trabalho.plano_cultura.situacao.id = 1
-    usuarios[0].plano_trabalho.plano_cultura.save()
-
-    url = url_sistemadeculturalocal + '?situacao_plano_id=0&situacao_plano_id=1'
+    url = url_sistemadeculturalocal + '?situacao_plano_cultura=0&situacao_plano_cultura=1'
 
     response = client.get(url)
 
     assert len(response.data['_embedded']['items']) == 2
+
     for componentes in response.data['_embedded']['items']:
-        situacao = componentes['_embedded']['acoes_plano_trabalho']['criacao_plano_cultura']['situacao']
+        situacao = componentes['acoes_plano_trabalho']['criacao_plano_cultura']['situacao']
         assert situacao == 'Avaliando anexo' or situacao == 'Em preenchimento'
 
 
-def test_pesquisa_por_nome_municipio_para_municipios_com_acento_no_nome(client):
-    ''' Pesquisa (sem acento) o nome de um municpio que tenha acento - Deve retornar normalmente'''
-    mommy.make('Municipio', cidade=mommy.make('Cidade', nome_municipio='Acrelândia'))
+def test_pesquisa_por_nome_ente_para_entes_com_acento_no_nome(client):
+    ''' Pesquisa (sem acento) o nome de um ente que tenha acento - Deve retornar normalmente'''
 
-    nome_municipio_param = '?nome_municipio={}'.format('Acrelandia')
+    mommy.make('SistemaCultura', ente_federado__nome='Goiás')
 
-    url = url_sistemadeculturalocal + nome_municipio_param
-
-    request = client.get(url, content_type="application/hal+json")
-    assert len(request.data["_embedded"]["items"]) == 1
-    assert request.data["_embedded"]["items"][0]["ente_federado"]["localizacao"]["cidade"]["nome_municipio"] == 'Acrelândia'
-
-def test_pesquisa_por_nome_estado_para_estados_com_acento_no_nome(client):
-    ''' Pesquisa (sem acento) o nome de um municpio que tenha acento - Deve retornar normalmente'''
-    mommy.make('Municipio', estado=mommy.make('Uf', nome_uf='Goiás'))
-
-    nome_municipio_param = '?nome_uf={}'.format('Goias')
-
-    url = url_sistemadeculturalocal + nome_municipio_param
+    url = url_sistemadeculturalocal + '?ente_federado=Goias'
 
     request = client.get(url, content_type="application/hal+json")
-    assert request.data["_embedded"]["items"][0]["ente_federado"]["localizacao"]['estado']['nome_uf'] == 'Goiás'
+
+    assert request.data["_embedded"]["items"][0]["ente_federado"]["nome"] == 'Goiás'

@@ -10,10 +10,11 @@ from planotrabalho.models import OrgaoGestor
 from planotrabalho.models import ConselhoCultural
 from planotrabalho.models import FundoCultura
 from planotrabalho.models import PlanoCultura
+from planotrabalho.models import Componente
 from planotrabalho.models import Conselheiro
+from planotrabalho.models import FundoDeCultura
 
 from adesao.models import SistemaCultura
-from planotrabalho.models import Componente
 from adesao.models import EnteFederado
 from adesao.models import Sede
 from adesao.models import Gestor
@@ -123,11 +124,21 @@ class ConselhoComponenteSerializer(hal_serializers.HalModelSerializer):
         }
 
 
+class FundoComponenteSerializer(hal_serializers.HalModelSerializer):
+    situacao = serializers.CharField(source='get_situacao_display')
+    cod_situacao = serializers.CharField(source='situacao')
+
+
+    class Meta:
+        model = FundoDeCultura
+        fields = ('cod_situacao', 'situacao', 'data_envio', 'arquivo', 'cnpj')
+
+
 class PlanoTrabalhoSCSerializer(hal_serializers.HalModelSerializer):
     criacao_lei_sistema = ComponenteSCSerializer(source='legislacao')
     criacao_orgao_gestor = ComponenteSCSerializer(source='orgao_gestor')
     criacao_plano_cultura = ComponenteSCSerializer(source='plano')
-    criacao_fundo_cultura = ComponenteSCSerializer(source='fundo_cultura')
+    criacao_fundo_cultura = FundoComponenteSerializer(source='fundo_cultura')
     criacao_conselho_cultural = ComponenteSCSerializer(source='conselho')
     # _embedded = serializers.SerializerMethodField(method_name='get_embedded')
     self = HalHyperlinkedIdentityField(view_name='api:planotrabalho-detail')
@@ -262,5 +273,5 @@ class SistemaCulturaDetailSerializer(PlanoTrabalhoSCSerializer):
 
         responseContext = context.copy()
         responseContext.update(embedded)
- 
+
         return responseContext
