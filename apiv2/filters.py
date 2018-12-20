@@ -3,11 +3,12 @@ from django.db.models import Q
 from django_filters import rest_framework as filters
 
 from adesao.models import SistemaCultura, UFS
+from planotrabalho.models import Componente
 
 
 class SistemaCulturaFilter(filters.FilterSet):
     ente_federado = filters.\
-        CharFilter(field_name='ente_federado__nome', lookup_expr='istartswith')
+        CharFilter(field_name='ente_federado__nome__unaccent', lookup_expr='icontains')
     estado_sigla = filters.CharFilter(method='sigla_filter')
     cnpj_prefeitura = filters.CharFilter(field_name='sede__cnpj', lookup_expr='contains')
     situacao_adesao = filters.\
@@ -17,11 +18,31 @@ class SistemaCulturaFilter(filters.FilterSet):
         DateFilter(field_name='data_publicacao_acordo', lookup_expr=('gte'))
     data_adesao_max = filters.\
         DateFilter(field_name='data_publicacao_acordo', lookup_expr=('lte'))
-    situacao_lei_sistema = filters.NumberFilter(field_name='legislacao__situacao')
-    situacao_orgao_gestor = filters.NumberFilter(field_name='orgao_gestor__situacao')
-    situacao_conselho_cultural = filters.NumberFilter(field_name='conselho__situacao')
-    situacao_fundo_cultura = filters.NumberFilter(field_name='fundo_cultura__situacao')
-    situacao_plano_cultura = filters.NumberFilter(field_name='plano__situacao')
+    situacao_lei_sistema = filters.ModelMultipleChoiceFilter(
+        queryset=Componente.objects.all(),
+        field_name='legislacao__situacao',
+        to_field_name='situacao'
+    )
+    situacao_orgao_gestor = filters.ModelMultipleChoiceFilter(
+        queryset=Componente.objects.all(),
+        field_name='orgao_gestor__situacao',
+        to_field_name='situacao'
+    )
+    situacao_conselho_cultural = filters.ModelMultipleChoiceFilter(
+        queryset=Componente.objects.all(),
+        field_name='conselho__situacao',
+        to_field_name='situacao'
+    )
+    situacao_fundo_cultura = filters.ModelMultipleChoiceFilter(
+        queryset=Componente.objects.all(),
+        field_name='fundo_cultura__situacao',
+        to_field_name='situacao'
+    )
+    situacao_plano_cultura = filters.ModelMultipleChoiceFilter(
+        queryset=Componente.objects.all(),
+        field_name='plano__situacao',
+        to_field_name='situacao'
+    )
 
     class Meta:
         model = SistemaCultura
