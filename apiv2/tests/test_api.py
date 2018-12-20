@@ -303,15 +303,15 @@ def test_retorno_maximo_de_100_objetos_sistema_de_cultura(client):
 
 def test_pesquisa_por_cnpj_prefeitura_em_sistema_de_cultura(client):
 
-    municipio = mommy.make('Municipio', _quantity=2)
-    cnpj_param = '?cnpj_prefeitura={}'.format(municipio[0].cnpj_prefeitura)
+    sistema_cultura = mommy.make('SistemaCultura', ente_federado__cod_ibge=seq(111), _quantity=2, _fill_optional=True)
+    cnpj_param = '?cnpj_prefeitura={}'.format(sistema_cultura[0].sede.cnpj)
 
     url = url_sistemadeculturalocal + cnpj_param
 
     request = client.get(url, content_type="application/hal+json")
 
     assert len(request.data["_embedded"]["items"]) == 1
-    assert request.data["_embedded"]["items"][0]["ente_federado"]["cnpj_prefeitura"] == municipio[0].cnpj_prefeitura
+    assert request.data["_embedded"]["items"][0]["_embedded"]["sede"]["localizacao"]["cnpj"] == sistema_cultura[0].sede.cnpj
 
 
 def test_pesquisa_por_nome_municipio_em_sistema_de_cultura(client):
