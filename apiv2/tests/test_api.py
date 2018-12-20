@@ -229,7 +229,7 @@ def test_objeto_criacao_fundo_cultura_acoesplanotrabalho(client, plano_trabalho)
 
     request = client.get(url, content_type="application/hal+json")
 
-    campos = set(["cnpj_fundo_cultura", "lei_fundo_cultura", "situacao"])
+    campos = set(["cod_situacao", "situacao", "data_envio", "arquivo", "cnpj"])
 
     assert campos.symmetric_difference(request.data["criacao_fundo_cultura"]) == set()
 

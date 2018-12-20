@@ -10,10 +10,11 @@ from planotrabalho.models import OrgaoGestor
 from planotrabalho.models import ConselhoCultural
 from planotrabalho.models import FundoCultura
 from planotrabalho.models import PlanoCultura
+from planotrabalho.models import Componente
 from planotrabalho.models import Conselheiro
+from planotrabalho.models import FundoDeCultura
 
 from adesao.models import SistemaCultura
-from planotrabalho.models import Componente
 from adesao.models import EnteFederado
 from adesao.models import Sede
 from adesao.models import Gestor
@@ -121,6 +122,16 @@ class ConselhoComponenteSerializer(hal_serializers.HalModelSerializer):
         return {
             'conselheiros': conselheiros
         }
+
+
+class FundoComponenteSerializer(hal_serializers.HalModelSerializer):
+    situacao = serializers.CharField(source='get_situacao_display')
+    cod_situacao = serializers.CharField(source='situacao')
+
+
+    class Meta:
+        model = FundoDeCultura
+        fields = ('cod_situacao', 'situacao', 'data_envio', 'arquivo', 'cnpj')
 
 
 class PlanoTrabalhoSCSerializer(hal_serializers.HalModelSerializer):
@@ -262,5 +273,5 @@ class SistemaCulturaDetailSerializer(PlanoTrabalhoSCSerializer):
 
         responseContext = context.copy()
         responseContext.update(embedded)
- 
+
         return responseContext
