@@ -960,7 +960,7 @@ def test_filtra_componente_lei_por_multiplos_ids_situacao(client):
     assert len(response.data['_embedded']['items']) == 2
 
     for componentes in response.data['_embedded']['items']:
-        situacao = componentes['acoes_plano_trabalho']['criacao_lei_sistema']['situacao']
+        situacao = componentes['acoes_plano_trabalho']['_embedded']['criacao_lei_sistema']['situacao']
         assert situacao == 'Avaliando anexo' or situacao == 'Em preenchimento'
 
 
@@ -981,7 +981,7 @@ def test_filtra_componente_conselho_por_multiplos_ids_situacao(client):
     assert len(response.data['_embedded']['items']) == 2
 
     for componentes in response.data['_embedded']['items']:
-        situacao = componentes['acoes_plano_trabalho']['criacao_conselho_cultural']['situacao']
+        situacao = componentes['acoes_plano_trabalho']['_embedded']['criacao_conselho_cultural']['situacao']
         assert situacao == 'Avaliando anexo' or situacao == 'Em preenchimento'
 
 
@@ -1002,7 +1002,7 @@ def test_filtra_componente_fundo_por_multiplos_ids_situacao(client):
     assert len(response.data['_embedded']['items']) == 2
 
     for componentes in response.data['_embedded']['items']:
-        situacao = componentes['acoes_plano_trabalho']['criacao_fundo_cultura']['situacao']
+        situacao = componentes['acoes_plano_trabalho']['_embedded']['criacao_fundo_cultura']['situacao']
         assert situacao == 'Avaliando anexo' or situacao == 'Em preenchimento'
 
 
@@ -1023,7 +1023,7 @@ def test_filtra_componente_orgao_por_multiplos_ids_situacao(client):
     assert len(response.data['_embedded']['items']) == 2
 
     for componentes in response.data['_embedded']['items']:
-        situacao = componentes['acoes_plano_trabalho']['criacao_orgao_gestor']['situacao']
+        situacao = componentes['acoes_plano_trabalho']['_embedded']['criacao_orgao_gestor']['situacao']
         assert situacao == 'Avaliando anexo' or situacao == 'Em preenchimento'
 
 
@@ -1044,7 +1044,7 @@ def test_filtra_componente_plano_por_multiplos_ids_situacao(client):
     assert len(response.data['_embedded']['items']) == 2
 
     for componentes in response.data['_embedded']['items']:
-        situacao = componentes['acoes_plano_trabalho']['criacao_plano_cultura']['situacao']
+        situacao = componentes['acoes_plano_trabalho']['_embedded']['criacao_plano_cultura']['situacao']
         assert situacao == 'Avaliando anexo' or situacao == 'Em preenchimento'
 
 
