@@ -221,9 +221,9 @@ def test_objeto_criacao_plano_cultura_acoesplanotrabalho(client, sistema_cultura
     assert campos.symmetric_difference(request.data["criacao_plano_cultura"]) == set()
 
 
-def test_objeto_criacao_fundo_cultura_acoesplanotrabalho(client, plano_trabalho):
+def test_objeto_criacao_fundo_cultura_acoesplanotrabalho(client, sistema_cultura):
 
-    plano_trabalho = PlanoTrabalho.objects.first()
+    plano_trabalho = SistemaCultura.sistema.first()
     plano_trabalho_id = '{}/'.format(plano_trabalho.id)
     url = url_acoesplanotrabalho + plano_trabalho_id
 
@@ -740,7 +740,7 @@ def test_filtrar_por_nome_ente_federado_nome(client, sistema_cultura):
 
 def test_filtrar_por_nome_ente_federado_vazio(client, sistema_cultura):
     """ Testa retorno de sistemas de cultura ao passar o parâmetro vazio """
-    
+
     url = url_sistemadeculturalocal + '?ente_federado='
 
     response = client.get(url)

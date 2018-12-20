@@ -138,7 +138,7 @@ class PlanoTrabalhoSCSerializer(hal_serializers.HalModelSerializer):
     criacao_lei_sistema = ComponenteSCSerializer(source='legislacao')
     criacao_orgao_gestor = ComponenteSCSerializer(source='orgao_gestor')
     criacao_plano_cultura = ComponenteSCSerializer(source='plano')
-    criacao_fundo_cultura = ComponenteSCSerializer(source='fundo_cultura')
+    criacao_fundo_cultura = FundoComponenteSerializer(source='fundo_cultura')
     criacao_conselho_cultural = ComponenteSCSerializer(source='conselho')
     # _embedded = serializers.SerializerMethodField(method_name='get_embedded')
     self = HalHyperlinkedIdentityField(view_name='api:planotrabalho-detail')
