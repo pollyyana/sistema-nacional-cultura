@@ -22,6 +22,8 @@ class SistemaCulturaFilter(filters.FilterSet):
     situacao_conselho_cultural = filters.NumberFilter(field_name='conselho__situacao')
     situacao_fundo_cultura = filters.NumberFilter(field_name='fundo_cultura__situacao')
     situacao_plano_cultura = filters.NumberFilter(field_name='plano__situacao')
+    municipal = filters.BooleanFilter(method='municipal_filter')
+    estadual = filters.BooleanFilter(method='estadual_filter')
 
     class Meta:
         model = SistemaCultura
@@ -35,6 +37,18 @@ class SistemaCulturaFilter(filters.FilterSet):
             cod_ibge = value
 
         return queryset.filter(Q(ente_federado__cod_ibge__startswith=cod_ibge))
+
+    def estadual_filter(self, queryset, name, value):
+        if value:
+            queryset = queryset.filter(ente_federado__cod_ibge__lte=100)
+
+        return queryset
+
+    def municipal_filter(self, queryset, name, value):
+        if value:
+            queryset = queryset.filter(ente_federado__cod_ibge__gt=100)
+
+        return queryset
 
 
 class PlanoTrabalhoFilter(SistemaCulturaFilter):

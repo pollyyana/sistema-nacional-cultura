@@ -661,57 +661,66 @@ def test_choices_situacao_conselheiro(client):
     assert request.data['conselho']['situacao']['choices'] == situacao_list
 
 
-def test_retorno_sistemas_cultura_municipios(client, entes_municipais_estaduais):
+def test_retorno_sistemas_cultura_municipios(client):
     """ Testa retorno de sistema culturas que são referentes a adesões
     de entes federados municipais """
-    estado, municipio = entes_municipais_estaduais
+
+    municipio = mommy.make('SistemaCultura', ente_federado__cod_ibge=123456, ente_federado__nome="Municipio")
+    estado = mommy.make('SistemaCultura', ente_federado__cod_ibge=11, ente_federado__nome="Estado")
+
     url = url_sistemadeculturalocal + '?municipal=true'
 
     response = client.get(url)
-    municipio_response = response.data['_embedded']['items'][0]['ente_federado']['localizacao']['cidade']['nome_municipio']
+    municipio_response = response.data['_embedded']['items'][0]['_embedded']['ente_federado']['nome']
 
     assert len(response.data['_embedded']['items']) == 1
-    assert municipio_response == municipio.cidade.nome_municipio
+    assert municipio_response == municipio.ente_federado.nome
 
 
-def test_retorno_sistemas_cultura_estados(client, entes_municipais_estaduais):
+def test_retorno_sistemas_cultura_estados(client):
     """ Testa retorno de sistema culturas que são referentes a adesões
     de entes federados estaduais """
 
-    estadual, municipio = entes_municipais_estaduais
+    municipio = mommy.make('SistemaCultura', ente_federado__cod_ibge=123456, ente_federado__nome="Municipio")
+    estado = mommy.make('SistemaCultura', ente_federado__cod_ibge=11, ente_federado__nome="Estado")
+
     url = url_sistemadeculturalocal + '?estadual=true'
 
     response = client.get(url)
-    municipio_response = response.data['_embedded']['items'][0]['ente_federado']['localizacao']['estado']['sigla']
+    estado_response = response.data['_embedded']['items'][0]['_embedded']['ente_federado']['nome']
 
     assert len(response.data['_embedded']['items']) == 1
-    assert municipio_response == estadual.estado.sigla
+    assert estado_response == estado.ente_federado.nome
 
 
-def test_retorno_sistemas_cultura_estadual_vazio(client, entes_municipais_estaduais):
+def test_retorno_sistemas_cultura_estadual_vazio(client):
     """ Testa retorno dos sistemas cultura ao fornecer o parâmetro estadual vazio """
 
-    estadual, municipal = entes_municipais_estaduais
+    municipio = mommy.make('SistemaCultura', ente_federado__cod_ibge=123456, ente_federado__nome="Municipio")
+    estado = mommy.make('SistemaCultura', ente_federado__cod_ibge=11, ente_federado__nome="Estado")
 
     url = url_sistemadeculturalocal + '?estadual=&municipal=true'
     response = client.get(url)
-    cidade = response.data['_embedded']['items'][0]['ente_federado']['localizacao']['cidade']
+    
+    municipio_response = response.data['_embedded']['items'][0]['_embedded']['ente_federado']['nome']
 
     assert len(response.data['_embedded']['items']) == 1
-    assert cidade['nome_municipio'] == municipal.cidade.nome_municipio
+    assert municipio_response == municipio.ente_federado.nome
 
 
-def test_retorno_sistemas_cultura_municipal_vazio(client, entes_municipais_estaduais):
+def test_retorno_sistemas_cultura_municipal_vazio(client):
     """ Testa retorno dos sistemas cultura ao fornecer o parâmetro municipal vazio """
 
-    estadual, municipal = entes_municipais_estaduais
+    municipio = mommy.make('SistemaCultura', ente_federado__cod_ibge=123456, ente_federado__nome="Municipio")
+    estado = mommy.make('SistemaCultura', ente_federado__cod_ibge=11, ente_federado__nome="Estado")
 
     url = url_sistemadeculturalocal + '?estadual=true&municipal='
     response = client.get(url)
-    cidade = response.data['_embedded']['items'][0]['ente_federado']['localizacao']['estado']
+    
+    estado_response = response.data['_embedded']['items'][0]['_embedded']['ente_federado']['nome']
 
     assert len(response.data['_embedded']['items']) == 1
-    assert cidade['sigla'] == estadual.estado.sigla
+    assert estado_response == estado.ente_federado.nome
 
 
 def test_filtrar_por_nome_ente_federado_sigla_estado(client, sistema_cultura):
