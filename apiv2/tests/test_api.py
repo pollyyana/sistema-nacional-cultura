@@ -234,34 +234,31 @@ def test_objeto_criacao_fundo_cultura_acoesplanotrabalho(client, sistema_cultura
     assert campos.symmetric_difference(request.data["criacao_fundo_cultura"]) == set()
 
 
-def test_objeto_criacao_conselho_cultural_acoesplanotrabalho(client, plano_trabalho):
+def test_objeto_criacao_conselho_cultural_acoesplanotrabalho(client, sistema_cultura):
 
-    plano_trabalho = PlanoTrabalho.objects.first()
-    situacao = SituacoesArquivoPlano.objects.first()
-    conselho_cultural = mommy.make('ConselhoCultural', situacao=situacao)
-    plano_trabalho = mommy.make('PlanoTrabalho', conselho_cultural=conselho_cultural)
+    plano_trabalho = SistemaCultura.sistema.first()
     plano_trabalho_id = '{}/'.format(plano_trabalho.id)
     url = url_acoesplanotrabalho + plano_trabalho_id
 
     request = client.get(url, content_type="application/hal+json")
 
-    campos = set(["ata_regimento_aprovado", "situacao"])
+    campos = set(["cod_situacao", "situacao", "data_envio", "arquivo"])
 
     assert campos.symmetric_difference(request.data["criacao_conselho_cultural"]) == set()
 
 
-def test_objeto_conselheiros_sistema_de_cultura(client, plano_trabalho):
+def test_objeto_conselheiros_sistema_de_cultura(client, sistema_cultura):
 
-    sistema_de_cultura = plano_trabalho.usuario.municipio
+    sistema_de_cultura = SistemaCultura.sistema.first()
     sistema_id = '{}/'.format(sistema_de_cultura.id)
     url = url_sistemadeculturalocal + sistema_id
 
     request = client.get(url, content_type="application/hal+json")
 
     campos = set(["segmento", "situacao", "data_cadastro", "email",
-                  "data_situacao", "nome"])
+                  "data_situacao", "nome", "cod_situacao"])
 
-    assert campos.symmetric_difference(request.data["conselho"]["conselheiros"][0]) == set()
+    assert campos.symmetric_difference(request.data["_embedded"]["conselho"]["conselheiros"][0]) == set()
 
 
 def test_retorno_situacao_conselheiro(client, plano_trabalho):
