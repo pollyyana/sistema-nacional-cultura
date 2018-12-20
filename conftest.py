@@ -187,6 +187,7 @@ def sistema_cultura():
     sistema_cultura = mommy.make(
             "SistemaCultura",
             ente_federado=ente_federado,
+            ente_federado__nome="Bahia",
             _fill_optional=True
             )
 
