@@ -186,7 +186,7 @@ def sistema_cultura():
 
     conselho = mommy.make("Componente", tipo=3, _fill_optional=True)
 
-    conselheiros = mommy.make("Conselheiro", _quantity=3, conselho=conselho, _fill_optional=True)
+    conselheiros = mommy.make("Conselheiro", _quantity=3, conselho=conselho, situacao=1, _fill_optional=True)
 
     sistema_cultura = mommy.make(
             "SistemaCultura",
