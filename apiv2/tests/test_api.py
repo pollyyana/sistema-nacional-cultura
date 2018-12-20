@@ -925,50 +925,6 @@ def test_ordenar_resultados_da_api_de_forma_descendente_por_nome_municipio(clien
 
 
 @pytest.mark.parametrize("query,componente", [
-    ("situacao_lei_id", "criacao_sistema"),
-    ("situacao_orgao_id", "orgao_gestor"),
-    ("situacao_fundo_id", "fundo_cultura"),
-    ("situacao_plano_id", "plano_cultura"),
-    ("situacao_conselho_id", "conselho_cultural"),
-    ])
-def test_filtrar_componente_situacao_id_acoesplanotrabalho(client, plano_trabalho,
-                                                           query, componente):
-    """ Testa retorno ao filtrar por id do componente do plano de trabalho
-    no endpoint acoesplanotrabalho """
-
-    mommy.make('Municipio', _quantity=2)
-    situacao = getattr(plano_trabalho, componente).situacao
-
-    url = url_acoesplanotrabalho + '?{}={}'.format(query, situacao.id)
-
-    response = client.get(url)
-
-    assert len(response.data['_embedded']['items']) == 1
-
-
-@pytest.mark.parametrize("query,componente", [
-    ("situacao_lei_descricao", "criacao_sistema"),
-    ("situacao_orgao_descricao", "orgao_gestor"),
-    ("situacao_fundo_descricao", "fundo_cultura"),
-    ("situacao_plano_descricao", "plano_cultura"),
-    ("situacao_conselho_descricao", "conselho_cultural"),
-    ])
-def test_filtrar_componente_situacao_descricao_acoesplanotrabalho(client, plano_trabalho,
-                                                                  query, componente):
-    """ Testa retorno ao filtrar por descrição componente do plano de trabalho
-    no endpoint acoesplanotrabalho """
-
-    mommy.make('Municipio', _quantity=2)
-    situacao = getattr(plano_trabalho, componente).situacao
-
-    url = url_acoesplanotrabalho + '?{}={}'.format(query, situacao.descricao)
-
-    response = client.get(url)
-
-    assert len(response.data['_embedded']['items']) == 1
-
-
-@pytest.mark.parametrize("query,componente", [
     ("situacao_lei_sistema", "legislacao"),
     ("situacao_orgao_gestor", "orgao_gestor"),
     ("situacao_fundo_cultura", "fundo_cultura"),
@@ -1098,10 +1054,10 @@ def test_filtra_componente_plano_por_multiplos_ids_situacao(client):
 def test_pesquisa_por_nome_ente_para_entes_com_acento_no_nome(client):
     ''' Pesquisa (sem acento) o nome de um ente que tenha acento - Deve retornar normalmente'''
 
-    mommy.make('SistemaCultura', ente_federado__nome='Goiás')
+    mommy.make('SistemaCultura', ente_federado__cod_ibge=123456, ente_federado__nome='Goiás')
 
     url = url_sistemadeculturalocal + '?ente_federado=Goias'
 
     request = client.get(url, content_type="application/hal+json")
 
-    assert request.data["_embedded"]["items"][0]["ente_federado"]["nome"] == 'Goiás'
+    assert request.data["_embedded"]["items"][0]["_embedded"]["ente_federado"]["nome"] == 'Goiás'
