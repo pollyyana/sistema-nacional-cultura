@@ -190,6 +190,7 @@ def sistema_cultura():
 
     sistema_cultura = mommy.make(
             "SistemaCultura",
+            estado_processo=6,
             ente_federado=ente_federado,
             conselho=conselho,
             _fill_optional=True

@@ -827,6 +827,8 @@ def test_filtra_por_situacao_id_componente_sistema_de_cultura(client, query, com
     """ Testa retorno ao filtrar sistemas de cultura locais por id da situação
     dos componentes do plano de trabalho """
 
+    SistemaCultura.objects.exclude(legislacao__situacao=None).delete()
+
     sistema_cultura = mommy.make("SistemaCultura", _fill_optional=['legislacao', 'orgao_gestor',
         'fundo_cultura', 'plano', 'conselho'])
 
