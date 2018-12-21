@@ -179,7 +179,17 @@ def preenche_planilha(planilha):
     return ultima_linha
 
 
-def atualiza_session(ente, request):
-    sistema = SistemaCultura.sistema.get(ente_federado__id=ente)
-    request.session['sistema_cultura_selecionado'] = model_to_dict(sistema, exclude=['data_criacao', 'alterado_em'])
+def atualiza_session(sistema_cultura, request):
+    request.session['sistema_cultura_selecionado'] = model_to_dict(sistema_cultura, exclude=['data_criacao', 'alterado_em'])
+    request.session['sistema_situacao'] = sistema_cultura.get_estado_processo_display()
+    request.session['sistema_sede'] = model_to_dict(sistema_cultura.sede)
+    request.session['sistema_gestor'] = model_to_dict(sistema_cultura.gestor, exclude=['termo_posse', 'rg_copia', 'cpf_copia'])
+    request.session['sistema_ente'] = model_to_dict(sistema_cultura.ente_federado, fields=['nome'])
+
+    if sistema_cultura.responsavel:
+        request.session['sistema_responsavel'] = model_to_dict(sistema_cultura.responsavel)
+
+    if sistema_cultura.secretario:
+        request.session['sistema_secretario'] = model_to_dict(sistema_cultura.secretario)
+   
     request.session.modified = True

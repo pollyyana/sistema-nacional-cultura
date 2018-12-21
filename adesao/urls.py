@@ -63,7 +63,7 @@ urlpatterns = [
             login_required(views.AlterarSistemaCultura.as_view()),
             name='alterar_sistema'),
 
-    path('sistema/<int:sistema>',
+    path('sistema',
             login_required(views.define_sistema_sessao),
             name='define_sistema_sessao'),
 
