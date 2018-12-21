@@ -372,7 +372,9 @@ def test_alterar_funcionario_tipo_responsavel(login, client):
     assert sistema_cultura_atualizado.responsavel.tipo_funcionario == 1
 
 
-def test_cadastrar_funcionario_dados_invalidos(login, client, sistema_cultura):
+def test_cadastrar_funcionario_dados_invalidos(login, client):
+
+    sistema_cultura = mommy.make("SistemaCultura", ente_federado__cod_ibge=123456)
 
     url = reverse("adesao:cadastrar_funcionario",
         kwargs={"tipo": "secretario", "sistema": sistema_cultura.id})
