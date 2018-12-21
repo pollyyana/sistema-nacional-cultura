@@ -754,7 +754,7 @@ def test_alterar_documentos_fundo_cultura(client, login_staff):
 
     numero_fundos_pos_update = FundoDeCultura.objects.count()
     fundo.refresh_from_db()
-    name = fundo_atualizado.arquivo.name.split("fundo_cultura/")[1]
+    name = fundo.arquivo.name.split("fundo_cultura/")[1]
 
     assert numero_fundos == numero_fundos_pos_update
     assert name == arquivo.name
