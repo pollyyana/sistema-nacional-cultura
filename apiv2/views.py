@@ -35,11 +35,17 @@ class SistemaCulturaAPIList(generics.ListAPIView):
     ordering_fields = ('ente_federado__nome',)
 
     def list(self, request):
+        queryset = self.filter_queryset(self.get_queryset())
+
+        municipios = queryset.filter(ente_federado__cod_ibge__gt=100)
+        estados = queryset.filter(ente_federado__cod_ibge__lte=100)
+
         response = super().list(self, request)
-        response.data['municipios'] = EnteFederado.objects.filter(cod_ibge__gt=100).count()
-        response.data['municipios_aderidos'] = SistemaCultura.sistema.filter(estado_processo=6).filter(ente_federado__cod_ibge__gt=100).count()
-        response.data['estados'] = EnteFederado.objects.filter(cod_ibge__lte=100).count()
-        response.data['estados_aderidos'] = SistemaCultura.sistema.filter(ente_federado__cod_ibge__lte=100).filter(estado_processo=6).count()
+        response.data['municipios'] = municipios.count()
+        response.data['municipios_aderidos'] = municipios.filter(estado_processo=6).count()
+        response.data['estados'] = estados.count()
+        response.data['estados_aderidos'] = estados.filter(estado_processo=6).count()
+
         return response
 
 
