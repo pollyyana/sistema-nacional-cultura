@@ -510,33 +510,28 @@ def test_pesquisa_por_situacao_adesao_6_em_sistema_de_cultura(client):
         assert municipio["situacao_adesao"]["situacao_adesao"] == 'Publicado no DOU'
 
 
-def test_pesquisa_data_adesao_sistema_de_cultura(client, plano_trabalho):
-    mommy.make('Municipio', _quantity=5)
-    sistema_de_cultura = Municipio.objects.first()
+def test_pesquisa_data_adesao_sistema_de_cultura(client):
+    mommy.make('SistemaCultura', _quantity=5, ente_federado__cod_ibge=seq(110),
+               data_publicacao_acordo=seq(datetime.date(2018, 12, 21),
+               datetime.timedelta(days=1)), _fill_optional=True)
+    sistema_de_cultura = SistemaCultura.sistema.first()
 
-    data_param = '?data_adesao={}'.format(sistema_de_cultura.usuario.data_publicacao_acordo)
+    data_param = '?data_adesao={}'.format(sistema_de_cultura.data_publicacao_acordo)
     url = url_sistemadeculturalocal + data_param
 
     request = client.get(url, content_type="application/hal+json")
 
     assert len(request.data["_embedded"]["items"]) == 1
-    assert request.data["_embedded"]["items"][0]["data_adesao"] == str(sistema_de_cultura.usuario.data_publicacao_acordo)
+    assert request.data["_embedded"]["items"][0]["data_adesao"] == str(sistema_de_cultura.data_publicacao_acordo)
 
 
 def test_pesquisa_range_data_adesao_sistema_de_cultura(client, plano_trabalho):
-    municipios = mommy.make('Municipio', _quantity=3)
-    sistema_de_cultura = Municipio.objects.first()
+    mommy.make('SistemaCultura', _quantity=5, ente_federado__cod_ibge=seq(110),
+               data_publicacao_acordo=seq(datetime.date(2018, 12, 21),
+                                          datetime.timedelta(days=1)), _fill_optional=True)
+    sistema_de_cultura = SistemaCultura.sistema.first()
     old_date = datetime.date.today() - datetime.timedelta(2)
-    actual_date = sistema_de_cultura.usuario.data_publicacao_acordo
-
-    mommy.make('Usuario', municipio=municipios[0],
-               data_publicacao_acordo=old_date)
-
-    mommy.make('Usuario', municipio=municipios[1],
-               data_publicacao_acordo=actual_date + datetime.timedelta(4))
-
-    mommy.make('Usuario', municipio=municipios[2],
-               data_publicacao_acordo=actual_date + datetime.timedelta(5))
+    actual_date = sistema_de_cultura.data_publicacao_acordo
 
     data_range_param = '?data_adesao_min={}&data_adesao_max={}'.format(old_date, actual_date)
     url = url_sistemadeculturalocal + data_range_param
@@ -545,9 +540,8 @@ def test_pesquisa_range_data_adesao_sistema_de_cultura(client, plano_trabalho):
 
     data = request.data["_embedded"]["items"]
 
-    assert len(data) == 2
-    assert data[0]["data_adesao"] == str(old_date)
-    assert data[1]["data_adesao"] == str(actual_date)
+    assert len(data) == 1
+    assert data[0]["data_adesao"] == str(actual_date)
 
 
 """ Testa requisição do tipo OPTIONS """
