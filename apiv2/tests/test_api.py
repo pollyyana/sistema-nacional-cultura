@@ -316,89 +316,49 @@ def test_pesquisa_por_cnpj_prefeitura_em_sistema_de_cultura(client):
 
 def test_pesquisa_por_nome_municipio_em_sistema_de_cultura(client):
 
-    cidades = mommy.make('Cidade', _quantity=2)
+    sistema_cultura = mommy.make('SistemaCultura', ente_federado__cod_ibge=seq(
+        111), _quantity=2, _fill_optional=True)
 
-    for cidade in cidades:
-        mommy.make('Municipio', cidade=cidade)
+    nome_ente_param = '?ente_federado={}'.format(
+        sistema_cultura[0].ente_federado.nome)
 
-    nome_municipio_param = '?nome_municipio={}'.format(cidades[0].nome_municipio)
-
-    url = url_sistemadeculturalocal + nome_municipio_param
+    url = url_sistemadeculturalocal + nome_ente_param
 
     request = client.get(url, content_type="application/hal+json")
 
     assert len(request.data["_embedded"]["items"]) == 1
-    assert request.data["_embedded"]["items"][0]["ente_federado"]["localizacao"]["cidade"]["nome_municipio"] == cidades[0].nome_municipio
+    assert request.data["_embedded"]["items"][0]["_embedded"]["ente_federado"]["nome"] == sistema_cultura[0].ente_federado.nome
 
 def test_pesquisa_por_nome_municipio_em_sistema_de_cultura_letras_maiusculas(client):
 
-    cidades = mommy.make('Cidade', _quantity=2)
+    sistema_cultura = mommy.make('SistemaCultura', ente_federado__cod_ibge=seq(
+        111), _quantity=2, _fill_optional=True)
 
-    for cidade in cidades:
-        mommy.make('Municipio', cidade=cidade)
+    nome_ente_maiusculo = sistema_cultura[0].ente_federado.nome.upper()
+    nome_ente_param = '?ente_federado={}'.format(nome_ente_maiusculo)
 
-    nome_municipio_maiusculo = cidades[0].nome_municipio.upper()
-    nome_municipio_param = '?nome_municipio={}'.format(nome_municipio_maiusculo)
-
-    url = url_sistemadeculturalocal + nome_municipio_param
+    url = url_sistemadeculturalocal + nome_ente_param
 
     request = client.get(url, content_type="application/hal+json")
 
     assert len(request.data["_embedded"]["items"]) == 1
-    assert request.data["_embedded"]["items"][0]["ente_federado"]["localizacao"]["cidade"]["nome_municipio"] == cidades[0].nome_municipio
+    assert request.data["_embedded"]["items"][0]["_embedded"]["ente_federado"]["nome"] == sistema_cultura[0].ente_federado.nome
 
 def test_pesquisa_por_nome_municipio_em_sistema_de_cultura_letras_minusculas(client):
 
-    cidades = mommy.make('Cidade', _quantity=2)
+    sistema_cultura = mommy.make('SistemaCultura', ente_federado__cod_ibge=seq(
+        111), _quantity=2, _fill_optional=True)
 
-    for cidade in cidades:
-        mommy.make('Municipio', cidade=cidade)
+    nome_ente_minusculo = sistema_cultura[0].ente_federado.nome.lower()
+    nome_ente_param = '?ente_federado={}'.format(nome_ente_minusculo)
 
-    nome_municipio_minusculo = cidades[0].nome_municipio.lower()
-    nome_municipio_param = '?nome_municipio={}'.format(nome_municipio_minusculo)
-
-    url = url_sistemadeculturalocal + nome_municipio_param
+    url = url_sistemadeculturalocal + nome_ente_param
 
     request = client.get(url, content_type="application/hal+json")
 
     assert len(request.data["_embedded"]["items"]) == 1
-    assert request.data["_embedded"]["items"][0]["ente_federado"]["localizacao"]["cidade"]["nome_municipio"] == cidades[0].nome_municipio
+    assert request.data["_embedded"]["items"][0]["_embedded"]["ente_federado"]["nome"] == sistema_cultura[0].ente_federado.nome
 
-
-def test_pesquisa_por_nome_uf_em_sistema_de_cultura_letras_maiusculas(client):
-
-    estados = mommy.make('Uf', _quantity=2)
-
-    for estado in estados:
-        mommy.make('Municipio', estado=estado)
-
-    nome_uf_maiuscula = estados[0].nome_uf.upper()
-    nome_uf_param = '?nome_uf={}'.format(nome_uf_maiuscula)
-
-    url = url_sistemadeculturalocal + nome_uf_param
-
-    request = client.get(url, content_type="application/hal+json")
-
-    assert len(request.data["_embedded"]["items"]) == 1
-    assert request.data["_embedded"]["items"][0]["ente_federado"]["localizacao"]["estado"]["nome_uf"] == estados[0].nome_uf
-
-
-def test_pesquisa_por_nome_uf_em_sistema_de_cultura_letras_minusculas(client):
-
-    estados = mommy.make('Uf', _quantity=2)
-
-    for estado in estados:
-        mommy.make('Municipio', estado=estado)
-
-    nome_uf_minuscula = estados[0].nome_uf.lower()
-    nome_uf_param = '?nome_uf={}'.format(nome_uf_minuscula)
-
-    url = url_sistemadeculturalocal + nome_uf_param
-
-    request = client.get(url, content_type="application/hal+json")
-
-    assert len(request.data["_embedded"]["items"]) == 1
-    assert request.data["_embedded"]["items"][0]["ente_federado"]["localizacao"]["estado"]["nome_uf"] == estados[0].nome_uf
 
 def test_pesquisa_por_estado_sigla_em_sistema_de_cultura(client):
 
