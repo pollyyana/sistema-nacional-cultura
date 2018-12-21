@@ -262,29 +262,29 @@ def test_objeto_conselheiros_sistema_de_cultura(client, sistema_cultura):
     assert campos.symmetric_difference(request.data["_embedded"]["conselho"]["conselheiros"][0]) == set()
 
 
-def test_retorno_situacao_conselheiro(client, plano_trabalho):
+def test_retorno_situacao_conselheiro(client, sistema_cultura):
 
-    sistema_de_cultura = Municipio.objects.first()
+    sistema_de_cultura = SistemaCultura.sistema.first()
     sistema_id = '{}/'.format(sistema_de_cultura.id)
     url = url_sistemadeculturalocal + sistema_id
 
     request = client.get(url, content_type="application/hal+json")
 
-    situacao = request.data["conselho"]["conselheiros"][0]["situacao"]
+    situacao = request.data["_embedded"]["conselho"]["conselheiros"][0]["situacao"]
 
     assert situacao == "Habilitado"
 
 
-def test_retorno_data_adesao_sistema_de_cultura(client, plano_trabalho):
+def test_retorno_data_adesao_sistema_de_cultura(client, sistema_cultura):
 
-    sistema_de_cultura = Municipio.objects.first()
+    sistema_de_cultura = SistemaCultura.sistema.first()
     sistema_id = '{}/'.format(sistema_de_cultura.id)
     url = url_sistemadeculturalocal + sistema_id
 
     request = client.get(url, content_type="application/hal+json")
 
     assert request.data["data_adesao"]
-    assert request.data["data_adesao"] == str(sistema_de_cultura.usuario.data_publicacao_acordo)
+    assert request.data["data_adesao"] == str(sistema_de_cultura.data_publicacao_acordo)
 
 
 """ Testes de requisições com parâmetros """
@@ -292,7 +292,7 @@ def test_retorno_data_adesao_sistema_de_cultura(client, plano_trabalho):
 
 def test_retorno_maximo_de_100_objetos_sistema_de_cultura(client):
 
-    mommy.make('Municipio', cidade__codigo_ibge=seq(110), _quantity=110)
+    mommy.make('SistemaCultura', ente_federado__cod_ibge=seq(110), _quantity=110)
     limit_param = '?limit=150'
 
     url = url_sistemadeculturalocal + limit_param
@@ -302,29 +302,17 @@ def test_retorno_maximo_de_100_objetos_sistema_de_cultura(client):
     assert len(request.data["_embedded"]["items"]) == 100
 
 
-def test_retorno_maximo_de_100_objetos_acoes_plano_trabalho(client):
-
-    mommy.make('PlanoTrabalho', _quantity=101)
-    limit_param = '?limit=150'
-
-    url = url_acoesplanotrabalho + limit_param
-
-    request = client.get(url, content_type="application/hal+json")
-
-    assert len(request.data["_embedded"]["items"]) == 100
-
-
 def test_pesquisa_por_cnpj_prefeitura_em_sistema_de_cultura(client):
 
-    municipio = mommy.make('Municipio', _quantity=2)
-    cnpj_param = '?cnpj_prefeitura={}'.format(municipio[0].cnpj_prefeitura)
+    sistema_cultura = mommy.make('SistemaCultura', ente_federado__cod_ibge=seq(111), _quantity=2, _fill_optional=True)
+    cnpj_param = '?cnpj_prefeitura={}'.format(sistema_cultura[0].sede.cnpj)
 
     url = url_sistemadeculturalocal + cnpj_param
 
     request = client.get(url, content_type="application/hal+json")
 
     assert len(request.data["_embedded"]["items"]) == 1
-    assert request.data["_embedded"]["items"][0]["ente_federado"]["cnpj_prefeitura"] == municipio[0].cnpj_prefeitura
+    assert request.data["_embedded"]["items"][0]["_embedded"]["sede"]["localizacao"]["cnpj"] == sistema_cultura[0].sede.cnpj
 
 
 def test_pesquisa_por_nome_municipio_em_sistema_de_cultura(client):
@@ -699,7 +687,7 @@ def test_retorno_sistemas_cultura_estadual_vazio(client):
 
     url = url_sistemadeculturalocal + '?estadual=&municipal=true'
     response = client.get(url)
-    
+
     municipio_response = response.data['_embedded']['items'][0]['_embedded']['ente_federado']['nome']
 
     assert len(response.data['_embedded']['items']) == 1
@@ -714,7 +702,7 @@ def test_retorno_sistemas_cultura_municipal_vazio(client):
 
     url = url_sistemadeculturalocal + '?estadual=true&municipal='
     response = client.get(url)
-    
+
     estado_response = response.data['_embedded']['items'][0]['_embedded']['ente_federado']['nome']
 
     assert len(response.data['_embedded']['items']) == 1
