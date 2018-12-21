@@ -3,6 +3,7 @@ import random
 import datetime
 
 from django.urls import reverse
+from django.db.models import Q
 
 from rest_framework import status
 from model_mommy import mommy
@@ -747,6 +748,8 @@ def test_filtrar_por_nome_ente_federado_nome(client, sistema_cultura):
 def test_filtrar_por_nome_ente_federado_vazio(client, sistema_cultura):
     """ Testa retorno de sistemas de cultura ao passar o parâmetro vazio """
 
+    SistemaCultura.objects.exclude(id=sistema_cultura.id).delete()
+
     url = url_sistemadeculturalocal + '?ente_federado='
 
     response = client.get(url)
@@ -946,6 +949,8 @@ def test_filtra_por_situacao_id_componente_sistema_de_cultura(client, query, com
 def test_filtra_componente_lei_por_multiplos_ids_situacao(client):
     """ Testa retorno ao filtrar sistemas de cultura locais por múltiplos ids da situação
     do componente lei sistema cultura """
+
+    SistemaCultura.objects.filter(Q(legislacao__situacao=1) | Q(legislacao__situacao=0)).delete()
 
     situacoes = [0, 1, 5]
     sistemas = mommy.make("SistemaCultura", _fill_optional='legislacao', _quantity=3)
