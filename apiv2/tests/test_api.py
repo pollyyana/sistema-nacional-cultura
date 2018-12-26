@@ -525,13 +525,14 @@ def test_pesquisa_data_adesao_sistema_de_cultura(client):
     assert request.data["_embedded"]["items"][0]["data_adesao"] == str(sistema_de_cultura.data_publicacao_acordo)
 
 
-def test_pesquisa_range_data_adesao_sistema_de_cultura(client, plano_trabalho):
-    mommy.make('SistemaCultura', _quantity=5, ente_federado__cod_ibge=seq(110),
-               data_publicacao_acordo=seq(datetime.date(2018, 12, 21),
-                                          datetime.timedelta(days=1)), _fill_optional=True)
+def test_pesquisa_range_data_adesao_sistema_de_cultura(client, sistema_cultura):
     sistema_de_cultura = SistemaCultura.sistema.first()
     old_date = datetime.date.today() - datetime.timedelta(2)
     actual_date = sistema_de_cultura.data_publicacao_acordo
+
+    mommy.make('SistemaCultura', ente_federado__cod_ibge=111, data_publicacao_acordo=old_date)
+    mommy.make('SistemaCultura', ente_federado__cod_ibge=112, data_publicacao_acordo=actual_date + datetime.timedelta(4))
+    mommy.make('SistemaCultura', ente_federado__cod_ibge=113, data_publicacao_acordo=actual_date + datetime.timedelta(5))
 
     data_range_param = '?data_adesao_min={}&data_adesao_max={}'.format(old_date, actual_date)
     url = url_sistemadeculturalocal + data_range_param
@@ -540,7 +541,7 @@ def test_pesquisa_range_data_adesao_sistema_de_cultura(client, plano_trabalho):
 
     data = request.data["_embedded"]["items"]
 
-    assert len(data) == 1
+    assert len(data) == 2
     assert data[0]["data_adesao"] == str(actual_date)
 
 
@@ -778,19 +779,23 @@ def test_counts_com_apenas_municipios(client):
 def test_ordenar_resultados_da_api_de_forma_ascendente_por_nome_municipio(client):
     """ Testa a ordenação ascendente do resultado da API por cidade(nome_municipio) """
 
-    nomes_entes = ['Brasilia', 'Zé Doca', 'Abaetetuba']
+    nomes_entes = ['Brasilia', 'Zé Doca', 'Abaetetuba', 'Abaetetuba']
 
     for nome in nomes_entes:
-        mommy.make('SistemaCultura', ente_federado__nome=nome)
+        mommy.make('SistemaCultura',
+                   ente_federado__nome=nome,
+                   ente_federado__cod_ibge=random.randint(100, 900),
+                   _fill_optional=True)
 
     url = url_sistemadeculturalocal + '?ordering=ente_federado__nome'
     response = client.get(url)
 
     entes = response.data['_embedded']['items']
 
-    assert entes[0]['ente_federado']['nome'] == nomes_entes[2]
-    assert entes[1]['ente_federado']['nome'] == nomes_entes[0]
-    assert entes[2]['ente_federado']['nome'] == nomes_entes[1]
+    assert entes[0]['_embedded']['ente_federado']['nome'] == nomes_entes[2]
+    assert entes[1]['_embedded']['ente_federado']['nome'] == nomes_entes[3]
+    assert entes[2]['_embedded']['ente_federado']['nome'] == nomes_entes[0]
+    assert entes[3]['_embedded']['ente_federado']['nome'] == nomes_entes[1]
 
 
 def test_ordenar_resultados_da_api_de_forma_descendente_por_nome_municipio(client):
@@ -798,16 +803,19 @@ def test_ordenar_resultados_da_api_de_forma_descendente_por_nome_municipio(clien
     nomes_entes = ['Brasilia', 'Zé Doca', 'Abaetetuba']
 
     for nome in nomes_entes:
-        mommy.make('SistemaCultura', ente_federado__nome=nome)
+        mommy.make('SistemaCultura',
+                   ente_federado__nome=nome,
+                   ente_federado__cod_ibge=random.randint(100, 900),
+                   _fill_optional=True)
 
     url = url_sistemadeculturalocal + '?ordering=-ente_federado__nome'
     response = client.get(url)
 
     entes = response.data['_embedded']['items']
 
-    assert entes[0]['ente_federado']['localizacao']['cidade']['nome_municipio'] == nomes_entes[1]
-    assert entes[1]['ente_federado']['localizacao']['cidade']['nome_municipio'] == nomes_entes[0]
-    assert entes[2]['ente_federado']['localizacao']['cidade']['nome_municipio'] == nomes_entes[2]
+    assert entes[0]['_embedded']['ente_federado']['nome'] == nomes_entes[1]
+    assert entes[1]['_embedded']['ente_federado']['nome'] == nomes_entes[0]
+    assert entes[2]['_embedded']['ente_federado']['nome'] == nomes_entes[2]
 
 
 @pytest.mark.parametrize("query,componente", [

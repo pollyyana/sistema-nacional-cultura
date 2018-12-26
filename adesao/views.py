@@ -61,7 +61,7 @@ def home(request):
     situacao = request.user.usuario.estado_processo
     historico = Historico.objects.filter(usuario=request.user.usuario)
     historico = historico.order_by("-data_alteracao")
-    sistemas_cultura = request.user.usuario.sistema_cultura.all().distinct('ente_federado')
+    sistemas_cultura = request.user.usuario.sistema_cultura.all().distinct('ente_federado__nome', 'ente_federado')
 
     request.session['sistemas'] = list(sistemas_cultura.values('id', 'ente_federado__nome'))
 
@@ -478,7 +478,7 @@ def importar_secretario(request):
         responsavel.save()
 
     except (ValidationError, ObjectDoesNotExist) as error:
-        return redirect("adesao:cadastrar_funcionario", 
+        return redirect("adesao:cadastrar_funcionario",
             sistema=sistema.id, tipo='responsavel')
 
     sistema.responsavel = responsavel
@@ -487,7 +487,7 @@ def importar_secretario(request):
     sistema_atualizado = SistemaCultura.sistema.get(ente_federado__id=sistema.ente_federado.id)
     atualiza_session(sistema_atualizado, request)
 
-    return redirect("adesao:cadastrar_funcionario", 
+    return redirect("adesao:cadastrar_funcionario",
         sistema=sistema.id, tipo='responsavel')
 
 
