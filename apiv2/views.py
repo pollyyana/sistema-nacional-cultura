@@ -11,7 +11,8 @@ from adesao.models import EnteFederado
 from planotrabalho.models import PlanoTrabalho
 
 # from .serializers import MunicipioSerializer as SistemaCulturaSerializer
-from .serializers import SistemaCulturaSerializer, SistemaCulturaDetailSerializer
+from .serializers import SistemaCulturaSerializer
+from .serializers import SistemaCulturaDetailSerializer
 from .serializers import PlanoTrabalhoSerializer
 
 from .filters import SistemaCulturaFilter
@@ -32,7 +33,7 @@ class SistemaCulturaAPIList(generics.ListAPIView):
 
     filter_backends = (DjangoFilterBackend, filters.OrderingFilter,)
     filterset_class = SistemaCulturaFilter
-    ordering_fields = ('ente_federado__nome',)
+    ordering_fields = ('ente_federado__nome', 'ente_federado')
 
     def list(self, request):
         queryset = self.filter_queryset(self.get_queryset())

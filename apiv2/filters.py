@@ -7,17 +7,18 @@ from planotrabalho.models import Componente
 
 
 class SistemaCulturaFilter(filters.FilterSet):
-    ente_federado = filters.\
-        CharFilter(field_name='ente_federado__nome__unaccent', lookup_expr='icontains')
+    ente_federado = filters.CharFilter(
+        field_name='ente_federado__nome__unaccent', lookup_expr='icontains')
     estado_sigla = filters.CharFilter(method='sigla_filter')
-    cnpj_prefeitura = filters.CharFilter(field_name='sede__cnpj', lookup_expr='contains')
-    situacao_adesao = filters.\
-        CharFilter(field_name='estado_processo', lookup_expr='exact')
+    cnpj_prefeitura = filters.CharFilter(
+        field_name='sede__cnpj', lookup_expr='contains')
+    situacao_adesao = filters.CharFilter(
+        field_name='estado_processo', lookup_expr='exact')
     data_adesao = filters.DateFilter(field_name='data_publicacao_acordo')
-    data_adesao_min = filters.\
-        DateFilter(field_name='data_publicacao_acordo', lookup_expr=('gte'))
-    data_adesao_max = filters.\
-        DateFilter(field_name='data_publicacao_acordo', lookup_expr=('lte'))
+    data_adesao_min = filters.DateFilter(
+        field_name='data_publicacao_acordo', lookup_expr=('gte'))
+    data_adesao_max = filters.DateFilter(
+        field_name='data_publicacao_acordo', lookup_expr=('lte'))
     situacao_lei_sistema = filters.ModelMultipleChoiceFilter(
         queryset=Componente.objects.all(),
         field_name='legislacao__situacao',
