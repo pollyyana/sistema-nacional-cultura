@@ -42,7 +42,7 @@
                     <p><strong>Bairro:</strong> {{ ente.sede.bairro }}</p>
                     {% if ente.processo_sei %}
                       <p>
-                        <strong>Processo SEI:</strong> 
+                        <strong>Processo SEI:</strong>
                           {% if ente.processo_sei %}
                             {{ente.processo_sei}}
                           {% endif %}
@@ -50,11 +50,11 @@
                     {% endif %}
                     {% if ente.data_publicacao_acordo %}
                       <p>
-                        <strong>Publicação no DOU:</strong> 
+                        <strong>Publicação no DOU:</strong>
                           {% if ente.link_publicacao_acordo %}
                             <a href="{{ ente.link_publicacao_acordo }}"> {{ente.data_publicacao_acordo|date:'d/m/Y'}}</a>
                           {% else %}
-                            {{ente.data_publicacao_acordo|date:'d/m/Y'}} 
+                            {{ente.data_publicacao_acordo|date:'d/m/Y'}}
                           {% endif %}
                       </p>
                     {% endif %}
@@ -270,7 +270,7 @@
           </div>
         </div>
     </div>
-    
+
 </div>
 {% endif %}
 
@@ -283,7 +283,7 @@
             </div>
             <div class="panel-body">
               {% for sistema in historico_sistemas %}
-                <ul class="list-group">            
+                <ul class="list-group">
                     {% if sistema.cadastrador.nome_usuario %}
                       <li class="list-group-item">
                          <b>Usuário:</b> {{sistema.cadastrador.nome_usuario}}
@@ -294,7 +294,7 @@
                       <li class="list-group-item">
                          <b>E-mail:</b> {{sistema.cadastrador.user.email}}
                       </li>
-                    {% endif %}         
+                    {% endif %}
                 </ul>
               {% endfor %}
             </div>
@@ -310,6 +310,9 @@
           <form name="form" id="detalhe_municipio_form" action="{% url 'gestao:alterar_dados_adesao' ente.ente_federado.cod_ibge %}" method="post">
               <div class="panel-body ">
                   {% csrf_token %}
+                  {{ form.link_publicacao_acordo.errors }}
+                  {{ form.data_publicacao_acordo.errors }}
+                  {{ form.processo_sei.errors }}
                   <div class="list-group-item col-md-12 text-center">
                       <div class="form-group">
                           <select id="select_situacoes" name="estado_processo" class="form-control">
@@ -325,7 +328,7 @@
 
                       <div class="form-group">
                         <textarea id="justificativa_situacao" name="justificativa" class="form-control hide" style="resize:none" placeholder="Justificativa" rows="4" cols="20">{% if ente.estado_processo == '3' %} {{ ente.justificativa }} {% endif %}</textarea>
-                        <input type="text" id="data_acordo_situacao" name="data_publicacao_acordo" class="form-control date hide" value="{% if ente.data_publicacao_acordo %} {{ente.data_publicacao_acordo}} {% endif %}" placeholder="Data de Publicação"></input>
+                        <input type="text" id="data_acordo_situacao" name="data_publicacao_acordo" class="form-control date hide" value="{% if ente.data_publicacao_acordo %} {{ente.data_publicacao_acordo | date:'SHORT_DATE_FORMAT'}} {% endif %}" placeholder="Data de Publicação"></input>
                         <input type="text" id="localizacao_situacao" name="localizacao" class="form-control hide" placeholder="Localização" value="{% if ente.estado_processo == '2' %} {{ente.localizacao}} {% endif %}"></input>
                       </div>
 
@@ -344,11 +347,11 @@
                             <a href="{% url 'gestao:detalhar' ente.ente_federado.cod_ibge %}" class="btn btn-default btn-xs" value="Cancelar" >Cancelar</a>
                           </div>
                       </div>
-                      
-              
+
+
                       <script>
                         $(document).ready(function(){
-                          
+
                           $("#detalhe_municipio_formn").submit(function (event) {
                             event.preventDefault();
                             $("#myModal").modal({backdrop: 'static', keyboard: false})
@@ -356,13 +359,13 @@
                           });
                         });
                       </script>
-                    
-              
-              
-              
+
+
+
+
                         <div class="modal fade" id="myModal" role="dialog">
                           <div class="modal-dialog">
-              
+
                             <!-- Modal content-->
                             <div class="modal-content">
                               <div class="modal-header">
