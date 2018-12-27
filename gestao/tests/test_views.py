@@ -478,6 +478,7 @@ def test_insere_link_publicacao_dou(client, sistema_cultura, login_staff):
             "estado_processo": "6",
             "data_publicacao_acordo": "28/06/2018",
             "link_publicacao_acordo": "https://www.google.com/",
+            "processo_sei": "1234567890987654321"
         },
     )
 
@@ -498,7 +499,8 @@ def test_remocao_data_publicacao_para_nao_publicados(client, sistema_cultura, lo
     client.post(
         url,
         data={
-            "estado_processo": "4"
+            "estado_processo": "4",
+            "processo_sei": "1234567890987654321"
         },
     )
 
@@ -513,7 +515,11 @@ def test_insere_sei(client, sistema_cultura, login_staff):
 
     url = reverse("gestao:alterar_dados_adesao", kwargs={"cod_ibge": sistema_cultura.ente_federado.cod_ibge})
 
-    client.post(url, data={"estado_processo": "6", "processo_sei": "123456"})
+    client.post(url, data={
+        "estado_processo": "6",
+        "data_publicacao_acordo": "28/06/2018",
+        "link_publicacao_acordo": "https://www.google.com/",
+        "processo_sei": "123456"})
 
     sistema_atualizado = SistemaCultura.sistema.get(ente_federado__cod_ibge=sistema_cultura
         .ente_federado.cod_ibge)
@@ -749,7 +755,7 @@ def test_alterar_documentos_fundo_cultura(client, login_staff):
 
     numero_fundos = FundoDeCultura.objects.count()
 
-    client.post(url, data={"arquivo": arquivo, "data_publicacao": "28/06/2018", 
+    client.post(url, data={"arquivo": arquivo, "data_publicacao": "28/06/2018",
         "cnpj": "27.082.838/0001-28"})
 
     numero_fundos_pos_update = FundoDeCultura.objects.count()
@@ -845,7 +851,7 @@ def test_inserir_documentos_conselho_cultural(client, sistema_cultura, login_sta
         "conselho_cultural.txt", b"file_content", content_type="text/plain"
     )
 
-    url = reverse("gestao:inserir_componente", kwargs={"pk": sistema_cultura.id, 
+    url = reverse("gestao:inserir_componente", kwargs={"pk": sistema_cultura.id,
         "componente": "conselho"})
 
     client.post(url, data={"arquivo": arquivo, "data_publicacao": "28/06/2018"})
@@ -1214,7 +1220,7 @@ def test_acompanhar_adesao_mais_de_um_sistema_por_ente(client, login_staff):
     assert response.context_data['object_list'][1] == sistema_sem_analise_recente_2
 
 def test_acompanhar_adesao_ordenar_data_com_sistema_com_mais_de_um_componente(client, login_staff):
-    """ Testa se na página de acompanhamento de adesões, quando há sistemas com múltiplos 
+    """ Testa se na página de acompanhamento de adesões, quando há sistemas com múltiplos
     componentes, o correto é considerado para ordenação pela data """
 
     SistemaCultura.objects.all().delete()
@@ -1267,7 +1273,7 @@ def test_acompanhar_adesao_ordenar_estado_processo(client, login_staff):
     """ Testa ordenação da página de acompanhamento das adesões
     por data de envio mais antiga entre os componentes e
     estado do processo da adesão """
-    
+
     SistemaCultura.objects.all().delete()
 
     sistema_nao_publicado = mommy.make('SistemaCultura', estado_processo=1,
@@ -1300,7 +1306,7 @@ def test_acompanhar_adesao_ordenar_estado_processo(client, login_staff):
 def test_alterar_dados_adesao_detalhe_municipio(client, login_staff, sistema_cultura):
     """ Testa alterar os dados da adesão na tela de detalhe do município """
 
-    url = reverse("gestao:alterar_dados_adesao", kwargs={"cod_ibge": 
+    url = reverse("gestao:alterar_dados_adesao", kwargs={"cod_ibge":
         sistema_cultura.ente_federado.cod_ibge})
 
     data = {
@@ -1329,7 +1335,7 @@ def test_alterar_dados_adesao_detalhe_municipio(client, login_staff, sistema_cul
 def test_alterar_dados_adesao_sem_valores(client, login_staff, sistema_cultura):
     """ Testa retorno ao tentar alterar os dados da adesão sem passar dados válidos """
 
-    url = reverse("gestao:alterar_dados_adesao", kwargs={"cod_ibge": 
+    url = reverse("gestao:alterar_dados_adesao", kwargs={"cod_ibge":
         sistema_cultura.ente_federado.cod_ibge})
     data = {}
 
@@ -1367,7 +1373,7 @@ def test_alterar_cadastrador_sem_data_publicacao(client, login_staff):
 
 
 def test_alterar_cadastrador_com_data_publicacao(client, login_staff):
-    """ Testa alteração de cadastrador de um sistema cultura 
+    """ Testa alteração de cadastrador de um sistema cultura
     com data de publicação do acordo"""
 
     new_user = mommy.make('Usuario', user__username='34701068004')
@@ -1455,7 +1461,7 @@ def test_pesquisa_por_ente_federado_com_arquivo_lei_sistema(client, login_staff)
     )
 
     sistema = mommy.make(
-        "SistemaCultura", ente_federado__cod_ibge=123456, ente_federado__nome="Abaeté", 
+        "SistemaCultura", ente_federado__cod_ibge=123456, ente_federado__nome="Abaeté",
         estado_processo='6', _fill_optional='legislacao'
     )
 
@@ -1499,7 +1505,7 @@ def test_pesquisa_por_ente_federado_com_arquivo_plano_cultura(client, login_staf
     )
 
     sistema = mommy.make(
-        "SistemaCultura", ente_federado__cod_ibge=123456, ente_federado__nome="Abaeté", 
+        "SistemaCultura", ente_federado__cod_ibge=123456, ente_federado__nome="Abaeté",
         estado_processo='6', _fill_optional='plano'
     )
 
@@ -1528,7 +1534,7 @@ def test_pesquisa_por_ente_federado_com_arquivo_fundo_cultura(client, login_staf
     )
 
     sistema = mommy.make(
-        "SistemaCultura", ente_federado__cod_ibge=12346, ente_federado__nome="Abaeté", 
+        "SistemaCultura", ente_federado__cod_ibge=12346, ente_federado__nome="Abaeté",
         estado_processo='6', _fill_optional='fundo_cultura'
     )
 
@@ -1557,7 +1563,7 @@ def test_pesquisa_por_ente_federado_com_arquivo_orgao_gestor(client, login_staff
     )
 
     sistema = mommy.make(
-        "SistemaCultura", ente_federado__cod_ibge=123456, ente_federado__nome="Abaeté", 
+        "SistemaCultura", ente_federado__cod_ibge=123456, ente_federado__nome="Abaeté",
         estado_processo='6', _fill_optional='orgao_gestor'
     )
 
@@ -1586,7 +1592,7 @@ def test_pesquisa_por_ente_federado_com_arquivo_conselho_cultural(client, login_
     )
 
     sistema = mommy.make(
-        "SistemaCultura", ente_federado__cod_ibge=123456, ente_federado__nome="Abaeté", 
+        "SistemaCultura", ente_federado__cod_ibge=123456, ente_federado__nome="Abaeté",
         estado_processo='6', _fill_optional='conselho'
     )
 
@@ -1613,7 +1619,7 @@ def test_pesquisa_por_ente_federado_inserir_documentos_listar_sistemas(
     """
 
     ente = mommy.make("EnteFederado", nome="Abaeté", cod_ibge=123456)
-    sistema_cultura = mommy.make("SistemaCultura", estado_processo=6, 
+    sistema_cultura = mommy.make("SistemaCultura", estado_processo=6,
         ente_federado=ente)
 
     url = (
@@ -1633,7 +1639,7 @@ def test_pesquisa_por_ente_federado_inserir_documentos_listar_orgaos(
     """
 
     ente = mommy.make("EnteFederado", nome="Abaeté", cod_ibge=123456)
-    sistema_cultura = mommy.make("SistemaCultura", estado_processo=6, 
+    sistema_cultura = mommy.make("SistemaCultura", estado_processo=6,
         ente_federado=ente)
 
     url = (
@@ -1652,7 +1658,7 @@ def test_pesquisa_por_ente_federado_inserir_documentos_listar_conselhos(
     """
 
     ente = mommy.make("EnteFederado", nome="Abaeté", cod_ibge=123456)
-    sistema_cultura = mommy.make("SistemaCultura", estado_processo=6, 
+    sistema_cultura = mommy.make("SistemaCultura", estado_processo=6,
         ente_federado=ente)
 
     url = (
@@ -1671,7 +1677,7 @@ def test_pesquisa_por_ente_federado_inserir_documentos_listar_fundos(
     """
 
     ente = mommy.make("EnteFederado", nome="Abaeté", cod_ibge=123456)
-    sistema_cultura = mommy.make("SistemaCultura", estado_processo=6, 
+    sistema_cultura = mommy.make("SistemaCultura", estado_processo=6,
         ente_federado=ente)
 
     url = (
@@ -1689,7 +1695,7 @@ def test_pesquisa_por_ente_federado_inserir_documentos_listar_planos(
     """
 
     ente = mommy.make("EnteFederado", nome="Abaeté", cod_ibge=123456)
-    sistema_cultura = mommy.make("SistemaCultura", estado_processo=6, 
+    sistema_cultura = mommy.make("SistemaCultura", estado_processo=6,
         ente_federado=ente)
 
     url = (
@@ -1800,7 +1806,7 @@ def test_verificacao_se_prazo_foi_alterado(client, login_staff):
 
     user.refresh_from_db()
     assert user.prazo == prazo + 2
-    
+
 
 
 def test_pesquisa_de_ente_federado_sem_acento_tela_adicionar_prazo(client, login_staff):
@@ -1848,7 +1854,7 @@ def test_ente_federado_nao_encontrado(client, login_staff):
     """
 
     sistema = mommy.make(
-        "SistemaCultura", ente_federado__cod_ibge=123456, ente_federado__nome="abaete", 
+        "SistemaCultura", ente_federado__cod_ibge=123456, ente_federado__nome="abaete",
     )
 
 
@@ -1856,4 +1862,3 @@ def test_ente_federado_nao_encontrado(client, login_staff):
     response = client.get(url)
 
     assert len(response.context_data["object_list"]) == 0
-  
