@@ -308,13 +308,10 @@
             Dados da Adesão
           </div>
           <form name="form" id="detalhe_municipio_form" action="{% url 'gestao:alterar_dados_adesao' ente.ente_federado.cod_ibge %}" method="post">
-              <div class="panel-body ">
+                  <div class="panel-body">
                   {% csrf_token %}
-                  {{ form.link_publicacao_acordo.errors }}
-                  {{ form.data_publicacao_acordo.errors }}
-                  {{ form.processo_sei.errors }}
                   <div class="list-group-item col-md-12 text-center">
-                      <div class="form-group">
+                      <div class="form-group {% if form.estado_processo.errors %} has-error {% endif %}">
                           <select id="select_situacoes" name="estado_processo" class="form-control">
                             <option value="1" {% if ente.estado_processo == '0' %}selected{% endif %}>Aguardando preenchimento dos dados cadastrais</option>
                               <option value="1" {% if ente.estado_processo == '1' %}selected{% endif %}>Aguardando envio da documentação</option>
@@ -326,18 +323,29 @@
                             </select>
                       </div>
 
-                      <div class="form-group">
+                      <div class="form-group {% if form.data_publicacao_acordo.errors %} has-error {% endif %}">
                         <textarea id="justificativa_situacao" name="justificativa" class="form-control hide" style="resize:none" placeholder="Justificativa" rows="4" cols="20">{% if ente.estado_processo == '3' %} {{ ente.justificativa }} {% endif %}</textarea>
+
                         <input type="text" id="data_acordo_situacao" name="data_publicacao_acordo" class="form-control date hide" value="{% if ente.data_publicacao_acordo %} {{ente.data_publicacao_acordo | date:'SHORT_DATE_FORMAT'}} {% endif %}" placeholder="Data de Publicação"></input>
+                        <span class="help-block">
+                          {{ form.data_publicacao_acordo.errors }}
+                        </span>
+
                         <input type="text" id="localizacao_situacao" name="localizacao" class="form-control hide" placeholder="Localização" value="{% if ente.estado_processo == '2' %} {{ente.localizacao}} {% endif %}"></input>
                       </div>
 
-                      <div class="form-group">
+                      <div class="form-group {% if form.link_publicacao_acordo.errors %} has-error {% endif %}">
                          <input type="text" id="link_acordo_situacao" name="link_publicacao_acordo" class="form-control hide" placeholder="Link da Publicação" value="{% if ente.link_publicacao_acordo %} {{ ente.link_publicacao_acordo }} {% endif %}"></input>
+                         <span class="help-block">
+                            {{ form.link_publicacao_acordo.errors }}
+                         </span>
                       </div>
 
-                      <div class="form-group">
+                      <div class="form-group {% if form.processo_sei.errors %} has-error {% endif %}">
                         <input type="text" id="processo_sei" name="processo_sei" class="form-control" placeholder="Número do Processo SEI" value="{% if ente.processo_sei %} {{ente.processo_sei}} {% endif %}"></input>
+                        <span class="help-block">
+                          {{ form.processo_sei.errors }}
+                        </span>
                       </div>
 
 
