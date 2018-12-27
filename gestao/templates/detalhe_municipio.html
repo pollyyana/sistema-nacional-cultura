@@ -310,7 +310,7 @@
           <form name="form" id="detalhe_municipio_form" action="{% url 'gestao:alterar_dados_adesao' ente.ente_federado.cod_ibge %}" method="post">
                   <div class="panel-body">
                   {% csrf_token %}
-                  <div class="list-group-item col-md-12 text-center">
+                  <div class="list-group-item col-md-12">
                       <div class="form-group {% if form.estado_processo.errors %} has-error {% endif %}">
                           <select id="select_situacoes" name="estado_processo" class="form-control">
                             <option value="1" {% if ente.estado_processo == '0' %}selected{% endif %}>Aguardando preenchimento dos dados cadastrais</option>
@@ -350,7 +350,7 @@
 
 
                       <div class="row">
-                          <div class="col-md-12">
+                          <div class="col-md-12 text-center">
                             <button type="submit" class="btn btn-primary btn-xs" title="Alterar Situação" >Salvar</button>
                             <a href="{% url 'gestao:detalhar' ente.ente_federado.cod_ibge %}" class="btn btn-default btn-xs" value="Cancelar" >Cancelar</a>
                           </div>
