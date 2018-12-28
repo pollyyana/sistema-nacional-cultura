@@ -274,14 +274,15 @@ class AcompanharSistemaCultura(ListView):
         situacao = self.request.GET.get('situacao', None)
         ente_federado = self.request.GET.get('ente_federado', None)
 
+        sistemas = SistemaCultura.objects.all()
+
         if situacao in ('0', '1', '2', '3', '4', '5', '6'):
             sistemas = SistemaCultura.objects.filter(estado_processo=situacao)
 
         if ente_federado:
             sistemas = SistemaCultura.objects.filter(
                 ente_federado__nome__unaccent__icontains=ente_federado)
-        else:
-            sistemas = SistemaCultura.objects.all()
+
 
         sistemas_entes_distintos = sistemas.distinct('ente_federado')
 
@@ -308,8 +309,8 @@ class AcompanharSistemaCultura(ListView):
         sistemas = sistemas.exclude(estado_processo='6').annotate(
             tem_cadastrador=Count('cadastrador')).order_by('-tem_cadastrador', '-estado_processo').filter(
             id__in=sistemas_entes_distintos)
- 
-        sistemas = list(chain(sistemas_nao_analisados, sistemas_diligencia, 
+
+        sistemas = list(chain(sistemas_nao_analisados, sistemas_diligencia,
             sistemas_nao_enviados, sistemas_concluidos, sistemas_publicados_sem_componentes, sistemas))
         sistemas = self.remove_repeticoes(sistemas)
 
