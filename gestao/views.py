@@ -66,47 +66,6 @@ from itertools import chain
 import datetime
 
 
-# Acompanhamento das adesões
-class AlterarCadastrador(UpdateView):
-    """AlterarCadastrador
-    Altera o cadastrador de um Municipio aderido
-    """
-    queryset = SistemaCultura.sistema.all()
-    template_name = 'cadastrador.html'
-    form_class = AlterarCadastradorForm
-
-    def get_form_kwargs(self):
-        kwargs = super(AlterarCadastrador, self).get_form_kwargs()
-        self.cod_ibge = self.kwargs['cod_ibge']
-        kwargs.update(self.kwargs)
-        return kwargs
-
-    def get_success_url(self):
-       return reverse_lazy('gestao:alterar_cadastrador', kwargs={'cod_ibge': self.cod_ibge})
-
-    def form_valid(self, form):
-        form.save()
-        messages.success(self.request, 'Cadastrador alterado com sucesso')
-        return super(AlterarCadastrador, self).form_valid(form)
-
-
-class CidadeChain(autocomplete.Select2QuerySetView):
-    def get_queryset(self):
-        """ Filtra todas as cidade de uma determinada UF """
-
-        uf_pk = self.forwarded.get('estado', None)
-
-        if uf_pk:
-            choices = Cidade.objects\
-                .filter(Q(uf__pk=uf_pk) & Q(nome_municipio__unaccent__icontains=self.q))\
-                .values_list('pk', 'nome_municipio', named=True)
-        else:
-            choices = Cidade.objects\
-                .filter(uf__sigla__iexact=self.q)\
-                .values_list('pk', 'nome_municipio', named=True)
-        return choices
-
-
 class EnteChain(autocomplete.Select2QuerySetView):
     def get_queryset(self):
         """ Filtra todas as cidade de uma determinada UF """
@@ -127,22 +86,6 @@ class EnteChain(autocomplete.Select2QuerySetView):
 
     def get_selected_result_label(self, item):
         return self.get_ente_name(item)
-
-
-class UfChain(autocomplete.Select2QuerySetView):
-    def get_queryset(self):
-        """ Filtra todas as uf passando nome ou sigla """
-
-        choices = Uf.objects.filter(
-                    Q(sigla__iexact=self.q) | Q(nome_uf__icontains=self.q)
-                ).values_list('pk', 'sigla', named=True)
-        return choices
-
-    def get_result_label(self, item):
-        return item.sigla
-
-    def get_selected_result_label(self, item):
-        return item.sigla
 
 
 def ajax_consulta_cpf(request):

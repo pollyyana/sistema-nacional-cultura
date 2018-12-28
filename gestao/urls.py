@@ -52,14 +52,6 @@ urlpatterns = [
         views.EnteChain.as_view(),
         name='ente_chain'),
 
-    url(r'^chain/cidade$',
-        views.CidadeChain.as_view(),
-        name='cidade_chain'),
-
-    url(r'^chain/uf$',
-        views.UfChain.as_view(),
-        name='uf_chain'),
-
     # Inserir de documentos de entes federados
     url(r'^inserir-documentos/ente-federado$',
         staff_member_required(views.ListarDocumentosEnteFederado.as_view()), name='inserir_entefederado'),

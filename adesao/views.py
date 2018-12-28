@@ -34,7 +34,7 @@ from adesao.models import (
     Funcionario
 )
 from planotrabalho.models import Conselheiro, PlanoTrabalho
-from adesao.forms import CadastrarUsuarioForm, CadastrarMunicipioForm, CadastrarSistemaCulturaForm
+from adesao.forms import CadastrarUsuarioForm, CadastrarSistemaCulturaForm
 from adesao.forms import SedeFormSet, GestorFormSet
 from adesao.forms import CadastrarFuncionarioForm
 from adesao.utils import enviar_email_conclusao, verificar_anexo, atualiza_session, preenche_planilha
@@ -381,64 +381,6 @@ class AlterarSistemaCultura(UpdateView):
             context['form_sede'] = SedeFormSet(instance=self.object.sede)
             context['form_gestor'] = GestorFormSet(instance=self.object.gestor)
         return context
-
-
-class CadastrarMunicipio(TemplatedEmailFormViewMixin, CreateView):
-    form_class = CadastrarMunicipioForm
-    model = Municipio
-    template_name = "prefeitura/cadastrar_prefeitura.html"
-    templated_email_template_name = "adesao"
-    templated_email_from_email = "naoresponda@cultura.gov.br"
-    success_url = reverse_lazy("adesao:sucesso_municipio")
-
-    def templated_email_get_recipients(self, form):
-        return [settings.RECEIVER_EMAIL]
-
-    def get_context_data(self, **kwargs):
-        context = super(CadastrarMunicipio, self).get_context_data(**kwargs)
-        context["tipo_ente"] = self.kwargs["tipo_ente"]
-        return context
-
-    def templated_email_get_context_data(self, **kwargs):
-        context = super().templated_email_get_context_data(**kwargs)
-        context["object"] = self.object
-        return context
-
-    def form_valid(self, form):
-        self.request.user.usuario.municipio = form.save()
-        self.request.user.usuario.save()
-        return super(CadastrarMunicipio, self).form_valid(form)
-
-    def dispatch(self, *args, **kwargs):
-        municipio = self.request.user.usuario.municipio
-        if municipio:
-            return redirect("adesao:alterar_municipio", pk=municipio.id)
-
-        return super(CadastrarMunicipio, self).dispatch(*args, **kwargs)
-
-    def get_form_kwargs(self):
-        kwargs = super(CadastrarMunicipio, self).get_form_kwargs()
-        kwargs["user"] = self.request.user.usuario
-        return kwargs
-
-
-class AlterarMunicipio(UpdateView):
-    form_class = CadastrarMunicipioForm
-    model = Municipio
-    template_name = "prefeitura/cadastrar_prefeitura.html"
-    success_url = reverse_lazy("adesao:sucesso_municipio")
-
-    def dispatch(self, *args, **kwargs):
-        municipio = self.request.user.usuario.municipio.pk
-        if str(municipio) != self.kwargs["pk"]:
-            raise Http404()
-
-        return super(AlterarMunicipio, self).dispatch(*args, **kwargs)
-
-    def get_form_kwargs(self):
-        kwargs = super(AlterarMunicipio, self).get_form_kwargs()
-        kwargs["user"] = self.request.user.usuario
-        return kwargs
 
 
 class CadastrarFuncionario(CreateView):

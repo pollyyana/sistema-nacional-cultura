@@ -30,18 +30,10 @@ urlpatterns = [
     # Cadastro e alteração de prefeitura
     url(r'^municipio/selecionar$', views.selecionar_tipo_ente,
         name='selecionar_tipo_ente'),
-    url(r'^municipio/$', login_required(views.CadastrarMunicipio.as_view()),
-        name='municipio'),
     url(r'^sucesso-cadastro-prefeitura/$',
         views.sucesso_municipio,
         name='sucesso_municipio'),
-    url(r'^municipio/cadastrar/(?P<tipo_ente>\d+)/$',
-        login_required(views.CadastrarMunicipio.as_view()),
-        name='cadastrar_municipio'),
-    url(r'^municipio/(?P<pk>[0-9]+)/$',
-        login_required(views.AlterarMunicipio.as_view()),
-        name='alterar_municipio'),
-
+    
     # Cadastro e alteração de responsável
     path('sucesso-cadastro-funcionario/',
         views.sucesso_funcionario,
