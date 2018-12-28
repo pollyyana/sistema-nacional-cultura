@@ -55,10 +55,10 @@ def fale_conosco(request):
 
 @login_required
 def home(request):
-    ente_federado = request.user.usuario.municipio
-    secretario = request.user.usuario.secretario
-    responsavel = request.user.usuario.responsavel
-    situacao = request.user.usuario.estado_processo
+    ente_federado = request.session.get('sistema_ente', False)
+    secretario = request.session.get('sistema_secretario', False)
+    responsavel = request.session.get('sistema_responsavel', False)
+    sistema = request.session.get('sistema_cultura_selecionado', False)
     historico = Historico.objects.filter(usuario=request.user.usuario)
     historico = historico.order_by("-data_alteracao")
     sistemas_cultura = request.user.usuario.sistema_cultura.all().distinct('ente_federado')
@@ -71,9 +71,14 @@ def home(request):
     if request.user.is_staff:
         return redirect("gestao:acompanhar_adesao")
 
-    if ente_federado and secretario and responsavel and int(situacao) < 1:
-        request.user.usuario.estado_processo = "1"
-        request.user.usuario.save()
+    if ente_federado and secretario and responsavel and int(sistema['estado_processo']) < 1:
+        sistema = SistemaCultura.sistema.get(id=sistema['id'])
+        sistema.estado_processo = "1"
+        sistema.save()
+
+        sistema_atualizado = SistemaCultura.sistema.get(ente_federado__cod_ibge=ente_federado['cod_ibge'])
+        atualiza_session(sistema_atualizado, request)
+
         message_txt = render_to_string("conclusao_cadastro.txt", {"request": request})
         message_html = render_to_string(
             "conclusao_cadastro.email", {"request": request}
