@@ -275,7 +275,7 @@ def sucesso_municipio(request):
     return render(request, "prefeitura/mensagem_sucesso_prefeitura.html")
 
 
-class CadastrarSistemaCultura(CreateView):
+class CadastrarSistemaCultura(TemplatedEmailFormViewMixin, CreateView):
     form_class = CadastrarSistemaCulturaForm
     model = SistemaCultura
     template_name = "cadastrar_sistema.html"
@@ -313,7 +313,7 @@ class CadastrarSistemaCultura(CreateView):
 
             self.request.session['sistemas'].append({"id": sistema.id, "ente_federado__nome": sistema.ente_federado.nome})
 
-            return redirect(self.success_url)
+            return super(CadastrarSistemaCultura, self).form_valid(form)
         else:
             return self.render_to_response(self.get_context_data(form=form))
 
@@ -333,7 +333,9 @@ class CadastrarSistemaCultura(CreateView):
         return context
 
     def templated_email_get_recipients(self, form):
-        return [settings.RECEIVER_EMAIL]
+        recipiente_list = [self.request.user.usuario.user.email]
+
+        return recipiente_list
 
     def templated_email_get_context_data(self, **kwargs):
         context = super().templated_email_get_context_data(**kwargs)

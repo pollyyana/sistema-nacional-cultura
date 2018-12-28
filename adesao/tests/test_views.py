@@ -48,7 +48,9 @@ def test_envio_email_em_nova_adesao(client):
 
     client.login(username=user.username, password="123456")
 
-    gestor = Gestor(cpf="590.328.900-26", rg="1234567", orgao_expeditor_rg="ssp", estado_expeditor=29,
+    a = mommy.make("Uf")
+
+    gestor = Gestor(cpf="590.328.900-26", rg="1234567", orgao_expeditor_rg="ssp", estado_expeditor=a,
         nome="nome", telefone_um="123456", email_institucional="email@email.com", tipo_funcionario=2)
     sede = Sede(cnpj="70.658.964/0001-07", endereco="endereco", complemento="complemento",
         cep="72430101", bairro="bairro", telefone_um="123456")
@@ -63,7 +65,7 @@ def test_envio_email_em_nova_adesao(client):
             "rg": gestor.rg,
             "nome": gestor.nome,
             "orgao_expeditor_rg": gestor.orgao_expeditor_rg,
-            "estado_expeditor": gestor.estado_expeditor,
+            "estado_expeditor": a.codigo_ibge,
             "telefone_um": gestor.telefone_um,
             "email_institucional": gestor.email_institucional,
             "tipo_funcionario": gestor.tipo_funcionario,
@@ -84,9 +86,6 @@ def test_envio_email_em_nova_adesao(client):
             "telefone_um": sede.telefone_um,
         },
     )
-
-    # Acessa a url de sucesso após o cadastro para fazer o envio do email
-    #client.get(response.url)
 
     sistema = SistemaCultura.sistema.get(ente_federado__cod_ibge=ente_federado.cod_ibge)
 

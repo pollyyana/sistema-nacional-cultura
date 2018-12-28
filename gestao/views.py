@@ -602,7 +602,8 @@ class DiligenciaGeralCreateView(TemplatedEmailFormViewMixin, CreateView):
         return get_object_or_404(SistemaCultura, pk=int(self.kwargs['pk']))
 
     def templated_email_get_recipients(self, form):
-        recipiente_list = list(self.get_sistema_cultura().cadastrador.user.email)
+        recipiente_list = [self.get_sistema_cultura().cadastrador.user.email]
+
         return recipiente_list
 
     def get_success_url(self):
