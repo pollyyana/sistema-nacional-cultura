@@ -72,7 +72,7 @@ def home(request):
     if request.user.is_staff:
         return redirect("gestao:acompanhar_adesao")
 
-    if ente_federado and secretario and responsavel and int(sistema['estado_processo']) < 1:
+    if ente_federado and secretario and responsavel and sistema and int(sistema['estado_processo']) < 1:
         sistema = SistemaCultura.sistema.get(id=sistema['id'])
         sistema.estado_processo = "1"
         sistema.save()
