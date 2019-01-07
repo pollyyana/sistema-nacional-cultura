@@ -542,3 +542,22 @@ def test_detalhar_conselheiros(client):
     response = client.get(url)
 
     assert response.context_data['conselheiros'][0] == conselheiro
+
+
+def test_home_apos_cadastro_de_secretario_e_responsavel(client, login):
+    sistema_cultura = mommy.make("SistemaCultura", ente_federado__cod_ibge=123456,
+        _fill_optional=['secretario', 'responsavel', 'gestor', 'sede'])
+
+    url = reverse("adesao:define_sistema_sessao")
+    client.post(url, data={"sistema": sistema_cultura.id})
+
+    url = reverse("adesao:home")
+    client.get(url)
+
+    sistema_cultura_atualizado = SistemaCultura.sistema.get(
+        ente_federado__cod_ibge=sistema_cultura.ente_federado.cod_ibge)
+
+    assert sistema_cultura_atualizado.estado_processo == '1'
+    assert client.session['sistema_cultura_selecionado'] ==  model_to_dict(sistema_cultura_atualizado, 
+        exclude=['data_criacao', 'alterado_em'])
+    assert len(mail.outbox) == 1
