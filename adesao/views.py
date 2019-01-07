@@ -34,12 +34,13 @@ from adesao.models import (
     Funcionario
 )
 from planotrabalho.models import Conselheiro, PlanoTrabalho
-from adesao.forms import CadastrarUsuarioForm, CadastrarMunicipioForm, CadastrarSistemaCulturaForm
+from adesao.forms import CadastrarUsuarioForm, CadastrarSistemaCulturaForm
 from adesao.forms import SedeFormSet, GestorFormSet
 from adesao.forms import CadastrarFuncionarioForm
 from adesao.utils import enviar_email_conclusao, verificar_anexo, atualiza_session, preenche_planilha
 
 from django_weasyprint import WeasyTemplateView
+from templated_email import send_templated_mail
 
 
 # Create your views here.
@@ -55,10 +56,10 @@ def fale_conosco(request):
 
 @login_required
 def home(request):
-    ente_federado = request.user.usuario.municipio
-    secretario = request.user.usuario.secretario
-    responsavel = request.user.usuario.responsavel
-    situacao = request.user.usuario.estado_processo
+    ente_federado = request.session.get('sistema_ente', False)
+    secretario = request.session.get('sistema_secretario', False)
+    responsavel = request.session.get('sistema_responsavel', False)
+    sistema = request.session.get('sistema_cultura_selecionado', False)
     historico = Historico.objects.filter(usuario=request.user.usuario)
     historico = historico.order_by("-data_alteracao")
     sistemas_cultura = request.user.usuario.sistema_cultura.all().distinct('ente_federado')
@@ -71,9 +72,14 @@ def home(request):
     if request.user.is_staff:
         return redirect("gestao:acompanhar_adesao")
 
-    if ente_federado and secretario and responsavel and int(situacao) < 1:
-        request.user.usuario.estado_processo = "1"
-        request.user.usuario.save()
+    if ente_federado and secretario and responsavel and sistema and int(sistema['estado_processo']) < 1:
+        sistema = SistemaCultura.sistema.get(id=sistema['id'])
+        sistema.estado_processo = "1"
+        sistema.save()
+
+        sistema_atualizado = SistemaCultura.sistema.get(ente_federado__cod_ibge=ente_federado['cod_ibge'])
+        atualiza_session(sistema_atualizado, request)
+
         message_txt = render_to_string("conclusao_cadastro.txt", {"request": request})
         message_html = render_to_string(
             "conclusao_cadastro.email", {"request": request}
@@ -270,13 +276,15 @@ def sucesso_municipio(request):
     return render(request, "prefeitura/mensagem_sucesso_prefeitura.html")
 
 
-class CadastrarSistemaCultura(CreateView):
+class CadastrarSistemaCultura(TemplatedEmailFormViewMixin, CreateView):
     form_class = CadastrarSistemaCulturaForm
     model = SistemaCultura
     template_name = "cadastrar_sistema.html"
+    success_url = reverse_lazy("adesao:sucesso_municipio")
+
     templated_email_template_name = "adesao"
     templated_email_from_email = "naoresponda@cultura.gov.br"
-    success_url = reverse_lazy("adesao:sucesso_municipio")
+
 
     def form_valid(self, form):
         context = self.get_context_data()
@@ -308,7 +316,7 @@ class CadastrarSistemaCultura(CreateView):
 
             self.request.session['sistemas'].append({"id": sistema.id, "ente_federado__nome": sistema.ente_federado.nome})
 
-            return redirect(self.success_url)
+            return super(CadastrarSistemaCultura, self).form_valid(form)
         else:
             return self.render_to_response(self.get_context_data(form=form))
 
@@ -328,11 +336,16 @@ class CadastrarSistemaCultura(CreateView):
         return context
 
     def templated_email_get_recipients(self, form):
-        return [settings.RECEIVER_EMAIL]
+        recipiente_list = [self.request.user.email]
+
+        return recipiente_list
 
     def templated_email_get_context_data(self, **kwargs):
         context = super().templated_email_get_context_data(**kwargs)
         context["object"] = self.object
+        context["cadastrador"] = self.request.user.usuario
+        context["sistema_atualizado"] = SistemaCultura.sistema.get(ente_federado__id=self.object.ente_federado.id)
+
         return context
 
 
@@ -376,64 +389,6 @@ class AlterarSistemaCultura(UpdateView):
             context['form_sede'] = SedeFormSet(instance=self.object.sede)
             context['form_gestor'] = GestorFormSet(instance=self.object.gestor)
         return context
-
-
-class CadastrarMunicipio(TemplatedEmailFormViewMixin, CreateView):
-    form_class = CadastrarMunicipioForm
-    model = Municipio
-    template_name = "prefeitura/cadastrar_prefeitura.html"
-    templated_email_template_name = "adesao"
-    templated_email_from_email = "naoresponda@cultura.gov.br"
-    success_url = reverse_lazy("adesao:sucesso_municipio")
-
-    def templated_email_get_recipients(self, form):
-        return [settings.RECEIVER_EMAIL]
-
-    def get_context_data(self, **kwargs):
-        context = super(CadastrarMunicipio, self).get_context_data(**kwargs)
-        context["tipo_ente"] = self.kwargs["tipo_ente"]
-        return context
-
-    def templated_email_get_context_data(self, **kwargs):
-        context = super().templated_email_get_context_data(**kwargs)
-        context["object"] = self.object
-        return context
-
-    def form_valid(self, form):
-        self.request.user.usuario.municipio = form.save()
-        self.request.user.usuario.save()
-        return super(CadastrarMunicipio, self).form_valid(form)
-
-    def dispatch(self, *args, **kwargs):
-        municipio = self.request.user.usuario.municipio
-        if municipio:
-            return redirect("adesao:alterar_municipio", pk=municipio.id)
-
-        return super(CadastrarMunicipio, self).dispatch(*args, **kwargs)
-
-    def get_form_kwargs(self):
-        kwargs = super(CadastrarMunicipio, self).get_form_kwargs()
-        kwargs["user"] = self.request.user.usuario
-        return kwargs
-
-
-class AlterarMunicipio(UpdateView):
-    form_class = CadastrarMunicipioForm
-    model = Municipio
-    template_name = "prefeitura/cadastrar_prefeitura.html"
-    success_url = reverse_lazy("adesao:sucesso_municipio")
-
-    def dispatch(self, *args, **kwargs):
-        municipio = self.request.user.usuario.municipio.pk
-        if str(municipio) != self.kwargs["pk"]:
-            raise Http404()
-
-        return super(AlterarMunicipio, self).dispatch(*args, **kwargs)
-
-    def get_form_kwargs(self):
-        kwargs = super(AlterarMunicipio, self).get_form_kwargs()
-        kwargs["user"] = self.request.user.usuario
-        return kwargs
 
 
 class CadastrarFuncionario(CreateView):
