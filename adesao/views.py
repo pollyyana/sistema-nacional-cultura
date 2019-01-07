@@ -40,6 +40,7 @@ from adesao.forms import CadastrarFuncionarioForm
 from adesao.utils import enviar_email_conclusao, verificar_anexo, atualiza_session, preenche_planilha
 
 from django_weasyprint import WeasyTemplateView
+from templated_email import send_templated_mail
 
 
 # Create your views here.
@@ -279,9 +280,11 @@ class CadastrarSistemaCultura(TemplatedEmailFormViewMixin, CreateView):
     form_class = CadastrarSistemaCulturaForm
     model = SistemaCultura
     template_name = "cadastrar_sistema.html"
+    success_url = reverse_lazy("adesao:sucesso_municipio")
+
     templated_email_template_name = "adesao"
     templated_email_from_email = "naoresponda@cultura.gov.br"
-    success_url = reverse_lazy("adesao:sucesso_municipio")
+
 
     def form_valid(self, form):
         context = self.get_context_data()
@@ -333,13 +336,16 @@ class CadastrarSistemaCultura(TemplatedEmailFormViewMixin, CreateView):
         return context
 
     def templated_email_get_recipients(self, form):
-        recipiente_list = [self.request.user.usuario.user.email]
+        recipiente_list = [self.request.user.email]
 
         return recipiente_list
 
     def templated_email_get_context_data(self, **kwargs):
         context = super().templated_email_get_context_data(**kwargs)
         context["object"] = self.object
+        context["cadastrador"] = self.request.user.usuario
+        context["sistema_atualizado"] = SistemaCultura.sistema.get(ente_federado__id=self.object.ente_federado.id)
+
         return context
 
 
