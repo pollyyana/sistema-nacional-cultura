@@ -5,11 +5,6 @@ from drf_hal_json import serializers as hal_serializers
 from adesao.models import Municipio
 from adesao.models import Uf
 from adesao.models import Cidade
-from planotrabalho.models import CriacaoSistema
-from planotrabalho.models import OrgaoGestor
-from planotrabalho.models import ConselhoCultural
-from planotrabalho.models import FundoCultura
-from planotrabalho.models import PlanoCultura
 from planotrabalho.models import Componente
 from planotrabalho.models import Conselheiro
 from planotrabalho.models import FundoDeCultura
@@ -18,51 +13,6 @@ from adesao.models import SistemaCultura
 from adesao.models import EnteFederado
 from adesao.models import Sede
 from adesao.models import Gestor
-
-
-# Criacao do Sistema
-class CriacaoSistemaSerializer(hal_serializers.HalModelSerializer):
-    situacao = serializers.ReadOnlyField(source='situacao.descricao')
-
-    class Meta:
-        model = CriacaoSistema
-        fields = ('lei_sistema_cultura', 'situacao')
-
-
-class OrgaoGestorSerializer(hal_serializers.HalModelSerializer):
-    situacao = serializers.ReadOnlyField(source='situacao.descricao')
-
-    class Meta:
-        model = OrgaoGestor
-        fields = ('relatorio_atividade_secretaria',
-                  'situacao')
-
-
-class ConselhoCulturalSerializer(hal_serializers.HalModelSerializer):
-    situacao = serializers.ReadOnlyField(source='situacao.descricao')
-
-    class Meta:
-        model = ConselhoCultural
-        fields = ('ata_regimento_aprovado', 'situacao')
-
-
-class FundoCulturaSerializer(hal_serializers.HalModelSerializer):
-    situacao = serializers.ReadOnlyField(source='situacao.descricao')
-
-    class Meta:
-        model = FundoCultura
-        fields = ('cnpj_fundo_cultura', 'lei_fundo_cultura',
-                  'situacao')
-
-
-class PlanoCulturaSerializer(hal_serializers.HalModelSerializer):
-    situacao = serializers.ReadOnlyField(source='situacao.descricao')
-
-    class Meta:
-        model = PlanoCultura
-        fields = ('relatorio_diretrizes_aprovadas', 'minuta_preparada',
-                  'ata_reuniao_aprovacao_plano', 'ata_votacao_projeto_lei',
-                  'lei_plano_cultura', 'situacao')
 
 
 class ComponenteSCSerializer(hal_serializers.HalModelSerializer):

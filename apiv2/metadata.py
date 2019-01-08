@@ -8,38 +8,17 @@ from planotrabalho.models import SITUACAO_CONSELHEIRO
 
 class MunicipioMetadata(SimpleMetadata):
 
-    def get_situacao_adesao(self):
-        situacao_adesao = []
+    def get_choices(self, options):
+        choices_list = []
 
-        for situacao in LISTA_ESTADOS_PROCESSO:
-            data = {'id': situacao[0], 'description': situacao[1]}
-            situacao_adesao.append(data)
+        for item in options:
+            data = {'id': item[0], 'description': item[1]}
+            choices_list.append(data)
 
-        choices = {'choices': situacao_adesao}
-
-        return choices
-
-    def get_segmento_conselheiros(self):
-        segmentos = []
-
-        for segmento in SETORIAIS:
-            data = {'id': segmento[0], 'description': segmento[1]}
-            segmentos.append(data)
-
-        choices = {'choices': segmentos}
+        choices = {'choices': choices_list}
 
         return choices
 
-    def get_situacao_conselheiro(self):
-        situacao_conselheiro = []
-
-        for situacao in SITUACAO_CONSELHEIRO:
-            data = {'id': situacao[0], 'description': situacao[1]}
-            situacao_conselheiro.append(data)
-
-        choices = {'choices': situacao_conselheiro}
-
-        return choices
 
     def determine_metadata(self, request, view):
         metadata = super(MunicipioMetadata, self).determine_metadata(request, view)
@@ -47,9 +26,9 @@ class MunicipioMetadata(SimpleMetadata):
         metadata['ente_federado'] = {}
         metadata['conselho'] = {}
 
-        metadata['ente_federado']['situacao_adesao'] = self.get_situacao_adesao()
-        metadata['conselho']['segmento'] = self.get_segmento_conselheiros()
-        metadata['conselho']['situacao'] = self.get_situacao_conselheiro()
+        metadata['ente_federado']['situacao_adesao'] = self.get_choices(LISTA_ESTADOS_PROCESSO)
+        metadata['conselho']['segmento'] = self.get_choices(SETORIAIS)
+        metadata['conselho']['situacao'] = self.get_choices(SITUACAO_CONSELHEIRO)
 
         return metadata
 
