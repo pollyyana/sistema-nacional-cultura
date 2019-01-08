@@ -779,6 +779,8 @@ def test_counts_com_apenas_municipios(client):
 def test_ordenar_resultados_da_api_de_forma_ascendente_por_nome_municipio(client):
     """ Testa a ordenação ascendente do resultado da API por cidade(nome_municipio) """
 
+    SistemaCultura.objects.all().delete()
+
     nomes_entes = ['Brasilia', 'Zé Doca', 'Abaetetuba', 'Abaetetuba']
 
     for nome in nomes_entes:
@@ -800,6 +802,9 @@ def test_ordenar_resultados_da_api_de_forma_ascendente_por_nome_municipio(client
 
 def test_ordenar_resultados_da_api_de_forma_descendente_por_nome_municipio(client):
     """ Testa a ordenação descendente do resultado da API por cidade(nome_municipio) """
+
+    SistemaCultura.objects.all().delete()
+
     nomes_entes = ['Brasilia', 'Zé Doca', 'Abaetetuba']
 
     for nome in nomes_entes:
