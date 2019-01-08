@@ -1312,8 +1312,11 @@ def test_alterar_dados_adesao_detalhe_municipio(client, login_staff, sistema_cul
     assert sistema_atualizado.link_publicacao_acordo == "https://www.google.com"
 
 
-def test_alterar_dados_adesao_sem_valores(client, login_staff, sistema_cultura):
+def test_alterar_dados_adesao_sem_valores(client, login_staff):
     """ Testa retorno ao tentar alterar os dados da adesão sem passar dados válidos """
+
+    sistema_cultura = mommy.make("SistemaCultura", ente_federado__cod_ibge=123456,
+        estado_processo=6)
 
     url = reverse("gestao:alterar_dados_adesao", kwargs={"cod_ibge": 
         sistema_cultura.ente_federado.cod_ibge})
