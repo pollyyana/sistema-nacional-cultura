@@ -227,7 +227,7 @@ class AcompanharSistemaCultura(ListView):
                 ente_federado__nome__unaccent__icontains=ente_federado)
 
 
-        sistemas_entes_distintos = sistemas.distinct('ente_federado')
+        sistemas_entes_distintos = sistemas.distinct('ente_federado__nome', 'ente_federado')
 
         sistemas_concluidos = self.annotate_componente_mais_antigo_por_situacao(sistemas, 2, 3).filter(
             estado_processo='6').exclude(mais_antigo=None).order_by('mais_antigo').filter(id__in=sistemas_entes_distintos)

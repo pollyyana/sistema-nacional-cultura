@@ -759,15 +759,15 @@ def test_alterar_documentos_fundo_cultura(client, login_staff):
         "cnpj": "27.082.838/0001-28"})
 
     numero_fundos_pos_update = FundoDeCultura.objects.count()
-    fundo_atualizado = FundoDeCultura.objects.first()
-    name = fundo_atualizado.arquivo.name.split("fundo_cultura/")[1]
+    fundo.refresh_from_db()
+    name = fundo.arquivo.name.split("fundo_cultura/")[1]
 
     assert numero_fundos == numero_fundos_pos_update
     assert name == arquivo.name
-    assert fundo_atualizado.situacao == 1
-    assert fundo_atualizado.data_publicacao == datetime.date(2018, 6, 28)
-    assert fundo_atualizado.cnpj == "27.082.838/0001-28"
-    assert fundo_atualizado.tipo == 2
+    assert fundo.situacao == 1
+    assert fundo.data_publicacao == datetime.date(2018, 6, 28)
+    assert fundo.cnpj == "27.082.838/0001-28"
+    assert fundo.tipo == 2
 
 
 def test_inserir_documentos_plano_cultura(client, sistema_cultura, login_staff):
@@ -1268,10 +1268,13 @@ def test_alterar_dados_adesao_detalhe_municipio(client, login_staff, sistema_cul
     assert sistema_atualizado.link_publicacao_acordo == "https://www.google.com"
 
 
-def test_alterar_dados_adesao_sem_valores(client, login_staff, sistema_cultura):
+def test_alterar_dados_adesao_sem_valores(client, login_staff):
     """ Testa retorno ao tentar alterar os dados da adesão sem passar dados válidos """
+    
+    sistema_cultura = mommy.make("SistemaCultura", ente_federado__cod_ibge=123456,
+        estado_processo=6)
 
-    url = reverse("gestao:alterar_dados_adesao", kwargs={"cod_ibge":
+    url = reverse("gestao:alterar_dados_adesao", kwargs={"cod_ibge": 
         sistema_cultura.ente_federado.cod_ibge})
     data = {}
 
@@ -1280,8 +1283,7 @@ def test_alterar_dados_adesao_sem_valores(client, login_staff, sistema_cultura):
     sistema_atualizado = SistemaCultura.sistema.get(ente_federado__cod_ibge=sistema_cultura
         .ente_federado.cod_ibge)
 
-    #assert response.status_code == 302
-    assert sistema_atualizado.estado_processo == "0"
+    assert sistema_atualizado.estado_processo == "6"
     assert not sistema_atualizado.data_publicacao_acordo
     assert not sistema_atualizado.processo_sei
     assert not sistema_atualizado.justificativa
