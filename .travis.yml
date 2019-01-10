@@ -8,6 +8,7 @@ python:
 
 install:
     - pip install --upgrade pipenv
+    - pipenv run pip install pip==18.0
     - pipenv install --three --dev
 
 before_script:
@@ -16,8 +17,7 @@ before_script:
     - ./cc-test-reporter before-build
 
 script:
-    - pipenv run coverage run -m pytest
-    - pipenv run coverage xml
+    - pipenv run pytest --cov=.
 
 after_script:
     - ./cc-test-reporter after-build --exit-code $TRAVIS_TEST_RESULT

@@ -3,8 +3,8 @@ from django import forms
 from django.forms import ModelForm
 from django.forms.widgets import FileInput
 
-from .models import CriacaoSistema, OrgaoGestor, ConselhoCultural, FundoCultura
-from .models import FundoCultura, PlanoCultura, Conselheiro, SITUACAO_CONSELHEIRO
+from .models import CriacaoSistema, OrgaoGestor, ConselhoCultural, FundoCultura, Componente
+from .models import FundoCultura, FundoDeCultura, PlanoCultura, Conselheiro, SITUACAO_CONSELHEIRO
 from .utils import validar_cnpj, add_anos
 
 SETORIAIS = (
@@ -33,202 +33,52 @@ SETORIAIS = (
     )
 
 
-class CriarSistemaForm(ModelForm):
-    minuta_projeto_lei = forms.FileField(required=False, widget=FileInput)
+class CriarComponenteForm(ModelForm):
+    componentes = {
+            "legislacao": 0,
+            "orgao_gestor": 1,
+            "fundo_cultura": 2,
+            "conselho": 3,
+            "plano": 4,
+    }
+
     arquivo = forms.FileField(required=True, widget=FileInput)
     data_publicacao = forms.DateField(required=True)
 
     def __init__(self, *args, **kwargs):
-        self.usuario = kwargs.pop('user')
-        super(CriarSistemaForm, self).__init__(*args, **kwargs)
-
-    def clean(self):
-        limite = add_anos(self.usuario.data_publicacao_acordo, self.usuario.prazo)
-        hoje = datetime.date.today()
-        if hoje > limite:
-            self.add_error('arquivo', 'Não foi possível salvar. Você ultrapassou a data limite de envio: ' +
-                limite.strftime("%d/%m/%Y"))
+        self.sistema = kwargs.pop('sistema')
+        self.tipo_componente = kwargs.pop('tipo')
+        super(CriarComponenteForm, self).__init__(*args, **kwargs)
 
     def save(self, commit=True, *args, **kwargs):
-        sistema = super(CriarSistemaForm, self).save(commit=False)
+        componente = super(CriarComponenteForm, self).save(commit=False)
         if 'arquivo' in self.changed_data:
-            sistema.situacao_id = 1
+            componente.situacao = 1
 
         if commit:
-            sistema.planotrabalho = self.usuario.plano_trabalho
-            sistema.save()
-            self.usuario.plano_trabalho.criacao_sistema = sistema
-            self.usuario.plano_trabalho.save()
-        return sistema
+            componente.tipo = self.componentes.get(self.tipo_componente)
+            componente.data_publicacao = self.cleaned_data['data_publicacao']
+            componente.arquivo = None
+            componente.save()
+            sistema_cultura = getattr(componente, self.tipo_componente)
+            sistema_cultura.add(self.sistema)
+            componente.arquivo = self.cleaned_data['arquivo']
+            componente.save()
+            setattr(self.sistema, self.tipo_componente, componente)
+            self.sistema.save()
+
+        return componente
 
     class Meta:
-        model = CriacaoSistema
-        fields = ['arquivo', 'data_publicacao']
+        model = Componente
+        fields = ('arquivo', 'data_publicacao')
 
 
-class OrgaoGestorForm(ModelForm):
-    arquivo = forms.FileField(
-        required=True, widget=FileInput)
-    data_publicacao = forms.DateField(required=True)
-
-    def __init__(self, *args, **kwargs):
-        self.usuario = kwargs.pop('user')
-        super(OrgaoGestorForm, self).__init__(*args, **kwargs)
-
-    def clean(self):
-        limite = add_anos(self.usuario.data_publicacao_acordo, self.usuario.prazo)
-        hoje = datetime.date.today()
-        if hoje > limite:
-            self.add_error('arquivo', '''Não foi possível salvar. Você ultrapassou a
-                data limite de envio: ''' + limite.strftime("%d/%m/%Y"))
-
-    def save(self, commit=True, *args, **kwargs):
-        orgao = super(OrgaoGestorForm, self).save(commit=False)
-        if 'arquivo' in self.changed_data:
-            orgao.situacao_id = 1
-
-        if commit:
-            orgao.planotrabalho = self.usuario.plano_trabalho
-            orgao.save()
-            self.usuario.plano_trabalho.orgao_gestor = orgao
-            self.usuario.plano_trabalho.save()
-        return orgao
+class CriarFundoForm(CriarComponenteForm):
 
     class Meta:
-        model = OrgaoGestor
-        fields = ['arquivo', 'data_publicacao']
-
-
-class ConselhoCulturalForm(ModelForm):
-    arquivo = forms.FileField(required=True, widget=FileInput)
-    data_publicacao = forms.DateField(required=True)
-
-    def __init__(self, *args, **kwargs):
-        self.usuario = kwargs.pop('user')
-        super(ConselhoCulturalForm, self).__init__(*args, **kwargs)
-
-    def clean(self):
-        limite = add_anos(self.usuario.data_publicacao_acordo, self.usuario.prazo)
-        hoje = datetime.date.today()
-        if hoje > limite:
-            self.add_error('arquivo', '''Não foi possível salvar.
-                Você ultrapassou a data limite de envio: ''' + limite.strftime("%d/%m/%Y"))
-
-    def save(self, commit=True, *args, **kwargs):
-        conselho = super(ConselhoCulturalForm, self).save(commit=False)
-        if 'arquivo' in self.changed_data:
-            conselho.situacao_id = 1
-
-        if commit:
-            conselho.planotrabalho = self.usuario.plano_trabalho
-            conselho.save()
-            self.usuario.plano_trabalho.conselho_cultural = conselho
-            self.usuario.plano_trabalho.save()
-
-            nomes = self.data.getlist('conselheiro')
-            emails = self.data.getlist('email')
-            segmentos = self.data.getlist('segmento')
-            outros_segmentos = self.data.getlist('outros_segmento')
-            for nome, email, segmento, outros_segmento in zip(nomes, emails, segmentos, outros_segmentos):
-                if nome and email and segmento:
-                    try:
-                        conselheiro = Conselheiro.objects.get(email=email, conselho=conselho)
-                        conselheiro.nome, conselheiro.email, conselheiro.conselho = nome, email, conselho
-                        conselheiro.segmento = segmento if segmento != 'Outros' else outros_segmento
-                        conselheiro.save()
-                    except Conselheiro.DoesNotExist:
-                        Conselheiro.objects.get_or_create(nome=nome, email=email, segmento=segmento, conselho=conselho)
-                else:
-                    Conselheiro.objects.filter(nome=nome, email=email, conselho=conselho).delete()
-            Conselheiro.objects.filter(conselho=conselho).exclude(email__in=emails).delete()
-        return conselho
-
-    class Meta:
-        model = ConselhoCultural
-        fields = ['arquivo', 'data_publicacao']
-
-
-class FundoCulturaForm(ModelForm):
-    arquivo = forms.FileField(required=True, widget=FileInput)
-    data_publicacao = forms.DateField(required=True)
-
-    def __init__(self, *args, **kwargs):
-        self.usuario = kwargs.pop('user')
-        super(FundoCulturaForm, self).__init__(*args, **kwargs)
-
-    def clean(self):
-        limite = add_anos(self.usuario.data_publicacao_acordo, self.usuario.prazo)
-        hoje = datetime.date.today()
-        if hoje > limite:
-            self.add_error('arquivo', '''Não foi possível salvar.
-            Você ultrapassou a data limite de envio: ''' + limite.strftime("%d/%m/%Y"))
-
-    def clean_cnpj_fundo_cultura(self):
-        cnpj = self.cleaned_data['cnpj_fundo_cultura']
-        if 'arquivo' in self.changed_data and not cnpj:
-            raise forms.ValidationError('CNPJ é obrigatório')
-        if cnpj:
-            if FundoCultura.objects.filter(cnpj_fundo_cultura=cnpj) and 'cnpj_fundo_cultura' in self.changed_data:
-                raise forms.ValidationError(
-                    'Já existe um Fundo de Cultura com este CNPJ cadastrado')
-            elif not validar_cnpj(cnpj):
-                raise forms.ValidationError('CNPJ inválido')
-
-        return self.cleaned_data['cnpj_fundo_cultura']
-
-    def save(self, commit=True, *args, **kwargs):
-        fundo = super(FundoCulturaForm, self).save(commit=False)
-        if 'arquivo' in self.changed_data and self.is_valid:
-            fundo.situacao_id = 1
-
-        if commit:
-            fundo.planotrabalho = self.usuario.plano_trabalho
-            fundo.save()
-            self.usuario.plano_trabalho.fundo_cultura = fundo
-            self.usuario.plano_trabalho.save()
-        return fundo
-
-    class Meta:
-        model = FundoCultura
-        fields = ['cnpj_fundo_cultura', 'arquivo', 'data_publicacao']
-
-
-class PlanoCulturaForm(ModelForm):
-    relatorio_diretrizes_aprovadas = forms.FileField(
-        required=False, widget=FileInput)
-    minuta_preparada = forms.FileField(required=False, widget=FileInput)
-    ata_reuniao_aprovacao_plano = forms.FileField(
-        required=False, widget=FileInput)
-    arquivo = forms.FileField(required=True, widget=FileInput)
-    data_publicacao = forms.DateField(required=True)
-
-    def __init__(self, *args, **kwargs):
-        self.usuario = kwargs.pop('user')
-        super(PlanoCulturaForm, self).__init__(*args, **kwargs)
-
-    def clean(self):
-        limite = add_anos(self.usuario.data_publicacao_acordo, self.usuario.prazo)
-        hoje = datetime.date.today()
-        if hoje > limite:
-            self.add_error('arquivo', '''Não foi possível salvar.
-             Você ultrapassou a data limite de envio: ''' + limite.strftime("%d/%m/%Y"))
-
-    def save(self, commit=True, *args, **kwargs):
-        plano = super(PlanoCulturaForm, self).save(commit=False)
-
-        if 'arquivo' in self.changed_data:
-            plano.situacao_id = 1
-
-        if commit:
-            plano.planotrabalho = self.usuario.plano_trabalho
-            plano.save()
-            self.usuario.plano_trabalho.plano_cultura = plano
-            self.usuario.plano_trabalho.save()
-        return plano
-
-    class Meta:
-        model = PlanoCultura
-        fields = ['arquivo', 'data_publicacao']
+        model = FundoDeCultura
+        fields = ('cnpj', 'arquivo', 'data_publicacao')
 
 
 class CriarConselheiroForm(ModelForm):
@@ -236,7 +86,7 @@ class CriarConselheiroForm(ModelForm):
     outros = forms.CharField(required=False)
 
     def __init__(self, *args, **kwargs):
-        self.usuario = kwargs.pop('user')
+        self.conselho_id = kwargs.pop('conselho')
         super(CriarConselheiroForm, self).__init__(*args, **kwargs)
 
     def clean_segmento(self):
@@ -251,7 +101,8 @@ class CriarConselheiroForm(ModelForm):
 
     def save(self, commit=True, *args, **kwargs):
         conselheiro = super(CriarConselheiroForm, self).save(commit=False)
-        conselheiro.conselho = self.usuario.plano_trabalho.conselho_cultural
+        conselho = Componente.objects.get(id=self.conselho_id)
+        conselheiro.conselho = conselho
         conselheiro.data_cadastro = datetime.datetime.now()
         conselheiro.data_situacao = datetime.datetime.now()
         conselheiro.situacao = 1  # Situação 1 = Habilitado
@@ -278,7 +129,6 @@ class AlterarConselheiroForm(ModelForm):
     situacao = forms.ChoiceField(choices=SITUACAO_CONSELHEIRO, required=True)
 
     def __init__(self, *args, **kwargs):
-        self.usuario = kwargs.pop('user')
         super(AlterarConselheiroForm, self).__init__(*args, **kwargs)
         self.fields['situacao'].required = False
 
@@ -294,7 +144,6 @@ class AlterarConselheiroForm(ModelForm):
 
     def save(self, commit=True, *args, **kwargs):
         conselheiro = super(AlterarConselheiroForm, self).save(commit=False)
-        conselheiro.conselho = self.usuario.plano_trabalho.conselho_cultural
 
         if self.cleaned_data['segmento'] == '21':  # outros
             outros = self.cleaned_data['outros']  # texto livre
@@ -314,13 +163,8 @@ class AlterarConselheiroForm(ModelForm):
 
 class DesabilitarConselheiroForm(ModelForm):
 
-    def __init__(self, *args, **kwargs):
-        self.usuario = kwargs.pop('user')
-        super(DesabilitarConselheiroForm, self).__init__(*args, **kwargs)
-
     def save(self, commit=True, *args, **kwargs):
         conselheiro = super(DesabilitarConselheiroForm, self).save(commit=False)
-        conselheiro.conselho = self.usuario.plano_trabalho.conselho_cultural
 
         conselheiro.data_situacao = datetime.datetime.now()
         conselheiro.situacao = 0  # Situação 0 = Desabilitado

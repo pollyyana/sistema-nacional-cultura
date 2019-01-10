@@ -111,11 +111,11 @@
       <div id="sobre">
         <ul>
           <li id="link-sobre">
-            <a href="#">Sobre o SNC</a>
+            <a href="http://portalsnc.cultura.gov.br/">Sobre o SNC</a>
           </li>
           |
           <li>
-            <a href="{% url 'adesao:consultar' %}">Consultar Informações</a>
+            <a href="{% url 'adesao:consultar' tipo='municipio' %}">Consultar Informações</a>
           </li>
           |
           <li id="link-sobre">
@@ -156,72 +156,96 @@
             <span class="menuTrigger">Menu</span>
             <div id="portal-column-one" class="cell width-1:4 position-0">
               {% if request.user.is_authenticated %}
-              <div class="portletWrapper" id="" data-portlethash="">
-                <dl class="portlet portletNavigationTree">
-                  <dt class="portletHeader">
-                    <span class="portletTopLeft"></span>
-                    <a href="#" class="tile ui-droppable">Menu Principal</a>
-                    <span class="portletTopRight"></span>
-                  </dt>
-                  <dd class="portletItem lastItem">
-                    <ul class="navTree navTreeLevel0">
-                      <li class="navTreeItem visualNoMarker navTreeFolderish section-assunto-a">
-                        <a href="{% url 'adesao:home' %}" title="" class="state-published navTreeFolderish contenttype-folder">
-                          <span>Início</span>
-                        </a>
-                      </li>
-                      {% if request.user.usuario.estado_processo in "01367" %}
-                      <li class="navTreeItem visualNoMarker navTreeFolderish section-assunto-b">
-                        {% if request.user.usuario.municipio %}
-                        <a href="{% url 'adesao:municipio' %}" title="" class="state-published navTreeFolderish contenttype-folder">
-                        {% else %}
-                        <a href="{% url 'adesao:selecionar_tipo_ente' %}" title="" class="state-published navTreeFolderish contenttype-folder">
+                {% if request.session.sistemas|length > 1 %}
+                  <form action="{% url 'adesao:define_sistema_sessao' %}" id="ente_form" class="form-horizontal" method="post">
+                    {% csrf_token %}
+                    <select class="form-control" id="ente_select" name="sistema">
+                      <option value="">Trocar Ente</option>
+                      {% for sistema in request.session.sistemas %}
+                        <option value={{ sistema.id }} {% if sistema.id == request.session.sistema_cultura_selecionado.id %} selected="selected"{% endif %}>{{ sistema.ente_federado__nome }}</option>
+                      {% endfor %}
+                    </select>
+                    </br>
+                  </form>
+                {% endif %}
+                <div class="portletWrapper" id="" data-portlethash="">
+                  <dl class="portlet portletNavigationTree">
+                    <dt class="portletHeader">
+                      <span class="portletTopLeft"></span>
+                      <a href="#" class="tile ui-droppable">Menu Principal</a>
+                      <span class="portletTopRight"></span>
+                    </dt>
+                    <dd class="portletItem lastItem">
+                      <ul class="navTree navTreeLevel0">
+                        <li class="navTreeItem visualNoMarker navTreeFolderish section-assunto-a">
+                          <a href="{% url 'adesao:home' %}" title="" class="state-published navTreeFolderish contenttype-folder">
+                            <span>Início</span>
+                          </a>
+                        </li>
+                        <li class="navTreeItem visualNoMarker navTreeFolderish section-assunto-b">
+                          <a href="{% url 'adesao:cadastrar_sistema' %}" title="" class="state-published navTreeFolderish contenttype-folder">
+                            <span>Criar Novo Ente Federado</span>
+                          </a>
+                        </li>
+                        {% if request.session.sistema_cultura_selecionado %}
+                          {% if request.session.sistema_cultura_selecionado.estado_processo in "01367" %}
+                            <li class="navTreeItem visualNoMarker navTreeFolderish section-assunto-b">
+                              <a href="{% url 'adesao:alterar_sistema' pk=request.session.sistema_cultura_selecionado.id %}" title="" class="state-published navTreeFolderish contenttype-folder">
+                                <span>Alterar Ente Federado</span>
+                              </a>
+                            </li>
+                            <li class="navTreeItem visualNoMarker navTreeFolderish section-assunto-c">
+                              {% if request.session.sistema_cultura_selecionado.secretario %}
+                                <a href="{% url 'adesao:alterar_funcionario' pk=request.session.sistema_cultura_selecionado.secretario tipo='secretario' %}" title="" class="state-published navTreeFolderish contenttype-folder">
+                              {% else %}
+                                <a href="{% url 'adesao:cadastrar_funcionario' sistema=request.session.sistema_cultura_selecionado.id tipo='secretario' %}" title="" class="state-published navTreeFolderish contenttype-folder">
+                              {% endif %}
+                                <span>Interlocutor</span>
+                              </a>
+                            </li>
+                            <li class="navTreeItem visualNoMarker navTreeFolderish section-assunto-d">
+                              {% if request.session.sistema_cultura_selecionado.responsavel %}
+                                <a href="{% url 'adesao:alterar_funcionario' pk=request.session.sistema_cultura_selecionado.responsavel tipo='responsavel' %}" title="" class="state-published navTreeFolderish contenttype-folder">
+                              {% else %}
+                                <a href="{% url 'adesao:cadastrar_funcionario' sistema=request.session.sistema_cultura_selecionado.id tipo='responsavel' %}" title="" class="state-published navTreeFolderish contenttype-folder">
+                              {% endif %}
+                                <span>Responsável</span>
+                              </a>
+                            </li>
+                          {% endif %}
+                          {% if request.session.sistema_cultura_selecionado.estado_processo in "13" %}
+                            <li class="navTreeItem visualNoMarker navTreeFolderish section-assunto-d">
+                              <a href="{% url 'adesao:gera_pdf' template='minuta_acordo' nome_arquivo='minuta_acordo.pdf' %}" title="" class="state-published navTreeFolderish contenttype-folder" target="_blank">
+                                <span>Acordo de Cooperação</span>
+                              </a>
+                            </li>
+                            <li class="navTreeItem visualNoMarker navTreeFolderish section-assunto-d">
+                              <a href="{% url 'adesao:gera_pdf' template='solicitacao' nome_arquivo='solicitacao.pdf' %}" title="" class="state-published navTreeFolderish contenttype-folder" target="_blank'">
+                                <span>Termo de Solicitação</span>
+                              </a>
+                            </li>
+                          {% endif %}
+                          {% if request.session.sistema_cultura_selecionado.estado_processo == '6' %}
+                            <li class="navTreeItem visualNoMarker navTreeFolderish section-assunto-d">
+                              <a href="{% url 'planotrabalho:planotrabalho' request.session.sistema_cultura_selecionado.id %}" title="" class="state-published navTreeFolderish contenttype-folder but-warning">
+                                <span>Plano de Trabalho</span>
+                              </a>
+                            </li>
+                            {% if request.session.sistema_cultura_selecionado.conselho %}
+                              <li class="navTreeItem visualNoMarker navTreeFolderish section-assunto-d">
+                                <a  href="{% url 'planotrabalho:listar_conselheiros' %}" title="" class="state-published navTreeFolderish contenttype-folder ">
+                                  <span>Conselheiros</span>
+                                </a>
+                              </li>
+                            {% endif %}
+                          {% endif %}
                         {% endif %}
-                          <span>Ente Federado</span>
-                        </a>
-                      </li>
-                      <li class="navTreeItem visualNoMarker navTreeFolderish section-assunto-c">
-                        <a href="{% url 'adesao:secretario' %}" title="" class="state-published navTreeFolderish contenttype-folder">
-                          <span>Interlocutor</span>
-                        </a>
-                      </li>
-                      <li class="navTreeItem visualNoMarker navTreeFolderish section-assunto-d">
-                        <a href="{% url 'adesao:responsavel' %}" title="" class="state-published navTreeFolderish contenttype-folder">
-                          <span>Responsável</span>
-                        </a>
-                      </li>
-                      {% endif %}
-                      {% if request.user.usuario.estado_processo in "13" %}
-                      <li class="navTreeItem visualNoMarker navTreeFolderish section-assunto-d">
-                        <a href="{% url 'adesao:minuta' %}" title="" class="state-published navTreeFolderish contenttype-folder" target="_blank">
-                          <span>Acordo de Cooperação</span>
-                        </a>
-                      </li>
-                      <li class="navTreeItem visualNoMarker navTreeFolderish section-assunto-d">
-                        <a href="{% url 'adesao:solicitacao' %}" title="" class="state-published navTreeFolderish contenttype-folder" target="_blank'">
-                          <span>Termo de Solicitação</span>
-                        </a>
-                      </li>
-                      {% endif %}
-                      {% if request.user.usuario.estado_processo == '6' %}
-                      <li class="navTreeItem visualNoMarker navTreeFolderish section-assunto-d">
-                        <a href="{% url 'planotrabalho:planotrabalho' request.user.usuario.plano_trabalho.id %}" title="" class="state-published navTreeFolderish contenttype-folder but-warning">
-                          <span>Plano de Trabalho</span>
-                        </a>
-                      </li>
-
-                      <li class="navTreeItem visualNoMarker navTreeFolderish section-assunto-d">
-                        <a  href="{% url 'planotrabalho:listar_conselheiros' %}" title="" class="state-published navTreeFolderish contenttype-folder ">
-                          <span>Conselheiros</span>
-                        </a>
-                      </li>
-                      {% endif %}
-                    </ul>
-                    <span class="portletBottomLeft"></span>
-                    <span class="portletBottomRight"></span>
-                  </dd>
-                </dl>
-              </div>
+                      </ul>
+                      <span class="portletBottomLeft"></span>
+                      <span class="portletBottomRight"></span>
+                    </dd>
+                  </dl>
+                </div>
               {% endif %}
               {% block menu %}
               {% endblock menu %}
@@ -268,7 +292,7 @@
           {% block content2 %}{% endblock content2 %}
 
             <!-- Column 2 -->
-            {% if request.user.usuario.estado_processo == '1' %}
+            {% if request.session.sistema_cultura_selecionado.estado_processo == '1' %}
             <div id="portal-column-two" class="cell width-1:4 position-3:4">
 
                 <div id="" class="portletWrapper kssattr-portlethash">
@@ -330,6 +354,13 @@
     <script src="{% static 'js/leaflet.js' %}"></script>
     <script type="text/javascript">
       $(document).ready(function() {
+        $('#ente_select').change(function(){
+          var ente_select = document.getElementById("ente_select");
+          var value = ente_select.options[ente_select.selectedIndex].value;
+          if (value != "") {
+            $('#ente_form').submit();
+          }
+        });
         $("body").prepend('<div id="overlay" style="height: 100%; width: 100%; opacity: 0.3; z-index: 100; position: fixed; background: url({% static "img/spinner.gif"%}) no-repeat center center; background-color: gray; display: none;"></div>');
 
         $(".add").click(function() {

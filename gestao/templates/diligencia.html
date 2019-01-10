@@ -1,0 +1,145 @@
+{% extends 'gestao/base_gestao.html' %} {% block content %}
+
+<style>
+	#painel-diligencia{
+		background-color: #eee;
+		margin-top: 2rem;
+		width: 83.5rem;
+	}
+	#lista-diligencia{
+		margin-bottom: 2rem;
+	}
+	.glyphicon.glyphicon-remove {
+		color: #d9534f;
+	}
+	.glyphicon.glyphicon-ok {
+		color: #337ab7;
+	}
+</style>
+
+<div id="painel-diligencia" class="row panel panel-default">
+	<div class="panel-body">
+		{% if componente == plano_trabalho  %}
+			<h2>Informações sobre o Plano Trabalho</h2>
+			<br>
+			<p><b>Ente Federado:</b> {{ ente_federado }}</p>
+
+            <p><b>Criação Sistema: </b> {{ situacoes.legislacao }}
+                {% if situacoes.legislacao != 'Concluída' %}
+                    <i class="glyphicon glyphicon-remove"></i>
+                {% else %}
+                    <i class="glyphicon glyphicon-ok"></i>
+                {% endif %}
+            </p>
+            <p><b>Fundo Cultura: </b> {{ situacoes.fundo_cultura }}
+                {% if situacoes.fundo_cultura != 'Concluída' %}
+                <i class="glyphicon glyphicon-remove"></i>
+                {% else %}
+                <i class="glyphicon glyphicon-ok"></i>
+                {% endif %}
+            </p>
+            <p><b>Conselho Cultural: </b> {{ situacoes.conselho}}
+                {% if situacoes.conselho != 'Concluída' %}
+                    <i class="glyphicon glyphicon-remove"></i>
+                {% else %}
+                    <i class="glyphicon glyphicon-ok"></i>
+                {% endif %}
+            </p>
+            <p><b>Orgao Gestor: </b> {{ situacoes.orgao_gestor }}
+                {% if situacoes.orgao_gestor != 'Concluída' %}
+                    <i class="glyphicon glyphicon-remove"></i>
+                {% else %}
+                    <i class="glyphicon glyphicon-ok"></i>
+                {% endif %}
+            </p>
+            <p><b>Plano Cultura: </b> {{ situacoes.plano }}
+                {% if situacoes.plano != 'Concluída' %}
+                    <i class="glyphicon glyphicon-remove"></i>
+                {% else %}
+                    <i class="glyphicon glyphicon-ok"></i>
+                {% endif %}
+            </p>
+
+		{% else %}
+
+			<h2>Informações sobre o Arquivo Enviado</h2>
+			<p><b>Ente Federado:</b> {{ ente_federado }}</p>
+			<p><b>Data de Envio do Arquivo:</b> {{ data_envio }}</p>
+			<a href = {{arquivo.url}}> <b>Download do arquivo</b></a>
+
+		{% endif %}
+	</div>
+</div>
+
+
+<div class="row">
+	<form method="POST" class='{% if form.texto_diligencia.errors %} has-error {% endif %}'>
+		{% csrf_token %}
+		{{form.texto_diligencia}}
+		{% if form.texto_diligencia.errors %}
+			<span class="help-block">{{ form.texto_diligencia.errors }}</span>
+        {% endif %}
+		<br>
+
+		{% if componente != plano_trabalho %}
+			<b>Classificação do Arquivo:</b> {{form.classificacao_arquivo}}
+		{% endif %}
+
+		{{form.media}}
+		<br><br>
+		<input class="btn btn-primary" type="submit"></input>
+		<a href="{% url 'gestao:detalhar' cod_ibge=sistema_cultura.ente_federado.cod_ibge %}" class="btn btn-danger">Cancelar</a>
+	</form>
+</div>
+<br>
+
+<div class="row">
+	{% if historico_diligencias %}
+		<div class="col-md-6">
+			<div class="row panel panel-info">
+				<div class="panel-heading">
+					Histórico de Diligências
+				</div>
+
+				{% for diligencia in historico_diligencias %}
+				<div id="lista-diligencia" class="col-md-12">
+					<ul class="list-group"></ul>
+						<li class="list-group-item" style="border: 1px solid #b3b5b6"><b>Usuário:</b> {{ diligencia.usuario.nome_usuario }}</li>
+		                {% if componente != plano_trabalho %}
+		                    <li class="list-group-item" style="border: 1px solid #b3b5b6"><b>Motivo:</b> {{ diligencia.get_classificacao_arquivo_display }}</li>
+		                {% endif %}
+						<li class="list-group-item" style="border: 1px solid #b3b5b6"><b>Data:</b> {{ diligencia.data_criacao }}</li>
+						<li class="list-group-item" style="border: 1px solid #b3b5b6"><b>Resumo:</b> {{ diligencia.texto_diligencia | striptags | safe}}</li>
+					</ul>
+				</div>
+				{% endfor %}
+
+			</div>
+		</div>
+	{% endif %}
+
+	{% if historico_diligencias_componentes %}
+		<div class="col-md-6">
+			<div class="row panel panel-info">
+				<div class="panel-heading">
+					Histórico de Diligências dos Componentes
+				</div>
+
+				{% for componente in historico_diligencias_componentes %}
+				<div id="lista-diligencia" class="col-md-12">
+					<ul class="list-group"></ul>
+					<li class="list-group-item" style="border: 1px solid #b3b5b6"><b>Componente:</b> {{ componente.get_tipo_display }}</li>
+						<li class="list-group-item" style="border: 1px solid #b3b5b6"><b>Usuário:</b> {{ componente.diligencia.usuario.nome_usuario }}</li>
+		                <li class="list-group-item" style="border: 1px solid #b3b5b6"><b>Motivo:</b> {{ componente.diligencia.get_classificacao_arquivo_display }}</li>
+						<li class="list-group-item" style="border: 1px solid #b3b5b6"><b>Data:</b> {{ componente.diligencia.data_criacao }}</li>
+						<li class="list-group-item" style="border: 1px solid #b3b5b6"><b>Resumo:</b> {{ componente.diligencia.texto_diligencia | striptags | safe}}</li>
+					</ul>
+				</div>
+				{% endfor %}
+
+			</div>
+		</div>
+	{% endif %}
+</div>
+
+{% endblock %}

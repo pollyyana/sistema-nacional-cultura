@@ -4,127 +4,146 @@
     <span class="anchorjs-icon"></span>
   </a>
 </h2>
-{% if request.user.usuario.estado_processo == '0' %}
-  <div class="alert alert-info" role="alert">
-    <strong>Caso o seu município já esteja cadastrado, e não possui acesso ao sistema:</strong><br><br>
-    <a href="{% url 'adesao:alterar_cadastrador' %}" target="_blank">- Imprima o modelo de ofício, que pode ser encontrado clicando aqui</a><br>
-    - Preencha com os dados do novo responsável e do prefeito.<br>
-    - Encaminhe para assinatura do prefeito. <br>
-    - Digitalize e envie para nosso email: acordosnc@cultura.gov.br
-  </div>
-  <p style="text-align: justify;">{% blocktrans %}O Sistema Nacional de Cultura (SNC) é um instrumento 
-  de gestão compartilhada de políticas públicas de cultura entre os ente federados e a sociedade civil. 
-  Seu principal objetivo é fortalecer as políticas culturais da União, Estados, Distrito Federal e Municípios 
-  por meio da institucionalização e amplificação da participação social para promover desenvolvimento - humano,
-  social e econômico - com pleno exercício dos direitos culturais.{% endblocktrans %}</p>
-  <p style="text-align: justify;">{% blocktrans %}Clique nas abas "Ente Federado", "Interlocutor" e "Responsável" 
-  e preencha as informações para gerar o Acordo de Cooperação Federativa e a Solicitação de Integração ao SNC.
-  {% endblocktrans %}</p>
-{% elif request.user.usuario.estado_processo == '1' %} 
-  {% include "conclusao_cadastro.html" %} 
-{% elif request.user.usuario.estado_processo == '2' %}
-  <p>
-    Informamos o recebimento da documentação física necessária para efetivar a Adesão ao SNC.
-  </p>
-
-  <p>
-    Nossa equipe realizará os procedimentos necessários à sua adesão.
-  </p>
-
-  <p>
-    Aguarde nosso contato.
-  </p>
-
-  <p>
-    Atenciosamente,
-    <br> Equipe SNC
-  </p>
-{% elif request.user.usuario.estado_processo == '3' %}
-  <p>
-    Consta em nossos registros a pendência da seguinte documentação física necessária para
-    efetivar a Adesão ao SNC:<br><br>
-    <strong>{{ historico.0.descricao }}</strong>
-  </p>
-
-  <p>
-    <font color="red">Seu prazo para o envio é de <strong>30 dias</strong> corridos.</font>
-  </p>
-
-  <p>
-    Atenciosamente,<br>
-    Equipe SNC
-  </p>
-{% elif request.user.usuario.estado_processo == '4' %}
-  <p>
-    Prezad@ {{ request.user.usuario.nome_usuario }},
-  </p>
-  <p>
-    O acordo de cooperação foi enviado para assinatura do Secretário de Articulação Institucional, representante do ministério na assinatura do acordo. Em seguida, providenciaremos a publicação no Diário Oficial da União.
-  </p>
-  <p>
-    Aguarde nosso contato.
-  </p>
-  <p>
-    Atenciosamente,<br>
-    Equipe SNC
-  </p>
-{% elif request.user.usuario.estado_processo == '5' %}
-  <p>
-    Prezad@ {{ request.user.usuario.nome_usuario }}
-  </p>
-  <p>
-    Sua solicitação foi confirmada pela nossa equipe. Estamos providenciando a publicação do seu acordo no Diário Oficial da União.
-  </p>
-  <p>
-    Aguarde nosso contato.
-  </p>
-  <p>
-    Atenciosamente,<br>
-    Equipe SNC
-  </p>
-{% elif request.user.usuario.estado_processo == '6' %}
-  <p style="text-align: justify;">
-    Parabéns! Seu Acordo de Cooperação Federativa foi publicado no Diário Oficial da União (DOU).
-  </p>
-
-  <p style="text-align: justify;">
-    Agora você já pode iniciar o seu Plano de Trabalho, <a href="{% url 'planotrabalho:planotrabalho' request.user.usuario.plano_trabalho.id %}">clicando aqui</a>
-    ou no menu a esquerda na opção "Plano de Trabalho"
-  </p>
-
-  {% if request.user.usuario.link_publicacao_acordo %}
+{% if request.session.sistemas and not request.session.sistema_cultura_selecionado %}
+  <form action="{% url 'adesao:define_sistema_sessao' %}" class="form-horizontal" method="post">
+    {% csrf_token %}
     <p style="text-align: justify;">
-      Para visualizar a publicação do Acordo de Cooperação no Diário Oficial da União,
-      <a href="{{ request.user.usuario.link_publicacao_acordo }}"> clique aqui</a>.
+      {% blocktrans %}
+        Por favor, selecione abaixo o ente federado o qual deseja gerenciar:
+      {% endblocktrans %}
     </p>
-  {% else %}
-    <p style="text-align: justify;">
-      Para visualizar a publicação do Acordo de Cooperação no Diário Oficial da União,
-      siga os seguintes passos:
+    <select class="form-control" name="sistema">
+      <option value="">Selecione um ente federado</option>
+      {% for sistema in request.session.sistemas %}
+        <option value={{ sistema.id }}>{{ sistema.ente_federado__nome }}</option>
+      {% endfor %}
+    </select>
+    </br>
+    <input type="submit" class="btn btn-success" value="Confirmar" />
+  </form>
+{% else %}
+  {% if request.session.sistema_cultura_selecionado.estado_processo == '0' or not request.session.sistema_cultura_selecionado %}
+    <div class="alert alert-info" role="alert">
+      <strong>Caso o seu município já esteja cadastrado, e não possui acesso ao sistema:</strong><br><br>
+      <a href="{% url 'adesao:gera_pdf' template='alterar_responsavel' nome_arquivo='alterar_responsavel.pdf' %}" target="_blank">- Imprima o modelo de ofício, que pode ser encontrado clicando aqui</a><br>
+      - Preencha com os dados do novo responsável e do prefeito.<br>
+      - Encaminhe para assinatura do prefeito. <br>
+      - Digitalize e envie para nosso email: snc@cultura.gov.br
+    </div>
+    <p style="text-align: justify;">{% blocktrans %}O Sistema Nacional de Cultura é um processo de gestão e promoção das políticas públicas de cultura 
+      democráticas e permanentes, pactuadas entre os entes da Federação (União, Estados, DF e Municípios) e a 
+      sociedade. O SNC é organizado em regime de colaboração, de forma descentralizada e participativa, tendo por objetivo 
+      promover o desenvolvimento humano, social e econômico com pleno exercício dos direitos culturais.{% endblocktrans %}</p>
+    <p style="text-align: justify;">{% blocktrans %}Clique nas abas "Ente Federado", "Interlocutor" e "Responsável" 
+    e preencha as informações para gerar o Acordo de Cooperação Federativa e a Solicitação de Integração ao SNC.
+    {% endblocktrans %}</p>
+  {% elif request.session.sistema_cultura_selecionado.estado_processo == '1' %} 
+    {% include "conclusao_cadastro.html" %} 
+  {% elif request.session.sistema_cultura_selecionado.estado_processo == '2' %}
+    <p>
+      Informamos o recebimento da documentação física necessária para efetivar a Adesão ao SNC.
+    </p>
 
-      <ol>
-        <li>Insira o nome do seu município em "Informe o termo"</li>
-        <li>Selecione "DOU3"</li>
-        <li>Informe a data de {{ request.user.usuario.data_publicacao_acordo }} em "Data Inicial e Data Final"</li>
-      </ol>
+    <p>
+      Nossa equipe realizará os procedimentos necessários à sua adesão.
+    </p>
+
+    <p>
+      Aguarde nosso  contato.
+    </p>
+
+    <p>
+      Atenciosamente,
+      <br> Equipe SNC
+    </p>
+  {% elif request.session.sistema_cultura_selecionado.estado_processo == '3' %}
+    <p>
+      Consta em nossos registros a pendência da seguinte documentação física necessária para
+      efetivar a Adesão ao SNC:<br><br>
+      <strong>{{ historico.0.descricao }}</strong>
+    </p>
+
+    <p>
+      <font color="red">Seu prazo para o envio é de <strong>30 dias</strong> corridos.</font>
+    </p>
+
+    <p>
+      Atenciosamente,<br>
+      Equipe SNC
+    </p>
+  {% elif request.session.sistema_cultura_selecionado.estado_processo == '4' %}
+    <p>
+      Prezad@ {{ request.user.usuario.nome_usuario }},
+    </p>
+    <p>
+      O acordo de cooperação foi enviado para assinatura do Secretário de Articulação Institucional, representante do ministério na assinatura do acordo. Em seguida, providenciaremos a publicação no Diário Oficial da União.
+    </p>
+    <p>
+      Aguarde nosso contato.
+    </p>
+    <p>
+      Atenciosamente,<br>
+      Equipe SNC
+    </p>
+  {% elif request.session.sistema_cultura_selecionado.estado_processo == '5' %}
+    <p>
+      Prezad@ {{ request.user.usuario.nome_usuario }}
+    </p>
+    <p>
+      Sua solicitação foi confirmada pela nossa equipe. Estamos providenciando a publicação do seu acordo no Diário Oficial da União.
+    </p>
+    <p>
+      Aguarde nosso contato
+    </p>
+    <p>
+      Atenciosamente,<br>
+      Equipe SNC
+    </p>
+  {% elif request.session.sistema_cultura_selecionado.estado_processo == '6' %}
+    <p style="text-align: justify;">
+      Parabéns! Seu Acordo de Cooperação Federativa foi publicado no Diário Oficial da União (DOU).
     </p>
 
     <p style="text-align: justify;">
-      <a href="http://portal.in.gov.br" target="_blank">Clique aqui para efetuar a pesquisa</a>
+      Agora você já pode iniciar o seu Plano de Trabalho, <a href="{% url 'planotrabalho:planotrabalho' request.session.sistema_cultura_selecionado.id %}">clicando aqui</a>
+      ou no menu a esquerda na opção "Plano de Trabalho"
     </p>
+
+    {% if request.session.sistema_cultura_selecionado.link_publicacao_acordo %}
+      <p style="text-align: justify;">
+        <a href="{{ request.session.sistema_cultura_selecionado.link_publicacao_acordo }}"> Clique aqui</a> para visualizar a publicação do Acordo de Cooperação no Diário Oficial da União
+      </p>
+    {% else %}
+      <p style="text-align: justify;">
+        <a href="http://portal.in.gov.br" target="_blank">Clique aqui para efetuar a pesquisa</a>
+      </p>
+    {% endif %}
+      
+    <p>
+      <strong>EQUIPE SNC</strong>
+    </p>
+    <p>
+      Coordenação-Geral do SNC - CGSNC</br>
+      SDC / MINISTÉRIO DA CULTURA</br>
+      SCS Q. 09, Lote C, Bloco B, 9º andar</br>
+      Edifício Parque Cidade Corporate</br>
+      CEP: 70.308-200    Brasília-DF</br>
+      E-mail: snc@cultura.gov.br</br>
+    </p>
+    
   {% endif %}
-
 {% endif %}
+
 {% if historico %}
   {% include "historico_mudancas.html" %}
 {% endif %}
-{% if request.user.usuario.municipio %}
+{% if request.session.sistema_cultura_selecionado.ente_federado %}
   {% include "dados_municipio.html" %}
 {% endif %}
-{% if request.user.usuario.secretario %}
+{% if request.session.sistema_cultura_selecionado.secretario %} 
   {% include "dados_secretario.html" %}
 {% endif %}
-{% if request.user.usuario.responsavel %}
+{% if request.session.sistema_cultura_selecionado.responsavel %}
   {% include "dados_responsavel.html" %}
 {% endif %}
 {% endblock content %}

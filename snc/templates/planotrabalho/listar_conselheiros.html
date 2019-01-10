@@ -60,7 +60,7 @@
   </div>
   {% endif %}
   <br>
-  <a href="{% url 'planotrabalho:criar_conselheiro' %}">
+  <a href="{% url 'planotrabalho:criar_conselheiro' conselho=request.session.sistema_cultura_selecionado.conselho %}">
       <button type="button" class="btn btn-info" id="add" data-toggle="tooltip" title="Adicionar novo">
           <i class="fa fa-plus"></i>
       </button>

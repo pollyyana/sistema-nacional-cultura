@@ -6,7 +6,7 @@ from io import BytesIO
 from datetime import timedelta
 from threading import Thread
 
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.http import Http404, HttpResponse
 from django.views.generic.edit import CreateView, UpdateView
 from django.views.generic import ListView, DetailView
@@ -18,10 +18,12 @@ from django.template.loader import render_to_string
 from django.core.exceptions import ValidationError, ObjectDoesNotExist
 from django.db.models import Q, Count
 from django.conf import settings
+from django.forms.models import model_to_dict
 
 from templated_email.generic_views import TemplatedEmailFormViewMixin
 
 from adesao.models import (
+    SistemaCultura,
     Municipio,
     Responsavel,
     Secretario,
@@ -29,13 +31,16 @@ from adesao.models import (
     Historico,
     Uf,
     Cidade,
+    Funcionario
 )
 from planotrabalho.models import Conselheiro, PlanoTrabalho
-from adesao.forms import CadastrarUsuarioForm, CadastrarMunicipioForm
-from adesao.forms import CadastrarResponsavelForm, CadastrarSecretarioForm
-from adesao.utils import enviar_email_conclusao, verificar_anexo
+from adesao.forms import CadastrarUsuarioForm, CadastrarSistemaCulturaForm
+from adesao.forms import SedeFormSet, GestorFormSet
+from adesao.forms import CadastrarFuncionarioForm
+from adesao.utils import enviar_email_conclusao, verificar_anexo, atualiza_session, preenche_planilha
 
 from django_weasyprint import WeasyTemplateView
+from templated_email import send_templated_mail
 
 
 # Create your views here.
@@ -51,25 +56,45 @@ def fale_conosco(request):
 
 @login_required
 def home(request):
-    ente_federado = request.user.usuario.municipio
-    secretario = request.user.usuario.secretario
-    responsavel = request.user.usuario.responsavel
-    situacao = request.user.usuario.estado_processo
+    ente_federado = request.session.get('sistema_ente', False)
+    secretario = request.session.get('sistema_secretario', False)
+    responsavel = request.session.get('sistema_responsavel', False)
+    sistema = request.session.get('sistema_cultura_selecionado', False)
     historico = Historico.objects.filter(usuario=request.user.usuario)
     historico = historico.order_by("-data_alteracao")
+    sistemas_cultura = request.user.usuario.sistema_cultura.all().distinct('ente_federado__nome', 'ente_federado')
+
+    request.session['sistemas'] = list(sistemas_cultura.values('id', 'ente_federado__nome'))
 
     if request.user.is_staff:
         return redirect("gestao:acompanhar_adesao")
 
-    if ente_federado and secretario and responsavel and int(situacao) < 1:
-        request.user.usuario.estado_processo = "1"
-        request.user.usuario.save()
+    if sistemas_cultura.count() == 1:
+        atualiza_session(sistemas_cultura[0], request)
+
+    if ente_federado and secretario and responsavel and sistema and int(sistema['estado_processo']) < 1:
+        sistema = SistemaCultura.sistema.get(id=sistema['id'])
+        sistema.estado_processo = "1"
+        sistema.save()
+
+        sistema_atualizado = SistemaCultura.sistema.get(ente_federado__cod_ibge=ente_federado['cod_ibge'])
+        atualiza_session(sistema_atualizado, request)
+
         message_txt = render_to_string("conclusao_cadastro.txt", {"request": request})
         message_html = render_to_string(
             "conclusao_cadastro.email", {"request": request}
         )
         enviar_email_conclusao(request.user, message_txt, message_html)
     return render(request, "home.html", {"historico": historico})
+
+
+def define_sistema_sessao(request):
+    sistema = request.POST.get('sistema')
+    sistema_cultura = SistemaCultura.sistema.get(id=sistema)
+
+    atualiza_session(sistema_cultura, request)
+
+    return redirect("adesao:home")
 
 
 def ativar_usuario(request, codigo):
@@ -92,8 +117,8 @@ def sucesso_usuario(request):
     return render(request, "usuario/mensagem_sucesso.html")
 
 
-def sucesso_responsavel(request):
-    return render(request, "responsavel/mensagem_sucesso.html")
+def sucesso_funcionario(request, **kwargs):
+    return render(request, "mensagem_sucesso.html")
 
 
 def exportar_csv(request):
@@ -106,10 +131,14 @@ def exportar_csv(request):
     writer = csv.writer(response)
     writer.writerow(
         [
-            "UF",
-            "Município",
+            "Nome",
             "Cod.IBGE",
             "Situação",
+            "Situação da Lei do Sistema de Cultura",
+            "Situação do Órgão Gestor",
+            "Situação do Conselho de Política Cultural",
+            "Situação do Fundo de Cultura",
+            "Situação do Plano de Cultura",
             "Endereço",
             "Bairro",
             "CEP",
@@ -118,31 +147,45 @@ def exportar_csv(request):
         ]
     )
 
-    for municipio in Municipio.objects.all():
-        uf = municipio.estado.sigla
-        if municipio.cidade:
-            cidade = municipio.cidade.nome_municipio
-            cod_ibge = municipio.cidade.codigo_ibge
+    for sistema in SistemaCultura.sistema.all():
+        if sistema.ente_federado:
+            if sistema.ente_federado.is_municipio:
+                nome = sistema.ente_federado.__str__()
+            else:
+                nome = "Estado de " + sistema.ente_federado.nome
+            cod_ibge = sistema.ente_federado.cod_ibge
         else:
-            cidade = municipio.estado.nome_uf
-            cod_ibge = ""
-        try:
-            estado_processo = municipio.usuario.get_estado_processo_display()
-            if estado_processo != "Publicado no DOU":
-                continue
-        except ObjectDoesNotExist:
-            estado_processo = "Publicado no DOU"
-        endereco = municipio.endereco
-        bairro = municipio.bairro
-        cep = municipio.cep
-        telefone = municipio.telefone_um
-        email = municipio.email_institucional_prefeito
+            nome = "Nome não cadastrado"
+            cod_ibge = "Código não cadastrado"
+
+        estado_processo = sistema.get_estado_processo_display()
+
+        if sistema.sede:
+            endereco = sistema.sede.endereco
+            bairro = sistema.sede.bairro
+            cep = sistema.sede.cep
+            telefone = sistema.sede.telefone_um
+        else:
+            endereco = "Não cadastrado"
+            bairro = "Não cadastrado"
+            cep = "Não cadastrado"
+            telefone = "Não cadastrado"
+
+        if sistema.gestor:
+            email = sistema.gestor.email_institucional
+        else:
+            email = "Não cadastrado"
+
         writer.writerow(
             [
-                uf,
-                cidade,
+                nome,
                 cod_ibge,
                 estado_processo,
+                verificar_anexo(sistema, "legislacao"),
+                verificar_anexo(sistema, "orgao_gestor"),
+                verificar_anexo(sistema, "conselho"),
+                verificar_anexo(sistema, "fundo_cultura"),
+                verificar_anexo(sistema, "plano"),
                 endereco,
                 bairro,
                 cep,
@@ -164,96 +207,7 @@ def exportar_ods(request):
 
     workbook = xlwt.Workbook()
     planilha = workbook.add_sheet("SNC")
-    planilha.write(0, 0, "UF")
-    planilha.write(0, 1, "Ente Federado")
-    planilha.write(0, 2, "Cod.IBGE")
-    planilha.write(0, 3, "Situação")
-    planilha.write(0, 4, "Endereço")
-    planilha.write(0, 5, "Bairro")
-    planilha.write(0, 6, "CEP")
-    planilha.write(0, 7, "Telefone")
-    planilha.write(0, 8, "Email Prefeito")
-    planilha.write(0, 9, "Email do Cadastrador")
-    planilha.write(0, 10, "Email do Responsável")
-    planilha.write(0, 11, "Localização do processo")
-    planilha.write(0, 12, "Possui Lei do Sistema de Cultura")
-    planilha.write(0, 13, "Possui Órgão Gestor")
-    planilha.write(0, 14, "Possui Conselho de Política Cultural")
-    planilha.write(0, 15, "Possui Fundo de Cultura")
-    planilha.write(0, 16, "Possui Plano de Cultura")
-
-    for i, municipio in enumerate(Municipio.objects.all().order_by("-cidade"), start=1):
-        uf = municipio.estado.sigla
-        if municipio.cidade:
-            cidade = municipio.cidade.nome_municipio
-            cod_ibge = municipio.cidade.codigo_ibge
-        else:
-            cidade = municipio.estado.nome_uf
-            cod_ibge = municipio.estado.codigo_ibge
-        try:
-            estado_processo = municipio.usuario.get_estado_processo_display()
-        except ObjectDoesNotExist:
-            # Documentando: isso foi colocado aqui pois, os municipios migrados
-            # fizeram adesão sem cadastrador e consequentemente estado do processo
-            estado_processo = "Publicado no DOU"
-        endereco = municipio.endereco
-        bairro = municipio.bairro
-        cep = municipio.cep
-        telefone = municipio.telefone_um
-        if municipio.email_institucional_prefeito != "":
-            email_prefeito = municipio.email_institucional_prefeito
-        else:
-            email_prefeito = "Não cadastrado"
-        try:
-            # email_cadastrador = Usuario.objects.get(municipio_id=municipio.id).user.email
-            email_cadastrador = municipio.usuario.user.email
-        except ObjectDoesNotExist:
-            email_cadastrador = "Não cadastrado"
-        try:
-            if municipio.usuario.responsavel:
-                email_responsavel = (
-                    municipio.usuario.responsavel.email_institucional_responsavel
-                )
-            else:
-                email_responsavel = "Não cadastrado"
-        except ObjectDoesNotExist:
-            email_responsavel = "Não cadastrado"
-
-        local = municipio.localizacao
-
-        planilha.write(i, 0, uf)
-        planilha.write(i, 1, cidade)
-        planilha.write(i, 2, cod_ibge)
-        planilha.write(i, 3, estado_processo)
-        planilha.write(i, 4, endereco)
-        planilha.write(i, 5, bairro)
-        planilha.write(i, 6, cep)
-        planilha.write(i, 7, telefone)
-        planilha.write(i, 8, email_prefeito)
-        planilha.write(i, 9, email_cadastrador)
-        planilha.write(i, 10, email_responsavel)
-        planilha.write(i, 11, local)
-        planilha.write(
-            i, 12, verificar_anexo(municipio, "criacao_sistema", "lei_sistema_cultura")
-        )
-        planilha.write(
-            i,
-            13,
-            verificar_anexo(
-                municipio, "orgao_gestor", "relatorio_atividade_secretaria"
-            ),
-        )
-        planilha.write(
-            i,
-            14,
-            verificar_anexo(municipio, "conselho_cultural", "ata_regimento_aprovado"),
-        )
-        planilha.write(
-            i, 15, verificar_anexo(municipio, "fundo_cultura", "lei_fundo_cultura")
-        )
-        planilha.write(
-            i, 16, verificar_anexo(municipio, "plano_cultura", "lei_plano_cultura")
-        )
+    preenche_planilha(planilha)
 
     workbook.save(response)
 
@@ -264,104 +218,10 @@ def exportar_xls(request):
 
     output = BytesIO()
 
-    # workbook = xlwt.Workbook()
     workbook = xlsxwriter.Workbook(output)
-    # planilha = workbook.add_sheet('SNC')
     planilha = workbook.add_worksheet("SNC")
+    ultima_linha = preenche_planilha(planilha)
 
-    planilha.write(0, 0, "UF")
-    planilha.write(0, 1, "Ente Federado")
-    planilha.write(0, 2, "Cod.IBGE")
-    planilha.write(0, 3, "Situação")
-    planilha.write(0, 4, "Endereço")
-    planilha.write(0, 5, "Bairro")
-    planilha.write(0, 6, "CEP")
-    planilha.write(0, 7, "Telefone")
-    planilha.write(0, 8, "Email Prefeito")
-    planilha.write(0, 9, "Email do Cadastrador")
-    planilha.write(0, 10, "Email do Responsável")
-    planilha.write(0, 11, "Localização do processo")
-    planilha.write(0, 12, "Possui Lei do Sistema de Cultura")
-    planilha.write(0, 13, "Possui Órgão Gestor")
-    planilha.write(0, 14, "Possui Conselho de Política Cultural")
-    planilha.write(0, 15, "Possui Fundo de Cultura")
-    planilha.write(0, 16, "Possui Plano de Cultura")
-    ultima_linha = 0
-    for i, municipio in enumerate(Municipio.objects.all().order_by("-cidade"), start=1):
-        uf = municipio.estado.sigla
-        if municipio.cidade:
-            cidade = municipio.cidade.nome_municipio
-            cod_ibge = municipio.cidade.codigo_ibge
-        else:
-            cidade = municipio.estado.nome_uf
-            cod_ibge = municipio.estado.codigo_ibge
-        try:
-            estado_processo = municipio.usuario.get_estado_processo_display()
-        except ObjectDoesNotExist:
-            # Documentando: isso foi colocado aqui pois, os municipios migrados
-            # fizeram adesão sem cadastrador e consequentemente estado do processo
-            estado_processo = "Publicado no DOU"
-        endereco = municipio.endereco
-        bairro = municipio.bairro
-        cep = municipio.cep
-        telefone = municipio.telefone_um
-        if municipio.email_institucional_prefeito != "":
-            email_prefeito = municipio.email_institucional_prefeito
-        else:
-            email_prefeito = "Não cadastrado"
-        try:
-            # email_cadastrador = Usuario.objects.get(municipio_id=municipio.id).user.email
-            email_cadastrador = municipio.usuario.user.email
-        except ObjectDoesNotExist:
-            email_cadastrador = "Não cadastrado"
-        try:
-            if municipio.usuario.responsavel:
-                email_responsavel = (
-                    municipio.usuario.responsavel.email_institucional_responsavel
-                )
-            else:
-                email_responsavel = "Não cadastrado"
-        except ObjectDoesNotExist:
-            email_responsavel = "Não cadastrado"
-
-        local = municipio.localizacao
-
-        planilha.write(i, 0, uf)
-        planilha.write(i, 1, cidade)
-        planilha.write(i, 2, cod_ibge)
-        planilha.write(i, 3, estado_processo)
-        planilha.write(i, 4, endereco)
-        planilha.write(i, 5, bairro)
-        planilha.write(i, 6, cep)
-        planilha.write(i, 7, telefone)
-        planilha.write(i, 8, email_prefeito)
-        planilha.write(i, 9, email_cadastrador)
-        planilha.write(i, 10, email_responsavel)
-        planilha.write(i, 11, local)
-        planilha.write(
-            i, 12, verificar_anexo(municipio, "criacao_sistema", "lei_sistema_cultura")
-        )
-        planilha.write(
-            i,
-            13,
-            verificar_anexo(
-                municipio, "orgao_gestor", "relatorio_atividade_secretaria"
-            ),
-        )
-        planilha.write(
-            i,
-            14,
-            verificar_anexo(municipio, "conselho_cultural", "ata_regimento_aprovado"),
-        )
-        planilha.write(
-            i, 15, verificar_anexo(municipio, "fundo_cultura", "lei_fundo_cultura")
-        )
-        planilha.write(
-            i, 16, verificar_anexo(municipio, "plano_cultura", "lei_plano_cultura")
-        )
-        ultima_linha = i
-
-    # workbook.save(response)
     planilha.autofilter(0, 0, ultima_linha, 16)
     workbook.close()
     output.seek(0)
@@ -416,284 +276,230 @@ def sucesso_municipio(request):
     return render(request, "prefeitura/mensagem_sucesso_prefeitura.html")
 
 
-class CadastrarMunicipio(TemplatedEmailFormViewMixin, CreateView):
-    form_class = CadastrarMunicipioForm
-    model = Municipio
-    template_name = "prefeitura/cadastrar_prefeitura.html"
-    templated_email_template_name = "adesao"
-    templated_email_from_email = "naoresponda@cultura.gov.br"
+class CadastrarSistemaCultura(TemplatedEmailFormViewMixin, CreateView):
+    form_class = CadastrarSistemaCulturaForm
+    model = SistemaCultura
+    template_name = "cadastrar_sistema.html"
     success_url = reverse_lazy("adesao:sucesso_municipio")
 
-    def templated_email_get_recipients(self, form):
-        return [settings.RECEIVER_EMAIL]
+    templated_email_template_name = "adesao"
+    templated_email_from_email = "naoresponda@cultura.gov.br"
+
+
+    def form_valid(self, form):
+        context = self.get_context_data()
+
+        form_sistema = context['form_sistema']
+        form_sede = context['form_sede']
+        form_gestor = context['form_gestor']
+
+        if form_sistema.is_valid() and form_gestor.is_valid() and form_sede.is_valid():
+            sede = form_sede.save()
+
+            form_gestor.instance.tipo_funcionario = 2
+            gestor = form_gestor.save()
+
+            form_sistema.instance.sede = sede
+            form_sistema.instance.gestor = gestor
+            form_sistema.instance.cadastrador = self.request.user.usuario
+
+            sistema = form_sistema.save()
+
+            if not self.request.session.get('sistemas', False):
+                self.request.session['sistemas'] = list()
+                sistema_atualizado = SistemaCultura.sistema.get(ente_federado__id=sistema.ente_federado.id)
+                atualiza_session(sistema_atualizado, self.request)
+            else:
+                if self.request.session.get('sistema_cultura_selecionado', False):
+                    self.request.session['sistema_cultura_selecionado'].clear()
+                    self.request.session.modified = True
+
+            self.request.session['sistemas'].append({"id": sistema.id, "ente_federado__nome": sistema.ente_federado.nome})
+
+            return super(CadastrarSistemaCultura, self).form_valid(form)
+        else:
+            return self.render_to_response(self.get_context_data(form=form))
+
+    def form_invalid(self, form):
+        return self.render_to_response(self.get_context_data(form=form))
 
     def get_context_data(self, **kwargs):
-        context = super(CadastrarMunicipio, self).get_context_data(**kwargs)
-        context["tipo_ente"] = self.kwargs["tipo_ente"]
+        context = super(CadastrarSistemaCultura, self).get_context_data(**kwargs)
+        if self.request.POST:
+            context['form_sistema'] = CadastrarSistemaCulturaForm(self.request.POST, self.request.FILES)
+            context['form_sede'] = SedeFormSet(self.request.POST, self.request.FILES)
+            context['form_gestor'] = GestorFormSet(self.request.POST, self.request.FILES)
+        else:
+            context['form_sistema'] = CadastrarSistemaCulturaForm()
+            context['form_sede'] = SedeFormSet()
+            context['form_gestor'] = GestorFormSet()
         return context
+
+    def templated_email_get_recipients(self, form):
+        recipiente_list = [self.request.user.email]
+
+        return recipiente_list
 
     def templated_email_get_context_data(self, **kwargs):
         context = super().templated_email_get_context_data(**kwargs)
         context["object"] = self.object
+        context["cadastrador"] = self.request.user.usuario
+        context["sistema_atualizado"] = SistemaCultura.sistema.get(ente_federado__id=self.object.ente_federado.id)
+
         return context
 
-    def form_valid(self, form):
-        self.request.user.usuario.municipio = form.save()
-        self.request.user.usuario.save()
-        return super(CadastrarMunicipio, self).form_valid(form)
 
-    def dispatch(self, *args, **kwargs):
-        municipio = self.request.user.usuario.municipio
-        if municipio:
-            return redirect("adesao:alterar_municipio", pk=municipio.id)
-
-        return super(CadastrarMunicipio, self).dispatch(*args, **kwargs)
-
-    def get_form_kwargs(self):
-        kwargs = super(CadastrarMunicipio, self).get_form_kwargs()
-        kwargs["user"] = self.request.user.usuario
-        return kwargs
-
-
-class AlterarMunicipio(UpdateView):
-    form_class = CadastrarMunicipioForm
-    model = Municipio
-    template_name = "prefeitura/cadastrar_prefeitura.html"
+class AlterarSistemaCultura(UpdateView):
+    form_class = CadastrarSistemaCulturaForm
+    model = SistemaCultura
+    template_name = "cadastrar_sistema.html"
     success_url = reverse_lazy("adesao:sucesso_municipio")
 
-    def dispatch(self, *args, **kwargs):
-        municipio = self.request.user.usuario.municipio.pk
-        if str(municipio) != self.kwargs["pk"]:
-            raise Http404()
+    def form_valid(self, form):
+        context = self.get_context_data()
 
-        return super(AlterarMunicipio, self).dispatch(*args, **kwargs)
+        form_sistema = context['form_sistema']
+        form_sede = context['form_sede']
+        form_gestor = context['form_gestor']
 
-    def get_form_kwargs(self):
-        kwargs = super(AlterarMunicipio, self).get_form_kwargs()
-        kwargs["user"] = self.request.user.usuario
-        return kwargs
+        if form_sistema.is_valid() and form_gestor.is_valid() and form_sede.is_valid():
+            sede = form_sede.save()
+            gestor = form_gestor.save()
+
+            form_sistema.instance.sede = sede
+            form_sistema.instance.gestor = gestor
+            form_sistema.instance.cadastrador = self.request.user.usuario
+            sistema = form_sistema.save()
+
+            return redirect(self.success_url)
+        else:
+            return self.render_to_response(self.get_context_data(form=form))
+
+    def form_invalid(self, form):
+        return self.render_to_response(self.get_context_data(form=form))
+
+    def get_context_data(self, **kwargs):
+        context = super(AlterarSistemaCultura, self).get_context_data(**kwargs)
+        if self.request.POST:
+            context['form_sistema'] = CadastrarSistemaCulturaForm(self.request.POST, instance=self.object)
+            context['form_sede'] = SedeFormSet(self.request.POST, instance=self.object.sede)
+            context['form_gestor'] = GestorFormSet(self.request.POST, instance=self.object.gestor)
+        else:
+            context['form_sistema'] = CadastrarSistemaCulturaForm(instance=self.object)
+            context['form_sede'] = SedeFormSet(instance=self.object.sede)
+            context['form_gestor'] = GestorFormSet(instance=self.object.gestor)
+        return context
 
 
-class CadastrarResponsavel(CreateView):
-    form_class = CadastrarResponsavelForm
-    template_name = "responsavel/cadastrar_responsavel.html"
-    success_url = reverse_lazy("adesao:sucesso_responsavel")
+class CadastrarFuncionario(CreateView):
+    form_class = CadastrarFuncionarioForm
+    template_name = "cadastrar_funcionario.html"
+
+    def get_sistema_cultura(self):
+        return get_object_or_404(SistemaCultura, pk=int(self.kwargs['sistema']))
 
     def form_valid(self, form):
-        self.request.user.usuario.responsavel = form.save()
-        self.request.user.usuario.save()
-        return super(CadastrarResponsavel, self).form_valid(form)
+        LISTA_TIPOS_FUNCIONARIOS = {
+            'secretario': 0,
+            'responsavel': 1
+        }
+        tipo_funcionario = self.kwargs['tipo']
+        form.instance.tipo_funcionario = LISTA_TIPOS_FUNCIONARIOS[tipo_funcionario]
+        sistema = self.get_sistema_cultura()
+        setattr(sistema, tipo_funcionario, form.save())
+        sistema.save()
+
+        funcionario = getattr(sistema, tipo_funcionario)
+
+        sistema_atualizado = SistemaCultura.sistema.get(ente_federado__id=sistema.ente_federado.id)
+        atualiza_session(sistema_atualizado, self.request)
+
+        return super(CadastrarFuncionario, self).form_valid(form)
+
+    def form_invalid(self, form):
+        return self.render_to_response(self.get_context_data(form=form))
 
     def dispatch(self, *args, **kwargs):
-        responsavel = self.request.user.usuario.responsavel
-        if responsavel:
-            return redirect("adesao:alterar_responsavel", pk=responsavel.id)
+        funcionario = getattr(self.get_sistema_cultura(), self.kwargs['tipo'])
+        if funcionario:
+            return redirect("adesao:alterar_funcionario", tipo=self.kwargs['tipo'], pk=funcionario.id)
 
-        return super(CadastrarResponsavel, self).dispatch(*args, **kwargs)
+        return super(CadastrarFuncionario, self).dispatch(*args, **kwargs)
+
+    def get_success_url(self):
+        return reverse_lazy('adesao:sucesso_funcionario')
 
 
 @login_required
 def importar_secretario(request):
-    secretario = request.user.usuario.secretario
-    # TODO: Refatorar essa importação depois que a migração for realizada
-    responsavel = Responsavel()
-    if secretario:
-        responsavel.cpf_responsavel = secretario.cpf_secretario
-        responsavel.rg_responsavel = secretario.rg_secretario
-        responsavel.orgao_expeditor_rg = secretario.orgao_expeditor_rg
-        responsavel.estado_expeditor = secretario.estado_expeditor
-        responsavel.nome_responsavel = secretario.nome_secretario
-        responsavel.cargo_responsavel = secretario.cargo_secretario
-        responsavel.instituicao_responsavel = secretario.instituicao_secretario
-        responsavel.telefone_um = secretario.telefone_um
-        responsavel.telefone_dois = secretario.telefone_dois
-        responsavel.telefone_tres = secretario.telefone_tres
-        responsavel.email_institucional_responsavel = (
-            secretario.email_institucional_secretario
-        )
-        try:
-            responsavel.full_clean()
-            responsavel.save()
-        except ValidationError:
-            return redirect("adesao:responsavel")
-        request.user.usuario.responsavel = responsavel
-        request.user.usuario.save()
-    return redirect("adesao:responsavel")
+    secretario_id = request.session['sistema_cultura_selecionado']['secretario']
+    sistema_id = request.session['sistema_cultura_selecionado']['id']
+
+    try:
+        sistema = SistemaCultura.sistema.get(id=sistema_id)
+        secretario = Funcionario.objects.get(id=secretario_id)
+
+        responsavel = secretario
+        responsavel.tipo_funcionario = 1
+
+        responsavel.full_clean()
+        responsavel.save()
+
+    except (ValidationError, ObjectDoesNotExist) as error:
+        return redirect("adesao:cadastrar_funcionario",
+            sistema=sistema.id, tipo='responsavel')
+
+    sistema.responsavel = responsavel
+    sistema.save()
+
+    sistema_atualizado = SistemaCultura.sistema.get(ente_federado__id=sistema.ente_federado.id)
+    atualiza_session(sistema_atualizado, request)
+
+    return redirect("adesao:cadastrar_funcionario",
+        sistema=sistema.id, tipo='responsavel')
 
 
-class AlterarResponsavel(UpdateView):
-    form_class = CadastrarResponsavelForm
-    model = Responsavel
-    template_name = "responsavel/cadastrar_responsavel.html"
-    success_url = reverse_lazy("adesao:sucesso_responsavel")
+class AlterarFuncionario(UpdateView):
+    form_class = CadastrarFuncionarioForm
+    model = Funcionario
+    template_name = "cadastrar_funcionario.html"
+    success_url = reverse_lazy("adesao:sucesso_funcionario")
 
 
-def sucesso_secretario(request):
-    return render(request, "secretario/mensagem_sucesso_secretario.html")
-
-
-class CadastrarSecretario(CreateView):
-    form_class = CadastrarSecretarioForm
-    template_name = "secretario/cadastrar_secretario.html"
-    success_url = reverse_lazy("adesao:sucesso_secretario")
-
-    def form_valid(self, form):
-        self.request.user.usuario.secretario = form.save()
-        self.request.user.usuario.save()
-        return super(CadastrarSecretario, self).form_valid(form)
-
-    def dispatch(self, *args, **kwargs):
-        secretario = self.request.user.usuario.secretario
-        if secretario:
-            return redirect("adesao:alterar_secretario", pk=secretario.id)
-
-        return super(CadastrarSecretario, self).dispatch(*args, **kwargs)
-
-
-class AlterarSecretario(UpdateView):
-    form_class = CadastrarSecretarioForm
-    model = Secretario
-    template_name = "secretario/cadastrar_secretario.html"
-    success_url = reverse_lazy("adesao:sucesso_secretario")
-
-
-class MinutaAcordo(WeasyTemplateView):
-    pdf_filename = "minuta_acordo.pdf"
-    template_name = "termos/minuta_acordo.html"
+class GeraPDF(WeasyTemplateView):
 
     def get_context_data(self, **kwargs):
-        context = super(MinutaAcordo, self).get_context_data(**kwargs)
+        context = super(GeraPDF, self).get_context_data(**kwargs)
         context["request"] = self.request
         context["static"] = self.request.get_host()
         return context
 
+    def get_pdf_filename(self):
+        return self.kwargs['nome_arquivo']
 
-class TermoSolicitacao(WeasyTemplateView):
-    pdf_filename = "solicitacao.pdf"
-    template_name = "termos/solicitacao.html"
-
-    def get_context_data(self, **kwargs):
-        context = super(TermoSolicitacao, self).get_context_data(**kwargs)
-        context["request"] = self.request
-        context["static"] = self.request.get_host()
-        return context
+    def get_template_names(self):
+        return ['termos/%s.html' % self.kwargs['template']]
 
 
-class OficioAlteracao(WeasyTemplateView):
-    pdf_filename = "alterar_responsavel.pdf"
-    template_name = "termos/alterar_responsavel.html"
-
-    def get_context_data(self, **kwargs):
-        context = super(OficioAlteracao, self).get_context_data(**kwargs)
-        context["request"] = self.request
-        context["static"] = self.request.get_host()
-        return context
-
-
-class ConsultarMunicipios(ListView):
+class ConsultarEnte(ListView):
     template_name = "consultar/consultar.html"
     paginate_by = "25"
 
     def get_queryset(self):
-        ente_federado = self.request.GET.get("municipio", None)
-        sistema = self.request.GET.get("sistema", None)
-        orgao = self.request.GET.get("orgao", None)
-        conselho = self.request.GET.get("conselho", None)
-        fundo = self.request.GET.get("fundo", None)
-        plano = self.request.GET.get("plano", None)
+        tipo = self.kwargs['tipo']
+        ente_federado = self.request.GET.get("ente_federado", None)
 
-        usuarios = Municipio.objects.all()
+        sistemas = SistemaCultura.sistema.filter(estado_processo='6')
 
-        if sistema:
-            usuarios = usuarios.filter(
-                usuario__plano_trabalho__criacao_sistema__lei_sistema_cultura__isnull=False
-            ).exclude(usuario__plano_trabalho__criacao_sistema__lei_sistema_cultura="")
-
-        if orgao:
-            usuarios = usuarios.filter(
-                usuario__plano_trabalho__orgao_gestor__relatorio_atividade_secretaria__isnull=False
-            ).exclude(
-                usuario__plano_trabalho__orgao_gestor__relatorio_atividade_secretaria=""
-            )
-
-        if conselho:
-            usuarios = usuarios.filter(
-                usuario__plano_trabalho__conselho_cultural__ata_regimento_aprovado__isnull=False
-            ).exclude(
-                usuario__plano_trabalho__conselho_cultural__ata_regimento_aprovado=""
-            )
-
-        if fundo:
-            usuarios = usuarios.filter(
-                usuario__plano_trabalho__fundo_cultura__lei_fundo_cultura__isnull=False
-            ).exclude(usuario__plano_trabalho__fundo_cultura__lei_fundo_cultura="")
-
-        if plano:
-            usuarios = usuarios.filter(
-                usuario__plano_trabalho__plano_cultura__lei_plano_cultura__isnull=False
-            ).exclude(usuario__plano_trabalho__plano_cultura__lei_plano_cultura="")
+        if tipo == 'municipio':
+            sistemas = sistemas.filter(ente_federado__cod_ibge__gt=100)
+        elif tipo == 'estado':
+            sistemas = sistemas.filter(ente_federado__cod_ibge__lte=100)
 
         if ente_federado:
-            return usuarios.filter(cidade__nome_municipio__icontains=ente_federado)
+            sistemas = sistemas.filter(ente_federado__nome__icontains=ente_federado)
 
-        return usuarios.filter(usuario__estado_processo="6").order_by(
-            "cidade__nome_municipio"
-        )
-
-
-class ConsultarEstados(ListView):
-    template_name = "consultar/consultar_estados.html"
-    paginate_by = "27"
-
-    def get_queryset(self):
-        ente_federado = self.request.GET.get("estado", None)
-        sistema = self.request.GET.get("sistema", None)
-        orgao = self.request.GET.get("orgao", None)
-        conselho = self.request.GET.get("conselho", None)
-        fundo = self.request.GET.get("fundo", None)
-        plano = self.request.GET.get("plano", None)
-
-        usuarios = Municipio.objects.all()
-
-        if sistema:
-            usuarios = usuarios.filter(
-                usuario__plano_trabalho__criacao_sistema__lei_sistema_cultura__isnull=False
-            ).exclude(usuario__plano_trabalho__criacao_sistema__lei_sistema_cultura="")
-
-        if orgao:
-            usuarios = usuarios.filter(
-                usuario__plano_trabalho__orgao_gestor__relatorio_atividade_secretaria__isnull=False
-            ).exclude(
-                usuario__plano_trabalho__orgao_gestor__relatorio_atividade_secretaria=""
-            )
-
-        if conselho:
-            usuarios = usuarios.filter(
-                usuario__plano_trabalho__conselho_cultural__ata_regimento_aprovado__isnull=False
-            ).exclude(
-                usuario__plano_trabalho__conselho_cultural__ata_regimento_aprovado=""
-            )
-
-        if fundo:
-            usuarios = usuarios.filter(
-                usuario__plano_trabalho__fundo_cultura__lei_fundo_cultura__isnull=False
-            ).exclude(usuario__plano_trabalho__fundo_cultura__lei_fundo_cultura="")
-
-        if plano:
-            usuarios = usuarios.filter(
-                usuario__plano_trabalho__plano_cultura__lei_plano_cultura__isnull=False
-            ).exclude(usuario__plano_trabalho__plano_cultura__lei_plano_cultura="")
-
-        if ente_federado:
-            usuarios = usuarios.filter(
-                Q(cidade__isnull=True),
-                Q(estado__nome_uf__icontains=ente_federado)
-                | Q(estado__sigla__iexact=ente_federado),
-            )
-
-        return usuarios.filter(estado__isnull=False, cidade__isnull=True).order_by(
-            "estado"
-        )
+        return sistemas
 
 
 class RelatorioAderidos(ListView):
@@ -733,24 +539,18 @@ class RelatorioAderidos(ListView):
 
 
 class Detalhar(DetailView):
-    model = Municipio
+    model = SistemaCultura
     template_name = "consultar/detalhar.html"
 
     def get_context_data(self, **kwargs):
         context = super(Detalhar, self).get_context_data(**kwargs)
         try:
-            planotrabalho = Usuario.objects.get(municipio_id=self.kwargs["pk"])
-            if planotrabalho.plano_trabalho_id:
-                conselhocultural = PlanoTrabalho.objects.get(
-                    id=planotrabalho.plano_trabalho_id
-                )
-                context["conselheiros"] = Conselheiro.objects.filter(
-                    conselho_id=conselhocultural.conselho_cultural_id, situacao="1"
-                )  # Situação ativo
-            return context
+            context["conselheiros"] = Conselheiro.objects.filter(conselho_id=self.object.conselho, 
+                situacao="1")
         except:
             context["conselheiros"] = None
-            return context
+        
+        return context
 
 
 class ConsultarPlanoTrabalhoMunicipio(ListView):

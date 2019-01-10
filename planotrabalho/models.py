@@ -2,14 +2,31 @@ import datetime
 
 from django.db import models
 from django.utils.text import slugify
+from django.utils.translation import ugettext as _
 from django.contrib.contenttypes.fields import GenericRelation
 
 from gestao.models import Diligencia
 
-SITUACAO_CONSELHEIRO = (
-    ('1', 'Habilitado'),
-    ('0', 'Desabilitado')
-    )
+SITUACAO_CONSELHEIRO = (("1", "Habilitado"), ("0", "Desabilitado"))
+
+LISTA_TIPOS_COMPONENTES = (
+    (0, 'Lei Sistema'),
+    (1, 'Órgão Gestor'),
+    (2, 'Fundo Cultura'),
+    (3, 'Conselho Cultural'),
+    (4, 'Plano Cultura'),
+)
+
+LISTA_SITUACAO_ARQUIVO = (
+    (0, "Em preenchimento"),
+    (1, "Avaliando anexo"),
+    (2, "Concluída"),
+    (3, "Arquivo aprovado com ressalvas"),
+    (4, "Arquivo danificado"),
+    (5, "Arquivo incompleto"),
+    (6, "Arquivo incorreto"),
+)
+
 
 def upload_to_componente(instance, filename):
     name = ''
@@ -34,6 +51,26 @@ def upload_to_componente(instance, filename):
     return name
 
 
+def upload_to(instance, filename):
+    componentes = {
+            0: "legislacao",
+            1: "orgao_gestor",
+            2: "fundo_cultura",
+            3: "conselho",
+            4: "plano",
+            }
+
+    name = ""
+    ext = slugify(filename.split(".").pop(-1))
+    new_name = slugify(filename.rsplit(".", 1)[0])
+    componente = componentes.get(instance.tipo)
+    instance_componente = getattr(instance, componente)
+    entefederado = instance_componente.first().ente_federado.cod_ibge
+
+    name = f"{entefederado}/docs/{componente}/{new_name}.{ext}"
+
+    return name
+
 class ArquivoComponente(models.Model):
     arquivo = models.FileField(upload_to=upload_to_componente, null=True, blank=True)
     situacao = models.ForeignKey('SituacoesArquivoPlano',
@@ -46,12 +83,21 @@ class ArquivoComponente(models.Model):
         abstract = True
 
 
+class ArquivoComponente2(models.Model):
+    arquivo = models.FileField(upload_to=upload_to, null=True, blank=True)
+    situacao = models.IntegerField("Situação do Arquivo", choices=LISTA_SITUACAO_ARQUIVO,
+        default=0,
+    )
+    data_envio = models.DateField(default=datetime.date.today)
+
+    class Meta:
+        abstract = True
+
+
 class PlanoTrabalho(models.Model):
     criacao_sistema = models.OneToOneField(
-        'CriacaoSistema',
-        on_delete=models.CASCADE,
-        blank=True,
-        null=True)
+        "CriacaoSistema", on_delete=models.CASCADE, blank=True, null=True
+    )
     orgao_gestor = models.OneToOneField(
         'OrgaoGestor',
         on_delete=models.CASCADE,
@@ -77,6 +123,30 @@ class PlanoTrabalho(models.Model):
 
     def __str__(self):
         return str(self.id)
+
+
+class Componente(ArquivoComponente2):
+    tipo = models.IntegerField(
+        choices=LISTA_TIPOS_COMPONENTES,
+        default=0)
+    diligencia = models.ForeignKey('gestao.DiligenciaSimples', on_delete=models.CASCADE, related_name="componente", blank=True, null=True)
+    data_publicacao = models.DateField(_("Data de Publicação do Componente"), null=True, blank=True)
+
+    def __str__(self):
+        return str(self.id)
+
+    def get_absolute_url(self):
+        url = reverse_lazy("gestao:detalhar", kwargs={"pk": self.sistema_cultura.pk})
+        return url
+
+
+class FundoDeCultura(Componente):
+    cnpj = models.CharField(
+        max_length=18,
+        verbose_name='CNPJ',
+        blank=True,
+        null=True,
+        default=None)
 
 
 class CriacaoSistema(ArquivoComponente):
@@ -187,7 +257,7 @@ class Conselheiro(models.Model):
         default=1)
     data_cadastro = models.DateField(blank=True, null=True)
     data_situacao = models.DateField(blank=True, null=True)
-    conselho = models.ForeignKey('ConselhoCultural', on_delete=models.CASCADE)
+    conselho = models.ForeignKey('Componente', on_delete=models.CASCADE)
 
 
 class SituacoesArquivoPlano(models.Model):

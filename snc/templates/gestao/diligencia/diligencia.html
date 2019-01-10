@@ -19,7 +19,7 @@
 
 <div id="painel-diligencia" class="row panel panel-default">
 	<div class="panel-body">
-		{% if componente == plano_trabalho  %}
+		{% if componente == None  %}
 			<h2>Informações sobre o Plano Trabalho</h2>
 			<br>
 			<p><b>Ente Federado:</b> {{ ente_federado }}</p>
@@ -85,7 +85,7 @@
 		{{form.media}}
 		<br><br>
 		<input class="btn btn-primary" type="submit"></input>
-		<a href="{% url 'gestao:detalhar' pk=usuario_id %}" class="btn btn-danger">Cancelar</a>
+		<a href="{% url 'gestao:detalhar' pk=sistema_cultura %}" class="btn btn-danger">Cancelar</a>
 	</form>
 </div>
 <br>

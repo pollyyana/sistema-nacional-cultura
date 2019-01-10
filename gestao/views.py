@@ -1,20 +1,18 @@
-from threading import Thread
-
-from django.contrib.contenttypes.models import ContentType
-from django.core.mail import send_mail
-
 from django.db.models import Case, When, DateField, Count, Q
 from django.db.models.functions import Least
+from django.utils.translation import gettext as _
 
 from django.shortcuts import redirect
 from django.shortcuts import render
 from django.shortcuts import get_object_or_404
 
-from django.http import Http404, JsonResponse, HttpResponseRedirect
+from django.http import Http404
 from django.http import JsonResponse
-from django.http import HttpResponseRedirect
 
 from django.contrib.auth.models import User
+from django.contrib import messages
+
+from django.views.generic.detail import SingleObjectMixin
 
 from django.views.generic import CreateView
 from django.views.generic import DetailView
@@ -27,11 +25,14 @@ from django.urls import reverse_lazy
 
 from dal import autocomplete
 
+from templated_email.generic_views import TemplatedEmailFormViewMixin
+
 from adesao.models import Usuario
 from adesao.models import Cidade
 from adesao.models import Municipio
 from adesao.models import Historico
 from adesao.models import SistemaCultura
+from adesao.models import EnteFederado
 
 from planotrabalho.models import PlanoTrabalho
 from planotrabalho.models import CriacaoSistema
@@ -40,91 +41,68 @@ from planotrabalho.models import FundoCultura
 from planotrabalho.models import OrgaoGestor
 from planotrabalho.models import ConselhoCultural
 from planotrabalho.models import SituacoesArquivoPlano
+from planotrabalho.models import Componente
+from planotrabalho.models import FundoDeCultura
 
-from gestao.utils import enviar_email_aprovacao_plano
 from gestao.utils import empty_to_none
 
 from adesao.models import Uf
 
-from .forms import DiligenciaForm, AlterarDocumentosEnteFederadoForm
-from .forms import AlterarDadosAdesao
+from .models import DiligenciaSimples
+
+from .forms import DiligenciaComponenteForm, DiligenciaGeralForm, AlterarDocumentosEnteFederadoForm
 
 from .forms import AlterarCadastradorForm
 from .forms import AlterarUsuarioForm
-from .forms import AlterarOrgaoForm
+from .forms import AlterarComponenteForm
+from .forms import AlterarDadosEnte
 
-from .forms import AlterarFundoForm
-from .forms import AlterarPlanoForm
-from .forms import AlterarConselhoForm
-from .forms import AlterarSistemaForm
-from .forms import CriarSistemaForm
-from .forms import CriarOrgaoForm
-from .forms import CriarConselhoForm
-from .forms import CriarFundoForm
-from .forms import CriarPlanoForm
+from planotrabalho.forms import CriarComponenteForm
+from planotrabalho.forms import CriarFundoForm
+
+from .forms import CadastradorEnte
 
 from itertools import chain
+import datetime
 
 
-# Acompanhamento das adesões
-class AlterarCadastrador(FormView):
-    """AlterarCadastrador
-    Altera o cadastrador de um Municipio aderido
-    """
-    template_name = 'gestao/alterar_cadastrador.html'
-    form_class = AlterarCadastradorForm
-    success_url = reverse_lazy('gestao:acompanhar_adesao')
-
-    def form_valid(self, form):
-        form.save()
-        return super(AlterarCadastrador, self).form_valid(form)
-
-
-class CidadeChain(autocomplete.Select2QuerySetView):
+class EnteChain(autocomplete.Select2QuerySetView):
     def get_queryset(self):
         """ Filtra todas as cidade de uma determinada UF """
+        choices = EnteFederado.objects.filter(Q(nome__unaccent__icontains=self.q))
 
-        uf_pk = self.forwarded.get('estado', None)
-        if uf_pk:
-            choices = Cidade.objects\
-                .filter(uf__pk=uf_pk)\
-                .values_list('pk', 'nome_municipio', named=True)
+        return choices
+
+    def get_ente_name(self, item):
+        if item.cod_ibge > 100:
+            nome = item.__str__()
         else:
-            choices = Cidade.objects\
-                .filter(uf__sigla__iexact=self.q)\
-                .values_list('pk', 'nome_municipio', named=True)
-        return choices
+            nome = "Estado de " + item.nome
+
+        return nome
 
     def get_result_label(self, item):
-        return item.nome_municipio
+        return self.get_ente_name(item)
 
     def get_selected_result_label(self, item):
-        return item.nome_municipio
+        return self.get_ente_name(item)
 
 
-class UfChain(autocomplete.Select2QuerySetView):
-    def get_queryset(self):
-        """ Filtra todas as uf passando nome ou sigla """
+def ajax_consulta_cpf(request):
 
-        choices = Uf.objects.filter(
-                    Q(sigla__iexact=self.q) | Q(nome_uf__icontains=self.q)
-                ).values_list('pk', 'sigla', named=True)
-        return choices
+    if not request.is_ajax():
+        return JsonResponse(data={"message": "Esta não é uma requisição AJAX"}, status=400)
 
-    def get_result_label(self, item):
-        return item.sigla
+    cpf = request.POST.get('cpf', None)
+    if not cpf:
+        return JsonResponse(data={"message": "CPF não informado"}, status=400)
 
-    def get_selected_result_label(self, item):
-        return item.sigla
+    try:
+        nome = Usuario.objects.get(user__username=cpf).nome_usuario
+    except Usuario.DoesNotExist:
+        return JsonResponse(data={"message": "CPF não encontrado"}, status=404)
 
-
-def alterar_dados_adesao(request, pk):
-    if request.method == "POST":
-        form = AlterarDadosAdesao(request.POST,
-                                  instance=Usuario.objects.get(pk=pk))
-        if form.is_valid():
-            form.save()
-    return redirect('gestao:detalhar', pk=pk)
+    return JsonResponse(data={"data": {"nome": nome}})
 
 
 def ajax_cadastrador_cpf(request):
@@ -157,299 +135,231 @@ class AcompanharPrazo(ListView):
         ente_federado = self.request.GET.get('municipio', None)
         if ente_federado:
             municipio = Usuario.objects.filter(
-                municipio__cidade__nome_municipio__icontains=ente_federado).order_by('municipio__estado__nome_uf')
+                municipio__cidade__nome_municipio__unaccent__icontains=ente_federado).order_by('municipio__estado__nome_uf')
             estado = Usuario.objects.filter(
                 municipio__cidade__isnull=True,
-                municipio__estado__nome_uf__icontains=ente_federado).order_by('municipio__estado__nome_uf')
+                municipio__estado__nome_uf__unaccent__icontains=ente_federado).order_by('municipio__estado__nome_uf')
 
             return municipio | estado
         return Usuario.objects.filter(estado_processo='6', data_publicacao_acordo__isnull=False).order_by(
-            'municipio__estado__nome_uf')
+            'municipio__estado__nome_uf', 'municipio__cidade__nome_municipio')
 
 
-def aditivar_prazo(request, id):
+def aditivar_prazo(request, id,page):
     if request.method == "POST":
         user = Usuario.objects.get(id=id)
-        user.prazo = user.prazo + 1
+        print(page)
+        user.prazo = user.prazo + 2
         user.save()
 
-    return redirect('gestao:acompanhar_prazo')
+        if user.municipio.cidade:
+            ente = user.municipio.cidade.nome_municipio
+        else:
+            ente = user.municipio.estado.nome_uf
+
+        message = 'Prazo de ' + ente + ' alterado para '+ str(user.prazo) + ' anos com sucesso'
+        messages.success(request, message)
 
 
-class AcompanharAdesao(ListView):
+    return redirect(reverse_lazy('gestao:acompanhar_prazo') + '?page=' + page)
+
+
+class AcompanharSistemaCultura(ListView):
+    model = SistemaCultura
     template_name = 'gestao/adesao/acompanhar.html'
     paginate_by = 10
 
+    def remove_repeticoes(self, lista):
+        ja_adicionados = set()
+        lista_sem_repeticoes = []
+        for sistema in lista:
+                if sistema not in ja_adicionados:
+                    lista_sem_repeticoes.append(sistema)
+                    ja_adicionados.add(sistema)
+
+        return lista_sem_repeticoes
+
     def annotate_componente_mais_antigo_por_situacao(self, componentes, *args):
         componentes = componentes.annotate(
-            data_lei_sem_analise=Case(
-                When(usuario__plano_trabalho__criacao_sistema__situacao__in=args, then='usuario__plano_trabalho__criacao_sistema__data_envio'),
+            data_legislacao_sem_analise=Case(
+                When(legislacao__situacao__in=args, then='legislacao__data_envio'),
                 default=None,
                 output_field=DateField(),
             ),
              data_orgao_sem_analise=Case(
-                When(usuario__plano_trabalho__orgao_gestor__situacao__in=args, then='usuario__plano_trabalho__orgao_gestor__data_envio'),
+                When(orgao_gestor__situacao__in=args, then='orgao_gestor__data_envio'),
                 default=None,
                 output_field=DateField(),
             ),
              data_conselho_sem_analise=Case(
-                When(usuario__plano_trabalho__conselho_cultural__situacao__in=args, then='usuario__plano_trabalho__conselho_cultural__data_envio'),
+                When(conselho__situacao__in=args, then='conselho__data_envio'),
                 default=None,
                 output_field=DateField(),
             ),
              data_plano_sem_analise=Case(
-                When(usuario__plano_trabalho__plano_cultura__situacao__in=args, then='usuario__plano_trabalho__plano_cultura__data_envio'),
+                When(plano__situacao__in=args, then='plano__data_envio'),
                 default=None,
                 output_field=DateField(),
             ),
             data_fundo_sem_analise=Case(
-                When(usuario__plano_trabalho__fundo_cultura__situacao__in=args, then='usuario__plano_trabalho__fundo_cultura__data_envio'),
+                When(fundo_cultura__situacao__in=args, then='fundo_cultura__data_envio'),
                 default=None,
                 output_field=DateField(),
             )
         ).annotate(
-            mais_antigo=Least('data_lei_sem_analise', 'data_orgao_sem_analise', 'data_conselho_sem_analise', 'data_plano_sem_analise',
+            mais_antigo=Least('data_legislacao_sem_analise', 'data_orgao_sem_analise', 'data_conselho_sem_analise', 'data_plano_sem_analise',
                 'data_fundo_sem_analise')
         )
 
         return componentes
 
-
     def get_queryset(self):
         situacao = self.request.GET.get('situacao', None)
-        ente_federado = self.request.GET.get('municipio', None)
+        ente_federado = self.request.GET.get('ente_federado', None)
+
+        sistemas = SistemaCultura.objects.all()
 
         if situacao in ('0', '1', '2', '3', '4', '5', '6'):
-            entes = Municipio.objects.filter(usuario__estado_processo=situacao)
+            sistemas = SistemaCultura.objects.filter(estado_processo=situacao)
 
-        elif ente_federado:
-            municipio = Municipio.objects.filter(
-                cidade__nome_municipio__icontains=ente_federado)
-            estado = Municipio.objects.filter(
-                cidade__nome_municipio__isnull=True,
-                estado__nome_uf__icontains=ente_federado)
-
-            entes = municipio | estado
-
-        else:
-            entes = Municipio.objects.all()
-
-        entes_concluidos = self.annotate_componente_mais_antigo_por_situacao(entes, 2, 3).annotate(
-            cadastrador=Count('usuario')).order_by('-cadastrador', '-usuario__estado_processo', 'mais_antigo')
-
-        entes_diligencia = self.annotate_componente_mais_antigo_por_situacao(entes, 4, 5, 6).annotate(
-            cadastrador=Count('usuario')).order_by('-cadastrador', '-usuario__estado_processo', 'mais_antigo')
-
-        entes_nao_analisados = self.annotate_componente_mais_antigo_por_situacao(entes, 1).annotate(
-            cadastrador=Count('usuario')).order_by('-cadastrador', '-usuario__estado_processo', 'mais_antigo')
-
-        entes = entes_nao_analisados | entes_diligencia | entes_concluidos
-
-        return entes
+        if ente_federado:
+            sistemas = SistemaCultura.objects.filter(
+                ente_federado__nome__unaccent__icontains=ente_federado)
 
 
-# Acompanhamento dos planos de trabalho
-def diligencia_documental(request, etapa, st, id):
-    usuario = Usuario.objects.get(id=id)
-    #print(getattr(getattr(usuario.plano_trabalho, etapa), st))
-    #modificando o comportamento pois, no caso da "SituacoesArquivoPlano" agora é um objeto, e não só um valor 0 na tabela
-    if isinstance(getattr(getattr(usuario.plano_trabalho, etapa), st), SituacoesArquivoPlano):
-        usuario.plano_trabalho.criacao_sistema.situacao_lei_sistema = SituacoesArquivoPlano.objects.get(pk=0)
-    else:
-        setattr(getattr(usuario.plano_trabalho, etapa), st, 0)
-    form = DiligenciaForm()
-    if request.method == 'POST':
-        form = DiligenciaForm(request.POST, usuario=usuario)
-        if form.is_valid():
-            getattr(usuario.plano_trabalho, etapa).save()
-            form.save()
-        return redirect('gestao:acompanhar_adesao')
-    return render(
-        request,
-        'gestao/planotrabalho/diligencia.html',
-        {'form': form, 'etapa': etapa, 'st': st, 'id': id})
+        sistemas_entes_distintos = sistemas.distinct('ente_federado__nome', 'ente_federado')
+
+        sistemas_concluidos = self.annotate_componente_mais_antigo_por_situacao(sistemas, 2, 3).filter(
+            estado_processo='6').exclude(mais_antigo=None).order_by('mais_antigo').filter(id__in=sistemas_entes_distintos)
+
+        sistemas_diligencia = self.annotate_componente_mais_antigo_por_situacao(sistemas, 4, 5, 6).filter(
+            estado_processo='6').exclude(mais_antigo=None).order_by('mais_antigo').filter(id__in=sistemas_entes_distintos)
+
+        sistemas_nao_enviados = self.annotate_componente_mais_antigo_por_situacao(sistemas, 0).filter(
+            estado_processo='6').exclude(mais_antigo=None).order_by('mais_antigo').filter(id__in=sistemas_entes_distintos)
+
+        sistemas_nao_analisados = self.annotate_componente_mais_antigo_por_situacao(sistemas, 1).filter(
+            estado_processo='6').exclude(mais_antigo=None).order_by('mais_antigo').filter(id__in=sistemas_entes_distintos)
+
+        sistemas_publicados_sem_componentes = sistemas.filter(Q(estado_processo='6') &
+            Q(legislacao=None) &
+            Q(orgao_gestor=None) &
+            Q(conselho=None) &
+            Q(plano=None) &
+            Q(fundo_cultura=None)).filter(
+            id__in=sistemas_entes_distintos)
+
+        sistemas = sistemas.exclude(estado_processo='6').annotate(
+            tem_cadastrador=Count('cadastrador')).order_by('-tem_cadastrador', '-estado_processo').filter(
+            id__in=sistemas_entes_distintos)
+
+        sistemas = list(chain(sistemas_nao_analisados, sistemas_diligencia,
+            sistemas_nao_enviados, sistemas_concluidos, sistemas_publicados_sem_componentes, sistemas))
+        sistemas = self.remove_repeticoes(sistemas)
+
+        return sistemas
 
 
-def concluir_etapa(request, etapa, st, id):
-    usuario = Usuario.objects.get(id=id)
-    if isinstance(getattr(getattr(usuario.plano_trabalho, etapa), st), SituacoesArquivoPlano):
-        usuario.plano_trabalho.criacao_sistema.situacao_lei_sistema = SituacoesArquivoPlano.objects.get(pk=2)
-    else:
-        setattr(getattr(usuario.plano_trabalho, etapa), st, 2)
-    getattr(usuario.plano_trabalho, etapa).save()
-    return redirect('gestao:detalhar', pk=id)
-
-
-def situacao_3 (request, etapa, st, id):
-    usuario = Usuario.objects.get(id=id)
-    setattr(getattr(usuario.plano_trabalho, etapa), st, 3)
-    getattr(usuario.plano_trabalho, etapa).save()
-    return redirect('gestao:detalhar', pk=id)
-
-def situacao_4 (request, etapa, st, id):
-    usuario = Usuario.objects.get(id=id)
-    setattr(getattr(usuario.plano_trabalho, etapa), st, 4)
-    getattr(usuario.plano_trabalho, etapa).save()
-    return redirect('gestao:detalhar', pk=id)
-
-def situacao_5 (request, etapa, st, id):
-    usuario = Usuario.objects.get(id=id)
-    setattr(getattr(usuario.plano_trabalho, etapa), st, 5)
-    getattr(usuario.plano_trabalho, etapa).save()
-    return redirect('gestao:detalhar', pk=id)
-
-def situacao_6 (request, etapa, st, id):
-    usuario = Usuario.objects.get(id=id)
-    setattr(getattr(usuario.plano_trabalho, etapa), st, 6)
-    getattr(usuario.plano_trabalho, etapa).save()
-    return redirect('gestao:detalhar', pk=id)
-
-#Teste Christian
-
-class AcompanharSistema(ListView):
-    template_name = 'gestao/planotrabalho/acompanhar_sistema.html'
+class AcompanharComponente(ListView):
     paginate_by = 10
+
+    def get_template_names(self):
+        return ['gestao/planotrabalho/acompanhar_%s.html' % self.kwargs['componente']]
 
     def get_queryset(self):
         anexo = self.request.GET.get('anexo', None)
         q = self.request.GET.get('q', None)
-        if not anexo:
-            raise Http404()
-        usuarios = Usuario.objects.filter(estado_processo='6')
-        usuarios = usuarios.exclude(plano_trabalho__criacao_sistema=None)
+        sistemas = SistemaCultura.sistema.filter(estado_processo='6')
+        kwargs = {'{0}'.format(self.kwargs['componente']): None}
+        sistemas = sistemas.exclude(**kwargs)
 
-        if anexo == 'lei_sistema_cultura':
-            usuarios = usuarios.filter(
-                plano_trabalho__criacao_sistema__situacao=1)
-            usuarios = usuarios.exclude(
-                plano_trabalho__criacao_sistema__lei_sistema_cultura='')
+        if anexo == 'arquivo':
+            kwargs = {'{0}__situacao'.format(self.kwargs['componente']): 1}
+            sistemas = sistemas.filter(**kwargs)
+            kwargs = {'{0}__arquivo'.format(self.kwargs['componente']): None}
+            sistemas = sistemas.exclude(**kwargs)
         else:
-            raise Http404()
+            raise Http404
 
         if q:
-            usuarios = usuarios.filter(
-                municipio__cidade__nome_municipio__icontains=q)
+            sistemas = sistemas.filter(
+                ente_federado__nome__unaccent__icontains=q)
 
-        return usuarios
-
-
-class AcompanharOrgao(ListView):
-    template_name = 'gestao/planotrabalho/acompanhar_orgao.html'
-    paginate_by = 10
-
-    def get_queryset(self):
-        q = self.request.GET.get('q', None)
-        usuarios = Usuario.objects.filter(estado_processo='6')
-        usuarios = usuarios.exclude(plano_trabalho__orgao_gestor=None)
-        usuarios = usuarios.filter(
-            plano_trabalho__orgao_gestor__situacao=1)
-        usuarios = usuarios.exclude(
-            plano_trabalho__orgao_gestor__relatorio_atividade_secretaria='')
-        if q:
-            usuarios = usuarios.filter(
-                municipio__cidade__nome_municipio__icontains=q)
-        return usuarios
+        return sistemas
 
 
-class AcompanharConselho(ListView):
-    template_name = 'gestao/planotrabalho/acompanhar_conselho.html'
-    paginate_by = 10
+class LookUpAnotherFieldMixin(SingleObjectMixin):
 
-    def get_queryset(self):
-        q = self.request.GET.get('q', None)
-        usuarios = Usuario.objects.filter(estado_processo='6')
-        usuarios = usuarios.exclude(plano_trabalho__conselho_cultural=None)
-        usuarios = usuarios.filter(
-            plano_trabalho__conselho_cultural__situacao=1)
-        usuarios = usuarios.exclude(
-            plano_trabalho__conselho_cultural__ata_regimento_aprovado='')
-        if q:
-            usuarios = usuarios.filter(
-                municipio__cidade__nome_municipio__icontains=q)
-        return usuarios
+    lookup_field = None
 
+    def get_object(self, queryset=None):
 
-class AcompanharFundo(ListView):
-    template_name = 'gestao/planotrabalho/acompanhar_fundo.html'
-    paginate_by = 10
+        if queryset is None:
+            queryset = self.get_queryset()
 
-    def get_queryset(self):
-        q = self.request.GET.get('q', None)
-        usuarios = Usuario.objects.filter(estado_processo='6')
-        usuarios = usuarios.exclude(plano_trabalho__fundo_cultura=None)
-        usuarios = usuarios.filter(
-            plano_trabalho__fundo_cultura__situacao=1)
-        usuarios = usuarios.exclude(
-            plano_trabalho__fundo_cultura__lei_fundo_cultura='')
-        if q:
-            usuarios = usuarios.filter(
-                municipio__cidade__nome_municipio__icontains=q)
-        return usuarios
+        pk = self.kwargs.get(self.pk_url_kwarg)
+        slug = self.kwargs.get(self.slug_url_kwarg)
+        lookup_field = self.lookup_field
 
+        if pk is not None and lookup_field is None:
+            queryset = queryset.filter(pk=pk)
 
-class AcompanharPlano(ListView):
-    template_name = 'gestao/planotrabalho/acompanhar_plano.html'
-    paginate_by = 10
+        if slug is not None and (pk is None or self.query_pk_and_slug):
+            slug_field = self.get_slug_field()
+            queryset = queryset.filter(**{slug_field: slug})
 
-    def get_queryset(self):
-        anexo = self.request.GET.get('anexo', None)
-        q = self.request.GET.get('q', None)
-        if not anexo:
-            raise Http404()
-        usuarios = Usuario.objects.filter(estado_processo='6')
-        usuarios = usuarios.exclude(plano_trabalho__plano_cultura=None)
+        if lookup_field is not None:
+            queryset = queryset.filter(**{lookup_field: pk})
 
-        if anexo == 'lei_plano_cultura':
-            usuarios = usuarios.filter(
-                plano_trabalho__plano_cultura__situacao=1)
-            usuarios = usuarios.exclude(
-                plano_trabalho__plano_cultura__lei_plano_cultura='')
-        else:
-            raise Http404()
-
-        if q:
-            usuarios = usuarios.filter(
-                municipio__cidade__nome_municipio__icontains=q)
-
-        return usuarios
-
-#Teste Christian
-
-
-class DetalharUsuario(DetailView):
-    model = Usuario
-    template_name = 'gestao/detalhe_municipio.html'
-
-    def get_context_data(self, **kwargs):
-        context = super(DetalharUsuario, self).get_context_data(**kwargs)
-        situacao = context['usuario'].estado_processo
-        context['processo_sei'] = context['usuario'].processo_sei
-        municipio = Municipio.objects.get(usuario__id=context['usuario'].id)
-
-        if municipio.cidade:
-            context['historico_sistemas'] = SistemaCultura.objects.por_municipio(municipio.estado, municipio.cidade)
-        else:
-            context['historico_sistemas'] = SistemaCultura.objects.por_municipio(municipio.estado)
+        if pk is None and slug is None and lookup_field is None:
+            raise AttributeError("Generic detail view %s must be called with "
+                                 "either an object pk or a slug."
+                                 % self.__class__.__name__)
 
         try:
+            # Get the single item from the filtered queryset
+            obj = queryset.get()
+        except queryset.model.DoesNotExist:
+            raise Http404(_("No %(verbose_name)s found matching the query") %
+                          {'verbose_name': queryset.model._meta.verbose_name})
+        return obj
 
-            if situacao == '3':
-                historico = Historico.objects.filter(usuario_id=context['usuario'].id)
-                historico = historico[0]
-                context['dado_situacao'] = historico.descricao
 
-            elif situacao == '2':
-                context['dado_situacao'] = municipio.localizacao
+class DetalharEnte(DetailView, LookUpAnotherFieldMixin):
+    model = SistemaCultura
+    context_object_name = "ente"
+    template_name = "detalhe_municipio.html"
+    pk_url_kwarg = "cod_ibge"
+    lookup_field = "ente_federado__cod_ibge"
+    queryset = SistemaCultura.sistema.all()
 
-            elif situacao == '4':
-                context['dado_situacao'] = municipio.numero_processo
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        ente_federado = context['object'].ente_federado
+        historico = SistemaCultura.historico.filter(ente_federado=ente_federado)[:10]
+        context['historico'] = historico
 
-            elif situacao == '6':
-                context['dado_situacao'] = context['usuario'].data_publicacao_acordo.strftime('%d/%m/%Y')
-                context['link_publicacao'] = context['usuario'].link_publicacao_acordo
-        except:
-            pass
         return context
+
+
+class AlterarDadosEnte(UpdateView, LookUpAnotherFieldMixin):
+    model = SistemaCultura
+    form_class = AlterarDadosEnte
+    context_object_name = "ente"
+    template_name = "detalhe_municipio.html"
+    pk_url_kwarg = "cod_ibge"
+    lookup_field = "ente_federado__cod_ibge"
+    queryset = SistemaCultura.sistema.all()
+
+
+class AlterarCadastradorEnte(UpdateView, LookUpAnotherFieldMixin):
+    model = SistemaCultura
+    queryset = SistemaCultura.sistema.all()
+    form_class = CadastradorEnte
+    context_object_name = "ente"
+    template_name = "detalhe_municipio.html"
+    pk_url_kwarg = "cod_ibge"
+    lookup_field = "ente_federado__cod_ibge"
 
 
 class ListarUsuarios(ListView):
@@ -473,7 +383,9 @@ class AlterarUsuario(UpdateView):
     template_name = 'gestao/listar_usuarios.html'
     success_url = reverse_lazy('gestao:usuarios')
 
+
     def get_success_url(self):
+        messages.success(self.request, 'Situação de CPF: '+ str(self.object) + ' alterada com sucesso.')
         return reverse_lazy('gestao:usuarios')
 
 
@@ -490,10 +402,10 @@ class ListarDocumentosEnteFederado(ListView):
 
         if ente_federado:
             municipio = Municipio.objects.filter(
-                cidade__nome_municipio__icontains=ente_federado)
+                cidade__nome_municipio__unaccent__icontains=ente_federado)
             estado = Municipio.objects.filter(
                 cidade__nome_municipio__isnull=True,
-                estado__nome_uf__icontains=ente_federado)
+                estado__nome_uf__unaccent__icontains=ente_federado)
 
             return municipio | estado
 
@@ -507,6 +419,7 @@ class AlterarDocumentosEnteFederado(UpdateView):
     model = Municipio
 
     def get_success_url(self):
+        messages.success(self.request, 'Ente Federado alterado com sucesso')
         return reverse_lazy('gestao:inserir_entefederado')
 
 
@@ -519,128 +432,68 @@ class ListarDocumentosComponentes(ListView):
     def get_queryset(self):
         q = self.request.GET.get('q', None)
 
-        usuarios = Usuario.objects.filter(estado_processo='6')
+        sistemas = SistemaCultura.sistema.filter(estado_processo='6')
 
         if q:
-            usuarios = usuarios.filter(
-                municipio__cidade__nome_municipio__icontains=q)
+            sistemas = sistemas.filter(
+                ente_federado__nome__unaccent__icontains=q)
 
-        return usuarios
-
-
-class InserirSistema(CreateView):
-    template_name = 'gestao/inserir_documentos/inserir_sistema.html'
-    form_class = CriarSistemaForm
-
-    def get_form_kwargs(self):
-        kwargs = super(InserirSistema, self).get_form_kwargs()
-        pk = self.kwargs['pk']
-        kwargs['plano'] = PlanoTrabalho.objects.get(pk=pk)
-        return kwargs
-
-    def get_success_url(self):
-        return reverse_lazy('gestao:listar_documentos', kwargs={'template': 'listar_sistemas'})
+        return sistemas
 
 
-class AlterarSistema(UpdateView):
-    template_name = 'gestao/inserir_documentos/inserir_sistema.html'
-    form_class = AlterarSistemaForm
-    model = CriacaoSistema
+class InserirComponente(CreateView):
 
-    def get_success_url(self):
-        return reverse_lazy('gestao:listar_documentos', kwargs={'template': 'listar_sistemas'})
-
-
-class InserirOrgao(CreateView):
-    template_name = 'gestao/inserir_documentos/inserir_orgao.html'
-    form_class = CriarOrgaoForm
+    def get_template_names(self):
+        return ['gestao/inserir_documentos/inserir_%s.html' % self.kwargs['componente']]
 
     def get_form_kwargs(self):
-        kwargs = super(InserirOrgao, self).get_form_kwargs()
+        kwargs = super(InserirComponente, self).get_form_kwargs()
         pk = self.kwargs['pk']
-        kwargs['plano'] = PlanoTrabalho.objects.get(pk=pk)
+        kwargs['tipo'] = self.kwargs['componente']
+        kwargs['sistema'] = SistemaCultura.sistema.get(pk=pk)
         return kwargs
 
-    def get_success_url(self):
-        return reverse_lazy('gestao:listar_documentos', kwargs={'template': 'listar_orgaos'})
+    def get_form_class(self):
+        if self.kwargs['componente'] == 'fundo_cultura':
+            form_class = CriarFundoForm
+        else:
+            form_class = CriarComponenteForm
 
-
-class AlterarOrgao(UpdateView):
-    template_name = 'gestao/inserir_documentos/inserir_orgao.html'
-    form_class = AlterarOrgaoForm
-    model = OrgaoGestor
-
-    def get_success_url(self):
-        return reverse_lazy('gestao:listar_documentos', kwargs={'template': 'listar_orgaos'})
-
-
-class InserirConselho(CreateView):
-    template_name = 'gestao/inserir_documentos/inserir_conselho.html'
-    form_class = CriarConselhoForm
-
-    def get_form_kwargs(self):
-        kwargs = super(InserirConselho, self).get_form_kwargs()
-        pk = self.kwargs['pk']
-        kwargs['plano'] = PlanoTrabalho.objects.get(pk=pk)
-        return kwargs
+        return form_class
 
     def get_success_url(self):
-        return reverse_lazy('gestao:listar_documentos', kwargs={'template': 'listar_conselhos'})
+        messages.success(self.request, 'Sistema da Cultura inserido com sucesso')
+        return reverse_lazy('gestao:listar_documentos', kwargs={'template': 'listar_%s' % self.kwargs['componente']})
 
 
-class AlterarConselho(UpdateView):
-    template_name = 'gestao/inserir_documentos/inserir_conselho.html'
-    form_class = AlterarConselhoForm
-    model = ConselhoCultural
+class AlterarComponente(UpdateView):
+    form_class = AlterarComponenteForm
+    model = Componente
+
+    def get_template_names(self):
+        return ['gestao/inserir_documentos/inserir_%s.html' % self.kwargs['componente']]
 
     def get_success_url(self):
-        return reverse_lazy('gestao:listar_documentos', kwargs={'template': 'listar_conselhos'})
+        messages.success(self.request, 'Sistema da Cultura alterado com sucesso')
+        return reverse_lazy('gestao:listar_documentos',kwargs={'template': 'listar_%s' % self.kwargs['componente']})
 
 
-class InserirFundo(CreateView):
-    template_name = 'gestao/inserir_documentos/inserir_fundo.html'
+class AlterarFundoCultura(UpdateView):
     form_class = CriarFundoForm
+    model = FundoDeCultura
+    template_name = 'gestao/inserir_documentos/inserir_fundo_cultura.html'
 
     def get_form_kwargs(self):
-        kwargs = super(InserirFundo, self).get_form_kwargs()
-        pk = self.kwargs['pk']
-        kwargs['plano'] = PlanoTrabalho.objects.get(pk=pk)
+        kwargs = super(AlterarFundoCultura, self).get_form_kwargs()
+        sistema_id = self.object.fundo_cultura.last().id
+        self.sistema = SistemaCultura.objects.get(id=sistema_id)
+        kwargs['sistema'] = self.sistema
+        kwargs['tipo'] = 'fundo_cultura'
         return kwargs
 
     def get_success_url(self):
-        return reverse_lazy('gestao:listar_documentos', kwargs={'template': 'listar_fundos'})
-
-
-class AlterarFundo(UpdateView):
-    template_name = 'gestao/inserir_documentos/inserir_fundo.html'
-    form_class = AlterarFundoForm
-    model = FundoCultura
-
-    def get_success_url(self):
-        return reverse_lazy('gestao:listar_documentos', kwargs={'template': 'listar_fundos'})
-    
-
-class InserirPlano(CreateView):
-    template_name = 'gestao/inserir_documentos/inserir_plano.html'
-    form_class = CriarPlanoForm
-
-    def get_form_kwargs(self):
-        kwargs = super(InserirPlano, self).get_form_kwargs()
-        pk = self.kwargs['pk']
-        kwargs['plano'] = PlanoTrabalho.objects.get(pk=pk)
-        return kwargs
-
-    def get_success_url(self):
-        return reverse_lazy('gestao:listar_documentos', kwargs={'template': 'listar_planos'})
-
-
-class AlterarPlano(UpdateView):
-    template_name = 'gestao/inserir_documentos/inserir_plano.html'
-    form_class = AlterarPlanoForm
-    model = PlanoCultura
-
-    def get_success_url(self):
-        return reverse_lazy('gestao:listar_documentos', kwargs={'template': 'listar_planos'})
+        messages.success(self.request, 'Sistema da Cultura alterado com sucesso')
+        return reverse_lazy('gestao:listar_documentos',kwargs={'template': 'listar_fundo_cultura'})
 
 
 class Prorrogacao(ListView):
@@ -660,176 +513,117 @@ class Prorrogacao(ListView):
 
         if q:
             usuarios = usuarios.filter(
-                municipio__cidade__nome_municipio__icontains=q)
+                municipio__cidade__nome_municipio__unaccent__icontains=q)
         return usuarios
 
 
-class DiligenciaView(CreateView):
-    template_name = 'gestao/diligencia/diligencia.html'
-    form_class = DiligenciaForm
+class DiligenciaComponenteView(CreateView):
+    template_name = 'diligencia.html'
+    model = DiligenciaSimples
+    form_class = DiligenciaComponenteForm
+    context_object_name = "diligencia"
 
-    componentes = {
-        'fundo_cultura': 'fundocultura',
-        'orgao_gestor': 'orgaogestor',
-        'conselho_cultural': 'conselhocultural',
-        'plano_cultura': 'planocultura',
-        'criacao_sistema': 'criacaosistema',
-        'plano_trabalho': 'planotrabalho',
-    }
+    def get_form_kwargs(self):
+        kwargs = super(DiligenciaComponenteView, self).get_form_kwargs()
+        kwargs['componente'] = self.kwargs['componente']
+        kwargs['sistema_cultura'] = self.get_sistema_cultura()
+        kwargs['usuario'] = self.request.user.usuario
 
-    def send_email_diligencia(self):
-        usuario = self.get_plano_trabalho().usuario
-        situacoes = self.get_situacao_componentes()
-        send_mail('MINISTÉRIO DA CULTURA - SNC - DILIGÊNCIA PLANO DE TRABALHO',
-                  'Prezado Cadastrador,\n' +
-                  'Uma diligência referente ao Plano de Trabalho do ente federado ' + self.get_ente_federado_name() +
-                  ' acabou de ser realizada.\n' +
-                  'O corpo da mensagem é: ' + self.object.texto_diligencia + '\n' +
-                  'As situações dos arquivos enviados de cada componente são: \n' +
-                  'Lei de Criação do Sistema de Cultura: ' + situacoes['criacao_sistema'] + ';\n' +
-                  'Órgão Gestor: ' + situacoes['orgao_gestor'] + ';\n' +
-                  'Conselho de Política Cultural: ' + situacoes['conselho_cultural'] + ';\n' +
-                  'Fundo de Cultura: ' + situacoes['fundo_cultura'] + ';\n' +
-                  'Plano de Cultura: ' + situacoes['plano_cultura'] + '.\n\n' +
-                  'Atenciosamente,\n\n' +
-                  'Equipe SNC\nMinistério da Cultura',
-                  'naoresponda@cultura.gov.br',
-                  [usuario.user.email], fail_silently=False)
+        return kwargs
 
     def get_success_url(self):
-        usuario = self.get_plano_trabalho().usuario
-        return reverse_lazy('gestao:detalhar', kwargs={'pk': usuario.id})
+        sistema_cultura = self.get_sistema_cultura()
+        return reverse_lazy('gestao:detalhar', kwargs={'cod_ibge': sistema_cultura.ente_federado.cod_ibge})
 
-    def get_plano_trabalho(self):
-        return get_object_or_404(PlanoTrabalho, pk=int(self.kwargs['pk']))
-
-    def get_ente_federado(self):
-        plano_trabalho = self.get_plano_trabalho()
-        return plano_trabalho.usuario.municipio
-
-    def get_form(self):
-        form_class = super().get_form_class()
-
-        return form_class(resultado=self.kwargs['resultado'], componente=self.kwargs['componente'], **self.get_form_kwargs())
+    def get_sistema_cultura(self):
+        return get_object_or_404(SistemaCultura, pk=int(self.kwargs['pk']))
 
     def get_componente(self):
         """ Retonar o componente baseado no argumento passado pela url"""
-        plano_trabalho = self.get_plano_trabalho()
-        plano_componente = None
+        sistema_cultura = self.get_sistema_cultura()
+        componente = None
 
-        if(self.kwargs['componente'] != 'plano_trabalho'):
-            try:
-                plano_componente = getattr(plano_trabalho,
-                                           self.kwargs['componente'])
-                assert plano_componente
-            except(AssertionError, AttributeError):
-                raise Http404('Componente não existe')
-        else:
-            plano_componente = plano_trabalho
-
-        return plano_componente
-
-    def get_ente_federado_name(self):
-        ente_federado = self.get_ente_federado()
-        name = None
-
-        if ente_federado.cidade:
-            name = "{} - {}".format(ente_federado.cidade.nome_municipio,
-                                    ente_federado.estado.sigla)
-
-        else:
-            name = ente_federado.estado.sigla
-
-        return name
-
-    def get_historico_diligencias(self):
-        plano_componente = self.get_componente()
-
-        historico_diligencias = plano_componente.diligencias.all().order_by('-data_criacao').order_by('-id')
-
-        return historico_diligencias[:3]
-
-    def get_componente_descricao(self, componente):
         try:
-            descricao = componente.situacao.descricao
-        except AttributeError:
-            descricao = 'Inexistente'
+            componente = getattr(sistema_cultura,
+                                       self.kwargs['componente'])
+            assert componente
+        except(AssertionError, AttributeError):
+            raise Http404('Componente não existe')
 
-        return descricao
-
-    def get_situacao_componentes(self):
-        situacoes = {}
-        plano_trabalho = self.get_plano_trabalho()
-
-        componentes = ["criacao_sistema", "orgao_gestor", "fundo_cultura", "conselho_cultural", "plano_cultura"]
-
-        for componente in componentes:
-            plano_comp = getattr(plano_trabalho, componente)
-            situacoes[componente] = self.get_componente_descricao(plano_comp)
-
-        return situacoes
+        return componente
 
     def get_context_data(self, form=None, **kwargs):
-        context = {}
-        plano_componente = self.get_componente()
-        ente_federado = self.get_ente_federado()
+        context = super().get_context_data(**kwargs)
+        componente = self.get_componente()
+        ente_federado = self.get_sistema_cultura().ente_federado.nome
 
-        if form is None:
-            form = self.get_form()
-
-        if (isinstance(plano_componente, PlanoTrabalho)):
-            context['situacoes'] = self.get_situacao_componentes()
-        else:
-            context['arquivo'] = plano_componente.arquivo
-
-        context['form'] = form
-        context['ente_federado'] = self.get_ente_federado_name()
-        context['historico_diligencias'] = self.get_historico_diligencias()
-        context['usuario_id'] = ente_federado.usuario.id
+        context['arquivo'] = componente.arquivo
+        context['ente_federado'] = ente_federado
+        context['sistema_cultura'] = self.get_sistema_cultura()
         context['data_envio'] = "--/--/----"
-        context['componente'] = plano_componente
-        context['plano_trabalho'] = self.get_plano_trabalho()
+        context['componente'] = componente
 
         return context
-
-    def form_valid(self, form):
-        plano_componente = self.get_componente()
-        self.object = form.save()
-
-        plano_componente.situacao = self.object.classificacao_arquivo
-        plano_componente.save()
-
-        if(isinstance(self.get_componente(), PlanoTrabalho)):
-            self.send_email_diligencia()
-
-        return HttpResponseRedirect(self.get_success_url())
 
     def form_invalid(self, form):
         return self.render_to_response(self.get_context_data(form=form), status=400)
 
-    def post(self, request, *args, **kwargs):
-        plano_componente = self.get_componente()
-        form = self.get_form()
 
-        if(isinstance(plano_componente, PlanoTrabalho)):
-            form.instance.tipo_diligencia = 'geral'
-        else:
-            form.instance.tipo_diligencia = 'componente'
+class DiligenciaGeralCreateView(TemplatedEmailFormViewMixin, CreateView):
+    template_name = 'diligencia.html'
+    model = DiligenciaSimples
+    form_class = DiligenciaGeralForm
 
-        form.instance.usuario = request.user.usuario
-        form.instance.ente_federado = self.get_ente_federado()
-        form.instance.componente_id = plano_componente.id
-        form.instance.componente_type = ContentType.objects.get(app_label='planotrabalho', model=self.componentes[self.kwargs['componente']])
+    templated_email_template_name = "diligencia"
+    templated_email_from_email = "naoresponda@cultura.gov.br"
 
-        if form.is_valid():
-            return self.form_valid(form)
-        else:
-            return self.form_invalid(form)
+    def get_form_kwargs(self):
+        kwargs = super(DiligenciaGeralCreateView, self).get_form_kwargs()
+        kwargs['sistema_cultura'] = self.get_sistema_cultura()
+        kwargs['usuario'] = self.request.user.usuario
+
+        return kwargs
+
+    def get_context_data(self, form=None, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['sistema_cultura'] = self.get_sistema_cultura()
+        context['situacoes'] = self.get_sistema_cultura().get_situacao_componentes()
+        context['historico_diligencias'] = self.get_historico_diligencias()
+        context['historico_diligencias_componentes'] = self.get_sistema_cultura().get_componentes_diligencias()
+
+        return context
+
+    def get_historico_diligencias(self):
+        historico_diligencias = DiligenciaSimples.objects.filter(
+            sistema_cultura__ente_federado__cod_ibge=self.get_sistema_cultura().ente_federado.cod_ibge)
+
+        return historico_diligencias
+
+    def get_sistema_cultura(self):
+        return get_object_or_404(SistemaCultura, pk=int(self.kwargs['pk']))
+
+    def templated_email_get_recipients(self, form):
+        recipiente_list = [self.get_sistema_cultura().cadastrador.user.email]
+
+        return recipiente_list
+
+    def get_success_url(self):
+        return reverse_lazy("gestao:detalhar", kwargs={"cod_ibge": self.get_sistema_cultura().ente_federado.cod_ibge})
 
 
+class DiligenciaGeralDetailView(DetailView):
+    model = SistemaCultura
+    fields = ['diligencia']
+    template_name = 'diligencia.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+
+        context['sistema_cultura'] = self.object.id
+        context['situacoes'] = self.object.get_situacao_componentes()
+        return context
 
 
-
-
-
-
+class SituacaoArquivoComponenteUpdateView(UpdateView):
+    model = Componente
+    fields = ['situacao']

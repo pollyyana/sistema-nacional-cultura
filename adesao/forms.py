@@ -4,10 +4,12 @@ from django.contrib.auth.forms import UserCreationForm
 from django.utils.crypto import get_random_string
 from django.forms import ModelForm
 from django.template.defaultfilters import filesizeformat
+from django.forms import formset_factory
 
 from dal import autocomplete
 
-from .models import Usuario, Municipio, Responsavel, Secretario
+from .models import Usuario, Municipio, Responsavel
+from .models import Secretario, Funcionario, SistemaCultura, Sede, Gestor
 from .utils import validar_cpf, validar_cnpj, limpar_mascara
 import re
 
@@ -109,74 +111,71 @@ class CadastrarUsuarioForm(UserCreationForm):
 
         return user
 
+class CadastrarGestor(ModelForm):
 
-class CadastrarMunicipioForm(ModelForm):
-    termo_posse_prefeito = RestrictedFileField(
+    termo_posse = RestrictedFileField(
         content_types=content_types,
         max_upload_size=5242880)
-    rg_copia_prefeito = RestrictedFileField(
+    rg_copia = RestrictedFileField(
         content_types=content_types,
         max_upload_size=5242880)
-    cpf_copia_prefeito = RestrictedFileField(
+    cpf_copia = RestrictedFileField(
         content_types=content_types,
         max_upload_size=5242880)
 
-    def __init__(self, *args, **kwargs):
-        self.usuario = kwargs.pop('user')
-        super(CadastrarMunicipioForm, self).__init__(*args, **kwargs)
-
-    def clean_cpf_prefeito(self):
-        if not validar_cpf(self.cleaned_data['cpf_prefeito']):
+    def clean_cpf(self):
+        if not validar_cpf(self.cleaned_data['cpf']):
             raise forms.ValidationError('Por favor, digite um CPF válido!')
 
-        return self.cleaned_data['cpf_prefeito']
+        return self.cleaned_data['cpf']
 
-    def clean_cnpj_prefeitura(self):
-        if not validar_cnpj(self.cleaned_data['cnpj_prefeitura']):
+    class Meta:
+        model = Gestor
+        exclude = ('tipo_funcionario',)
+
+class CadastrarSede(ModelForm):
+
+    def clean_cnpj(self):
+        if not validar_cnpj(self.cleaned_data['cnpj']):
             raise forms.ValidationError('Por favor, digite um CNPJ válido!')
 
-        return self.cleaned_data['cnpj_prefeitura']
+        return self.cleaned_data['cnpj']
+
+    class Meta:
+        model = Sede
+        fields = '__all__'
+
+
+class CadastrarSistemaCulturaForm(ModelForm):
 
     def clean(self):
-        super(CadastrarMunicipioForm, self).clean()
+        super(CadastrarSistemaCulturaForm, self).clean()
 
-        if 'estado' in self.changed_data or 'cidade' in self.changed_data:
-            if self.usuario.estado_processo == '6':
-                self.add_error('estado', '''Não é possivel modificar o município ou estado após a
-                 publicação do plano de trabalho no DOU. Em caso de dúvida entre em contato através do Fale Conosco.''')
-            if not self.cleaned_data.get("cidade"):
-                estado_validacao = Municipio.objects.filter(
-                    estado__sigla=self.cleaned_data['estado'],
-                    cidade__isnull=True)
-                if estado_validacao:
-                    self.add_error('estado', 'Este estado já foi cadastrado!')
+        if 'ente_federado' in self.changed_data:
+            sistema_cultura = SistemaCultura.sistema.filter(
+                ente_federado=self.cleaned_data['ente_federado'])
+
+            if sistema_cultura:
+                self.add_error('ente_federado', 'Este ente federado já foi cadastrado!')
 
     class Meta:
-        model = Municipio
-        fields = '__all__'
-        widgets = {'cidade': autocomplete.ModelSelect2(url='gestao:cidade_chain', forward=['estado']),
-                   'estado': autocomplete.ModelSelect2(url='gestao:uf_chain')}
+        model = SistemaCultura
+        fields = ('ente_federado',)
+        widgets = {'ente_federado': autocomplete.ModelSelect2(url='gestao:ente_chain')}
 
 
-class CadastrarSecretarioForm(ModelForm):
-    def clean_cpf_secretario(self):
-        if not validar_cpf(self.cleaned_data['cpf_secretario']):
+SedeFormSet = formset_factory(CadastrarSistemaCulturaForm, CadastrarSede, extra=2)
+
+GestorFormSet = formset_factory(CadastrarSistemaCulturaForm, CadastrarGestor, extra=2)
+
+
+class CadastrarFuncionarioForm(ModelForm):
+    def clean_cpf(self):
+        if not validar_cpf(self.cleaned_data['cpf']):
             raise forms.ValidationError('Por favor, digite um CPF válido!')
 
-        return self.cleaned_data['cpf_secretario']
+        return self.cleaned_data['cpf']
 
     class Meta:
-        model = Secretario
-        fields = '__all__'
-
-
-class CadastrarResponsavelForm(ModelForm):
-    def clean_cpf_responsavel(self):
-        if not validar_cpf(self.cleaned_data['cpf_responsavel']):
-            raise forms.ValidationError('Por favor, digite um CPF válido!')
-
-        return self.cleaned_data['cpf_responsavel']
-
-    class Meta:
-        model = Responsavel
-        fields = '__all__'
+        model = Funcionario
+        exclude = ('tipo_funcionario',)

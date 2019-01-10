@@ -9,6 +9,9 @@
 *.mo
 *.sqlite
 *settings_*
+*.backup.bin
+*.backup
+dump
 
 # ignore pycharm files
 *.idea
@@ -30,3 +33,5 @@ snc.sln
 
 .pytest_cache
 .tox
+
+.coverage

@@ -26,18 +26,13 @@
                 <th>CNPJ</th>
                 <th>Anexo</th>
                 <th></th>
-                <th></th>
               </tr>
             </thead>
             <tbody>
-              {% for usuario in object_list %}
+              {% for sistema in object_list %}
                 <tr class="odd gradeX">
-                {% if usuario.municipio.cidade %}
-                  <td><a href="{% url 'gestao:detalhar' usuario.id %}">{{ usuario.municipio.cidade }}/{{ usuario.municipio.estado }}</a></td>
-                {% else %}
-                  <td><a href="{% url 'gestao:detalhar' usuario.id %}">{{ usuario.municipio.estado.nome_uf }}</a></td>
-                {% endif %}
-                  <td>{{ usuario.municipio.cnpj_prefeitura }}</td>
+                  <td><a href="{% url 'gestao:detalhar' sistema.id %}">{{ sistema.ente_federado }}</a></td>
+                  <td>{{ sistema.sede.cnpj }}</td>
                   <td>
                     {% if request.GET.anexo == 'relatorio_diretrizes_aprovadas' %}
                     <a href="{{ usuario.plano_trabalho.plano_cultura.relatorio_diretrizes_aprovadas.url }}">Download</a>
@@ -47,33 +42,14 @@
                     <a href="{{ usuario.plano_trabalho.plano_cultura.ata_reuniao_aprovacao_plano.url }}">Download</a>
                     {% elif request.GET.anexo == 'lei_plano_cultura' %}
                     <a href="{{ usuario.plano_trabalho.plano_cultura.lei_plano_cultura.url }}">Download</a>
+                    {% elif request.GET.anexo == 'arquivo' %}
+                    <a href="{{ sistema.legislacao.arquivo.url }}">Download</a>
                     {% endif %}
                   </td>
                   <td>
-                    {% if request.GET.anexo == 'relatorio_diretrizes_aprovadas' %}
-                    <a href="{% url 'gestao:diligencia_documental' 'plano_cultura' 'situacao_relatorio_diretrizes' usuario.id %}">
-                    {% elif request.GET.anexo == 'minuta_preparada' %}
-                    <a href="{% url 'gestao:diligencia_documental' 'plano_cultura' 'situacao_minuta' usuario.id %}">
-                    {% elif request.GET.anexo == 'ata_reuniao_aprovacao_plano' %}
-                    <a href="{% url 'gestao:diligencia_documental' 'plano_cultura' 'situacao_ata' usuario.id %}">
-                    {% elif request.GET.anexo == 'lei_plano_cultura' %}
-                    <a href="{% url 'gestao:diligencia_documental' 'plano_cultura' 'situacao_lei_plano' usuario.id %}">
-                    {% endif %}
-                      <i class="fa fa-thumbs-down"></i>
-                    </a>
-                  </td>
-                  <td>
-                    {% if request.GET.anexo == 'relatorio_diretrizes_aprovadas' %}
-                    <a href="{% url 'gestao:concluir_etapa' 'plano_cultura' 'situacao_relatorio_diretrizes' usuario.id %}">
-                    {% elif request.GET.anexo == 'minuta_preparada' %}
-                    <a href="{% url 'gestao:concluir_etapa' 'plano_cultura' 'situacao_minuta' usuario.id %}">
-                    {% elif request.GET.anexo == 'ata_reuniao_aprovacao_plano' %}
-                    <a href="{% url 'gestao:concluir_etapa' 'plano_cultura' 'situacao_ata' usuario.id %}">
-                    {% elif request.GET.anexo == 'lei_plano_cultura' %}
-                    <a href="{% url 'gestao:concluir_etapa' 'plano_cultura' 'situacao_lei_plano' usuario.id %}">
-                    {% endif %}
-                      <i class="fa fa-thumbs-up"></i>
-                    </a>
+                    <a href="{% url 'gestao:diligencia_componente' pk=sistema.id componente='plano' %}">
+                      Criar Diligência
+                    </a>                    
                   </td>
                 </tr>
               {% endfor %}

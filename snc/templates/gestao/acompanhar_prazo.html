@@ -1,4 +1,6 @@
 {% extends "gestao/base_gestao.html" %} {% load gestao_tags %} {% block content %}
+{% include 'messages.html' %}
+
 <div class="row">
   <div class="col-lg-12">
     <div class="panel panel-default">
@@ -44,7 +46,7 @@
                 {% endif %}
                   <td>{{ usuario.prazo }} anos</td>
                   <td>
-                    <form method="post" action="{% url 'gestao:aditivar_prazo' usuario.id %}">{% csrf_token %}
+                    <form method="post" action="{% url 'gestao:aditivar_prazo' usuario.id page_obj.number%}">{% csrf_token %}
                       <button type="submit" class="btn btn-primary"><i class="fa fa-plus"></i></input>
                     </form>
                   </td>

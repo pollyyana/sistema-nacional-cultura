@@ -1,34 +1,30 @@
-<h3>Dados do {% if request.user.usuario.municipio.cidade %}Município{% else %}Governo{% endif %}</h3>
+<h3>Dados do Ente Federado</h3>
 
 <ul>
     <li>
-      {% if request.user.usuario.municipio.cidade %}Município-{% endif %}Estado:
-        <a class="link-plain" href="#">{% if request.user.usuario.municipio.cidade %}
-          {{ request.user.usuario.municipio.cidade }}-
-        {% endif %}
-        {{ request.user.usuario.municipio.estado.nome_uf }}</a>
-
+        Nome:
+        <a class="link-plain" href="#">
+            {{ request.session.sistema_ente.nome }}
+        </a>
     </li>
     <li>
         CNPJ:
-        <a class="link-plain" href="#">{{ request.user.usuario.municipio.cnpj_prefeitura }}</a>
+        <a class="link-plain" href="#">{{ request.session.sistema_sede.cnpj }}</a>
 
     </li>
     <li>
         Governador/Prefeito:
-        <a class="link-plain" href="#">{{ request.user.usuario.municipio.nome_prefeito }}</a>
+        <a class="link-plain" href="#">{{ request.session.sistema_gestor.nome }}</a>
 
     </li>
     <li>
         Situação:
-        <a class="link-plain" href="#">{{ request.user.usuario.get_estado_processo_display }}</a>
+        <a class="link-plain" href="#">{{ request.session.sistema_situacao }}</a>
 
     </li>
-    {% if request.user.usuario.estado_processo == '6' %}
+    {% if request.session.sistema_cultura_selecionado.link_publicacao_acordo %}
         <li>
-            Publicação no DOU:
-            <a class="link-plain" href="{{ request.user.usuario.link_publicacao_acordo }}">{{ request.user.usuario.data_publicacao_acordo|date:'d/m/Y' }}</a>
-
+            <a class="link-plain" href="{{ request.session.sistema_cultura_selecionado.link_publicacao_acordo }}">Ver Publicação no DOU</a>
         </li>
     {% endif %}
 </ul>

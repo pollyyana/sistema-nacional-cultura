@@ -1,4 +1,3 @@
-{% extends "base.html" %}
 {% load widget_tweaks %}
 {% block content %}
 <div class="container">
@@ -11,7 +10,7 @@
 
   <div class="form-group">
     <label for="{{ form.data_publicacao.id_for_label }}">
-      Data de publicação
+      Data de Publicação da Lei do Sistema de Cultura
     </label>
     {% render_field form.data_publicacao class="form-control date half-width" %}
     {{ form.data_publicacao.errors }}
