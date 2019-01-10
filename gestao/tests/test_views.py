@@ -616,7 +616,7 @@ def test_listar_documentos(client, plano_trabalho, login_staff):
         url = reverse("gestao:listar_documentos", kwargs={"template": template})
         response = client.get(url)
 
-        for sisstema in response.context_data["object_list"]:
+        for sistema in response.context_data["object_list"]:
             assert sistema.estado_processo == 6
 
 
