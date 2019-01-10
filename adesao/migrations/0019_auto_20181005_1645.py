@@ -10,6 +10,7 @@ def cria_sistema_cultura(apps, schema_editor):
 
     SistemaCultura = apps.get_model('adesao', 'SistemaCultura')
     Municipio = apps.get_model('adesao', 'Municipio')
+    Cidade = apps.get_model('adesao', 'Cidade')
     EnteFederado = apps.get_model('adesao', 'EnteFederado')
     Secretario = apps.get_model('adesao', 'Secretario')
     Funcionario = apps.get_model('adesao', 'Funcionario')
@@ -55,17 +56,18 @@ def cria_sistema_cultura(apps, schema_editor):
                 sistema_cultura.ente_federado = EnteFederado.objects.get(cod_ibge=municipio.estado.codigo_ibge)
             except EnteFederado.DoesNotExist:
                 ente = EnteFederado.objects.filter(nome__icontains=municipio.estado.nome_uf)
-                if not ente:
+                if not ente or len(ente) > 1:
                     print(f"Erro ao procurar UF {municipio.estado.nome_uf} - {municipio.estado.codigo_ibge}\n")
                     erros.append(municipio.estado.codigo_ibge)
                     pass
                 sistema_cultura.ente_federado = ente[0]
         else:
             try:
-                sistema_cultura.ente_federado = EnteFederado.objects.get(cod_ibge=municipio.cidade.codigo_ibge)
+                cidade = Cidade.objects.get(nome_municipio=municipio.cidade.nome_municipio, uf=municipio.estado)
+                sistema_cultura.ente_federado = EnteFederado.objects.get(cod_ibge=cidade.codigo_ibge)
             except EnteFederado.DoesNotExist:
-                ente = EnteFederado.objects.filter(cod_ibge__contains=municipio.cidade.codigo_ibge)
-                if not ente:
+                ente = EnteFederado.objects.filter(cod_ibge__startswith=cidade.codigo_ibge)
+                if not ente or len(ente) > 1:
                     print(f"Erro ao procurar Municipio {municipio.cidade.nome_municipio} - {municipio.cidade.codigo_ibge}\n")
                     erros.append(municipio.estado.codigo_ibge)
                     pass
