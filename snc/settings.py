@@ -21,6 +21,7 @@ env = environ.Env(
     DEBUG=(bool, False),
     SENTRY_DSN=(str, None),
     )
+
 env.read_env()
 
 ROOT_DIR = environ.Path(__file__) - 2  # (/a/b/myfile.py - 3 = /)
