@@ -1787,6 +1787,7 @@ def test_historico_diligencias_componentes(client, login_staff):
     assert len(historico) == 1
     assert historico[0].diligencia == diligencia
 
+
 def test_ente_federado_nao_encontrado(client, login_staff):
     """ Testa se pesquisa retorna um ente federado.
     """
@@ -1800,3 +1801,42 @@ def test_ente_federado_nao_encontrado(client, login_staff):
     response = client.get(url)
 
     assert len(response.context_data["object_list"]) == 0
+
+
+def test_links_para_componentes(client, login_staff):
+
+    sistema = mommy.make(
+        "SistemaCultura", ente_federado__cod_ibge=123456, estado_processo=6,
+        _fill_optional=['legislacao', 'orgao_gestor', 'plano', 'fundo_cultura', 'conselho']
+    )
+
+    arquivo = SimpleUploadedFile("lei.txt", b"file_content", content_type="text/plain")
+
+    sistema.legislacao.tipo = 0
+    sistema.legislacao.arquivo = arquivo
+    sistema.legislacao.save()
+
+    sistema.orgao_gestor.tipo = 1
+    sistema.orgao_gestor.arquivo = arquivo
+    sistema.orgao_gestor.save()
+
+    sistema.fundo_cultura.tipo = 2
+    sistema.fundo_cultura.arquivo = arquivo
+    sistema.fundo_cultura.save()
+
+    sistema.conselho.tipo = 3
+    sistema.conselho.arquivo = arquivo
+    sistema.conselho.save()
+
+    sistema.plano.tipo = 4
+    sistema.plano.arquivo = arquivo
+    sistema.plano.save()
+
+    url = reverse("gestao:detalhar", kwargs={"cod_ibge": sistema.ente_federado.cod_ibge})
+    response = client.get(url)
+
+    assert "<a href=\"/media/" + sistema.legislacao.arquivo.name + "\">Download</a>" in response.rendered_content
+    assert "<a href=\"/media/" + sistema.orgao_gestor.arquivo.name + "\">Download</a>" in response.rendered_content
+    assert "<a href=\"/media/" + sistema.fundo_cultura.arquivo.name + "\">Download</a>" in response.rendered_content
+    assert "<a href=\"/media/" + sistema.conselho.arquivo.name + "\">Download</a>" in response.rendered_content
+    assert "<a href=\"/media/" + sistema.plano.arquivo.name + "\">Download</a>" in response.rendered_content
