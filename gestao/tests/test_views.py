@@ -1840,3 +1840,19 @@ def test_links_para_componentes(client, login_staff):
     assert "<a href=\"/media/" + sistema.fundo_cultura.arquivo.name + "\">Download</a>" in response.rendered_content
     assert "<a href=\"/media/" + sistema.conselho.arquivo.name + "\">Download</a>" in response.rendered_content
     assert "<a href=\"/media/" + sistema.plano.arquivo.name + "\">Download</a>" in response.rendered_content
+
+
+def test_historico_cadastradores(client, login_staff):
+
+    cadastrador_antigo = mommy.make("Usuario")
+    sistema = mommy.make("SistemaCultura", ente_federado__cod_ibge=123456, cadastrador=cadastrador_antigo)
+    
+    cadastrador_novo = mommy.make("Usuario")
+    sistema.cadastrador = cadastrador_novo
+    sistema.save()
+
+    url = reverse("gestao:detalhar", kwargs={"cod_ibge": sistema.ente_federado.cod_ibge})
+    response = client.get(url)
+
+    assert response.context["historico"][0].cadastrador == cadastrador_antigo
+    assert response.context["historico"][1].cadastrador == cadastrador_novo

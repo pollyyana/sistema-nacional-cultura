@@ -336,8 +336,8 @@ class DetalharEnte(DetailView, LookUpAnotherFieldMixin):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         ente_federado = context['object'].ente_federado
-        historico = SistemaCultura.historico.filter(ente_federado=ente_federado)[:10]
-        context['historico'] = historico
+        historico = SistemaCultura.historico.filter(ente_federado=ente_federado)
+        context['historico'] = historico.distinct('cadastrador').order_by('cadastrador')[:10]
 
         return context
 
