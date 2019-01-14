@@ -245,7 +245,7 @@ class Usuario(models.Model):
         choices=LISTA_ESTADOS_PROCESSO,
         default='0')
     data_publicacao_acordo = models.DateField(blank=True, null=True)
-    link_publicacao_acordo = models.CharField(max_length=100, blank=True, null=True)
+    link_publicacao_acordo = models.CharField(max_length=200, blank=True, null=True)
     processo_sei = models.CharField(max_length=100, blank=True, null=True)
     codigo_ativacao = models.CharField(max_length=12, unique=True)
     data_cadastro = models.DateTimeField(auto_now_add=True)
