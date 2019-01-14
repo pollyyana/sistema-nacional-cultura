@@ -275,14 +275,14 @@
 {% endif %}
 
 <div class="row">
-    {% if historico_sistemas %}
+    {% if historico %}
       <div class="col-md-6">
           <div class="panel panel-info">
             <div class="panel-heading">
               Histórico de cadastradores
             </div>
             <div class="panel-body">
-              {% for sistema in historico_sistemas %}
+              {% for sistema in historico %}
                 <ul class="list-group">
                     {% if sistema.cadastrador.nome_usuario %}
                       <li class="list-group-item">
