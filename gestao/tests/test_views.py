@@ -1800,8 +1800,6 @@ def test_ente_federado_nao_encontrado(client, login_staff):
     url = reverse("gestao:acompanhar_adesao") + "?ente_federado=aaaa"
     response = client.get(url)
 
-    print(response.content)
-
     assert len(response.context_data["object_list"]) == 0
 
 
