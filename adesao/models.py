@@ -100,7 +100,7 @@ class EnteFederado(models.Model):
         if digits > 2:
             return f"{self.nome}/{uf}"
 
-        return f"{self.nome} ({uf})"
+        return f"Estado de {self.nome} ({uf})"
 
     @property
     def is_municipio(self):
