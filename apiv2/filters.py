@@ -61,16 +61,37 @@ class SistemaCulturaFilter(filters.FilterSet):
         return queryset.filter(Q(ente_federado__cod_ibge__startswith=cod_ibge))
 
     def estadual_filter(self, queryset, name, value):
+        pular_filtro = self.checar_filtro_municipal_estadual_ativos()
+        if(pular_filtro):
+            return queryset
+
         if value:
             queryset = queryset.filter(ente_federado__cod_ibge__lte=100)
 
         return queryset
 
     def municipal_filter(self, queryset, name, value):
+        pular_filtro = self.checar_filtro_municipal_estadual_ativos()
+        if(pular_filtro):
+            return queryset
+
         if value:
             queryset = queryset.filter(ente_federado__cod_ibge__gt=100)
 
         return queryset
+
+    def checar_filtro_municipal_estadual_ativos(self):
+        try:
+            estadual_filter = self.data.getlist('estadual')[0]
+            municipal_filter = self.data.getlist('municipal')[0]
+
+        except IndexError:
+            return False
+
+        if(estadual_filter == 'true' and municipal_filter == 'true'):
+            return True
+
+        return False
 
 
 class PlanoTrabalhoFilter(SistemaCulturaFilter):
