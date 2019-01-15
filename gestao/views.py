@@ -66,76 +66,26 @@ from itertools import chain
 import datetime
 
 
-# Acompanhamento das adesões
-class AlterarCadastrador(UpdateView):
-    """AlterarCadastrador
-    Altera o cadastrador de um Municipio aderido
-    """
-    queryset = SistemaCultura.sistema.all()
-    template_name = 'cadastrador.html'
-    form_class = AlterarCadastradorForm
-
-    def get_form_kwargs(self):
-        kwargs = super(AlterarCadastrador, self).get_form_kwargs()
-        self.cod_ibge = self.kwargs['cod_ibge']
-        kwargs.update(self.kwargs)
-        return kwargs
-
-    def get_success_url(self):
-       return reverse_lazy('gestao:alterar_cadastrador', kwargs={'cod_ibge': self.cod_ibge})
-
-    def form_valid(self, form):
-        form.save()
-        messages.success(self.request, 'Cadastrador alterado com sucesso')
-        return super(AlterarCadastrador, self).form_valid(form)
-
-
-class CidadeChain(autocomplete.Select2QuerySetView):
-    def get_queryset(self):
-        """ Filtra todas as cidade de uma determinada UF """
-
-        uf_pk = self.forwarded.get('estado', None)
-
-        if uf_pk:
-            choices = Cidade.objects\
-                .filter(Q(uf__pk=uf_pk) & Q(nome_municipio__unaccent__icontains=self.q))\
-                .values_list('pk', 'nome_municipio', named=True)
-        else:
-            choices = Cidade.objects\
-                .filter(uf__sigla__iexact=self.q)\
-                .values_list('pk', 'nome_municipio', named=True)
-        return choices
-
-
 class EnteChain(autocomplete.Select2QuerySetView):
     def get_queryset(self):
         """ Filtra todas as cidade de uma determinada UF """
-        choices = EnteFederado.objects.filter(Q(nome__unaccent__icontains=self.q))\
-            .values_list('pk', 'nome', named=True)
+        choices = EnteFederado.objects.filter(Q(nome__unaccent__icontains=self.q))
 
         return choices
 
-    def get_result_label(self, item):
-        return item.nome
+    def get_ente_name(self, item):
+        if item.cod_ibge > 100:
+            nome = item.__str__()
+        else:
+            nome = "Estado de " + item.nome
 
-    def get_selected_result_label(self, item):
-        return item.nome
-
-
-class UfChain(autocomplete.Select2QuerySetView):
-    def get_queryset(self):
-        """ Filtra todas as uf passando nome ou sigla """
-
-        choices = Uf.objects.filter(
-                    Q(sigla__iexact=self.q) | Q(nome_uf__icontains=self.q)
-                ).values_list('pk', 'sigla', named=True)
-        return choices
+        return nome
 
     def get_result_label(self, item):
-        return item.sigla
+        return self.get_ente_name(item)
 
     def get_selected_result_label(self, item):
-        return item.sigla
+        return self.get_ente_name(item)
 
 
 def ajax_consulta_cpf(request):
@@ -267,14 +217,15 @@ class AcompanharSistemaCultura(ListView):
         situacao = self.request.GET.get('situacao', None)
         ente_federado = self.request.GET.get('ente_federado', None)
 
+        sistemas = SistemaCultura.objects.all()
+
         if situacao in ('0', '1', '2', '3', '4', '5', '6'):
             sistemas = SistemaCultura.objects.filter(estado_processo=situacao)
 
         if ente_federado:
             sistemas = SistemaCultura.objects.filter(
                 ente_federado__nome__unaccent__icontains=ente_federado)
-        else:
-            sistemas = SistemaCultura.objects.all()
+
 
         sistemas_entes_distintos = sistemas.distinct('ente_federado__nome', 'ente_federado')
 
@@ -307,63 +258,6 @@ class AcompanharSistemaCultura(ListView):
         sistemas = self.remove_repeticoes(sistemas)
 
         return sistemas
-
-
-# Acompanhamento dos planos de trabalho
-def diligencia_documental(request, etapa, st, id):
-    usuario = Usuario.objects.get(id=id)
-    #print(getattr(getattr(usuario.plano_trabalho, etapa), st))
-    #modificando o comportamento pois, no caso da "SituacoesArquivoPlano" agora é um objeto, e não só um valor 0 na tabela
-    if isinstance(getattr(getattr(usuario.plano_trabalho, etapa), st), SituacoesArquivoPlano):
-        usuario.plano_trabalho.criacao_sistema.situacao_lei_sistema = SituacoesArquivoPlano.objects.get(pk=0)
-    else:
-        setattr(getattr(usuario.plano_trabalho, etapa), st, 0)
-    form = DiligenciaForm()
-    if request.method == 'POST':
-        form = DiligenciaForm(request.POST, usuario=usuario)
-        if form.is_valid():
-            getattr(usuario.plano_trabalho, etapa).save()
-            form.save()
-        return redirect('gestao:acompanhar_adesao')
-    return render(
-        request,
-        'gestao/planotrabalho/diligencia.html',
-        {'form': form, 'etapa': etapa, 'st': st, 'id': id})
-
-
-def concluir_etapa(request, etapa, st, id):
-    usuario = Usuario.objects.get(id=id)
-    if isinstance(getattr(getattr(usuario.plano_trabalho, etapa), st), SituacoesArquivoPlano):
-        usuario.plano_trabalho.criacao_sistema.situacao_lei_sistema = SituacoesArquivoPlano.objects.get(pk=2)
-    else:
-        setattr(getattr(usuario.plano_trabalho, etapa), st, 2)
-    getattr(usuario.plano_trabalho, etapa).save()
-    return redirect('gestao:detalhar', pk=id)
-
-
-def situacao_3 (request, etapa, st, id):
-    usuario = Usuario.objects.get(id=id)
-    setattr(getattr(usuario.plano_trabalho, etapa), st, 3)
-    getattr(usuario.plano_trabalho, etapa).save()
-    return redirect('gestao:detalhar', pk=id)
-
-def situacao_4 (request, etapa, st, id):
-    usuario = Usuario.objects.get(id=id)
-    setattr(getattr(usuario.plano_trabalho, etapa), st, 4)
-    getattr(usuario.plano_trabalho, etapa).save()
-    return redirect('gestao:detalhar', pk=id)
-
-def situacao_5 (request, etapa, st, id):
-    usuario = Usuario.objects.get(id=id)
-    setattr(getattr(usuario.plano_trabalho, etapa), st, 5)
-    getattr(usuario.plano_trabalho, etapa).save()
-    return redirect('gestao:detalhar', pk=id)
-
-def situacao_6 (request, etapa, st, id):
-    usuario = Usuario.objects.get(id=id)
-    setattr(getattr(usuario.plano_trabalho, etapa), st, 6)
-    getattr(usuario.plano_trabalho, etapa).save()
-    return redirect('gestao:detalhar', pk=id)
 
 
 class AcompanharComponente(ListView):
@@ -709,7 +603,8 @@ class DiligenciaGeralCreateView(TemplatedEmailFormViewMixin, CreateView):
         return get_object_or_404(SistemaCultura, pk=int(self.kwargs['pk']))
 
     def templated_email_get_recipients(self, form):
-        recipiente_list = list(self.get_sistema_cultura().cadastrador.user.email)
+        recipiente_list = [self.get_sistema_cultura().cadastrador.user.email]
+
         return recipiente_list
 
     def get_success_url(self):

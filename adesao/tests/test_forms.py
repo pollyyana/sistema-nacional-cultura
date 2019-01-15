@@ -6,7 +6,7 @@ from django.shortcuts import reverse
 from django.core.files.uploadedfile import SimpleUploadedFile
 from dal.autocomplete import ModelSelect2
 
-from adesao.forms import CadastrarMunicipioForm, CadastrarSistemaCulturaForm, CadastrarGestor, CadastrarSede
+from adesao.forms import CadastrarSistemaCulturaForm, CadastrarGestor, CadastrarSede
 from adesao.models import Usuario
 
 
@@ -17,47 +17,26 @@ def cadastrar_municipio_form(login):
     return CadastrarMunicipioForm(**kwargs)
 
 
-def test_widget_estado_form_cadastrar_municipio(client, cadastrar_municipio_form):
+def test_widget_form_cadastrar_ente(client):
     """
-    Testa o uso do widget ModelSelect2 na campo estado no form de
-    cadastrar município
-    """
-
-    form = cadastrar_municipio_form
-    assert isinstance(form['estado'].field.widget, ModelSelect2)
-
-
-def test_url_widget_estado_form_cadastrar_municipio(client, cadastrar_municipio_form):
-    """
-    Testa url usada pelo widget ModelSelect2 no campo estado no form
-    de cadastrar municipio
+    Testa o uso do widget ModelSelect2 na campo ente_federado no form de
+    cadastrar sistema cultura
     """
 
-    form = cadastrar_municipio_form
-    uf_url = reverse('gestao:uf_chain')
-
-    assert form['estado'].field.widget.url == uf_url
+    form = CadastrarSistemaCulturaForm()
+    assert isinstance(form['ente_federado'].field.widget, ModelSelect2)
 
 
-def test_widget_cidade_form_cadastrar_municipio(client, cadastrar_municipio_form):
+def test_url_widget_form_cadastrar_ente_url(client):
     """
-    Testa o uso do widget ModelSelect2 no campo cidade no form de
-    cadastrar municipio
+    Testa url usada pelo widget ModelSelect2 no campo ente_federado no form
+    de cadastrar sistema cultura
     """
 
-    form = cadastrar_municipio_form
-    assert isinstance(form['cidade'].field.widget, ModelSelect2)
+    form = CadastrarSistemaCulturaForm()
+    url = reverse('gestao:ente_chain')
 
-
-def test_url_widget_cidade_form_cadastrar_municipio(client, cadastrar_municipio_form):
-    """
-    Testa url usada pelo widget ModelSelect2 no campo cidade no
-    form de cadastrar municipio
-    """
-
-    form = cadastrar_municipio_form
-    municipio_url = reverse('gestao:cidade_chain')
-    assert form['cidade'].field.widget.url == municipio_url
+    assert form['ente_federado'].field.widget.url == url
 
 
 def test_save_cadastrar_sistema_cultura_dados_validos(client, login, sistema_cultura):
