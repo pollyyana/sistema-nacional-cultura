@@ -90,6 +90,8 @@ class EnteFederado(models.Model):
     receita = models.IntegerField(_("Receitas realizadas - R$ (×1000)"), null=True, blank=True)
     despesas = models.IntegerField(_("Despesas empenhadas - R$ (×1000)"), null=True, blank=True)
     pib = models.DecimalField(_("PIB per capita - R$"), max_digits=10, decimal_places=2)
+    latitude = models.FloatField(null=True, blank=True)
+    longitude = models.FloatField(null=True, blank=True)
 
     def __str__(self):
 
@@ -336,6 +338,7 @@ class Funcionario(models.Model):
     rg = models.CharField(max_length=50, verbose_name='RG')
     orgao_expeditor_rg = models.CharField(max_length=50)
     estado_expeditor = models.IntegerField(choices=UFS.items())
+    # estado_expeditor = models.ForeignKey('Uf', on_delete=models.CASCADE)
     nome = models.CharField(max_length=100)
     cargo = models.CharField(max_length=100, null=True, blank=True)
     instituicao = models.CharField(max_length=100, null=True, blank=True)
