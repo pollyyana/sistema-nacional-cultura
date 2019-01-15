@@ -148,7 +148,7 @@ def aditivar_prazo(request, id,page):
         sistema.prazo = sistema.prazo + 2
         sistema.save()
 
-        message = 'Prazo de ' + sistema.ente_federado + ' alterado para '+ str(sisteema.prazo) + ' anos com sucesso'
+        message = 'Prazo de ' + sistema.ente_federado.__str__() + ' alterado para '+ str(sistema.prazo) + ' anos com sucesso'
         messages.success(request, message)
 
     return redirect(reverse_lazy('gestao:acompanhar_prazo') + '?page=' + page)

@@ -397,6 +397,7 @@ class SistemaCultura(models.Model):
     localizacao = models.CharField(_("Localização do Processo"), max_length=10, blank=True, null=True)
     justificativa = models.TextField(_("Justificativa"), blank=True, null=True)
     diligencia = models.ForeignKey("gestao.DiligenciaSimples", on_delete=models.SET_NULL, related_name="sistema_cultura", blank=True, null=True)
+    prazo = models.IntegerField(default=2)
     alterado_em = models.DateTimeField("Alterado em", default=timezone.now)
 
     objects = models.Manager()
