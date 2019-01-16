@@ -1856,3 +1856,47 @@ def test_historico_cadastradores(client, login_staff):
 
     assert response.context["historico"][0].cadastrador == cadastrador_antigo
     assert response.context["historico"][1].cadastrador == cadastrador_novo
+
+
+def test_links_download_plano_trabalho(client, login_staff):
+
+    sistema = mommy.make(
+        "SistemaCultura", ente_federado__cod_ibge=123456, estado_processo=6,
+        _fill_optional=['legislacao', 'orgao_gestor', 'plano', 'fundo_cultura', 'conselho']
+    )
+
+    arquivo = SimpleUploadedFile("lei.txt", b"file_content", content_type="text/plain")
+
+    sistema.legislacao.tipo = 0
+    sistema.legislacao.arquivo = arquivo
+    sistema.legislacao.situacao = 1
+    sistema.legislacao.save()
+
+    sistema.orgao_gestor.tipo = 1
+    sistema.orgao_gestor.arquivo = arquivo
+    sistema.orgao_gestor.situacao = 1
+    sistema.orgao_gestor.save()
+
+    sistema.fundo_cultura.tipo = 2
+    sistema.fundo_cultura.arquivo = arquivo
+    sistema.fundo_cultura.situacao = 1
+    sistema.fundo_cultura.save()
+
+    sistema.conselho.tipo = 3
+    sistema.conselho.arquivo = arquivo
+    sistema.conselho.situacao = 1
+    sistema.conselho.save()
+
+    sistema.plano.tipo = 4
+    sistema.plano.arquivo = arquivo
+    sistema.plano.situacao = 1
+    sistema.plano.save()
+
+    componentes = ["legislacao", "orgao_gestor", "fundo_cultura", "conselho", "plano"]
+
+    for nome_componente in componentes:
+        url = reverse("gestao:acompanhar_componente", kwargs={"componente": nome_componente})
+        response = client.get(url + '?anexo=arquivo')
+
+        componente = getattr(sistema, nome_componente)
+        assert "<a href=\"/media/" + componente.arquivo.name + "\">Download</a>" in response.rendered_content
