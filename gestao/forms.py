@@ -3,6 +3,8 @@ from django.forms import ModelForm
 from django.contrib.auth.models import User
 from django.template.defaultfilters import filesizeformat
 
+from localflavor.br.forms import BRCPFField
+
 from dal import autocomplete
 
 from ckeditor.widgets import CKEditorWidget
@@ -83,13 +85,10 @@ class InserirSEI(ModelForm):
 
 
 class CadastradorEnte(forms.ModelForm):
-    cpf_cadastrador = forms.CharField(max_length="20")
+    cpf_cadastrador = BRCPFField()
     data_publicacao_acordo = forms.DateField(required=False)
 
     def clean_cpf_cadastrador(self):
-        if not validar_cpf(self.cleaned_data['cpf_cadastrador']):
-            raise forms.ValidationError('Por favor, digite um CPF válido!')
-
         try:
             Usuario.objects.get(user__username=self.cleaned_data['cpf_cadastrador'])
         except Usuario.DoesNotExist:
