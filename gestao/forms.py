@@ -27,8 +27,6 @@ from gestao.models import Diligencia, DiligenciaSimples
 
 from .utils import enviar_email_alteracao_situacao
 
-from adesao.utils import validar_cpf
-
 import re
 
 
@@ -233,7 +231,7 @@ class DiligenciaGeralForm(DiligenciaForm):
 
 
 class AlterarCadastradorForm(forms.Form):
-    cpf_usuario = forms.CharField(max_length=11)
+    cpf_usuario = BRCPFField()
     data_publicacao_acordo = forms.DateField(required=False)
 
     def __init__(self, cod_ibge=None, *args, **kwargs):
@@ -241,9 +239,6 @@ class AlterarCadastradorForm(forms.Form):
         self.cod_ibge = cod_ibge
 
     def clean_cpf_usuario(self):
-        if not validar_cpf(self.cleaned_data['cpf_usuario']):
-            raise forms.validationerror('por favor, digite um cpf válido!')
-
         try:
             user.objects.get(username=''.join(re.findall(
                 '\d+',
