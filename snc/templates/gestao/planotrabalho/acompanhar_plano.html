@@ -31,7 +31,7 @@
             <tbody>
               {% for sistema in object_list %}
                 <tr class="odd gradeX">
-                  <td><a href="{% url 'gestao:detalhar' sistema.id %}">{{ sistema.ente_federado }}</a></td>
+                  <td><a href="{% url 'gestao:detalhar' cod_ibge=sistema.ente_federado.cod_ibge %}">{{ sistema.ente_federado }}</a></td>
                   <td>{{ sistema.sede.cnpj }}</td>
                   <td>
                     {% if request.GET.anexo == 'arquivo' %}

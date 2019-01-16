@@ -11,7 +11,7 @@
       <div class="panel-body">
         <form method="get" action="">
           <div class="input-group custom-search-form col-lg-3">
-              <input type="text" name="municipio" class="form-control" placeholder="Município ou Estado">
+              <input type="text" name="ente_federado" class="form-control" placeholder="Município ou Estado">
               <span class="input-group-btn">
                   <button class="btn btn-default" type="submit">
                       <i class="fa fa-search"></i>
@@ -31,22 +31,18 @@
               </tr>
             </thead>
             <tbody>
-              {% for usuario in object_list %}
+              {% for sistema in object_list %}
                 <tr class="odd gradeX">
-                {% if usuario.municipio.cidade %}
-                  <td>{{ usuario.municipio.cidade }}/{{ usuario.municipio.estado }}</td>
-                {% else %}
-                  <td>{{ usuario.municipio.estado.nome_uf }}</td>
-                {% endif %}
-                  <td>{{ usuario.municipio.cnpj_prefeitura }}</td>
-                {% if usuario.data_publicacao_acordo %}
-                  <td>{{ usuario.data_publicacao_acordo }}</td>
-                {% else %}
-                  <td>Não encontrada</td>
-                {% endif %}
-                  <td>{{ usuario.prazo }} anos</td>
+                  <td>{{ sistema.ente_federado }}</td>
+                  <td>{{ sistema.sede.cnpj }}</td>
+                  {% if sistema.data_publicacao_acordo %}
+                    <td>{{ sistema.data_publicacao_acordo }}</td>
+                  {% else %}
+                    <td>Não encontrada</td>
+                  {% endif %}
+                  <td>{{ sistema.prazo }} anos</td>
                   <td>
-                    <form method="post" action="{% url 'gestao:aditivar_prazo' usuario.id page_obj.number%}">{% csrf_token %}
+                    <form method="post" action="{% url 'gestao:aditivar_prazo' sistema.id page_obj.number%}">{% csrf_token %}
                       <button type="submit" class="btn btn-primary"><i class="fa fa-plus"></i></input>
                     </form>
                   </td>
