@@ -8,30 +8,31 @@ def migra_prazo(apps, schema_editor):
 
 	SistemaCultura = apps.get_model('adesao', 'SistemaCultura')
 	Municipio = apps.get_model('adesao', 'Municipio')
+	Cidade = apps.get_model('adesao', 'Cidade')
 
 	for municipio in Municipio.objects.all():
 
 		try:
 			if municipio.usuario:
-				if municipio.cidade:
-					sistemas = SistemaCultura.objects.filter(ente_federado__nome=municipio.cidade.nome_municipio).distinct('ente_federado')
-					codigo_ibge = str(municipio.cidade.codigo_ibge)
-				else:
-					sistemas = SistemaCultura.objects.filter(ente_federado__nome=municipio.estado.nome_uf).distinct('ente_federado')
-					codigo_ibge = str(municipio.estado.codigo_ibge)
+				if municipio.cidade is None:
+					sistema_cultura = SistemaCultura.objects.filter(
+						ente_federado__cod_ibge=municipio.estado.codigo_ibge).distinct('ente_federado')
 
-				if sistemas.count() > 1:
-					for sistema in sistemas:
-						if codigo_ibge in str(sistema.ente_federado.cod_ibge):
-							sistema_prazo = sistema
-							break
-				elif sistemas.count() == 1:
-					sistema_prazo = sistemas[0]
+					if not sistema_cultura or len(sistema_cultura) > 1:
+						sistema_cultura = SistemaCultura.objects.filter(
+							ente_federado__nome__icontains=municipio.estado.nome_uf).distinct('ente_federado')
 				else:
-					continue
+					cidade = Cidade.objects.get(nome_municipio=municipio.cidade.nome_municipio, uf=municipio.estado)
+					sistema_cultura = SistemaCultura.objects.filter(ente_federado__cod_ibge=cidade.codigo_ibge).distinct('ente_federado')
 
-				sistema_prazo.prazo = municipio.usuario.prazo
-				sistema_prazo.save()
+					if not sistema_cultura or len(sistema_cultura) > 1:
+						sistema_cultura = SistemaCultura.objects.filter(
+							ente_federado__cod_ibge__startswith=cidade.codigo_ibge).distinct('ente_federado')
+
+				sistema_cultura = sistema_cultura[0]
+
+				sistema_cultura.prazo = municipio.usuario.prazo
+				sistema_cultura.save()
 
 		except ObjectDoesNotExist:
 			pass
