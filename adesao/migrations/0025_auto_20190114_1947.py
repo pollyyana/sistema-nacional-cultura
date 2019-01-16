@@ -21,6 +21,7 @@ def inserir_lat_long(apps, schema_editor):
 class Migration(migrations.Migration):
 
     dependencies = [
+        ('adesao', '0028_auto_20190116_1635'),
         ('adesao', '0024_auto_20181130_1730'),
     ]
 
