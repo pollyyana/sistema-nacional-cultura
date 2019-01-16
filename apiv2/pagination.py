@@ -6,8 +6,7 @@ from rest_framework.response import Response
 class HalLimitOffsetPagination(LimitOffsetPagination):
 
     # Limite máximo de objetos retornados por requisição
-    # max_limit = 100
-    max_limit = 5600
+    max_limit = 100
 
     def get_paginated_response(self, data):
         if self.get_next_link():
