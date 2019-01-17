@@ -33,6 +33,7 @@ from adesao.models import Municipio
 from adesao.models import Historico
 from adesao.models import SistemaCultura
 from adesao.models import EnteFederado
+from adesao.models import Gestor
 
 from planotrabalho.models import PlanoTrabalho
 from planotrabalho.models import CriacaoSistema
@@ -384,29 +385,21 @@ class ListarDocumentosEnteFederado(ListView):
     paginate_by = 10
 
     def get_queryset(self):
-        situacao = self.request.GET.get('situacao', None)
-        ente_federado = self.request.GET.get('municipio', None)
+        ente_federado = self.request.GET.get('ente_federado', None)
 
-        if situacao in ('1', '2', '3', '4', '5'):
-            return Municipio.objects.filter(usuario__estado_processo=situacao)
+        sistema = SistemaCultura.sistema.filter(estado_processo__range=('1', '5'))
 
         if ente_federado:
-            municipio = Municipio.objects.filter(
-                cidade__nome_municipio__unaccent__icontains=ente_federado)
-            estado = Municipio.objects.filter(
-                cidade__nome_municipio__isnull=True,
-                estado__nome_uf__unaccent__icontains=ente_federado)
+            sistema = sistema.filter(ente_federado__nome__unaccent__icontains=ente_federado)
 
-            return municipio | estado
-
-        return Municipio.objects.filter(usuario__estado_processo__range=('1', '5'))
+        return sistema
 
 
 class AlterarDocumentosEnteFederado(UpdateView):
 
     template_name = 'gestao/inserir_documentos/alterar_entefederado.html'
     form_class = AlterarDocumentosEnteFederadoForm
-    model = Municipio
+    model = Gestor
 
     def get_success_url(self):
         messages.success(self.request, 'Ente Federado alterado com sucesso')
