@@ -51,7 +51,7 @@ class SistemaCulturaAPIList(generics.ListAPIView):
 
 
 class SistemaCulturaDetail(generics.RetrieveAPIView):
-    queryset = SistemaCultura.objects.filter()
+    queryset = SistemaCultura.sistema.filter()
     serializer_class = SistemaCulturaSerializer
 
 
@@ -65,5 +65,5 @@ class PlanoTrabalhoList(generics.ListAPIView):
 
 
 class PlanoTrabalhoDetail(generics.RetrieveAPIView):
-    queryset = SistemaCultura.objects.filter()
+    queryset = SistemaCultura.sistema.filter()
     serializer_class = SistemaCulturaDetailSerializer
