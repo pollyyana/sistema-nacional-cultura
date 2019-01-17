@@ -55,7 +55,7 @@ urlpatterns = [
     # Inserir de documentos de entes federados
     url(r'^inserir-documentos/ente-federado$',
         staff_member_required(views.ListarDocumentosEnteFederado.as_view()), name='inserir_entefederado'),
-    url(r'^inserir-documentos/ente-federado/alterar/(?P<pk>[0-9]+)$',
+    path("inserir-documentos/ente-federado/alterar/<int:pk>",
         staff_member_required(views.AlterarDocumentosEnteFederado.as_view()), name='alterar_entefederado'),
 
     path("inserir-documentos/<str:componente>/<int:pk>", staff_member_required(

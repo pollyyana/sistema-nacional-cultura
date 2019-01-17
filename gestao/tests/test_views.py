@@ -1821,3 +1821,32 @@ def test_links_download_plano_trabalho(client, login_staff):
 
         componente = getattr(sistema, nome_componente)
         assert "<a href=\"/media/" + componente.arquivo.name + "\">Download</a>" in response.rendered_content
+
+
+def test_listar_documentos_ente_federado(client, login_staff):
+    sistema_cultura = mommy.make("SistemaCultura", estado_processo=5, ente_federado__cod_ibge=123456,
+        ente_federado__nome='Acrelândia')
+
+    url = reverse("gestao:inserir_entefederado")
+    response = client.get(url + '?ente_federado=acrelandia')
+
+    assert len(response.context_data["object_list"]) == 1
+    assert response.context_data["object_list"][0] == sistema_cultura
+
+
+def test_alterar_documentos_ente_federado(client, login_staff):
+    sistema_cultura = mommy.make("SistemaCultura", ente_federado__cod_ibge=123456,
+        _fill_optional='gestor')
+
+    rg_copia = SimpleUploadedFile("rg_copia.txt", b"file_content", content_type="text/plain")
+    termo_posse = SimpleUploadedFile("termo_posse.txt", b"file_content", content_type="text/plain")
+    cpf_copia = SimpleUploadedFile("cpf_copia.txt", b"file_content", content_type="text/plain")
+
+    url = reverse("gestao:alterar_entefederado", kwargs={"pk": sistema_cultura.id})
+    response = client.post(url, data={"rg_copia": rg_copia, "termo_posse": termo_posse, "cpf_copia": cpf_copia})
+
+    sistema_atualizado = SistemaCultura.sistema.get(ente_federado__cod_ibge=123456)
+
+    assert sistema_atualizado.gestor.termo_posse.name.split('termo_posse/')[1] == termo_posse.name
+    assert sistema_atualizado.gestor.rg_copia.name.split('termo_posse/')[1] == rg_copia.name
+    assert sistema_atualizado.gestor.cpf_copia.name.split('termo_posse/')[1] == cpf_copia.name

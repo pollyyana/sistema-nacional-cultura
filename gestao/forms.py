@@ -12,9 +12,8 @@ from adesao.models import Historico
 from adesao.models import Cidade
 from adesao.models import Uf
 from adesao.models import Municipio
-from adesao.models import SistemaCultura
 from adesao.models import LISTA_ESTADOS_PROCESSO
-from adesao.models import SistemaCultura
+from adesao.models import SistemaCultura, Gestor
 
 
 from planotrabalho.models import CriacaoSistema, FundoCultura, Componente
@@ -280,19 +279,19 @@ class AlterarUsuarioForm(ModelForm):
 
 
 class AlterarDocumentosEnteFederadoForm(ModelForm):
-    termo_posse_prefeito = RestrictedFileField(
+    termo_posse = RestrictedFileField(
         content_types=content_types,
         max_upload_size=max_upload_size)
-    rg_copia_prefeito = RestrictedFileField(
+    rg_copia = RestrictedFileField(
         content_types=content_types,
         max_upload_size=max_upload_size)
-    cpf_copia_prefeito = RestrictedFileField(
+    cpf_copia = RestrictedFileField(
         content_types=content_types,
         max_upload_size=max_upload_size)
 
     class Meta:
-        model = Municipio
-        fields = ('termo_posse_prefeito', 'rg_copia_prefeito', 'cpf_copia_prefeito')
+        model = Gestor
+        fields = ('termo_posse', 'rg_copia', 'cpf_copia')
 
 
 class AlterarComponenteForm(ModelForm):
