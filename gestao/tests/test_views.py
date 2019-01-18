@@ -1270,11 +1270,11 @@ def test_alterar_dados_adesao_detalhe_municipio(client, login_staff, sistema_cul
 
 def test_alterar_dados_adesao_sem_valores(client, login_staff):
     """ Testa retorno ao tentar alterar os dados da adesão sem passar dados válidos """
-    
+
     sistema_cultura = mommy.make("SistemaCultura", ente_federado__cod_ibge=123456,
         estado_processo=6)
 
-    url = reverse("gestao:alterar_dados_adesao", kwargs={"cod_ibge": 
+    url = reverse("gestao:alterar_dados_adesao", kwargs={"cod_ibge":
         sistema_cultura.ente_federado.cod_ibge})
     data = {}
 
@@ -1650,7 +1650,7 @@ def test_adicionar_prazo_permanecendo_na_mesma_pagina_apos_redirect(
 ):
     """ Testa se ao adicionar prazo a um Ente Federado, a tela permanecerá na mesma página (verificação pela url) """
 
-    sistemas = mommy.make("SistemaCultura", estado_processo=6, 
+    sistemas = mommy.make("SistemaCultura", estado_processo=6,
         data_publicacao_acordo=datetime.date(2018, 1, 1), _quantity=15)
 
     page = 2
@@ -1668,7 +1668,7 @@ def test_verificacao_se_prazo_foi_alterado(client, login_staff):
     """Verifica se o prazo aumenta em dois"""
     prazo = 2
 
-    sistema = mommy.make("SistemaCultura", ente_federado__cod_ibge=123456, estado_processo=6, 
+    sistema = mommy.make("SistemaCultura", ente_federado__cod_ibge=123456, estado_processo=6,
         data_publicacao_acordo=datetime.date(2018, 1, 1), prazo=prazo)
 
     url = reverse("gestao:aditivar_prazo", kwargs={"id": str(sistema.id), "page": "1"})
@@ -1682,8 +1682,8 @@ def test_pesquisa_de_ente_federado_sem_acento_tela_adicionar_prazo(client, login
     """ Testa a pesquisa por nome do ente federado (sem acento) - Deve retornar o nome
     com o acento normalmente """
 
-    sistema = mommy.make("SistemaCultura", ente_federado__cod_ibge=123456, 
-        ente_federado__nome='Acrelândia', estado_processo=6, 
+    sistema = mommy.make("SistemaCultura", ente_federado__cod_ibge=123456,
+        ente_federado__nome='Acrelândia', estado_processo=6,
         data_publicacao_acordo=datetime.date(2018, 1, 1))
 
     url = reverse("gestao:acompanhar_prazo") + "?ente_federado=Acrelandia"
@@ -1767,7 +1767,7 @@ def test_historico_cadastradores(client, login_staff):
 
     cadastrador_antigo = mommy.make("Usuario")
     sistema = mommy.make("SistemaCultura", ente_federado__cod_ibge=123456, cadastrador=cadastrador_antigo)
-    
+
     cadastrador_novo = mommy.make("Usuario")
     sistema.cadastrador = cadastrador_novo
     sistema.save()
