@@ -492,9 +492,9 @@ def test_session_user_com_um_sistema_cultura(login, client):
 def test_session_user_com_mais_de_um_sistema_cultura(login, client):
 
     sistema_1 = mommy.make("SistemaCultura", _fill_optional=['ente_federado', 'secretario', 'responsavel'],
-        cadastrador=login)
+        ente_federado__nome='Acre', cadastrador=login)
     sistema_2 = mommy.make("SistemaCultura", _fill_optional=['ente_federado', 'secretario', 'responsavel'],
-        cadastrador=login)
+       ente_federado__nome='Brasília', cadastrador=login)
 
     url = reverse("adesao:home")
     response = client.get(url)
