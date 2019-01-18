@@ -854,7 +854,8 @@ def test_filtra_componente_lei_por_multiplos_ids_situacao(client):
     SistemaCultura.objects.filter(Q(legislacao__situacao=1) | Q(legislacao__situacao=0)).delete()
 
     situacoes = [0, 1, 5]
-    sistemas = mommy.make("SistemaCultura", _fill_optional='legislacao', _quantity=3)
+    sistemas = mommy.make(
+        "SistemaCultura", ente_federado__cod_ibge=1234567, _fill_optional=['legislacao'], _quantity=3)
     for sistema, situacao in zip(sistemas, situacoes):
         sistema.legislacao.situacao = situacao
         sistema.legislacao.save()
@@ -875,7 +876,8 @@ def test_filtra_componente_conselho_por_multiplos_ids_situacao(client):
     do componente conselho cultural do plano de trabalho """
 
     situacoes = [0, 1, 5]
-    sistemas = mommy.make("SistemaCultura", _fill_optional='conselho', _quantity=3)
+    sistemas = mommy.make(
+        "SistemaCultura", ente_federado__cod_ibge=1234567, _fill_optional='conselho', _quantity=3)
     for sistema, situacao in zip(sistemas, situacoes):
         sistema.conselho.situacao = situacao
         sistema.conselho.save()
@@ -896,7 +898,8 @@ def test_filtra_componente_fundo_por_multiplos_ids_situacao(client):
     do componente fundo cultura do plano de trabalho """
 
     situacoes = [0, 1, 5]
-    sistemas = mommy.make("SistemaCultura", _fill_optional='fundo_cultura', _quantity=3)
+    sistemas = mommy.make(
+        "SistemaCultura", ente_federado__cod_ibge=1234567, _fill_optional='fundo_cultura', _quantity=3)
     for sistema, situacao in zip(sistemas, situacoes):
         sistema.fundo_cultura.situacao = situacao
         sistema.fundo_cultura.save()
@@ -917,7 +920,8 @@ def test_filtra_componente_orgao_por_multiplos_ids_situacao(client):
     do componente órgão gestor do plano de trabalho """
 
     situacoes = [0, 1, 5]
-    sistemas = mommy.make("SistemaCultura", _fill_optional='orgao_gestor', _quantity=3)
+    sistemas = mommy.make(
+        "SistemaCultura", ente_federado__cod_ibge=1234567, _fill_optional='orgao_gestor', _quantity=3)
     for sistema, situacao in zip(sistemas, situacoes):
         sistema.orgao_gestor.situacao = situacao
         sistema.orgao_gestor.save()
@@ -938,7 +942,8 @@ def test_filtra_componente_plano_por_multiplos_ids_situacao(client):
     do componente plano cultura do plano de trabalho """
 
     situacoes = [0, 1, 5]
-    sistemas = mommy.make("SistemaCultura", _fill_optional='plano', _quantity=3)
+    sistemas = mommy.make(
+        "SistemaCultura", ente_federado__cod_ibge=1234567, _fill_optional='plano', _quantity=3)
     for sistema, situacao in zip(sistemas, situacoes):
         sistema.plano.situacao = situacao
         sistema.plano.save()
