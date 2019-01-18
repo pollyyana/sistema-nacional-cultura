@@ -67,19 +67,26 @@ with open("adesao/fixtures/planilha.csv") as file:
         if ente.isupper():
             codigo_ibge = UFS[ente]
             nome_estado = ente
+            sistemas = SistemaCultura.sistema.filter(
+                ente_federado__nome__unaccent__iexact=ente,
+                ente_federado__cod_ibge=codigo_ibge)
+        else:
+            sistemas = SistemaCultura.sistema.filter(
+                ente_federado__nome__unaccent__iexact=ente,
+                ente_federado__cod_ibge__startswith=codigo_ibge).exclude(
+                    ente_federado__cod_ibge=codigo_ibge)
 
-        sistemas = SistemaCultura.sistema.filter(ente_federado__nome__unaccent__iexact=ente, ente_federado__cod_ibge__startswith=codigo_ibge)
-
-        if len(sistemas) > 1:
-            if ente.isupper():
-                sistema = sistemas.filter(ente_federado__cod_ibge=codigo_ibge)[0]
-            else:
-                sistema = sistemas.exclude(ente_federado__cod_ibge=codigo_ibge)[0]
-        elif len(sistemas) == 0:
+        if len(sistemas) == 0:
             try:
-                entefederado = EnteFederado.objects.get(nome__unaccent__iexact=ente, cod_ibge__startswith=codigo_ibge)
+                if ente.isupper():
+                    entefederado = EnteFederado.objects.get(
+                        nome__unaccent__iexact=ente, cod_ibge=codigo_ibge)
+                else:
+                    entefederado = EnteFederado.objects.get(
+                        nome__unaccent__iexact=ente,
+                        cod_ibge__startswith=codigo_ibge)
             except EnteFederado.DoesNotExist:
-                print(f"{ente} - {UFS[nome_estado]} - Planilha: {estado_do_processo}")
+                print(f"Não encontrado {ente} - {UFS[nome_estado]} - Planilha: {estado_do_processo}")
                 continue
 
             sistema = SistemaCultura()
@@ -97,3 +104,17 @@ with open("adesao/fixtures/planilha.csv") as file:
                 sistema.data_publicacao_acordo = None
 
         sistema.save()
+
+minas = SistemaCultura.sistema.get(ente_federado__cod_ibge=31)
+funilandia = SistemaCultura.sistema.get(ente_federado__cod_ibge=3127206)
+
+funilandia.cadastrador = minas.cadastrador
+funilandia.secretario = minas.secretario
+funilandia.responsavel = minas.responsavel
+
+minas.cadastrador = None
+minas.secretario = None
+minas.responsavel = None
+
+funilandia.save()
+minas.save()
