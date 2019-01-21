@@ -30,18 +30,10 @@ urlpatterns = [
     # Cadastro e alteração de prefeitura
     url(r'^municipio/selecionar$', views.selecionar_tipo_ente,
         name='selecionar_tipo_ente'),
-    url(r'^municipio/$', login_required(views.CadastrarMunicipio.as_view()),
-        name='municipio'),
     url(r'^sucesso-cadastro-prefeitura/$',
         views.sucesso_municipio,
         name='sucesso_municipio'),
-    url(r'^municipio/cadastrar/(?P<tipo_ente>\d+)/$',
-        login_required(views.CadastrarMunicipio.as_view()),
-        name='cadastrar_municipio'),
-    url(r'^municipio/(?P<pk>[0-9]+)/$',
-        login_required(views.AlterarMunicipio.as_view()),
-        name='alterar_municipio'),
-
+    
     # Cadastro e alteração de responsável
     path('sucesso-cadastro-funcionario/',
         views.sucesso_funcionario,
@@ -67,21 +59,10 @@ urlpatterns = [
             login_required(views.define_sistema_sessao),
             name='define_sistema_sessao'),
 
-    # Cadastro e alteração de cadastrador
-    url(r'^alterar/cadastrador/$',
-        login_required(views.OficioAlteracao.as_view()),
-        name='alterar_cadastrador'),
-
     # Minuta de acordo e termo de solicitação
-    url(r'^termo/minuta/$',
-        login_required(views.MinutaAcordo.as_view()),
-        name='minuta'),
-    url(r'^termo/solicitacao/$',
-        login_required(views.TermoSolicitacao.as_view()),
-        name='solicitacao'),
-    url(r'^oficio/alteracao/$',
-        login_required(views.OficioAlteracao.as_view()),
-        name='alteracao'),
+    path('termo/<str:template>/<str:nome_arquivo>',
+        login_required(views.GeraPDF.as_view()),
+        name='gera_pdf'),
 
     # Consulta
     path('consultar/<str:tipo>', views.ConsultarEnte.as_view(), name='consultar'),

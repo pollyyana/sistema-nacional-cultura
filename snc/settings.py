@@ -21,6 +21,7 @@ env = environ.Env(
     DEBUG=(bool, False),
     SENTRY_DSN=(str, None),
     )
+
 env.read_env()
 
 ROOT_DIR = environ.Path(__file__) - 2  # (/a/b/myfile.py - 3 = /)
@@ -86,7 +87,7 @@ LOCAL_APPS = (
     'gestao',
     'planotrabalho',
     'snc',
-    'api',
+    'apiv2',
 )
 
 # App used on development process
@@ -102,7 +103,7 @@ if DEBUG:
     INSTALLED_APPS = INSTALLED_APPS + DEVELOPMENT_SUPPORT_APPS
 
 REST_FRAMEWORK = {
-    'DEFAULT_PAGINATION_CLASS': 'api.pagination.HalLimitOffsetPagination',
+    'DEFAULT_PAGINATION_CLASS': 'apiv2.pagination.HalLimitOffsetPagination',
     'PAGE_SIZE': 10,
     'DEFAULT_FILTER_BACKENDS': ('django_filters.rest_framework.DjangoFilterBackend',),
     'DEFAULT_PARSER_CLASSES':
@@ -260,6 +261,7 @@ STATICFILES_FINDERS = (
 # ------------------------------------------------------------------------------
 # See: https://docs.djangoproject.com/en/dev/ref/settings/#media-root
 MEDIA_ROOT = str(ROOT_DIR('media'))
+FILE_UPLOAD_PERMISSIONS = 0o644
 
 # See: https://docs.djangoproject.com/en/dev/ref/settings/#media-url
 MEDIA_URL = '/media/'
