@@ -53,7 +53,6 @@ from .models import DiligenciaSimples
 
 from .forms import DiligenciaComponenteForm, DiligenciaGeralForm, AlterarDocumentosEnteFederadoForm
 
-from .forms import AlterarCadastradorForm
 from .forms import AlterarUsuarioForm
 from .forms import AlterarComponenteForm
 from .forms import AlterarDadosEnte

@@ -229,39 +229,6 @@ class DiligenciaGeralForm(DiligenciaForm):
             self.sistema_cultura.save()
 
 
-class AlterarCadastradorForm(forms.Form):
-    cpf_usuario = BRCPFField()
-    data_publicacao_acordo = forms.DateField(required=False)
-
-    def __init__(self, cod_ibge=None, *args, **kwargs):
-        super(AlterarCadastradorForm, self).__init__(*args, **kwargs)
-        self.cod_ibge = cod_ibge
-
-    def clean_cpf_usuario(self):
-        try:
-            user.objects.get(username=''.join(re.findall(
-                '\d+',
-                self.cleaned_data['cpf_usuario'])))
-            return self.cleaned_data['cpf_usuario']
-        except user.doesnotexist:
-            raise forms.validationerror('esse cpf não está cadastrado.')
-
-        return self.cleaned_data['cpf_usuario']
-
-    def save(self):
-        cadastrador_novo = usuario.objects.get(
-                user__username=self.cleaned_data['cpf_usuario'])
-        sistema = sistemacultura.sistema.get(ente_federado__cod_ibge=self.cod_ibge)
-        sistema.data_publicacao_acordo = self.cleaned_data['data_publicacao_acordo']
-        sistema.cadastrador = cadastrador_novo
-        sistema.save()
-
-        return sistema
-
-    class Meta:
-        fields = ('cpf_usuario', 'data_publicacao_acordo')
-
-
 class AlterarUsuarioForm(ModelForm):
     is_active = forms.BooleanField(required=False)
     is_staff = forms.BooleanField(required=False)
