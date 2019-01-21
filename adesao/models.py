@@ -1,4 +1,5 @@
 import math
+import re
 
 from django.db import models
 from django.contrib.auth.models import User
@@ -89,6 +90,8 @@ class EnteFederado(models.Model):
     receita = models.IntegerField(_("Receitas realizadas - R$ (×1000)"), null=True, blank=True)
     despesas = models.IntegerField(_("Despesas empenhadas - R$ (×1000)"), null=True, blank=True)
     pib = models.DecimalField(_("PIB per capita - R$"), max_digits=10, decimal_places=2)
+    latitude = models.FloatField(null=True, blank=True)
+    longitude = models.FloatField(null=True, blank=True)
 
     def __str__(self):
 
@@ -99,7 +102,7 @@ class EnteFederado(models.Model):
         if digits > 2:
             return f"{self.nome}/{uf}"
 
-        return f"{self.nome} ({uf})"
+        return f"Estado de {self.nome} ({uf})"
 
     @property
     def is_municipio(self):
@@ -108,6 +111,14 @@ class EnteFederado(models.Model):
         if digits > 2:
             return True
         return False
+
+    @property
+    def sigla(self):
+        if self.is_municipio is False:
+            uf = re.search('\(([A-Z]+)\)', self.__str__())[0]
+            return re.search('[A-Z]+', uf)[0]
+
+        return re.search('(\/[A-Z]*)', self.__str__())[0][1:]
 
     class Meta:
         indexes = [models.Index(fields=['cod_ibge']), ]
@@ -236,7 +247,7 @@ class Usuario(models.Model):
         choices=LISTA_ESTADOS_PROCESSO,
         default='0')
     data_publicacao_acordo = models.DateField(blank=True, null=True)
-    link_publicacao_acordo = models.CharField(max_length=100, blank=True, null=True)
+    link_publicacao_acordo = models.CharField(max_length=200, blank=True, null=True)
     processo_sei = models.CharField(max_length=100, blank=True, null=True)
     codigo_ativacao = models.CharField(max_length=12, unique=True)
     data_cadastro = models.DateTimeField(auto_now_add=True)
@@ -388,6 +399,7 @@ class SistemaCultura(models.Model):
     localizacao = models.CharField(_("Localização do Processo"), max_length=10, blank=True, null=True)
     justificativa = models.TextField(_("Justificativa"), blank=True, null=True)
     diligencia = models.ForeignKey("gestao.DiligenciaSimples", on_delete=models.SET_NULL, related_name="sistema_cultura", blank=True, null=True)
+    prazo = models.IntegerField(default=2)
     alterado_em = models.DateTimeField("Alterado em", default=timezone.now)
 
     objects = models.Manager()
@@ -395,7 +407,7 @@ class SistemaCultura(models.Model):
     historico = HistoricoManager()
 
     class Meta:
-        ordering = ['ente_federado', '-alterado_em']
+        ordering = ['ente_federado__nome', 'ente_federado', '-alterado_em']
 
     def get_absolute_url(self):
         url = reverse_lazy("gestao:detalhar", kwargs={"cod_ibge": self.ente_federado.cod_ibge})

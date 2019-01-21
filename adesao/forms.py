@@ -7,10 +7,11 @@ from django.template.defaultfilters import filesizeformat
 from django.forms import formset_factory
 
 from dal import autocomplete
+from localflavor.br.forms import BRCNPJField, BRCPFField
 
 from .models import Usuario, Municipio, Responsavel
 from .models import Secretario, Funcionario, SistemaCultura, Sede, Gestor
-from .utils import validar_cpf, validar_cnpj, limpar_mascara
+from .utils import limpar_mascara
 import re
 
 content_types = [
@@ -56,7 +57,7 @@ class RestrictedFileField(forms.FileField):
 
 
 class CadastrarUsuarioForm(UserCreationForm):
-    username = forms.CharField(max_length=14, required=True)
+    username = BRCPFField()
     confirmar_email = forms.EmailField(required=True)
     email = forms.EmailField(required=True)
     nome_usuario = forms.CharField(max_length=100)
@@ -80,9 +81,6 @@ class CadastrarUsuarioForm(UserCreationForm):
             return self.cleaned_data['email']
 
     def clean_username(self):
-        if not validar_cpf(self.cleaned_data['username']):
-            raise forms.ValidationError('Por favor, digite um CPF válido!')
-
         try:
             User.objects.get(username=''.join(re.findall(
                 '\d+',
@@ -111,8 +109,9 @@ class CadastrarUsuarioForm(UserCreationForm):
 
         return user
 
-class CadastrarGestor(ModelForm):
 
+class CadastrarGestor(ModelForm):
+    cpf = BRCPFField()
     termo_posse = RestrictedFileField(
         content_types=content_types,
         max_upload_size=5242880)
@@ -123,23 +122,13 @@ class CadastrarGestor(ModelForm):
         content_types=content_types,
         max_upload_size=5242880)
 
-    def clean_cpf(self):
-        if not validar_cpf(self.cleaned_data['cpf']):
-            raise forms.ValidationError('Por favor, digite um CPF válido!')
-
-        return self.cleaned_data['cpf']
-
     class Meta:
         model = Gestor
         exclude = ('tipo_funcionario',)
 
+
 class CadastrarSede(ModelForm):
-
-    def clean_cnpj(self):
-        if not validar_cnpj(self.cleaned_data['cnpj']):
-            raise forms.ValidationError('Por favor, digite um CNPJ válido!')
-
-        return self.cleaned_data['cnpj']
+    cnpj = BRCNPJField()
 
     class Meta:
         model = Sede
@@ -156,73 +145,25 @@ class CadastrarSistemaCulturaForm(ModelForm):
                 ente_federado=self.cleaned_data['ente_federado'])
 
             if sistema_cultura:
-                self.add_error('ente_federado', 'Este ente federado já foi cadastrado!')
+                self.add_error(
+                    'ente_federado', 'Este ente federado já foi cadastrado!')
 
     class Meta:
         model = SistemaCultura
         fields = ('ente_federado',)
-        widgets = {'ente_federado': autocomplete.ModelSelect2(url='gestao:ente_chain')}
+        widgets = {
+            'ente_federado': autocomplete.ModelSelect2(url='gestao:ente_chain')}
 
 
-SedeFormSet = formset_factory(CadastrarSistemaCulturaForm, CadastrarSede, extra=2)
+SedeFormSet = formset_factory(
+    CadastrarSistemaCulturaForm, CadastrarSede, extra=2)
 
-GestorFormSet = formset_factory(CadastrarSistemaCulturaForm, CadastrarGestor, extra=2)
-
-
-class CadastrarMunicipioForm(ModelForm):
-    termo_posse_prefeito = RestrictedFileField(
-        content_types=content_types,
-        max_upload_size=5242880)
-    rg_copia_prefeito = RestrictedFileField(
-        content_types=content_types,
-        max_upload_size=5242880)
-    cpf_copia_prefeito = RestrictedFileField(
-        content_types=content_types,
-        max_upload_size=5242880)
-
-    def __init__(self, *args, **kwargs):
-        self.usuario = kwargs.pop('user')
-        super(CadastrarMunicipioForm, self).__init__(*args, **kwargs)
-
-    def clean_cpf_prefeito(self):
-        if not validar_cpf(self.cleaned_data['cpf_prefeito']):
-            raise forms.ValidationError('Por favor, digite um CPF válido!')
-
-        return self.cleaned_data['cpf_prefeito']
-
-    def clean_cnpj_prefeitura(self):
-        if not validar_cnpj(self.cleaned_data['cnpj_prefeitura']):
-            raise forms.ValidationError('Por favor, digite um CNPJ válido!')
-
-        return self.cleaned_data['cnpj_prefeitura']
-
-    def clean(self):
-        super(CadastrarMunicipioForm, self).clean()
-
-        if 'estado' in self.changed_data or 'cidade' in self.changed_data:
-            if self.usuario.estado_processo == '6':
-                self.add_error('estado', '''Não é possivel modificar o município ou estado após a
-                 publicação do plano de trabalho no DOU. Em caso de dúvida entre em contato através do Fale Conosco.''')
-            if not self.cleaned_data.get("cidade"):
-                estado_validacao = Municipio.objects.filter(
-                    estado__sigla=self.cleaned_data['estado'],
-                    cidade__isnull=True)
-                if estado_validacao:
-                    self.add_error('estado', 'Este estado já foi cadastrado!')
-
-    class Meta:
-        model = Municipio
-        fields = '__all__'
-        widgets = {'cidade': autocomplete.ModelSelect2(url='gestao:cidade_chain', forward=['estado']),
-                   'estado': autocomplete.ModelSelect2(url='gestao:uf_chain')}
+GestorFormSet = formset_factory(
+    CadastrarSistemaCulturaForm, CadastrarGestor, extra=2)
 
 
 class CadastrarFuncionarioForm(ModelForm):
-    def clean_cpf(self):
-        if not validar_cpf(self.cleaned_data['cpf']):
-            raise forms.ValidationError('Por favor, digite um CPF válido!')
-
-        return self.cleaned_data['cpf']
+    cpf = BRCPFField()
 
     class Meta:
         model = Funcionario

@@ -6,7 +6,9 @@ class SistemaManager(models.Manager):
     """ Manager utilizado para interações com os Sistemas de Cultura """
 
     def get_queryset(self):
-        return super().get_queryset().distinct('ente_federado').select_related()
+        queryset = super().get_queryset()
+        queryset = queryset.distinct('ente_federado__nome', 'ente_federado')
+        return queryset.filter(id__in=queryset).select_related()
 
 
 class HistoricoManager(models.Manager):
