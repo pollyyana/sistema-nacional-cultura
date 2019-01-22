@@ -98,7 +98,6 @@ class AlterarDadosEnte(ModelForm):
 
     def clean(self):
         cleaned_data = super().clean()
-        # import pdb;pdb.set_trace()
         acordo_publicado = cleaned_data.get('estado_processo', self.instance.estado_processo)
 
         if acordo_publicado == '6':
