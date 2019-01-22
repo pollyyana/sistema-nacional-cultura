@@ -9,6 +9,8 @@ from django.forms import formset_factory
 from dal import autocomplete
 from localflavor.br.forms import BRCNPJField, BRCPFField
 
+from snc.forms import RestrictedFileField
+
 from .models import Usuario, Municipio, Responsavel
 from .models import Secretario, Funcionario, SistemaCultura, Sede, Gestor
 from .utils import limpar_mascara
@@ -27,33 +29,6 @@ content_types = [
     'application/zip',
     'application/octet-stream',
     'text/plain']
-
-
-class RestrictedFileField(forms.FileField):
-    def __init__(self, *args, **kwargs):
-        self.content_types = kwargs.pop("content_types")
-        self.max_upload_size = kwargs.pop("max_upload_size")
-
-        super(RestrictedFileField, self).__init__(*args, **kwargs)
-
-    def clean(self, data, initial=None):
-        file = super(RestrictedFileField, self).clean(data, initial)
-
-        try:
-            content_type = file.content_type
-            if content_type in self.content_types:
-                if file._size > self.max_upload_size:
-                    raise forms.ValidationError(
-                        'O arquivo deve ter menos de %s. Tamanho atual %s'
-                        % (filesizeformat(self.max_upload_size),
-                            filesizeformat(file._size)))
-            else:
-                raise forms.ValidationError(
-                    'Arquivos desse tipo não são aceitos.')
-        except AttributeError:
-            pass
-
-        return data
 
 
 class CadastrarUsuarioForm(UserCreationForm):
