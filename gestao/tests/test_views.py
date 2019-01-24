@@ -1824,7 +1824,8 @@ def test_links_download_plano_trabalho(client, login_staff):
 
 
 def test_listar_documentos_ente_federado(client, login_staff):
-    sistema_cultura = mommy.make("SistemaCultura", estado_processo=5, ente_federado__nome='Acrelândia')
+    sistema_cultura = mommy.make("SistemaCultura", estado_processo=5, ente_federado__cod_ibge=123456,
+        ente_federado__nome='Acrelândia', _fill_optional='gestor')
 
     url = reverse("gestao:inserir_entefederado")
     response = client.get(url + '?ente_federado=acrelandia')
@@ -1841,7 +1842,7 @@ def test_alterar_documentos_ente_federado(client, login_staff):
     termo_posse = SimpleUploadedFile("termo_posse.txt", b"file_content", content_type="text/plain")
     cpf_copia = SimpleUploadedFile("cpf_copia.txt", b"file_content", content_type="text/plain")
 
-    url = reverse("gestao:alterar_entefederado", kwargs={"pk": sistema_cultura.id})
+    url = reverse("gestao:alterar_entefederado", kwargs={"pk": sistema_cultura.gestor.id})
     response = client.post(url, data={"rg_copia": rg_copia, "termo_posse": termo_posse, "cpf_copia": cpf_copia})
 
     sistema_atualizado = SistemaCultura.sistema.get(ente_federado__cod_ibge=123456)

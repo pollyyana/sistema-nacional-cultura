@@ -9,6 +9,8 @@ from dal import autocomplete
 
 from ckeditor.widgets import CKEditorWidget
 
+from snc.forms import RestrictedFileField
+
 from adesao.models import Usuario
 from adesao.models import Historico
 from adesao.models import Cidade
@@ -22,7 +24,7 @@ from planotrabalho.models import CriacaoSistema, FundoCultura, Componente
 from planotrabalho.models import PlanoCultura, OrgaoGestor, ConselhoCultural
 from planotrabalho.models import SituacoesArquivoPlano
 
-from gestao.models import Diligencia, DiligenciaSimples
+from gestao.models import Diligencia, DiligenciaSimples, LISTA_SITUACAO_ARQUIVO
 
 from .utils import enviar_email_alteracao_situacao
 
@@ -44,34 +46,6 @@ content_types = [
     'text/plain']
 
 max_upload_size = 5242880
-
-
-class RestrictedFileField(forms.FileField):
-    def __init__(self, *args, **kwargs):
-        self.content_types = kwargs.pop("content_types")
-        self.max_upload_size = kwargs.pop("max_upload_size")
-
-        super(RestrictedFileField, self).__init__(*args, **kwargs)
-
-    def clean(self, data, initial=None):
-        file = super(RestrictedFileField, self).clean(data, initial)
-
-        try:
-            content_type = file.content_type
-            if content_type in self.content_types:
-                if file._size > self.max_upload_size:
-                    raise forms.ValidationError(
-                        'O arquivo deve ter menos de %s. Tamanho atual %s'
-                        % (filesizeformat(self.max_upload_size),
-                            filesizeformat(file._size)))
-            else:
-                raise forms.ValidationError(
-                    'Arquivos desse tipo não são aceitos.')
-        except AttributeError:
-            pass
-
-        return data
-
 
 class InserirSEI(ModelForm):
     processo_sei = forms.CharField(max_length="50", required=False)
@@ -115,45 +89,28 @@ class AlterarDadosEnte(ModelForm):
     localizacao = forms.CharField(max_length="10", required=False)
     estado_processo = forms.ChoiceField(choices=LISTA_ESTADOS_PROCESSO, required=False)
 
-    def clean_data_publicacao_acordo(self):
-        estado_processo = self.cleaned_data.get(
-            'estado_processo', self.instance.estado_processo)
-
-        if (estado_processo == '6' and
-                self.cleaned_data['data_publicacao_acordo'] is None):
-            raise forms.ValidationError(
-                'Por favor, preencha a data de publicação do acordo')
-
-        return self.cleaned_data['data_publicacao_acordo']
-
-    def clean_link_publicacao_acordo(self):
-        estado_processo = self.cleaned_data.get(
-            'estado_processo', self.instance.estado_processo)
-
-        if (estado_processo == '6' and
-                self.cleaned_data['link_publicacao_acordo'] is None):
-            raise forms.ValidationError(
-                'Por favor, preencha o link para acesso a publicação do acordo')
-
-        return self.cleaned_data['link_publicacao_acordo']
-
-    def clean_processo_sei(self):
-        estado_processo = self.cleaned_data.get(
-            'estado_processo', self.instance.estado_processo)
-
-        if (estado_processo == '6' and
-                self.cleaned_data['processo_sei'] is None):
-            raise forms.ValidationError(
-                'Por favor, preencha o número do processo no SEI')
-
-        return self.cleaned_data['processo_sei']
-
     def clean_estado_processo(self):
         if self.cleaned_data.get('estado_processo', None) != '6':
             if self.instance.data_publicacao_acordo:
                 self.instance.data_publicacao_acordo = None
 
         return self.cleaned_data['estado_processo']
+
+    def clean(self):
+        cleaned_data = super().clean()
+        acordo_publicado = cleaned_data.get('estado_processo', self.instance.estado_processo)
+
+        if acordo_publicado == '6':
+            if cleaned_data['data_publicacao_acordo'] is None:
+                self.add_error('data_publicacao_acordo', forms.ValidationError('Preencha a data de publicação do acordo'))
+
+            if cleaned_data['link_publicacao_acordo'] is None:
+                self.add_error('link_publicacao_acordo', forms.ValidationError('Preencha o link para acesso a publicação do acordo'))
+
+            if cleaned_data['processo_sei'] is None:
+                self.add_error('processo_sei', forms.ValidationError('Preencha o número do processo no SEI'))
+
+        return cleaned_data
 
     class Meta:
         model = SistemaCultura
@@ -186,17 +143,8 @@ class DiligenciaForm(ModelForm):
 
 
 class DiligenciaComponenteForm(DiligenciaForm):
-    SITUACOES = (
-        (0, "Em preenchimento"),
-        (1, "Avaliando anexo"),
-        (2, "Concluída"),
-        (3, "Arquivo aprovado com ressalvas"),
-        (4, "Arquivo danificado"),
-        (5, "Arquivo incompleto"),
-        (6, "Arquivo incorreto")
-    )
-
-    classificacao_arquivo = forms.TypedChoiceField(choices=SITUACOES, required=False)
+    classificacao_arquivo = forms.TypedChoiceField(
+        choices=LISTA_SITUACAO_ARQUIVO, required=False)
 
     def __init__(self, *args, **kwargs):
         self.tipo_componente = kwargs.pop("componente")
