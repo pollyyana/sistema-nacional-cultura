@@ -321,15 +321,3 @@ def test_get_diligencias_componentes():
     sistema_diligencias  = sistema_cultura.get_componentes_diligencias()
     assert len(sistema_diligencias) == 1
     assert sistema_diligencias[0] == sistema_cultura.legislacao
-
-
-def test_link_publicacao_maior_200():
-    try:
-        sistema_cultura = SistemaCultura(link_publicacao_acordo="Cultura do latim cultura é um conceito de várias acepções," + 
-        "sendo a mais corrente, especialmente na antropologia, a definição genérica formulada por Edward B. Tylor segundo a qual" +
-        "cultura é todo aquele...")
-        sistema_cultura.save()
-    except DataError as e:
-        max_length = SistemaCultura._meta.get_field('link_publicacao_acordo').max_length
-        assert e.args[0] == f"value too long for type character varying({max_length})\n"
-
