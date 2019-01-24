@@ -2,15 +2,14 @@ import pytest
 from django.forms import ModelForm
 from django.shortcuts import reverse
 
-from gestao.forms import DiligenciaComponenteForm, DiligenciaGeralForm, CadastradorEnte, DiligenciaForm
+from gestao.forms import DiligenciaComponenteForm, DiligenciaGeralForm
+from gestao.forms import CadastradorEnte, DiligenciaForm, AlterarDadosEnte
 from gestao.models import DiligenciaSimples
 from adesao.models import SistemaCultura
 
 from ckeditor.widgets import CKEditorWidget
 from dal.autocomplete import ModelSelect2
 from model_mommy import mommy
-
-from gestao.forms import AlterarDadosEnte
 
 pytestmark = pytest.mark.django_db
 
@@ -175,5 +174,14 @@ def test_form_criacao_diligencia_dados_validos(sistema_cultura, login):
     data = {'classificacao_arquivo': '2'}
 
     form = DiligenciaForm(data=data, sistema_cultura=sistema_cultura, usuario=login)
+
+    assert form.is_valid()
+
+
+def test_form_alterar_dados_ente_validos(sistema_cultura, login):
+
+    data = {'estado_processo': '3'}
+
+    form = AlterarDadosEnte(data=data)
 
     assert form.is_valid()
