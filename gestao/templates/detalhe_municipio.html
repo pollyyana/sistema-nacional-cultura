@@ -144,7 +144,7 @@
             {% if ente.legislacao.situacao == 1 %}
 
               <div class="list-group-item col-xs-2 text-center ">
-                <a href="{% url 'gestao:diligencia_componente' pk=ente.id componente='legislacao' %}">Criar Diligência</a>
+                <a href="{% url 'gestao:diligencia_componente' pk=ente.id componente='legislacao' %}">Avaliar</a>
               </div>
             {% else %}
             <div class="list-group-item col-xs-2 text-center">
@@ -169,7 +169,7 @@
           {% if ente.orgao_gestor.situacao == 1 %}
 
           <div class="list-group-item col-xs-2 text-center">
-              <a href="{% url 'gestao:diligencia_componente' pk=ente.id componente='orgao_gestor' %}">Criar Diligência</a>
+              <a href="{% url 'gestao:diligencia_componente' pk=ente.id componente='orgao_gestor' %}"> Avaliar</a>
           </div>
           {% else %}
           <div class="list-group-item col-xs-2 text-center">
@@ -193,7 +193,7 @@
           </div>
           {% if ente.conselho.situacao == 1 %}
             <div class="list-group-item col-xs-2 text-center">
-                <a href="{% url 'gestao:diligencia_componente' pk=ente.id componente='conselho' %}">Criar Diligência</a>
+                <a href="{% url 'gestao:diligencia_componente' pk=ente.id componente='conselho' %}">Avaliar</a>
             </div>
           {% else %}
           <div class="list-group-item col-xs-2 text-center">
@@ -217,7 +217,7 @@
           </div>
           {% if ente.fundo_cultura.situacao == 1 %}
             <div class="list-group-item col-xs-2 text-center">
-                <a href="{% url 'gestao:diligencia_componente' pk=ente.id componente='fundo_cultura' %}">Criar Diligência</a>
+                <a href="{% url 'gestao:diligencia_componente' pk=ente.id componente='fundo_cultura' %}">Avaliar</a>
             </div>
           {% else %}
           <div class="list-group-item col-xs-2 text-center">
@@ -239,12 +239,12 @@
           </div>
 
           <div class="list-group-item col-xs-2 text-center">
-            <a href="{{ ente.plano_cultura.arquivo.url}}">Download</a>
+            <a href="{{ ente.plano.arquivo.url}}">Download</a>
           </div>
           {% if ente.plano.situacao == 1 %}
 
           <div class="list-group-item col-xs-2 text-center">
-              <a href="{% url 'gestao:diligencia_componente' pk=ente.id componente='plano' %}">Criar Diligência</a>
+              <a href="{% url 'gestao:diligencia_componente' pk=ente.id componente='plano' %}"> Avaliar</a>
           </div>
           {% else %}
           <div class="list-group-item col-xs-2 text-center">
@@ -275,14 +275,14 @@
 {% endif %}
 
 <div class="row">
-    {% if historico_sistemas %}
+    {% if historico %}
       <div class="col-md-6">
           <div class="panel panel-info">
             <div class="panel-heading">
               Histórico de cadastradores
             </div>
             <div class="panel-body">
-              {% for sistema in historico_sistemas %}
+              {% for sistema in historico %}
                 <ul class="list-group">
                     {% if sistema.cadastrador.nome_usuario %}
                       <li class="list-group-item">

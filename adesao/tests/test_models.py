@@ -2,6 +2,7 @@ import pytest
 from datetime import datetime
 
 from django.utils import timezone
+from django.db.utils import DataError
 from model_mommy import mommy
 
 from adesao.models import SistemaCultura

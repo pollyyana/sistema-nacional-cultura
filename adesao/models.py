@@ -90,6 +90,8 @@ class EnteFederado(models.Model):
     receita = models.IntegerField(_("Receitas realizadas - R$ (×1000)"), null=True, blank=True)
     despesas = models.IntegerField(_("Despesas empenhadas - R$ (×1000)"), null=True, blank=True)
     pib = models.DecimalField(_("PIB per capita - R$"), max_digits=10, decimal_places=2)
+    latitude = models.FloatField(null=True, blank=True)
+    longitude = models.FloatField(null=True, blank=True)
 
     def __str__(self):
 
@@ -100,7 +102,7 @@ class EnteFederado(models.Model):
         if digits > 2:
             return f"{self.nome}/{uf}"
 
-        return f"{self.nome} ({uf})"
+        return f"Estado de {self.nome} ({uf})"
 
     @property
     def is_municipio(self):
@@ -245,7 +247,7 @@ class Usuario(models.Model):
         choices=LISTA_ESTADOS_PROCESSO,
         default='0')
     data_publicacao_acordo = models.DateField(blank=True, null=True)
-    link_publicacao_acordo = models.CharField(max_length=100, blank=True, null=True)
+    link_publicacao_acordo = models.CharField(max_length=200, blank=True, null=True)
     processo_sei = models.CharField(max_length=100, blank=True, null=True)
     codigo_ativacao = models.CharField(max_length=12, unique=True)
     data_cadastro = models.DateTimeField(auto_now_add=True)
@@ -391,12 +393,13 @@ class SistemaCultura(models.Model):
         choices=LISTA_ESTADOS_PROCESSO,
         default='0')
     data_publicacao_acordo = models.DateField(blank=True, null=True)
-    link_publicacao_acordo = models.CharField(max_length=100, blank=True, null=True)
+    link_publicacao_acordo = models.CharField(max_length=200, blank=True, null=True)
     processo_sei = models.CharField(max_length=100, blank=True, null=True)
     numero_processo = models.CharField(max_length=50, null=True, blank=True)
     localizacao = models.CharField(_("Localização do Processo"), max_length=10, blank=True, null=True)
     justificativa = models.TextField(_("Justificativa"), blank=True, null=True)
     diligencia = models.ForeignKey("gestao.DiligenciaSimples", on_delete=models.SET_NULL, related_name="sistema_cultura", blank=True, null=True)
+    prazo = models.IntegerField(default=2)
     alterado_em = models.DateTimeField("Alterado em", default=timezone.now)
 
     objects = models.Manager()

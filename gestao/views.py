@@ -33,6 +33,7 @@ from adesao.models import Municipio
 from adesao.models import Historico
 from adesao.models import SistemaCultura
 from adesao.models import EnteFederado
+from adesao.models import Gestor
 
 from planotrabalho.models import PlanoTrabalho
 from planotrabalho.models import CriacaoSistema
@@ -52,7 +53,6 @@ from .models import DiligenciaSimples
 
 from .forms import DiligenciaComponenteForm, DiligenciaGeralForm, AlterarDocumentosEnteFederadoForm
 
-from .forms import AlterarCadastradorForm
 from .forms import AlterarUsuarioForm
 from .forms import AlterarComponenteForm
 from .forms import AlterarDadosEnte
@@ -132,34 +132,24 @@ class AcompanharPrazo(ListView):
     paginate_by = 10
 
     def get_queryset(self):
-        ente_federado = self.request.GET.get('municipio', None)
-        if ente_federado:
-            municipio = Usuario.objects.filter(
-                municipio__cidade__nome_municipio__unaccent__icontains=ente_federado).order_by('municipio__estado__nome_uf')
-            estado = Usuario.objects.filter(
-                municipio__cidade__isnull=True,
-                municipio__estado__nome_uf__unaccent__icontains=ente_federado).order_by('municipio__estado__nome_uf')
+        ente_federado = self.request.GET.get('ente_federado', None)
 
-            return municipio | estado
-        return Usuario.objects.filter(estado_processo='6', data_publicacao_acordo__isnull=False).order_by(
-            'municipio__estado__nome_uf', 'municipio__cidade__nome_municipio')
+        sistemas = SistemaCultura.sistema.filter(estado_processo='6', data_publicacao_acordo__isnull=False)
+
+        if ente_federado:
+            sistemas = sistemas.filter(ente_federado__nome__unaccent__icontains=ente_federado)
+
+        return sistemas
 
 
 def aditivar_prazo(request, id,page):
     if request.method == "POST":
-        user = Usuario.objects.get(id=id)
-        print(page)
-        user.prazo = user.prazo + 2
-        user.save()
+        sistema = SistemaCultura.sistema.get(id=id)
+        sistema.prazo = sistema.prazo + 2
+        sistema.save()
 
-        if user.municipio.cidade:
-            ente = user.municipio.cidade.nome_municipio
-        else:
-            ente = user.municipio.estado.nome_uf
-
-        message = 'Prazo de ' + ente + ' alterado para '+ str(user.prazo) + ' anos com sucesso'
+        message = 'Prazo de ' + sistema.ente_federado.__str__() + ' alterado para '+ str(sistema.prazo) + ' anos com sucesso'
         messages.success(request, message)
-
 
     return redirect(reverse_lazy('gestao:acompanhar_prazo') + '?page=' + page)
 
@@ -336,8 +326,8 @@ class DetalharEnte(DetailView, LookUpAnotherFieldMixin):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         ente_federado = context['object'].ente_federado
-        historico = SistemaCultura.historico.filter(ente_federado=ente_federado)[:10]
-        context['historico'] = historico
+        historico = SistemaCultura.historico.filter(ente_federado=ente_federado)
+        context['historico'] = historico.distinct('cadastrador').order_by('cadastrador')[:10]
 
         return context
 
@@ -394,29 +384,21 @@ class ListarDocumentosEnteFederado(ListView):
     paginate_by = 10
 
     def get_queryset(self):
-        situacao = self.request.GET.get('situacao', None)
-        ente_federado = self.request.GET.get('municipio', None)
+        ente_federado = self.request.GET.get('ente_federado', None)
 
-        if situacao in ('1', '2', '3', '4', '5'):
-            return Municipio.objects.filter(usuario__estado_processo=situacao)
+        sistema = SistemaCultura.sistema.filter(estado_processo__range=('1', '5'))
 
         if ente_federado:
-            municipio = Municipio.objects.filter(
-                cidade__nome_municipio__unaccent__icontains=ente_federado)
-            estado = Municipio.objects.filter(
-                cidade__nome_municipio__isnull=True,
-                estado__nome_uf__unaccent__icontains=ente_federado)
+            sistema = sistema.filter(ente_federado__nome__unaccent__icontains=ente_federado)
 
-            return municipio | estado
-
-        return Municipio.objects.filter(usuario__estado_processo__range=('1', '5'))
+        return sistema
 
 
 class AlterarDocumentosEnteFederado(UpdateView):
 
     template_name = 'gestao/inserir_documentos/alterar_entefederado.html'
     form_class = AlterarDocumentosEnteFederadoForm
-    model = Municipio
+    model = Gestor
 
     def get_success_url(self):
         messages.success(self.request, 'Ente Federado alterado com sucesso')

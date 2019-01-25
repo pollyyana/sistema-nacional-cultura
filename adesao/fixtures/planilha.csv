@@ -1,0 +1,5599 @@
+ente,estado_do_processo,data_adesao
+ACRE, Sim ,11/4/2013
+Rio Branco,1,3/5/2013
+Acrelândia, - , -
+Assis Brasil, - ,19/10/2012
+Brasiléia,1,12/8/2014
+Bujarí,1,24/7/2013
+Capixaba, - , -
+Cruzeiro do Sul,1,2/1/2013
+Epitaciolândia,1,22/1/2013
+Feijó, - , -
+Jordão,1,19/9/2013
+Mâncio Lima, - , -
+Manoel Urbano, - , -
+Marechal Thaumaturgo, - , -
+Plácido de Castro,1,12/9/2013
+Porto Acre,1,12/12/2014
+Porto Walter, - , -
+Rodrigues Alves, - , -
+Santa Rosa do Purus, - , -
+Sena Madureira, - , -
+Senador Guiomard, - , -
+Tarauacá,1,30/7/2014
+Xapuri,1,23/4/2013
+ALAGOAS, Sim  ,12/2/2014
+Maceió,1,16/8/2013
+Água Branca, - ,
+Anadia,1,7/5/2014
+Arapiraca,1,2/1/2013
+Atalaia, - ,
+Barra de Santo Antônio, - ,
+Barra de São Miguel, - ,
+Batalha, - ,
+Belém, - ,
+Belo Monte, - ,
+Boca da Mata, - ,
+Branquinha,1,19/4/2013
+Cacimbinha, - ,
+Cajueiro, - ,
+Campestre, - ,
+Campo Alegre, - ,
+Campo Grande, - ,
+Canapi, - ,
+Capela,1,21/3/2013
+Carneiros, - ,
+Chã Preta, - ,
+Coité do Nóia, - ,
+Colônia Leopoldina,1,24/8/2017
+Coqueiro Seco, - ,
+Coruripe,1,17/9/2013
+Craíbas, - ,
+Delmiro Gouveia,1,29/2/2016
+Dois Riachos, - ,
+Estrela de Alagoas, - ,
+Feira Grande,1,7/11/2017
+Feliz Deserto,1,6/9/2013
+Flexeiras, - ,
+Girau do Ponciano, - ,
+Ibateguara, - ,
+Igaci, - ,
+Igreja Nova, - ,
+Inhapi, - ,
+Jacaré dos Homens,1,30/7/2014
+Jacuípe, - ,
+Japaratinga, - ,
+Jaramataia, - ,
+Jequiá da Praia, - ,
+Joaquim Gomes,1,7/8/2013
+Jundiá, - ,
+Junqueiro,1,3/12/2013
+Lagoa da Canoa,1,16/8/2013
+Limoeiro de Anadia, - ,
+Major Isidoro, - ,
+Mar Vermelho, - ,
+Maragogi,1,4/12/2015
+Maravilha, - ,
+Marechal Deodoro, - ,
+Maribondo, - ,
+Mata Grande, - ,
+Matriz de Camaragibe, - ,
+Messias, - ,
+Minador do Negrão, - ,
+Monteirópolis, - ,
+Murici, - ,
+Novo Lino, - ,
+Olho D'Água das Flores,1,7/7/2015
+Olho D'Água do Casado,1,8/6/2017
+Olho D'Água Grande, - ,
+Olivença, - ,
+Ouro Branco,1,15/1/2014
+Palestina, - ,
+Palmeira dos Índios, - ,
+Pão de Açúcar, - ,
+Pariconha, - ,
+Paripueira, - ,
+Passo de Camaragibe, - ,
+Paulo Jacinto,1,30/7/2014
+Penedo,1,17/9/2015
+Piaçabuçu,1,12/4/2013
+Pilar,1,2/12/2015
+Pindoba, - ,
+Piranhas, - ,
+Poço das Trincheiras,1,4/2/2013
+Porto Calvo,1,24/4/2015
+Porto de Pedras, - ,
+Porto Real do Colégio, - ,
+Quebrangulo, - ,
+Rio Largo, - ,
+Roteiro, - ,
+Santa Luzia do Norte,1,19/10/2015
+Santana do Ipanema,1,24/9/2018
+Santana do Mundaú, - ,
+São Brás, - ,
+São José da Lage, - ,
+São José da Tapera, - ,
+São Luis do Quitunde, - ,
+São Miguel dos Campos,1,7/7/2015
+São Miguel dos Milagres, - ,
+São Sebastião, - ,
+Satuba, - ,
+Senador Rui Palmeira, - ,
+Tanque D'Arca, - ,
+Taquarana, - ,
+Teotônio Vilela,1,3/4/2014
+Traipu, - ,
+União dos Palmares,1,13/11/2013
+Viçosa, - ,
+AMAPÁ, Sim ,18/4/2013
+Macapá,1,21/3/2013
+Amapá, - , -
+Calçoene,1,20/8/2013
+Cutias, - , -
+Ferreira Gomes, - , -
+Itaubal, - , -
+Laranjal do Jari,1,30/11/2017
+Mazagão, - , -
+Oiapoque,1,3/5/2013
+Pedra Branca do Amaparí, - , -
+Porto Grande, - , -
+Pracuúba, - , -
+Santana,1,30/4/2018
+Serra do Navio, - , -
+Tartarugalzinho,1,13/11/2013
+Vitória do Jarí, - , -
+AMAZONAS, Sim ,18/4/2013
+Manaus,1,23/4/2013
+Alvarães, - , -
+Amaturá, - , -
+Anamã, - , -
+Anori, - , -
+Apuí, - , -
+Atalaia do Norte, - , -
+Autazes, - , -
+Barcelos, - , -
+Barreirinha, - , -
+Benjamin Constant,1,30/11/2017
+Beruri,1,15/1/2014
+Boa Vista do Ramos, - , -
+Boca do Acre,1,5/9/2013
+Borba, - , -
+Caapiranga, - , -
+Canutama, - , -
+Carauari, - , -
+Careiro, - , -
+Careiro da Várzea, - , -
+Coari, - , -
+Codajás, - , -
+Eirunepé, - , -
+Envira, - , -
+Fonte Boas, - , -
+Guajará, - , -
+Humaitá,1,23/4/2013
+Ipixuna, - , -
+Iranduba,1,24/7/2013
+Itacoatiara, - , -
+Itamarati, - , -
+Itapiranga, - , -
+Japurá, - , -
+Juruá, - , -
+Jutaí, - , -
+Lábrea, - , -
+Manacapuru,1,6/9/2013
+Manaquiri, - , -
+Manicoré,1,23/11/2017
+Maraã, - , -
+Maués,1,27/10/2015
+Nhamundá,1,3/5/2013
+Nova Olinda do Norte, - , -
+Novo Airão,1,21/8/2014
+Novo Aripuanã, - , -
+Parintins, - , -
+Pauini, - , -
+Presidente Figueiredo,1,25/11/2013
+Rio Preto da Eva,1,3/12/2013
+Santa Isabel do Rio Negro, - , -
+Santo Antônio do Içá, - , -
+São Gabriel da Cachoeira,1,16/9/2014
+São Paulo de Olivença, - , -
+São Sebastião do Uatumã, - , -
+Silves, - , -
+Tabatinga, - , -
+Tapauá, - , -
+Tefé, - , -
+Tonantins, - , -
+Uarini, - , -
+Urucará, - , -
+Urucurituba, - , -
+BAHIA, Sim ,11/4/2013
+Salvador,1,19/4/2013
+Abaíra, - , -
+Abaré,1,27/4/2017
+Acajutiba, - , -
+Adustina, - , -
+Água Fria,1,3/6/2013
+Aiquara, - , -
+Alagoinhas,1,3/6/2013
+Alcobaça, - , -
+Almadina, - , -
+Amargosa,1,3/7/2014
+Amélia Rodrigues,1,22/7/2013
+América Dourada,1,3/6/2013
+Anagé,1,24/4/2015
+Andaraí,1,22/1/2013
+Andorinha,1,17/9/2013
+Angical,1,12/12/2014
+Anguera, - , -
+Antas, - , -
+Antônio Cardoso,1,3/5/2013
+Antônio Gonçalves, - , -
+Aporá, - , -
+Apuarema, - , -
+Araças, - , -
+Aracatu, - , -
+Araci,1,5/9/2013
+Aramarí,1,24/1/2018
+Arataca, - , -
+Aratuípe, - , -
+Aurelino Leal,1,14/8/2013
+Baianópolis, - , -
+Baixa Grande, - , -
+Banzaê,1,3/5/2013
+Barra, - , -
+Barra da Estiva, - ,
+Barra do Choça, - ,
+Barra dos Mendes, - , -
+Barra do Rocha,1,15/1/2014
+Barreiras,1,20/11/2014
+Barro Alto,1,3/5/2013
+Barrocas, - , -
+Barro Preto,1,19/4/2017
+Belmonte,1,3/12/2013
+Belo Campo, - , -
+Biritinga, - , -
+Boa Nova,1,10/5/2018
+Boa Vista do Tupim,1,5/2/2014
+Bom Jesus da Lapa,1,2/5/2017
+Bom Jesus da Serra, - , -
+Boninal, - , -
+Bonito,1,24/5/2017
+Boquira, - , -
+Botuporã, - , -
+Brejões,1,16/8/2013
+Brejolândia, - , -
+Brotas de  Macaúbas,1,24/5/2017
+Brumado, - , -
+Buerarema, - , -
+Buritirama, - , -
+Caatiba, - , -
+Cabaceiros do Paraguaçu, - , -
+Cachoeira,1,24/7/2013
+Caculé,1,3/4/2014
+Caém, - , -
+Caetanos, - , -
+Caetité, - , -
+Cafarnaum, - , -
+Cairu,1,22/7/2013
+Caldeirão Grande, - , -
+Camacan, - , -
+Camaçari,1,3/7/2014
+Camamu, - , -
+Campo Alegre de Lourdes,1,22/7/2013
+Campo Formoso, - , -
+Canápolis,1,3/7/2014
+Canarana,1,3/5/2013
+Canavieiras,1,19/10/2015
+Candeal, - , -
+Candeias,1,18/5/2017
+Candiba,1,13/10/2017
+Cândido Sales, - , -
+Cansanção,1,24/5/2017
+Canudos,1,25/11/2013
+Capela do Alto Alegre, - , -
+Capim Grosso,1,3/7/2014
+Caraibas, - , -
+Caravelas,1,3/5/2013
+Cardeal da Silva, - , -
+Carinhanha, - , -
+Casa Nova,1,16/10/2014
+Castro Alves,1,22/7/2013
+Catolândia, - , -
+Catu,1,22/7/2013
+Caturama, - , -
+Central,1,2/3/2017
+Chorrichó, - , -
+Cícero Dantas,1,29/7/2013
+Cipó,1,18/6/2013
+Coaraci, - , -
+Cocos,1,2/10/2015
+Conceição da Feira,1,3/5/2013
+Conceição de Almeida,1,5/9/2013
+Conceição do Coité,1,16/10/2014
+Conceição do Jacuipe,1,12/2/2014
+Conde, - , -
+Condeúba,1,16/10/2014
+Contendas do Sincorá, - , -
+Coração de Maria, - , -
+Cordeiros,1,28/12/2012
+Coribe,1,19/4/2013
+Coronel João Sá,1,5/9/2013
+Correntina, - , -
+Cotegipe,1,12/11/2015
+Cravolândia,1,3/5/2013
+Crisópolis, - , -
+Cristópolis, - , -
+Cruz das Almas,1,19/4/2013
+Curaçá, - , -
+Dário Meira,1,2/5/2017
+Dias D'Ávila,1,18/6/2013
+Dom Basílio,1,2/10/2017
+Dom Macedo Costa,1,30/7/2014
+Elísio Medrado, - , -
+Encruzilhada, - , -
+Entre Rios, - , -
+Érico Cardoso,, -
+Esplanada, - , -
+Euclides da Cunha, - , -
+Eunápolis,1,3/12/2013
+Fátima, - , -
+Feira da Mata, - , -
+Feira de Santana,1,3/5/2013
+Filadélfia,1,16/9/2014
+Firmino Alves, - , -
+Floresta Azul,1,6/9/2013
+Formosa do Rio Preto, - , -
+Gandu,1,19/4/2013
+Gavião, - , -
+Gentio de Ouro,1,23/11/2017
+Glória, - , -
+Gongogi, - , -
+Governador Mangabeira, - , -
+Guajeru, - , -
+Guanambi, - , -
+Guaratinga, - , -
+Heliópolis, - , -
+Iaçu, - , -
+Ibiassucê, - , -
+Ibicaraí, - , -
+Ibicoara, - , -
+Ibicuí,1,3/4/2014
+Ibipeba, - , -
+Ibipitanga, - , -
+Ibiquera,1,28/7/2017
+Ibirapitanga, - , -
+Ibirapuã, - , -
+Ibirataia,1,31/8/2015
+Ibitiara, - , -
+Ibititá, - , -
+Ibotirama,1,18/6/2013
+Ichu,1,23/11/2017
+Igaporã,1,21/8/2014
+Igrapiúna, - , -
+Iguaí, - , -
+Ilhéus,1,26/2/2014
+Inhambupe,1,7/5/2014
+Ipecaetá, - , -
+Ipiaú,1,30/6/2017
+Ipirá,1,3/12/2013
+Ipupiara, - , -
+Irajuba, - , -
+Iramaia,1,7/7/2015
+Iraquara, - , -
+Irará,1,15/1/2014
+Irecê,1,19/4/2013
+Itabela, - , -
+Itaberaba,1,3/5/2013
+Itabuna,1,29/7/2013
+Itacaré,1,3/5/2013
+Itaeté, - , -
+Itagi, - , -
+Itagibá,1,30/7/2014
+Itagimirim,1,3/12/2013
+Itaguaçu da Bahia, - , -
+Itaju da Colônia, - , -
+Itajuípe,1,14/6/2013
+Itamaraju, - , -
+Itamari, - , -
+Itambé, - , -
+Itanagra, - , -
+Itanhém, - , -
+Itaparica,1,7/7/2015
+Itapé, - , -
+Itapebi,1,22/7/2013
+Itapetinga,1,14/11/2013
+Itapicuru, - , -
+Itapitanga,1,20/9/2017
+Itaquara,1,16/8/2013
+Itarantim, - , -
+Itatim,1,15/1/2014
+Itiruçu,1,21/8/2014
+Itiúba, - , -
+Itororó, - , -
+Ituaçu, - , -
+Ituberá,1,16/6/2017
+Iuiú,1,19/7/2016
+Jaborandi, - , -
+Jacaraci,1,22/7/2013
+Jacobina,1,27/7/2015
+Jaguaquara,1,3/5/2013
+Jaguararí, - , -
+Jaguaripe, - , -
+Jandaira,1,13/10/2017
+Jequié,1,3/6/2013
+Jeremoabo,1,3/5/2013
+Jequiriçá, - , -
+Jitaúna,1,24/4/2015
+João Dourado,1,8/6/2017
+Juazeiro,1,22/1/2013
+Jucuruçu, - , -
+Jussara, - , -
+Jussari, - , -
+Jussiape, - , -
+Lafaiete Coutinho,1,3/5/2013
+Lagoa Real, - , -
+Laje,1,14/6/2013
+Lajedão,1,21/8/2014
+Lajedinho,1,23/2/2015
+Lajedo do Tabocal,1,5/12/2014
+Lamarão,1,29/2/2016
+Lapão, - , -
+Lauro de Freitas,1,29/7/2013
+Lençóis, - , -
+Licínio de Almeida, - , -
+Livramento de N. Senhora, - , -
+Luis Eduardo Magalhães,1,3/12/2013
+Macajuba,1,22/3/2017
+Macarani,1,29/7/2013
+Macaúbas, - , -
+Mucururé, - , -
+Madre de Deus,1,6/9/2013
+Maetinga, - , -
+Maiquinique, - , -
+Mairi,1,3/4/2014
+Malhada,1,24/1/2018
+Malhada de Pedras,1,23/2/2015
+Manoel Vitorino, - , -
+Mansidão,1,7/7/2015
+Maracás,1,29/7/2013
+Maragogipe,1,3/5/2013
+Maraú, - , -
+Marcionílio Souza, - , -
+Mascote,1,25/11/2013
+Mata de São João,1,21/3/2013
+Matina, - , -
+Medeiros Neto,1,21/2/2018
+Miguel Camon, - , -
+Milagres,1,23/8/2018
+Mirangaba, - , -
+Mirante, - , -
+Monte Santo, - , -
+Morpará, - , -
+Morro do Chapéu,1,5/2/2014
+Mortugaba,1,16/8/2013
+Mucugê,1,3/5/2013
+Mucuri,1,7/5/2014
+Mulungu do Morro,1,3/12/2013
+Mundo Novo,1,2/10/2015
+Muniz Ferreira, - , -
+Muquém de São Francisco,1,16/6/2017
+Muritiba,1,3/5/2013
+Mutuípe,1,19/4/2013
+Nazaré,1,3/12/2013
+Nilo Peçanha, - , -
+Nordestina,1,3/6/2013
+Nova Canaã,1,23/2/2015
+Nova Fátima,1,12/8/2014
+Nova Ibiá,1,17/9/2015
+Nova Itarana, - , -
+Nova Redenção, - , -
+Nova Soure,1,3/12/2013
+Nova Viçosa, - , -
+Novo Horizonte, - , -
+Novo Triunfo, - , -
+Olindina, - , -
+Oliveira dos Brejinhos, - , -
+Ouriçangas, - , -
+Ourolândia, - , -
+Palmas de Monte Alto, - , -
+Palmeiras,1,7/5/2014
+Paramirim,1,13/10/2017
+Paratinga,1,22/3/2017
+Paripiranga, - , -
+Pau Brasil, - , -
+Paulo Afonso,1,3/12/2013
+Pé de Serra,1,15/1/2014
+Pedrão,1,22/7/2013
+Pedro Alexandre, - , -
+Piatã, - , -
+Pilão Arcado, - , -
+Pindaí, - , -
+Pindobaçu,1,14/12/2017
+Pintadas,1,12/2/2014
+Piraí do Norte, - , -
+Piripá, - , -
+Piritiba,1,15/1/2014
+Planaltino,1,18/6/2013
+Planalto,1,24/5/2017
+Poções, - , -
+Pojuca,1,26/2/2014
+Ponto Novo, - , -
+Porto Seguro,1,12/4/2013
+Potiraguá,1,21/6/2016
+Prado,1,3/7/2014
+Presidente Dutra, - , -
+Presidente Janio Quadros, - , -
+Presidente Tancredo Neves, - , -
+Queimadas,1,7/5/2014
+Quijingue,1,4/4/2016
+Quixabeira,1,16/5/2017
+Rafael Jambeiro, - , -
+Remanso,1,29/7/2013
+Retirolândia, - , -
+Riachão das Neves, - , -
+Riachão do Jacuípe,1,26/2/2014
+Riacho de Santana, - , -
+Ribeira do Amparo,1,25/11/2013
+Ribeira do Pombal,1,3/5/2013
+Ribeirão do Largo, - , -
+Rio de Contas,1,14/6/2013
+Rio do Antônio, - , -
+Rio do Pires, - , -
+Rio Real,1,14/8/2013
+Rodelas, - , -
+Ruy Barbosa,1,30/7/2014
+Salinas da Margarida,1,3/5/2013
+Santa Bárbara,1,3/7/2014
+Santa Brígida,1,7/8/2013
+Santa Cruz Cabrália,1,22/7/2013
+Santa Cruz da Vitória, - , -
+Santa Ines,1,3/6/2013
+Santa Luzia, - , -
+Santa Maria da Vitória,1,3/12/2013
+Santa Rita de Cássia, - , -
+Santa Teresinha,1,3/12/2013
+Santaluz, - , -
+Santana,1,23/6/2017
+Santanópolis,1,30/10/2013
+Santo Amaro,1,13/12/2013
+Santo Antônio de Jesus,1,7/8/2013
+Santo Estevão,1,27/7/2015
+São Desidério,1,12/4/2013
+São Domingos,1,22/1/2013
+São Felipe,1,3/5/2013
+São Félix, - , -
+São Félix do Coribe,1,3/12/2013
+São Francisco do Conde,1,19/4/2013
+São Gabriel,1,3/5/2013
+São Gonçalo dos Campos,1,25/11/2013
+São José da Vitória, - , -
+São José do Jacuípe, - , -
+São Miguel das Matas, - , -
+São Sebastião do Passé,1,3/12/2013
+Sapeaçu,1,3/6/2013
+Sátiro Dias,1,13/12/2013
+Saubara, - , -
+Saúde,1,3/6/2013
+Seabra, - , -
+Sebastião Laranjeiras, - , -
+Senhor do Bonfim,1,16/8/2013
+Sento Sé, - , -
+Serra do Ramalho, - , -
+Serra Dourada, - , -
+Serra Preta, - , -
+Serrinha,1,3/6/2013
+Serrolândia, - , -
+Simões Filho,1,3/12/2013
+Sítio do Mato, - , -
+Sítio do Quinto,1,29/7/2013
+Sobradinho, - , -
+Souto Soares,1,19/4/2013
+Tabocas do Brejo Velho, - , -
+Tanhaçu, - , -
+Tanque Novo,1,19/8/2016
+Tanquinho, - , -
+Taperoá, - , -
+Tapiramutá,1,30/7/2014
+Teixeira de Freitas,1,21/8/2014
+Teodoro Sampaio,1,30/7/2014
+Teofilândia,1,19/10/2015
+Teolândia, - , -
+Terra Nova, - , -
+Tremedal, - , -
+Tucano,1,17/9/2015
+Uauá,1,12/2/2014
+Ubaíra,1,18/6/2013
+Ubaitaba, - , -
+Ubatã,1,27/10/2015
+Uibaí, - , -
+Umburamas, - , -
+Una, - , -
+Urandi, - , -
+Uruçuca, - , -
+Utinga, - , -
+Valença,1,3/12/2013
+Valente,1,29/5/2015
+Várzea da Roça, - , -
+Várzea do Poço, - , -
+Várzea Nova, - , -
+Varzedo,1,15/1/2014
+Vera Cruz, - , -
+Vereda,1,28/9/2015
+Vitória da Conquista,1,13/11/2013
+Wagner,1,3/4/2014
+Wanderley,1,23/2/2015
+Wenceslau Guimarães,1,19/10/2015
+Xique-Xique,1,18/6/2013
+CEARÁ, Sim ,7/3/2013
+Fortaleza,1,12/4/2013
+Abaiara,1,29/8/2017
+Acarapé,1,30/7/2014
+Acaraú,1,21/8/2014
+Acopiara,1,19/4/2013
+Aiuaba,1,13/10/2017
+Alcântaras,1,3/7/2014
+Altaneira,1,25/11/2013
+Alto Santo,1,12/4/2013
+Amontada,1,14/8/2013
+Antonina do Norte,1,23/8/2018
+Apuiarés, - , -
+Aquiraz,1,16/8/2013
+Aracati,1,29/5/2015
+Aracoiaba,1,31/8/2015
+Ararendá,1,19/4/2017
+Araripe,1,14/11/2013
+Aratuba,1,29/2/2016
+Arneiroz,1,27/10/2015
+Assaré,1,25/11/2013
+Aurora,1,21/3/2013
+Baixio,1,21/8/2014
+Banabuiú,1,3/6/2013
+Barbalha,1,16/9/2014
+Barreira,1,25/11/2013
+Barro,1,21/8/2014
+Barroquinha,1,7/5/2014
+Baturité,1,12/2/2014
+Beberibe,1,14/6/2013
+Bela Cruz,1,4/2/2013
+Boa Viagem,1,7/7/2015
+Brejo Santo,1,30/7/2014
+Camocim,1,3/12/2013
+Campos Sales, - ,
+Canindé,1,5/9/2013
+Capistrano,1,3/4/2014
+Caridade, - , -
+Cariré,1,21/3/2013
+Caririaçu,1,30/7/2014
+Cariús, - , -
+Carnaubal, - , -
+Cascavel,1,1/3/2013
+Catarina,1,7/8/2013
+Catunda,1,23/6/2017
+Caucaia,1,30/7/2014
+Cedro,1,2/10/2015
+Chaval, - , -
+Choró,1,29/5/2015
+Chorozinho,1,19/4/2017
+Coreaú,1,21/7/2014
+Crateús,1,7/8/2013
+Crato,1,7/5/2014
+Croatá,1,23/2/2015
+Cruz,1,30/7/2014
+Deputado Irapuan Pinheiro,1,31/8/2015
+Ererê, - , -
+Eusébio,1,30/7/2014
+Farias Brito,1,21/8/2014
+Forquilha, - , -
+Fortim,1,23/6/2017
+Frecheirinha,1,3/5/2013
+General Sampaio,1,18/6/2013
+Graça,1,4/2/2013
+Granja,1,16/9/2014
+Granjeiro, - , -
+Groaíras,1,18/6/2013
+Guaiúba,1,6/9/2013
+Guaraciaba do Norte,1,7/5/2014
+Guaramiranga,1,3/12/2013
+Hidrolândia,1,7/8/2013
+Horizonte,1,12/11/2015
+Ibaretama,1,27/7/2015
+Ibiapina,1,7/8/2013
+Ibicuitinga,1,21/8/2014
+Icapuí,1,3/12/2013
+Icó,1,18/6/2013
+Iguatu,1,7/8/2013
+Independência, - , -
+Ipaporanga,1,9/10/2013
+Ipaumirim,1,4/2/2013
+Ipu,1,3/7/2014
+Ipueiras, - , -
+Iracema,1,7/5/2014
+Irauçuba,1,28/12/2012
+Itaiçaba,1,29/2/2016
+Itaitinga,1,19/9/2013
+Itapajé,1,12/2/2014
+Itapipoca,1,7/8/2013
+Itapiúna,1,27/4/2017
+Itarema,1,21/8/2014
+Itatira,1,29/2/2016
+Jaguaretama,1,3/4/2014
+Jaguaribara, - , -
+Jaguaribe,1,7/8/2013
+Jaguaruana,1,3/5/2013
+Jardim, - ,19/10/2012
+Jati,1,25/11/2013
+Jijoca de Jericoacoara,1,12/11/2015
+Juazeiro do Norte,1,21/3/2013
+Jucás,1,7/8/2013
+Lavras da  Mangabeira,1,19/9/2013
+Limoeiro do Norte,1,9/10/2013
+Madalena,1,13/11/2013
+Maracanaú,1,1/3/2013
+Marco,1,1/6/2017
+Maranguape,1,28/12/2012
+Martinópole, - , -
+Massapê, - , -
+Mauriti,1,7/5/2014
+Meruoca,1,4/2/2013
+Milagres,1,21/2/2018
+Milhã,1,3/7/2014
+Miraíma,1,19/8/2013
+Missão Velha,1,8/12/2017
+Mombaça,1,3/12/2013
+Monsenhor Tabosa,1,30/7/2014
+Morada Nova,1,19/8/2013
+Moraújo, - , -
+Morrinhos, - , -
+Mucambo,1,15/1/2014
+Mulungu,1,7/8/2013
+Nova Olinda,1,7/8/2013
+Nova Russas, - , -
+Novo Oriente ,1,21/8/2014
+Ocara,1,5/2/2014
+Orós,1,29/2/2016
+Pacajus,1,3/5/2013
+Pacatuba,1,12/12/2014
+Pacoti,1,12/9/2013
+Pacujá,1,30/6/2017
+Palhano,1,28/12/2012
+Palmácia,1,28/9/2015
+Paracuru,1,29/5/2015
+Paraipaba,1,20/7/2017
+Parambu,1,12/11/2015
+Paramoti, - , -
+Pedra Branca,1,7/5/2014
+Penaforte,1,7/11/2017
+Pentecoste,1,7/8/2013
+Pereiro,1,23/2/2015
+Pindoretama,1,3/7/2014
+Piquet Carneiro,1,7/5/2014
+Pires Ferreira,1,13/8/2018
+Poranga,1,30/7/2014
+Porteiras, - , -
+Potengi, - , -
+Potiretama,1,2/3/2017
+Quiterianópolis,1,4/12/2015
+Quixadá,1,3/6/2013
+Quixelô,1,16/8/2013
+Quixeramobim,1,30/7/2014
+Quixeré,1,31/8/2015
+Redenção,1,30/7/2014
+Reriutaba,1,4/12/2015
+Russas,1,30/7/2014
+Saboeiro,1,13/8/2018
+Salitre,1,21/7/2014
+Santa Quitéria,1,2/12/2015
+Santana do Acaraú,1,12/11/2015
+Santana do Cariri,1,12/2/2014
+São Benedito,1,7/8/2013
+São Gonçalo do Amarante,1,7/7/2015
+São João do Jaguaribe,1,8/9/2017
+São Luis do Curu,1,23/2/2015
+Senador Pompeu,1,17/9/2015
+Senador Sá,1,27/10/2015
+Sobral,1,12/4/2013
+Solonópole, - , -
+Tabuleiro do Norte,1,3/5/2013
+Tamboril,1,2/12/2015
+Tarrafas,1,3/7/2014
+Tauá,1,29/5/2015
+Tejuçuoca, - , -
+Tianguá,1,16/9/2014
+Trairi,1,16/10/2014
+Tururu,1,14/11/2013
+Ubajara,1,26/2/2014
+Umari,1,4/10/2018
+Umirim,1,3/12/2013
+Uruburetama, - , -
+Uruoca,1,12/11/2015
+Varjota,1,23/1/2013
+Várzea Alegre,1,16/9/2014
+Viçosa do Ceará,1,12/9/2013
+DISTRITO FEDERAL,1,7/2/2013
+ESPÍRITO SANTO, Sim ,7/3/2013
+Vitória,1,30/7/2014
+Afonso Cláudio,1,4/11/2014
+Água Doce do Norte, - , -
+Águia Branca, - , -
+Alegre, - , -
+Alfredo Chaves,1,2/5/2017
+Alto Rio Novo, - , -
+Anchieta, - , -
+Apiacá, - , -
+Aracruz,1,8/6/2017
+Atílio Vivacqua, - , -
+Baixo Guandu,1,5/9/2013
+Barra de São Francisco, - , -
+Boa Esperança, - , -
+Bom Jesus do Norte, - , -
+Brejetuba,1,30/6/2017
+Cachoeiro de Itapemirim,1,21/2/2018
+Cariacica,1,12/2/2014
+Castelo,1,22/1/2013
+Colatina,1,18/4/2013
+Conceição da Barra, - , -
+Conceição do Castelo,1,2/1/2013
+Divino de São Lourenço,1,12/2/2014
+Domingos Martins,1,29/2/2016
+Dores do Rio Preto, - , -
+Ecoporanga, - , -
+Fundão, - , -
+Governador Lindemberg, - , -
+Guaçuí,1,3/5/2013
+Guarapari, - , -
+Ibatiba,1,18/7/2017
+Ibiraçu, - , -
+Ibitirama, - , -
+Iconha,1,12/4/2013
+Irupi, - , -
+Itaguaçu, - , -
+Itapemirim, - , -
+Itarana, - , -
+Iúna,1,16/6/2017
+Jaguaré, - , -
+Jerônimo Monteiro,1,19/4/2017
+João Neiva,1,16/8/2013
+Laranja da Terra,1,12/4/2013
+Linhares,1,27/11/2018
+Mantenópolis, - , -
+Marataizes,1,22/1/2013
+Marechal Floriano, - , -
+Marilândia, - , -
+Mimoso do Sul, - , -
+Montanha,1,24/7/2013
+Mucurici, - , -
+Muniz Freire, - , -
+Muqui, - , -
+Nova Venécia, - , -
+Pancas,1,22/1/2013
+Pedro Canário,1,30/7/2014
+Pinheiros, - , -
+Piúma,1,30/7/2014
+Ponto Belo, - , -
+Presidente Kennedy, - , -
+Rio Bananal, - , -
+Rio Novo do Sul, - , -
+Santa Leopoldina, - , -
+Santa Maria de Jetibá,1,7/11/2017
+Santa Teresa,1,30/7/2014
+São Domingos do Norte,1,14/6/2013
+São Gabriel da Palha,1,12/9/2013
+São José do Calçado, - , -
+São Mateus,1,22/1/2013
+São Roque do Canaã, - , -
+Serra,1,12/9/2013
+Sooretama, - , -
+Vargem Alta,1,12/8/2014
+Venda Nova do Imigrante,1,18/5/2017
+Viana,1,2/1/2013
+Vila Pavão, - , -
+Vila Valério, - , -
+Vila Velha,1,19/10/2015
+GOIÁS, Sim ,7/3/2013
+Goiânia,1,3/6/2013
+Abadia de Goiás, - , -
+Abadiânia, - , -
+Acreuna, - , -
+Adelândia, - , -
+Água Fria de Goiás, - , -
+Água Limpa, - , -
+Águas Lindas de Goiás,1,5/9/2013
+Alexânia,1,14/3/2013
+Aloândia, - , -
+Alto Horizonte, - , -
+Alto Paraíso de Goiás,1,3/5/2013
+Alvorada do Norte,1,23/4/2013
+Amaralina, - , -
+Americano do Brasil, - , -
+Amorinápolis, - , -
+Anápolis,1,14/3/2013
+Anhanguera, - , -
+Anicuns, - , -
+Aparecida de Goiânia,1,3/5/2013
+Aparecida do Rio Doce, - , -
+Aporé,1,4/11/2014
+Araçu, - , -
+Aragarças, - , -
+Aragoiânia, - , -
+Araquapaz, - , -
+Arenópolis, - , -
+Aruanã, - , -
+Aurilândia, - , -
+Avelinópolis, - , -
+Baliza, - , -
+Barro Alto,1,3/4/2014
+Bela Vista de Goiás, - , -
+Bom Jardim de Goiás, - , -
+Bom Jesus de Goiás, - , -
+Bonfinópolis,1,3/5/2013
+Bonópolis, - , -
+Brazabrantes, - , -
+Britânia, - , -
+Buriti Alegre,1,3/4/2014
+Buriti de Goiás, - , -
+Buritinópolis, - , -
+Cabeceiras, - , -
+Cachoeira Alta,1,16/5/2017
+Cachoeira de Goiás, - , -
+Cachoeira Dourada, - , -
+Caçu, - , -
+Caiapônia, - , -
+Caldas Novas,1,5/9/2013
+Caldazinha, - , -
+Campestre de Goiás, - , -
+Campinaçu,1,16/10/2014
+Campinorte, - , -
+Campo Alegre de Goiás, - , -
+Campo Limpo de Goiás, - , -
+Campos Belo, - , -
+Campos Verdes, - , -
+Carmo do Rio Verde, - , -
+Castelândia, - , -
+Catalão,1,15/1/2014
+Caturaí, - , -
+Cavalcante, - , -
+Ceres,1,18/6/2013
+Cezarina, - , -
+Chapadão do Céu,1,4/11/2014
+Cidade Ocidental, - , -
+Cocalzinho de Goiás, - , -
+Colinas do Sul, - , -
+Córrego do Ouro, - , -
+Corumbá de Goias,1,12/4/2013
+Corumbaíba, - , -
+Cristalina,1,14/3/2013
+Cristianópolis, - , -
+Crixás,1,23/2/2015
+Cromínia, - , -
+Cumari, - , -
+Damianópolis, - , -
+Damolândia, - , -
+Davinópolis, - , -
+Diorama, - , -
+Divinópolis de Goiás,1,27/11/2018
+Doverlândia, - , -
+Edealina, - , -
+Edéia, - , -
+Estrela do Norte, - , -
+Faina, - , -
+Fazenda Nova, - , -
+Firminópolis, - , -
+Flores de Goiás, - , -
+Formosa,1,3/4/2014
+Formoso, - , -
+Gameleira de Goiás, - , -
+Goianópolis, - , -
+Goiandira, - , -
+Goianésia,1,28/3/2013
+Goianira,1,21/8/2014
+Goiás,1,17/9/2013
+Goiatuba,1,4/11/2014
+Gouvelândia, - , -
+Guapó, - , -
+Guaraíta, - , -
+Guarani de Goiás, - , -
+Guarinos, - , -
+Heitoraí,1,7/11/2017
+Hidrolândia, - , -
+Hidrolina, - , -
+Iaciara,1,1/3/2013
+Inaciolândia, - , -
+Indiara,1,3/5/2013
+Inhumas,1,20/8/2013
+Ipameri,1,7/5/2014
+Ipiranga de Goiás, - , -
+Iporá,1,28/1/2013
+Israelândia, - , -
+Itaberaí,1,7/5/2014
+Itaguari, - , -
+Itaguaru,1,31/8/2015
+Itajá, - , -
+Itapaci,1,19/9/2013
+Itapirapuã, - , -
+Itapuranga,1,7/5/2014
+Itarumã, - , -
+Itauçu, - , -
+Itumbiara,1,30/7/2014
+Ivolândia, - , -
+Jandaia,1,3/12/2013
+Jaraguá,1,28/1/2013
+Jataí,1,3/5/2013
+Jaupaci, - , -
+Jasúpolis, - , -
+Joviânia, - , -
+Jussara, - , -
+Lagoa Santa, - , -
+Leopoldo de Bulhões,1,7/5/2014
+Luziânia,1,23/2/2015
+Mairipotaba, - , -
+Mambai, - , -
+Mara Rosa,1,16/10/2014
+Marzagão, - , -
+Matrinchã,1,12/2/2014
+Maurilândia, - , -
+Mimoso de Goiás, - , -
+Minaçu,1,22/6/2017
+Mineiros,1,3/7/2014
+Moiporã, - , -
+Monte Alegre de Goiás, - , -
+Montes Claros de Goiás, - , -
+Montividiu, - , -
+Montividiu do Norte, - , -
+Morrinhos, - , -
+Morro Agudo de Goiás, - , -
+Mossâmedes,1,28/3/2013
+Morzalândia, - , -
+Mundo Novo, - , -
+Mutunópolis, - , -
+Nazário, - , -
+Nerópolis,1,24/7/2013
+Niquelândia,1,19/9/2013
+Nova América,1,12/2/2014
+Nova Aurora,1,14/12/2018
+Nova Crixás, - , -
+Nova Glória, - , -
+Nova Iguaçu de Goiás, - , -
+Nova Roma, - , -
+Nova Veneza, - , -
+Novo Brasil, - , -
+Novo Gama, - , -
+Novo Planalto, - , -
+Orizona,1,23/4/2013
+Ouro Verde de Goiás, - , -
+Ouvidor, - , -
+Padre Bernardo,1,28/1/2013
+Palestina de Goiás, - , -
+Palmeiras de Goiás,1,8/12/2017
+Palmelo, - , -
+Palminópolis,1,2/10/2017
+Panamá de Goiás,1,23/4/2013
+Paranaiguara,1,23/6/2017
+Paraúna,1,16/5/2017
+Perolândia, - , -
+Petrolina de Goiás, - , -
+Pilar de Goiás, - , -
+Piracanjuba,1,12/9/2013
+Piranhas,1,7/5/2014
+Pirenópolis,1,28/3/2013
+Pires do Rio, - , -
+Planaltina,1,26/2/2014
+Pontalina, - , -
+Porangatu,1,3/5/2013
+Porteirão, - , -
+Portelândia, - , -
+Posse,1,26/2/2014
+Professor Jamil, - , -
+Quirinópolis,1,28/3/2013
+Rialma,1,9/10/2013
+Rianópolis,1,16/10/2014
+Rio Quente, - , -
+Rio Verde,1,13/12/2013
+Rubiataba,1,3/7/2014
+Sanclerlândia, - , -
+Santa Bárbara de Goiás,1,1/3/2013
+Santa Cruz de Goiás,1,18/6/2013
+Santa Fé de Goiás, - , -
+Santa Helena de Goiás, - , -
+Santa Izabel, - , -
+Santa Rita do Araguaia,1,19/4/2017
+Santa Rita do Novo Destino, - , -
+Santa Rosa de Goiás, - , -
+Santa Tereza de Goiás, - , -
+Santa Terezinha de Goiás, - , -
+Santo Antônio da Barra,1,30/10/2013
+Santo Antônio de Goiás, - , -
+Santo Antônio do Descoberto,1,23/2/2015
+São Domingos, - , -
+São Francisco de Goiás, - , -
+São João D'Aliança, - , -
+São João da Paraúna, - , -
+São Luis de Montes Belos,1,12/12/2014
+São Luiz do Norte, - , -
+São Miguel do Araguaia,1,7/5/2014
+São Miguel do Passa Quatro, - , -
+São Patricio, - , -
+São Simão,1,12/2/2014
+Senador Canedo,1,5/2/2014
+Serranópolis,1,28/3/2013
+Silvânia,1,16/8/2013
+Simolândia, - , -
+Sítio D'Abadia, - , -
+Taquaral de Goiás, - , -
+Teresina de Goiás, - , -
+Terezópolis de Goiás, - , -
+Três Ranchos, - , -
+Trindade, - , -
+Trombas, - , -
+Turvânia, - , -
+Turvelândia,1,7/5/2014
+Uirapuru, - , -
+Uruaçu,1,23/4/2013
+Uruana,1,28/3/2013
+Urutaí,1,30/11/2017
+Valparaiso de Goiás,1,30/7/2014
+Varjão, - , -
+Vianópolis, - , -
+Vicentinópolis, - , -
+Vila Boa, - , -
+Vila Propício, - , -
+MARANHÃO, Sim ,7/3/2013
+São Luis ,1,12/2/2014
+Açailândia, - , -
+Afonso Cunha,1,4/2/2013
+Água Doce do Maranhão,1,26/2/2014
+Alcântara,1,29/7/2013
+Aldeias Altas,1,3/5/2013
+Altamira do Maranhão, - , -
+Alto Alegre do Maranhão,1,3/12/2013
+Alto Alegre do Pindaré, - , -
+Alto Parnaíba,1,7/1/2015
+Amapá do Maranhão,1,4/11/2014
+Amarante do Maranhão,1,15/1/2014
+Anajatuba,1,7/5/2014
+Anapurus,1,7/5/2014
+Apicum-Açu,1,29/7/2013
+Araguanã,1,30/7/2014
+Araioses,1,19/4/2013
+Arame, - , -
+Arari,1,4/2/2013
+Axixá, - , -
+Bacabal,1,7/1/2015
+Bacabeira,1,22/7/2013
+Bacuri,1,12/2/2014
+Bacurituba,1,12/2/2014
+Balsas,1,13/12/2013
+Barão de Grajaú, - , -
+Barra do Corda,1,14/8/2013
+Barreirinhas, - , -
+Bela Vista do Maranhão, - , -
+Belágua, - , -
+Benedito Leite, - , -
+Bequimão,1,15/1/2014
+Bernardo do  Mearim, - , -
+Boa Vista do Gurupi, - , -
+Bom Jardim,1,16/9/2014
+Bom Jesus das Selvas, - , -
+Bom Lugar,1,5/2/2014
+Brejo ,1,29/7/2013
+Brejo de Areia, - , -
+Buriti,1,12/12/2014
+Buriti Bravo,1,30/7/2014
+Buriticupu,1,7/5/2014
+Buritirana,1,15/1/2014
+Cachoeira Grande,1,21/7/2014
+Cajapió, - , -
+Cajari, - , -
+Campestre do Maranhão, - , -
+Cândido Mendes, - , -
+Cantanhede,1,11/4/2013
+Capinzal do Norte,1,15/1/2014
+Carolina, - , -
+Carutapera, - , -
+Caxias,1,3/5/2013
+Cedral,1,15/1/2014
+Central do Maranhão, - , -
+Centro do Guilherme,1,5/2/2014
+Centro Novo do Maranhão,1,21/7/2014
+Chapadinha,1,15/1/2014
+Cidelândia,1,22/7/2013
+Codó,1,15/1/2014
+Coelho Neto, - , -
+Colinas,1,3/7/2014
+Conceição do Lago-Açu, - , -
+Coroatá, - , -
+Cururupu,1,13/12/2013
+Davinópolis, - , -
+Dom Pedro, - , -
+Duque Bacelar,1,21/3/2013
+Esperantinópolis,1,12/2/2014
+Estreito,1,18/1/2013
+Feira Nova do Maranhão,1,15/1/2014
+Fernando Falcão, - , -
+Formosa da Serra Negra,1,6/9/2013
+Fortaleza dos Nogueiras,1,18/6/2013
+Fortuna, - , -
+Godofredo Viana,1,5/2/2014
+Gonçalves Dias,1,15/1/2014
+Governador Archer,1,21/7/2014
+Governador Edison Lobão,1,7/11/2017
+Governador Eugênio Barros, - , -
+Governador Luiz Rocha,1,19/9/2013
+Governador Newton Bello,1,12/2/2014
+Governador Nunes Freire,1,26/2/2014
+Graça Aranha,1,3/12/2013
+Grajaú,1,4/11/2014
+Guimarães,1,12/2/2014
+Humberto de Campos,1,1/3/2013
+Icatu,1,19/9/2013
+Igarapé do Meio, - , -
+Igarapé Grande, - , -
+Imperatriz,1,29/7/2013
+Itaipava do Grajaú, - , -
+Itapecuru Mirim, - , -
+Itinga do Maranhão, - , -
+Jatobá, - , -
+Jenipapo dos Vieiras,1,25/11/2013
+João Lisboa,1,3/6/2013
+Joselândia,1,3/12/2013
+Junco do Maranhão,1,16/8/2013
+Lago da Pedra,1,21/3/2013
+Lago do Junco,1,29/7/2013
+Lago dos Rodrigues,1,15/1/2014
+Lago Verde,1,19/4/2013
+Lagoa do Mato,1,21/8/2014
+Lagoa Grande do Maranhão,1,15/1/2014
+Lajeado Novo, - , -
+Lima Campos, - , -
+Loreto,1,21/3/2013
+Luis Domingues, - , -
+Magalhães de Almeida, - , -
+Maracaçumé, - , -
+Marajá do Sena,1,15/1/2014
+Maranhãozinho, - , -
+Mata Roma, - , -
+Matinha, - , -
+Matões, - , -
+Matões do Norte,1,21/3/2013
+Milagres do Maranhão, - , -
+Mirador, - , -
+Miranda do Norte, - , -
+Mirinzal, - , -
+Monção,1,15/1/2014
+Montes Altos, - , -
+Morros,1,19/4/2013
+Nina Rodrigues, - , -
+Nova Colinas, - , -
+Nova Iorque, - , -
+Nova Olinda do Maranhão,1,15/1/2014
+Olho D'Água das Cunhãs, - , -
+Olinda Nova do Maranhão,1,7/5/2014
+Paço do Lumiar,1,3/12/2013
+Palmeirândia,1,27/7/2015
+Paraibano, - , -
+Parnarama,1,19/4/2017
+Passagem Franca,1,4/2/2013
+Pastos Bons,1,15/1/2014
+Paulino Neves,1,3/4/2014
+Paulo Ramos,1,19/8/2013
+Pedreiras,1,1/3/2013
+Pedro do Rosário,1,12/12/2014
+Penalva, - , -
+Peri Mirim, - , -
+Peritoró,1,29/7/2013
+Pindaré-Mirim, - , -
+Pinheiro, - , -
+Pio XII, - , -
+Pirapemas,1,18/6/2013
+Poção de Pedras,1,15/1/2014
+Porto Franco,1,15/1/2014
+Porto Rico do Maranhão, - , -
+Presidente Dutra,1,29/7/2013
+Presidente Juscelino, - , -
+Presidente Médici, - , -
+Presidente Sarney,1,25/11/2013
+Presidente Vargas,1,18/6/2013
+Primeira Cruz, - , -
+Raposa, - , -
+Riachão,1,12/9/2013
+Ribamar Fiquene, - , -
+Rosário, - , -
+Sambaíba,1,5/2/2014
+Santa Filomena do Maranhão, - , -
+Santa Helena,1,30/7/2014
+Santa Inês,1,30/10/2013
+Santa Luzia, - , -
+Santa Luzia do Paruá, - , -
+Santa Quitéria do Maranhão,1,12/2/2014
+Santa Rita,1,14/8/2013
+Santana do Maranhão, - , -
+Santo Amaro do Maranhão,1,15/1/2014
+Santo Antônio dos Lopes, - , -
+São Benedito do Rio Preto,1,20/11/2014
+São Bento,1,15/1/2014
+São Bernardo, - , -
+São Domingos do Azeitão, - , -
+São Domingos do Maranhão,1,15/1/2014
+São Félix de Balsas, - , -
+São Francisco do Brejão, - , -
+São Francisco do Maranhão, - , -
+São João Batista,1,16/10/2014
+São João do Caru, - , -
+São João do Paraíso,1,29/7/2013
+São João do Soter,1,29/7/2013
+São João dos Patos, - , -
+São José de Ribamar, - , -
+São José dos Basílios, - , -
+São Luis Gonzaga do Maranhão, - , -
+São Mateus do Maranhão,1,29/7/2013
+São Pedro da Água Branca,1,16/6/2017
+São Pedro dos Crentes, - , -
+São Raimundo das Mangabeiras,1,14/11/2013
+São Raimundo do Doca Bezerra,1,29/7/2013
+São Roberto, - , -
+São Vicente Ferrer,1,12/2/2014
+Satubinha, - , -
+Senador Alexandre Costa,1,3/5/2013
+Senador La Rocque,1,15/1/2014
+Serrano do Maranhão,1,30/7/2014
+Sítio Novo,1,12/2/2014
+Sucupira do Norte, - , -
+Sucupira do Riachão, - , -
+Tasso Fragoso, - , -
+Timbiras, - , -
+Timon,1,19/4/2013
+Trizidela do Vale,1,3/12/2013
+Tufilândia, - , -
+Tuntum,1,12/12/2014
+Turiaçu, - , -
+Turilândia, - , -
+Tutóia,1,15/1/2014
+Urbano Santos,1,29/7/2013
+Vargem Grande,1,16/8/2013
+Viana ,1,12/2/2014
+Vila Nova dos Martírios, - , -
+Vitória do Mearim,1,23/1/2013
+Vitorino Freire,1,16/8/2013
+Zé Doca,1,21/7/2014
+MATO GROSSO , Sim ,7/3/2013
+Cuiabá,1,2/12/2015
+Acorizal,, -
+Água Boa,1,1/3/2013
+Alta Floresta,1,23/4/2013
+Alto Araguaia,, -
+Alto Boa Vista,, -
+Alto Garças,, -
+Alto Paraguai,, -
+Alto Taquari,1,14/3/2013
+Apiacás,1,14/8/2013
+Araguaiana,, -
+Araguainha,, -
+Araputanga,, -
+Arenápolis,, -
+Aripuanã,, -
+Barão de Melgaço,, -
+Barra do Bugres,, -
+Barra do Garças,1,28/1/2013
+Bom Jesus do Araguaia,, -
+Brasnorte,, -
+Cáceres,1,3/6/2013
+Campinápolis,, -
+Campo Novo do Parecis,1,14/3/2013
+Campo Verde,1,3/12/2013
+Campos de Júlio,, -
+Canabrava do Norte,1,28/1/2013
+Canarana,1,14/3/2013
+Carlinda,1,20/8/2013
+Castanheira, - , -
+Chapada dos Guimarães,, -
+Cláudia,1,12/4/2013
+Cocalinho,, -
+Colíder,1,14/3/2013
+Colniza,1,23/4/2013
+Comodoro,, -
+Confresa,, -
+Conquista d'Oeste,, -
+Cotriguaçu,, -
+Curvelândia,1,28/1/2013
+Denise,, -
+Diamantino,1,24/5/2018
+Dom Aquino,, -
+Feliz Natal,1,3/5/2013
+Figueirópolis D'Oeste,1,31/5/2016
+Gaúcha do Norte,1,18/5/2017
+General Carneiro,, -
+Glória d'Oeste,, -
+Guarantã do Norte,, -
+Guiratinga,, -
+Indiavaí,, -
+Ipiranga do Norte,1,28/3/2013
+Itanhangá,, -
+Itaúba,, -
+Itiquira,1,3/6/2013
+Jaciara,1,24/5/2017
+Jangada,, -
+Jauru,, -
+Juara,1,28/1/2013
+Juína,1,28/1/2013
+Juruena,, -
+Juscimeira,, -
+Lambari D'Oeste,1,28/3/2013
+Lucas do Rio Verde,1,19/9/2013
+Luciára,, -
+Marcelândia,,
+Matupá,,
+Mirassol D'Oeste,,
+Nobres,,
+Nortelândia,1,1/3/2013
+Nossa Senhora do Livramento,,
+Nova Bandeirantes,, -
+Nova Brasilândia,, -
+Nova Canaã do Norte,, -
+Nova Guarita,, -
+Nova Lacerda,1,5/12/2018
+Nova Marilândia,1,3/12/2013
+Nova Maringá,, -
+Nova Monte Verde,1,3/6/2013
+Nova Mutum,1,18/6/2013
+Nova Nazaré,1,19/4/2017
+Nova Olímpia, - , -
+Nova Santa Helena,1,30/4/2018
+Nova Ubiratã,1,3/12/2013
+Nova Xavantina,1,3/5/2013
+Novo Horizonte do Norte,, -
+Novo Mundo,1,24/5/2017
+Novo Santo Antônio,, -
+Novo São Joaquim,1,2/1/2013
+Paranaíta,, -
+Paranatinga,1,2/3/2017
+Pedra Preta,1,3/5/2013
+Peixoto de Azevedo,1,18/6/2013
+Planalto da Serra,, -
+Poconé,, -
+Pontal do Araguaia,, -
+Ponte Branca,, -
+Pontes e Lacerda,, -
+Porto Alegre do Norte,, -
+Porto dos Gaúchos,, -
+Porto Esperidião,, -
+Porto Estrela,, -
+Poxoréu,1,20/4/2018
+Primavera do Leste,1,1/3/2013
+Querência,, -
+Reserva do Cabaçal,, -
+Ribeirão Cascalheira,1,7/7/2015
+Ribeirãozinho,, -
+Rio Branco,1,28/3/2013
+Rondolândia,1,28/1/2013
+Rondonópolis,1,14/3/2013
+Rosário Oeste,, -
+Salto do Céu,, -
+Santa Carmem,, -
+Santa Cruz do Xingu,, -
+Santa Rita do Trivelato,, -
+Santa Terezinha,, -
+Santo Afonso,, -
+Santo Antônio do Leste,, -
+Santo Antônio do Leverger,, -
+São Félix do Araguaia,1,19/4/2017
+São José do Povo,, -
+São José do Rio Claro,, -
+São José do Xingu,1,7/7/2015
+São José dos Quatro Marcos,1,13/10/2017
+São Pedro da Cipa,, -
+Sapezal,1,3/6/2013
+Serra Nova Dourada,, -
+Sinop,1,16/8/2013
+Sorriso,1,23/4/2013
+Tabaporã,, -
+Tangará da Serra,1,23/4/2013
+Tapurah,, -
+Terra Nova do Norte,, -
+Tesouro,, -
+Torixoréu,, -
+União do Sul,1,2/1/2013
+Vale de  São Domingos,, -
+Várzea Grande,1,24/7/2013
+Vera,1,23/4/2013
+Vila Bela da Santíssima Trindade,1,14/8/2013
+Vila Rica,, -
+MATO GROSSO DO SUL, Sim ,7/3/2013
+Campo Grande,1,23/4/2013
+Água Clara,1,3/5/2013
+Alcinópolis,, -
+Amambaí,1,24/7/2013
+Anastácio,, -
+Anaurilândia,1,30/7/2014
+Angélica,, -
+Antônio João,1,28/1/2013
+Aparecida do Taboado,1,5/9/2013
+Aquidauana,1,23/4/2013
+Aral Moreira,1,26/7/2016
+Bandeirantes,1,27/7/2015
+Bataguassu,1,17/9/2013
+Batayporã,1,23/4/2013
+Bela Vista,1,13/8/2018
+Bodoquena,1,28/1/2013
+Bonito,1,17/9/2013
+Brasilândia,1,17/9/2013
+Caarapó,, -
+Camapuã,1,26/10/2016
+Caracol,1,7/5/2014
+Cassilândia,1,27/10/2015
+Chapadão do Sul,1,23/4/2013
+Corguinho,1,28/1/2013
+Coronel Sapucaia,1,3/4/2014
+Corumbá,1,3/5/2013
+Costa Rica,1,23/4/2013
+Coxim,1,16/9/2014
+Deodápolis,1,29/2/2016
+Dois Irmãos do Buriti,1,14/11/2013
+Douradina,, -
+Dourados,1,28/3/2013
+Eldorado,1,2/10/2015
+Fátima do Sul,, -
+Figueirão,1,3/7/2014
+Glória de Dourados,, -
+Guia Lopes da Laguna,1,28/1/2013
+Iguatemi,, -
+Inocência,1,16/10/2014
+Itaporã,, -
+Itaquiraí,1,3/7/2014
+Ivinhema,1,13/12/2013
+Japorã,1,17/9/2015
+Jaraguari,1,16/9/2014
+Jardim,1,12/12/2014
+Jateí,1,26/2/2014
+Juti,, -
+Ladário,1,18/6/2013
+Laguna Carapã,1,16/10/2014
+Maracaju,1,31/8/2015
+Miranda,, -
+Mundo Novo,1,14/11/2013
+Naviraí,1,28/1/2013
+Nioaque,1,29/5/2015
+Nova Alvorada do Sul,1,4/4/2016
+Nova Andradina,1,19/9/2013
+Novo Horizonte do Sul,, -
+Paraíso das Águas,1,23/2/2015
+Paranaíba,1,23/4/2013
+Paranhos,1,3/5/2013
+Pedro Gomes,1,24/7/2013
+Ponta Porã,1,30/7/2014
+Porto Murtinho,1,18/6/2013
+Ribas do Rio Pardo,1,28/1/2013
+Rio Brilhante,1,23/2/2015
+Rio Negro,1,30/7/2014
+Rio Verde de Mato Grosso,1,18/6/2013
+Rochedo,1,30/7/2014
+Santa Rita do Pardo,1,23/4/2013
+São Gabriel do Oeste,1,23/4/2013
+Selvíria,1,19/4/2017
+Sete Quedas,, -
+Sidrolândia,1,3/12/2013
+Sonora,, -
+Tacuru,1,19/4/2017
+Taquarussu,, -
+Terenos,1,23/4/2013
+Três Lagoas,1,28/3/2013
+Vicentina,, -
+MINAS GERAIS, Sim ,15/1/2014
+Belo Horizonte,1,21/3/2013
+Abadia dos Dourados, - , -
+Abaeté, - , -
+Abre Campo, - , -
+Acaiaca, - , -
+Açucena,1,16/9/2014
+Água Boa, - , -
+Água Comprida, - , -
+Aguanil, - , -
+Águas Formosas, - , -
+Águas Vermelhas, - , -
+Aimorés, - , -
+Aiuruoca, - , -
+Alagoa, - , -
+Albertina, - , -
+Além Paraíba,1,25/11/2013
+Alfenas,1,7/5/2014
+Alfredo Vasconcelos, - , -
+Almenara,1,26/10/2016
+Alpercata, - , -
+Alpinópolis,1,2/5/2017
+Alterosa, - , -
+Alto Caparaó, - , -
+Alto Jequitibá, - ,
+Alto Rio Doce, - , -
+Alvarenga, - , -
+Alvinópolis,1,20/11/2014
+Alvorada de Minas,1,30/7/2014
+Amparo do Serra,1,16/5/2017
+Andradas, - , -
+Andrelândia, - , -
+Angelândia, - , -
+Antônio Carlos, - , -
+Antônio Dias, - , -
+Antônio Prado de Minas,1,5/12/2014
+Araçaí, - , -
+Aracitaba, - , -
+Araçuaí,1,24/4/2015
+Araguari, - , -
+Arantina,1,31/5/2016
+Araponga,1,12/12/2014
+Araporã,1,21/3/2013
+Arapuá, - , -
+Araújos, - , -
+Araxá,1,15/1/2014
+Arceburgo, - , -
+Arcos,1,27/4/2017
+Areado,1,2/3/2017
+Argirita,1,5/9/2013
+Aricanduva, - , -
+Arinos,1,1/2/2013
+Astolfo Dutra, - , -
+Ataléia, - , -
+Augusto de Lima, - , -
+Baependi,1,1/2/2013
+Baldim,1,4/4/2016
+Bambuí, - , -
+Bandeira,1,12/2/2014
+Bandeira do Sul, - , -
+Barão de Cocais,1,4/11/2014
+Barão de Monte Alto, - , -
+Barbacena,1,14/11/2013
+Barra Longa,1,18/4/2013
+Barroso,1,3/5/2013
+Bela Vista de Minas, - , -
+Belmiro Braga, - , -
+Belo Oriente, - , -
+Belo Vale,1,19/10/2015
+Berilo, - , -
+Berizal, - , -
+Bertópolis,1,7/5/2014
+Betim,1,17/9/2013
+Bias Fortes, - , -
+Bicas,1,2/5/2016
+Biquinhas, - , -
+Boa Esperança,1,18/6/2013
+Bocaina de Minas, - , -
+Bocaiúva,1,16/5/2017
+Bom Despacho,1,16/10/2014
+Bom Jardim de Minas,1,14/3/2018
+Bom Jesus da Penha, - , -
+Bom Jesus do Amparo, - , -
+Bom Jesus do Galho, - , -
+Bom Repouso, - , -
+Bom Sucesso,1,26/2/2014
+Bonfim,1,26/2/2014
+Bonfinópolis de Minas,1,3/6/2013
+Bonito de Minas, - , -
+Borda da Mata,1,16/6/2017
+Botelhos, - , -
+Botumirim, - , -
+Brás Pires, - , -
+Brasilândia de Minas,1,28/9/2015
+Brasília de Minas,1,7/5/2014
+Brasópolis,1,6/10/2017
+Braúnas, - , -
+Brumadinho,1,3/12/2013
+Bueno Brandão,1,30/7/2014
+Buenópolis, - , -
+Bugre, - , -
+Buritis, - , -
+Buritizeiro,1,14/3/2018
+Cabeceira Grande, - , -
+Cabo Verde, - , -
+Cachoeira da Prata, - , -
+Cachoeira de Minas, - , -
+Cachoeira de Pajeú,1,11/4/2013
+Cachoeira Dourada,1,1/2/2013
+Caetanópolis,1,16/10/2014
+Caeté,1,4/12/2015
+Caiana, - , -
+Cajuri, - , -
+Caldas, - , -
+Camacho, - , -
+Camanducaia, - , -
+Cambuí,1,5/2/2014
+Cambuquira,1,3/5/2013
+Campanário, - ,19/11/2012
+Campanha,1,6/10/2017
+Campestre,1,1/2/2013
+Campina Verde,1,20/8/2013
+Campo Azul, - , -
+Campo Belo, - , -
+Campo do Meio,1,20/9/2017
+Campo Florido,1,14/11/2013
+Campos Altos, - , -
+Campos Gerais, - , -
+Cana Verde, - , -
+Canaã,1,25/11/2013
+Canápolis,1,16/9/2014
+Candeias,1,2/1/2013
+Cantagalo,1,29/8/2017
+Caparaó, - , -
+Capela Nova, - , -
+Capelinha,1,24/7/2013
+Capetinga, - , -
+Capim Branco,1,1/3/2013
+Capinópolis,1,29/5/2015
+Capitão Andrade, - , -
+Capitão Enéas,1,27/7/2015
+Capitólio,1,2/1/2013
+Caputira, - , -
+Caraí, - , -
+Caranaíba, - , -
+Carandaí, - , -
+Carangola,1,19/10/2015
+Caratinga,1,1/3/2013
+Carbonita,1,30/7/2014
+Careaçu, - , -
+Carlos Chagas,1,10/5/2018
+Carmésia, - ,19/11/2012
+Carmo da Cachoeira,1,2/10/2017
+Carmo da Mata, - , -
+Carmo de Minas,1,30/7/2014
+Carmo do Cajuru, - , -
+Carmo do Paranaíba, - , -
+Carmo do Rio Claro,1,28/9/2015
+Carmópolis de Minas, - , -
+Carneirinho,1,3/12/2013
+Carrancas, - , -
+Carvalhópolis,1,6/10/2017
+Carvalhos,1,3/7/2014
+Casa Grande, - , -
+Cascalho Rico, - , -
+Cássia,1,2/10/2017
+Cataguases,1,11/4/2013
+Catas Altas , - , -
+Catas Altas da Noruega, - , -
+Catuji,1,5/9/2013
+Catuti, - , -
+Caxambu,1,3/4/2014
+Cedro do Abaeté,1,2/5/2017
+Central de Minas, - , -
+Centralina,1,1/2/2013
+Chácara, - , -
+Chalé, - , -
+Chapada do Norte,1,10/7/2018
+Chapada Gaúcha,1,24/7/2013
+Chiador, - , -
+Cipotânea, - , -
+Claraval,1,3/5/2013
+Claro dos Poções, - , -
+Cláudio, - , -
+Coimbra,1,4/11/2014
+Coluna, - , -
+Comendador Gomes,1,24/7/2013
+Comercinho, - , -
+Conceição da Aparecida, - , -
+Conceição da Barra de Minas, - , -
+Conceição das Alagoas, - , -
+Conceição das Pedras, - , -
+Conceição de Ipanema, - , -
+Conceição do Mato Dentro,1,17/9/2013
+Conceição do Pará,1,29/7/2013
+Conceição do Rio Verde, - , -
+Conceição dos Ouros,1,23/2/2015
+Cônego Marinho, - , -
+Confins,1,31/8/2015
+Congonhal,1,24/4/2015
+Congonhas,1,27/7/2015
+Congonhas do Norte,1,12/12/2014
+Conquista,1,7/11/2017
+Conselheiro Lafaiete,1,11/4/2013
+Conselheiro Pena, - , -
+Consolação, - , -
+Contagem,1,24/4/2015
+Coqueiral, - , -
+Coração de Jesus,1,30/7/2014
+Cordisburgo, - , -
+Cordislândia, - , -
+Corinto, - , -
+Coroaci, - , -
+Coromandel, - , -
+Coronel Fabriciano,1,15/1/2014
+Coronel Murta,1,1/2/2013
+Coronel Pacheco, - , -
+Coronel Xavier Chaves,1,18/6/2013
+Córrego Danta, - , -
+Córrego do Bom Jesus, - , -
+Córrego Fundo,1,24/8/2017
+Córrego Novo,1,3/12/2013
+Couto de Magalhães de Minas,1,30/7/2014
+Crisólita, - , -
+Cristais, - , -
+Cristália, - , -
+Cristiano Otoni,1,2/10/2017
+Cristina,1,1/2/2013
+Crucilândia, - , -
+Cruzeiro da Fortaleza, - , -
+Cruzília, - , -
+Cuparaque,1,2/10/2017
+Curral de Dentro, - , -
+Curvelo, - , -
+Datas, - , -
+Delfim Moreira,1,1/2/2013
+Delfinópolis,1,11/4/2013
+Delta, - , -
+Descoberto,1,7/11/2017
+Desterro de Entre Rios, - , -
+Desterro do Melo, - , -
+Diamantina,1,18/4/2013
+Diogo de Vasconcelos, - , -
+Dionísio,1,7/5/2014
+Divinésia, - , -
+Divino, - , -
+Divino das Laranjeiras, - , -
+Divinolândia de Minas, - , -
+Divinópolis,1,1/2/2013
+Divisa Alegre, - , -
+Divisa Nova, - , -
+Divisópolis, - , -
+Dom Bosco, - , -
+Dom Cavati, - , -
+Dom Joaquim,1,15/1/2014
+Dom Silvério,1,17/9/2013
+Dom Viçoso, - , -
+Dona Eusébia,1,31/5/2016
+Dores de Campos,1,1/2/2013
+Dores de Guanhães,1,12/1/2018
+Dores do Indaiá,1,26/12/2017
+Dores do Turvo, - , -
+Doresópolis, - , -
+Douradoquara,1,3/6/2013
+Durandé, - , -
+Elói Mendes, - , -
+Engenheiro Caldas, - , -
+Engenheiro Navarro, - , -
+Entre Folhas, - , -
+Entre Rios de Minas,1,2/3/2017
+Ervália, - , -
+Esmeraldas,1,1/2/2013
+Espera Feliz, - , -
+Espinosa, - , -
+Espírito Santo do Dourado, - , -
+Estiva,1,14/11/2013
+Estrela Dalva, - , -
+Estrela do Indaiá,1,18/4/2013
+Estrela do Sul, - , -
+Eugenópolis, - , -
+Ewbank da Câmara,1,3/10/2017
+Extrema,1,7/1/2015
+Fama,1,7/11/2017
+Faria Lemos, - , -
+Felício dos Santos, - , -
+Felisburgo,1,13/12/2013
+Felixlândia, - , -
+Fernandes Tourinho, - , -
+Ferros,1,14/12/2012
+Fervedouro, - , -
+Florestal,1,17/9/2013
+Formiga,1,20/11/2014
+Formoso, - , -
+Fortaleza de Minas, - , -
+Fortuna de Minas,1,14/12/2017
+Francisco Badaró, - , -
+Francisco Dumont, - , -
+Francisco Sá,1,21/6/2016
+Franciscópolis, - , -
+Frei Gaspar, - , -
+Frei Inocêncio, - , -
+Frei LagoNegro, - , -
+Fronteira  ,1,8/6/2017
+Fronteira dos Vales,1,24/4/2015
+Fruta de Leite, - , -
+Frutal,1,3/12/2013
+Funilândia,1,30/4/2018
+Galiléia, - , -
+Gameleiras, - , -
+Glaucilândia, - , -
+Goiabeira, - , -
+Goianá,1,27/10/2015
+Gonçalves, - , -
+Gonzaga, - , -
+Gouveia, - , -
+Governador Valadares,1,28/12/2012
+Grão Mogol, - , -
+Grupiara, - , -
+Guanhães, - , -
+Guapé,1,11/4/2013
+Guaraciaba, - , -
+Guaraciama, - , -
+Guaranésia,1,26/2/2014
+Guarani,1,19/9/2013
+Guarará, - , -
+Guarda-Mor,1,19/9/2013
+Guaxupé, - , -
+Guidoval, - , -
+Guimarânia, - , -
+Guiricema,1,27/11/2018
+Gurinhatã,1,30/7/2014
+Heliodora, - , -
+Iapu, - , -
+Ibertioga,1,23/11/2017
+Ibiá,1,3/12/2013
+Ibiaí, - , -
+Ibiracatu, - , -
+Ibiraci,1,7/5/2014
+Ibirité,1,13/8/2018
+Ibitiúra de Minas, - , -
+Ibituruna, - , -
+Icaraí de Minas, - , -
+Igarapé, - , -
+Igaratinga, - , -
+Iguatama, - , -
+Ijaci, - , -
+Ilicínea, - , -
+Imbé de Minas, - , -
+Inconfidentes,1,2/10/2017
+Indaiabira, - , -
+Indianópolis,1,6/9/2013
+Ingaí, - , -
+Inhapim, - , -
+Inhaúma,1,14/3/2018
+Inimutaba, - , -
+Ipaba, - , -
+Ipanema, - , -
+Ipatinga,1,6/9/2013
+Ipiaçu,1,7/7/2016
+Ipuiúna, - , -
+Iraí de Minas, - , -
+Itabira,1,3/12/2013
+Itabirinha , - , -
+Itabirito,1,12/2/2014
+Itacambira, - , -
+Itacarambi, - , -
+Itaguara,1,2/1/2013
+Itaipé, - , -
+Itajubá,1,3/12/2013
+Itamarandiba, - , -
+Itamarati de Minas,1,11/4/2013
+Itambacuri, - , -
+Itambé do Mato Dentro, - , -
+Itamogi,1,1/3/2013
+Itamonte, - , -
+Itanhandu,1,21/8/2014
+Itanhomi, - , -
+Itaobim,1,4/11/2014
+Itapagipe, - , -
+Itapecerica, - , -
+Itapeva, - , -
+Itatiaiuçu, - , -
+Itaú de Minas, - , -
+Itaúna,1,29/5/2015
+Itaverava, - , -
+Itinga, - , -
+Itueta, - , -
+Ituiutaba,1,29/7/2013
+Itumirim, - , -
+Iturama,1,19/9/2013
+Itutinga, - , -
+Jaboticatubas,1,15/1/2014
+Jacinto, - , -
+Jacuí, - , -
+Jacutinga,1,18/5/2017
+Jaguaraçu, - , -
+Jaíba,1,12/1/2018
+Jampruca, - , -
+Janaúba,1,10/5/2018
+Januária,1,27/10/2015
+Japaraíba, - , -
+Japonvar, - , -
+Jeceaba,1,21/12/2016
+Jenipapo de Minas,1,12/8/2014
+Jequeri, - , -
+Jequitaí, - , -
+Jequitibá, - , -
+Jequitinhonha,1,3/12/2013
+Jesuânia,1,7/5/2014
+Joaíma,1,27/7/2015
+Joanésia, - , -
+João Monlevade, - , -
+João Pinheiro, - , -
+Joaquim Felicio, - , -
+Jordânia, - , -
+José Gonçalves de Minas, - , -
+José Raydan, - , -
+Josenópolis, - , -
+Juatuba, - , -
+Juiz de Fora,1,1/2/2013
+Juramento, - , -
+Juruaia,1,16/5/2017
+Juvenília, - , -
+Ladainha, - , -
+Lagamar, - , -
+Lagoa da Prata, - , -
+Lagoa dos Patos,1,11/4/2013
+Lagoa Dourada, - , -
+Lagoa Formosa, - , -
+Lagoa Grande, - , -
+Lagoa Santa,1,27/7/2015
+Lajinha, - , -
+Lambari,1,11/4/2013
+Lamim,1,3/1/2018
+Laranjal,1,13/10/2017
+Lassance, - , -
+Lavras,1,24/8/2017
+Leandro Ferreira, - , -
+Leme do Prado,1,13/12/2013
+Leopoldina, - , -
+Liberdade,1,7/5/2014
+Lima Duarte, - , -
+Limeira do Oeste,1,19/8/2013
+Lontra, - , -
+Luisburgo, - , -
+Luislândia, - , -
+Luminárias,1,19/4/2017
+Luz, - , -
+Machacalis,1,25/11/2013
+Machado,1,28/12/2012
+Madre de Deus de Minas, - , -
+Malacacheta,1,3/4/2014
+Mamonas, - , -
+Manga, - , -
+Manhuaçu, - ,19/11/2012
+Manhumirim, - , -
+Mantena, - , -
+Mar de Espanha, - , -
+Maravilhas, - , -
+Maria da Fé,1,7/5/2014
+Mariana,1,7/5/2014
+Marilac, - , -
+Mário Campos, - , -
+Maripá de Minas, - , -
+Marliéria, - , -
+Marmelópolis,1,11/4/2013
+Martinho Campos, - , -
+Martins Soares, - , -
+Mata Verde,,
+Materlândia, - , -
+Mateus Leme, - , -
+Mathias Lobato, - , -
+Matias Barbosa, - , -
+Matias Cardoso, - , -
+Matipó, - , -
+Mato Verde,1,11/4/2013
+Matozinhos, - , -
+Matutina,1,11/4/2013
+Medeiros, - , -
+Medina,1,12/8/2014
+Mendes Pimentel, - , -
+Mercês, - , -
+Mesquita, - , -
+Minas Novas, - , -
+Minduri, - , -
+Mirabela, - , -
+Miradouro,1,28/3/2017
+Miraí, - , -
+Miravânia,1,17/9/2015
+Moeda, - , -
+Moema,1,19/9/2013
+Monjolos,1,4/11/2014
+Monsenhor Paulo, - , -
+Montalvânia, - , -
+Monte Alegre de Minas,1,12/12/2014
+Monte Azul,1,2/5/2017
+Monte Belo, - , -
+Monte Carmelo,1,30/7/2014
+Monte Formoso, - , -
+Monte Santo de Minas,1,16/5/2017
+Monte Sião, - , -
+Montes Claros,1,28/3/2017
+Montezuma, - , -
+Morada Nova de Minas,1,7/11/2017
+Morro da Garça,1,3/12/2013
+Morro do Pilar,1,12/2/2014
+Munhoz, - , -
+Muriaé,1,11/4/2013
+Mutum,1,19/9/2013
+Muzambinho, - , -
+Nacip Raydan, - , -
+Nanuque,1,21/8/2014
+Naque, - , -
+Natalândia, - , -
+Natércia, - , -
+Nazareno, - , -
+Nepomuceno, - , -
+Ninheira,1,7/5/2014
+Nova Belém, - , -
+Nova Era,1,7/7/2015
+Nova Lima,1,16/9/2014
+Nova Módica, - , -
+Nova Ponte, - , -
+Nova Porteirinha, - , -
+Nova Resende,1,2/1/2013
+Nova Serrana,1,24/6/2016
+Nova União, - , -
+Novo Cruzeiro, - , -
+Novo Oriente de Minas, - , -
+Novorizonte, - , -
+Olaria, - , -
+Olhos-D'Água, - , -
+Olimpio Noronha,1,13/8/2018
+Oliveira,1,21/3/2013
+Oliveira Fortes,1,23/11/2017
+Onça de Pitangui, - , -
+Oratórios, - , -
+Orizânia, - , -
+Ouro Branco,1,1/2/2013
+Ouro Fino, - , -
+Ouro Preto,1,1/2/2013
+Ouro Verde de Minas, - , -
+Padre Carvalho, - , -
+Padre Paraiso,1,8/2/2017
+Pai Pedro, - , -
+Paineiras, - , -
+Pains, - , -
+Paiva, - , -
+Palma,1,2/10/2017
+Palmópolis, - , -
+Papagaios, - , -
+Pará de Minas,1,30/7/2014
+Paracatu,1,15/1/2014
+Paraguaçu,1,27/4/2017
+Paraisópolis,1,21/12/2016
+Paraopeba,1,18/4/2013
+Passa Quatro,1,13/8/2018
+Passa Tempo, - , -
+Passa-Vinte, - , -
+Passabém, - , -
+Passos,1,11/4/2013
+Patis, - , -
+Patos de Minas,1,23/11/2017
+Patrocínio,1,12/9/2013
+Patrocínio do Muriaé, - , -
+Paula Cândido,1,30/10/2013
+Paulistas, - , -
+Pavão, - , -
+Peçanha, - , -
+Pedra Azul,1,2/12/2015
+Pedra Bonita, - , -
+Pedra do Anta, - , -
+Pedra do Indaiá, - , -
+Pedra Dourada, - , -
+Pedralva, - , -
+Pedras de Maria da Cruz, - , -
+Pedrinópolis, - , -
+Pedro Leopoldo,1,2/1/2013
+Pedro Teixeira, - , -
+Pequeri, - , -
+Pequi, - , -
+Perdigão, - , -
+Perdizes,1,3/12/2013
+Perdões, - , -
+Periquito,1,20/11/2014
+Pescador, - , -
+Piau, - , -
+Piedade de Caratinga, - , -
+Piedade de Ponte Nova, - , -
+Piedade do Rio Grande, - , -
+Piedade dos Gerais, - , -
+Pimenta,1,13/12/2013
+Pingo-D'Água, - , -
+Pintópolis, - , -
+Piracema, - , -
+Pirajuba, - , -
+Piranga, - , -
+Piranguçu,1,18/4/2013
+Piranguinho, - , -
+Pirapetinga, - , -
+Pirapora,1,7/1/2015
+Piraúba, - , -
+Pitangui,1,3/5/2013
+Piumhi,1,3/7/2014
+Planura,1,14/11/2013
+Poço Fundo,1,8/9/2017
+Poços de Caldas,1,11/4/2013
+Pocrane, - , -
+Pompéu,1,2/1/2013
+Ponte Nova,1,11/4/2013
+Ponto Chique, - , -
+Ponto dos Volantes, - , -
+Porteirinha, - , -
+Porto Firme, - , -
+Poté,1,7/7/2015
+Pouso Alegre,1,1/2/2013
+Pouso Alto, - , -
+Prados,1,2/1/2013
+Prata, - , -
+Pratápolis, - , -
+Pratinha, - , -
+Presidente Bernardes,1,30/7/2014
+Presidente Juscelino, - , -
+Presidente Kubitschek,1,20/9/2017
+Presidente Olegário, - , -
+Prudente de Morais,1,7/5/2014
+Quartel Geral, - , -
+Queluzito, - , -
+Raposos,1,1/2/2013
+Raul Soares,1,5/2/2014
+Recreio, - , -
+Reduto, - , -
+Resende Costa, - , -
+Resplendor, - , -
+Ressaquinha, - , -
+Riachinho, - , -
+Riacho dos Machados, - , -
+Ribeirão das Neves,1,1/2/2013
+Ribeirão Vermelho, - , -
+Rio Acima,1,6/10/2017
+Rio Casca, - , -
+Rio do Prado, - , -
+Rio Doce,1,16/10/2014
+Rio Espera,1,7/5/2014
+Rio Manso, - , -
+Rio Novo, - , -
+Rio Paranaíba, - , -
+Rio Pardo de Minas, - , -
+Rio Piracicaba, - , -
+Rio Pomba, - , -
+Rio Preto,1,24/8/2017
+Rio Vermelho,1,3/5/2013
+Ritápolis, - , -
+Rochedo de Minas, - , -
+Rodeiro,1,3/12/2013
+Romaria,1,3/12/2013
+Rosário da Limeira, - , -
+Rubelita, - , -
+Rubim, - , -
+Sabará,1,2/1/2013
+Sabinópolis, - , -
+Sacramento, - , -
+Salinas,1,12/12/2014
+Salto da Divisa,1,12/2/2014
+Santa Bárbara ,1,27/10/2015
+Santa Bárbara do Leste, - , -
+Santa Bárbara do Monte Verde, - , -
+Santa Bárbara do Tugúrio, - , -
+Santa Cruz de Minas,1,14/6/2013
+Santa Cruz de Salinas, - , -
+Santa Cruz do Escalvado,1,2/1/2013
+Santa Efigênia de Minas, - , -
+Santa Fé de Minas,1,24/4/2015
+Santa Helena de Minas, - , -
+Santa Juliana, - , -
+Santa Luzia, - , -
+Santa Margarida, - , -
+Santa Maria de Itabira, - , -
+Santa Maria do Salto, - , -
+Santa Maria do Suaçuí, - , -
+Santa Rita de Caldas,1,23/11/2017
+Santa Rita de Ibitipoca, - , -
+Santa Rita de Jacutinga,1,31/5/2016
+Santa Rita de Minas, - , -
+Santa Rita do Itueto, - , -
+Santa Rita do Sapucaí,1,11/4/2013
+Santa Rosa da Serra,1,20/9/2017
+Santa Vitória, - , -
+Santana da Vargem, - , -
+Santana de Cataguases, - , -
+Santana de Pirapama, - , -
+Santana do Deserto, - , -
+Santana do Garambéu, - , -
+Santana do Jacaré, - , -
+Santana do Manhuaçu, - , -
+Santana do Paraiso,1,24/7/2013
+Santana do Riacho,1,12/2/2014
+Santana dos Montes, - , -
+Santo Antônio do Amparo, - , -
+Santo Antônio do Aventureiro,1,7/5/2014
+Santo Antônio do Grama,1,2/1/2013
+Santo Antônio do Itambé, - , -
+Santo Antônio do Jacinto, - , -
+Santo Antônio do Monte, - , -
+Santo Antônio do Retiro, - , -
+Santo Antônio do Rio Abaixo, - , -
+Santo Hipólito, - , -
+Santos Dumont,1,30/7/2014
+São Bento Abade,1,30/10/2013
+São Brás do Suaçuí, - , -
+São Domingos das Dores, - , -
+São Domingos do Prata,1,26/2/2014
+São Félix de Minas, - , -
+São Francisco ,1,16/9/2014
+São Francisco de Paula, - , -
+São Francisco de Sales, - , -
+São Francisco do Glória, - , -
+São Geraldo, - , -
+São Geraldo da Piedade, - , -
+São Geraldo do Baixio,1,3/4/2014
+São Gonçalo do Abaetê,1,28/12/2012
+São Gonçalo do Pará, - , -
+São Gonçalo do Rio Abaixo,1,12/9/2013
+São Gonçalo do Rio Preto,1,21/6/2016
+São Gonçalo do Sapucaí, - , -
+São Gotardo,1,30/7/2014
+São João Batista do Glória,1,7/11/2017
+São João da Lagoa, - , -
+São João da Mata, - , -
+São João da Ponte,1,7/7/2015
+São João das Missões, - , -
+São João Del Rei,1,21/3/2013
+São João do Manhuaçu, - , -
+São João do Manteninha, - , -
+São João do Oriente, - , -
+São João do Pacuí, - , -
+São João do Paraíso, - , -
+São João Evangelista, - , -
+São João Nepomuceno,1,12/2/2014
+São Joaquim de Bicas,1,26/12/2017
+São José da Barra, - , -
+São José da Lapa, - , -
+São José da Safira, - , -
+São José da Varginha, - , -
+São José do Alegre,1,20/8/2013
+São José do Divino, - , -
+São José do Goiabal,1,19/4/2017
+São José do Jacuri, - , -
+São José do Mantimento,1,8/12/2017
+São Lourenço,1,16/5/2017
+São Miguel do Anta,1,28/9/2015
+São Pedro da União, - , -
+São Pedro do Suaçuí, - , -
+São Pedro dos Ferros, - , -
+São Romão, - , -
+São Roque de Minas, - , -
+São Sebastião da Bela Vista,1,27/4/2017
+São Sebastião da Vargem Alegre, - , -
+São Sebastião do Anta, - , -
+São Sebastião do Maranhão, - , -
+São Sebastião do Oeste, - , -
+São Sebastião do Paraiso, - , -
+São Sebastião do Rio Preto, - , -
+São Sebastião do Rio Verde, - , -
+São Thomé das Letras,1,27/7/2015
+São Tiago,1,16/5/2017
+São Tomás de Aquino, - , -
+São Vicente de Minas,1,16/5/2017
+Sapucaí-Mirim, - , -
+Sardoá, - , -
+Sarzedo,1,16/8/2013
+Sem-Peixe,1,4/4/2016
+Senador Amaral,1,11/4/2013
+Senador Cortes, - , -
+Senador Firmino, - , -
+Senador José Bento, - , -
+Senador Modestino Gonçalves, - , -
+Senhora de Oliveira, - , -
+Senhora do Porto, - , -
+Senhora dos Remédios, - , -
+Sericita, - , -
+Seritinga, - , -
+Serra Azul de Minas,1,11/4/2013
+Serra da Saudade,1,2/12/2015
+Serra do Salitre,1,28/12/2012
+Serra dos Aimorés, - , -
+Serrania, - , -
+Serranópolis de Minas, - , -
+Serranos, - , -
+Serro,1,12/9/2013
+Sete Lagoas,1,21/7/2014
+Setubinha, - , -
+Silveirânia, - , -
+Silvianópolis, - , -
+Simão Pereira, - , -
+Simonésia, - , -
+Sobrália, - , -
+Soledade de Minas,1,30/7/2014
+Tabuleiro,1,31/5/2016
+Taiobeiras, - ,19/11/2012
+Taparuba, - , -
+Tapira,1,30/7/2014
+Tapiraí, - , -
+Taquaraçu de Minas, - , -
+Tarumirim, - , -
+Teixeiras, - , -
+Teófilo Otoni,1,15/1/2014
+Timóteo,1,19/10/2015
+Tiradentes,1,18/4/2013
+Tiros,1,12/9/2013
+Tocantins, - , -
+Tocos do Moji, - , -
+Toledo,1,26/6/2018
+Tombos, - , -
+Três Corações,1,3/5/2013
+Três Marias,1,2/1/2013
+Três Pontas,1,12/9/2013
+Tumiritinga, - , -
+Tupaciguara,1,12/8/2014
+Turmalina, - , -
+Turvolândia, - , -
+Ubá,1,16/8/2013
+Ubaí,1,3/10/2017
+Ubaporanga,1,30/10/2013
+Uberaba,1,1/2/2013
+Uberlândia,1,7/7/2015
+Umburatiba, - , -
+Unaí,1,26/12/2017
+União de Minas,1,21/8/2014
+Uruana de Minas,1,30/10/2013
+Urucânia,1,7/7/2015
+Urucuia,1,7/11/2017
+Vargem Alegre, - , -
+Vargem Bonita, - , -
+Vargem Grande do Rio Pardo,1,23/11/2017
+Varginha,1,11/4/2013
+Varjão de Minas, - , -
+Várzea da Palma, - , -
+Varzelândia, - , -
+Vazante,1,24/5/2017
+Verdelândia, - , -
+Veredinha, - , -
+Veríssimo, - , -
+Vermelho Novo, - , -
+Vespasiano,1,18/4/2013
+Viçosa,1,21/3/2013
+Vieiras, - , -
+Virgem da Lapa,1,24/5/2017
+Virgínia, - , -
+Virginópolis, - , -
+Virgolândia, - , -
+Visconde do Rio Branco,1,31/8/2015
+Volta Grande, - , -
+Wenceslau Braz, - ,-
+PARÁ,,
+Belém, - ,
+Abaetetuba,1,3/6/2013
+Abel Figueiredo,1,11/4/2013
+Acará, - ,
+Afuá,1,21/3/2013
+Água Azul do Norte, - ,
+Alenquer,1,3/5/2013
+Almeirim, - ,
+Altamira,1,5/9/2013
+Anajás,1,3/5/2013
+Ananindeua,1,14/3/2013
+Anapu,1,7/7/2015
+Augusto Corrêa,1,17/9/2013
+Aurora do Pará, - ,
+Aveiro,1,16/5/2017
+Bagre, - ,
+Baião,1,11/4/2013
+Bannach, - ,
+Barcarena,1,3/5/2013
+Belterra, - ,
+Benevides,1,5/9/2013
+Bom Jesus do Tocantins, - ,
+Bonito, - ,
+Bragança,1,3/5/2013
+Brasil Novo,1,30/7/2014
+Brejo Grande do Araguaia, - ,
+Breu Branco,1,24/5/2017
+Breves,1,3/5/2013
+Bujaru,1,3/6/2013
+Cachoeira do Arari, - ,
+Cachoeira do  Piriá,1,3/5/2013
+Cametá,1,11/4/2013
+Canaã dos Carajás,1,20/11/2013
+Capanema,1,3/12/2013
+Capitão Poço, - ,
+Castanhal,1,7/7/2015
+Chaves,1,24/7/2013
+Colares,1,20/8/2013
+Conceição do Araguaia,1,16/5/2017
+Concórdia do Pará,1,31/8/2015
+Cumaru do Norte, - ,
+Curionópolis, - ,
+Curralinho,1,3/5/2013
+Curuá,1,3/5/2013
+Curuçá,1,17/9/2013
+Dom Eliseu, - ,
+Eldorado dos Carajás, - ,
+Faro,1,3/6/2013
+Floresta do Araguaia, - ,
+Garrafão do Norte, - ,
+Goianésia do Pará,1,6/9/2013
+Gurupá,1,3/5/2013
+Igarapé-Açu,1,19/9/2013
+Igarapé-Miri, - ,
+Inhangapi, - ,
+Ipixuna do Pará,1,3/6/2013
+Irituia, - ,
+Itaituba,1,11/4/2013
+Itupiranga, - ,
+Jacareacanga, - ,
+Jacundá, - ,
+Juruti,1,3/5/2013
+Limoeira do Ajuru, - ,
+Mãe do Rio,1,3/6/2013
+Magalhães Barata, - ,
+Marabá,1,30/7/2014
+Maracanã,1,3/5/2013
+Marapanim,1,3/12/2013
+Marituba, - ,
+Medicilândia,1,7/7/2015
+Melgaço,1,24/7/2013
+Mocajuba, - ,
+Moju, - ,
+Mojuí dos Campos,,
+Monte Alegre, - ,
+Muaná,1,3/5/2013
+Nova Esperança do Piriá,1,13/12/2013
+Nova Ipixuna, - ,
+Nova Timboteua,1,2/5/2016
+Novo Progresso,1,24/4/2015
+Novo Repartimento,1,21/8/2014
+Óbidos,1,3/5/2013
+Oeiras do Pará,1,9/10/2013
+Oriximiná,1,3/5/2013
+Ourém, - ,
+Ourilândia do Norte, - ,
+Pacajá,1,3/5/2013
+Palestina do Pará, - ,
+Paragominas,1,23/4/2013
+Parauapebas,1,16/10/2014
+Pau D'Arco,1,7/7/2015
+Peixe-Boi, - ,
+Piçarra, - ,
+Placas, - ,
+Ponta de Pedras,1,3/5/2013
+Portel,1,22/1/2013
+Porto de Moz,1,19/10/2015
+Prainha,1,30/10/2013
+Primavera,1,30/10/2013
+Quatipuru, - ,
+Redenção,1,23/4/2013
+Rio Maria,1,14/8/2013
+Rondon do Pará,1,27/7/2015
+Rurópolis, - ,
+Salinópolis,1,3/5/2013
+Salvaterra,1,27/7/2015
+Santa Bárbara do Pará, - ,
+Santa Cruz do Arari, - ,
+Santa Izabel do Pará,1,30/10/2013
+Santa Luzia do Pará, - ,
+Santa Maria das Barreiras, - ,
+Santa Maria do Pará, - ,
+Santana do Araguaia, - ,
+Santarém,1,12/9/2013
+Santarém Novo,1,12/9/2013
+Santo Antônio do Tauá, - ,
+São Caetano de Odivelas, - ,
+São Domingos do Araguaia, - ,
+São Domingos do Capim,1,23/2/2015
+São Félix do Xingu,1,3/5/2013
+São Francisco do Pará, - ,
+São Geraldo do Araguaia, - ,
+São João da Ponta,1,20/8/2013
+São João de Pirabas, - ,
+São João do Araguaia, - ,
+São Miguel do Guamá, - ,
+São Sebastião da Boa Vista,1,3/5/2013
+Sapucaia, - ,
+Senador José Porfírio,1,8/12/2017
+Soure,1,16/8/2013
+Tailândia,1,2/1/2013
+Terra Alta,1,13/11/2013
+Terra Santa,1,3/5/2013
+Tomé-Açu,1,21/3/2013
+Tracuateua,1,12/9/2013
+Trairão,1,24/4/2015
+Tucumã, - ,
+Tucuruí,1,3/6/2013
+Ulianópolis, - ,
+Uruará,1,16/9/2014
+Vigia,1,20/11/2014
+Viseu, - ,
+Vitória do Xingu,1,16/9/2014
+Xinguara,1,23/4/2013
+PARAÍBA, Sim ,18/4/2013
+João Pessoa,1,24/4/2013
+Água Branca,1,3/6/2013
+Aguiar,1,3/7/2014
+Alagoa Grande,1,19/10/2015
+Alagoa Nova, - , -
+Alagoinha, - , -
+Alcantil, - , -
+Algodão de Jandaíra, - , -
+Alhandra, - , -
+Amparo,1,18/7/2017
+Aparecida,1,19/4/2013
+Araçagi, - , -
+Arara, - , -
+Araruna, - , -
+Areia,1,13/12/2013
+Areia de Baraúnas, - , -
+Areial, - , -
+Aroeiras, - , -
+Assunção,1,26/2/2014
+Baía da Traição, - , -
+Bananeiras,1,18/5/2017
+Baraúna,1,23/1/2013
+Barra de Santa Rosa,1,30/7/2014
+Barra de Santana,1,4/2/2013
+Barra de São Miguel,1,7/7/2015
+Bayeux,1,13/12/2013
+Belém, - , -
+Belém do Brejo da Cruz , - , -
+Bernardino Batista,1,7/5/2014
+Boa Ventura, - , -
+Boa Vista, - , -
+Bom Jesus,1,22/7/2013
+Bom Sucesso, - , -
+Bonito de Santa Fé,1,19/4/2017
+Boqueirão, - , -
+Borborema, - , -
+Brejo do Cruz,1,4/2/2013
+Brejo dos Santos, - , -
+Caaporã, - , -
+Cabaceiras,1,21/2/2018
+Cabedelo,1,7/5/2014
+Cachoeira dos Índios,1,3/5/2013
+Cacimba de Areia, - , -
+Cacimba de Dentro, - , -
+Cacimbas, - , -
+Caiçara, - , -
+Cajazeiras,1,12/4/2013
+Cajazeirinhas, - , -
+Caldas Brandão,1,2/1/2013
+Camalaú,1,20/8/2013
+Campina Grande,1,7/8/2013
+Capim,1,17/9/2015
+Caraúbas,1,7/1/2015
+Carrapateira,1,29/7/2013
+Casserengue, - , -
+Catingueira,1,21/3/2013
+Catolé do Rocha, - , -
+Caturité, - , -
+Conceição,1,22/6/2017
+Condado,1,2/5/2017
+Conde, - , -
+Congo, - , -
+Coremas,1,24/4/2015
+Coxixola, - , -
+Cruz do Espírito Santo,1,25/11/2013
+Cubati, - , -
+Cuité,1,7/8/2013
+Cuité de Mamanguape, - , -
+Cuitegi, - , -
+Curral de Cima, - , -
+Curral Velho, - , -
+Damião, - , -
+Desterro, - , -
+Diamante, - , -
+Dona Inês, - , -
+Duas Estradas, - , -
+Emas, - , -
+Esperança,1,7/7/2015
+Fagundes, - , -
+Frei Martinho, - , -
+Gado Bravo, - , -
+Guarabira,1,18/6/2013
+Gurinhém, - , -
+Gurjão, - , -
+Ibiara, - , -
+Igaracy,1,8/2/2017
+Imaculada , - , -
+Ingá,1,14/12/2012
+Itabaiana,1,19/4/2013
+Itaporanga, - , -
+Itapororoca, - , -
+Itatuba,1,19/4/2013
+Jacaraú, - , -
+Jericó, - , -
+Joca Claudino,1,17/9/2015
+Juarez Távora,1,14/12/2012
+Juazeirinho, - , -
+Junco do Seridó, - , -
+Juripiranga,1,19/4/2013
+Juru,1,7/5/2014
+Lagoa, - , -
+Lagoa de Dentro,1,24/4/2015
+Lagoa Seca,1,23/1/2013
+Lastro, - , -
+Livramento, - , -
+Logradouro, - , -
+Lucena,1,15/1/2014
+Mãe D'Água,1,19/8/2013
+Malta, - , -
+Mamanguape, - , -
+Manaíra, - , -
+Marcação,1,4/2/2013
+Mari,1,25/11/2013
+Marizópolis,1,24/4/2015
+Massaranduba, - , -
+Mataraca, - , -
+Matinhas, - , -
+Mato Grosso, - , -
+Maturéia, - , -
+Mogeiro,1,19/4/2013
+Montadas, - , -
+Monte Horebe,1,19/8/2013
+Monteiro, - , -
+Mulungu, - , -
+Natuba, - , -
+Nazarezinho, - , -
+Nova Floresta,1,14/12/2012
+Nova Olinda, - , -
+Nova Palmeira,1,20/11/2014
+Olho D'Água,1,28/7/2017
+Olivedos,1,8/6/2017
+Ouro Velho,1,19/4/2013
+Parari, - , -
+Passagem, - , -
+Patos,1,7/8/2013
+Paulista, - , -
+Pedra Branca, - , -
+Pedra Lavrada,1,19/8/2013
+Pedras de Fogo,1,19/4/2013
+Pedro Régis, - , -
+Piancó, - , -
+Picuí, - , -
+Pilar,1,24/5/2017
+Pilões, - , -
+Pilõezinhos, - , -
+Pirpirituba, - , -
+Pitimbu, - , -
+Pocinhos,1,23/1/2013
+Poço Dantas,1,16/8/2013
+Poço de José de Moura,1,19/4/2013
+Pombal,1,30/7/2014
+Prata,1,1/3/2013
+Princesa Isabel, - , -
+Puxinanã,1,3/7/2014
+Queimadas, - , -
+Quixabá, - , -
+Remígio,1,23/2/2015
+Riachão, - , -
+Riachão do Bacamarte,1,14/12/2012
+Riachão do Poço, - , -
+Riacho de Santo Antônio, - , -
+Riacho dos Cavalos, - , -
+Rio Tinto,1,24/4/2015
+Salgadinho, - , -
+Salgado de São Félix,1,19/4/2013
+Santa Cecília de Umbuzeiro, - , -
+Santa Cruz, - , -
+Santa Helena,1,14/6/2013
+Santa Inês, - , -
+Santa Luzia,1,21/7/2014
+Santa Rita , - , -
+Santa Teresinha, - , -
+Santana de Mangueira, - , -
+Santana dos Garrotes, - , -
+Santo André, - , -
+São Bentinho, - , -
+São Bento,1,1/6/2017
+São Domingos, - , -
+São Domingos do Cariri, - , -
+São Francisco,1,3/5/2013
+São João do Cariri, - , -
+S'ao João do Rio do Peixe,1,29/7/2013
+São João do Tigre, - , -
+São José da Lagoa Tapada, - , -
+São José de Caiana, - , -
+São José de Espinharas , - , -
+São José de Piranhas, - , -
+São José de Princesa, - , -
+São José do Bonfim, - , -
+São José do Brejo do Cruz, - , -
+São José do Sabugi,1,3/12/2013
+São José dos Cordeiros, - , -
+São José dos Ramos,1,19/4/2013
+São Mamede, - , -
+São Miguel de Taipu,1,30/10/2013
+São Sebastião de Lagoa de Roça,1,21/8/2014
+São Sebastião do Umbuzeiro , - ,
+São Vicente do Seridó,1,7/5/2014
+Sapé, - ,
+Serra Branca, - , -
+Serra da Raiz, - , -
+Serra Grande,1,30/10/2013
+Serra Redonda,1,19/4/2013
+Serraria, - , -
+Sertãozinho, - , -
+Sobrado,1,16/9/2014
+Solânea,1,7/5/2014
+Soledade,1,27/7/2015
+Sossego, - , -
+Sousa,1,19/4/2013
+Sumé,1,23/2/2015
+Tacima,, -
+Taperoá, - , -
+Tavares,1,7/5/2014
+Teixeira, - , -
+Tenório , - , -
+Triunfo,1,12/9/2013
+Uiraúna,1,3/5/2013
+Umbuzeiro,1,2/10/2017
+Várzea, - , -
+Vieirópolis,1,3/12/2013
+Vista Serrana, - , -
+Zabelê,1,16/8/2013
+PARANÁ, Sim ,12/12/2012
+Curitiba,1,3/4/2014
+Abatiá,1,12/4/2013
+Adrianópolis, - ,
+Agudos do Sul, - ,
+Almirante Tamandaré,1,5/2/2014
+Altamira do Paraná, - ,
+Alto Paraíso, - ,
+Alto Paraná, - ,
+Alto Piquiri,1,18/4/2013
+Altônia,1,15/1/2014
+Alvorada do Sul, - ,
+Amaporã, - ,
+Ampére,1,27/7/2015
+Anahy, - ,
+Andirá, - ,
+Ângulo, - ,
+Antonina,1,7/1/2015
+Antônio Olinto, - ,
+Apucarana,1,7/7/2015
+Arapongas,1,30/7/2014
+Arapoti,1,14/8/2013
+Arapuã, - ,
+Araruna,1,3/7/2014
+Araucária,1,21/3/2013
+Ariranha do Ivaí, - ,
+Assaí,1,5/9/2013
+Assis Chateaubriand, - ,
+Astorga, - ,
+Atalaia,1,15/1/2014
+Balsa Nova, - ,
+Bandeirantes, - ,
+Barbosa Ferraz,1,30/7/2014
+Barra do Jacaré, - ,
+Barracão,1,27/7/2015
+Bela Vista da Caroba, - ,
+Bela Vista do Paraíso,1,12/8/2014
+Bituruna,1,19/10/2015
+Boa Esperança, - ,
+Boa Esperança do Iguaçu, - ,
+Boa Ventura de São Roque, - ,
+Boa Vista da Aparecida, - ,
+Bocaiúva do Sul, - ,
+Bom Jesus do Sul, - ,
+Bom Sucesso,1,30/7/2014
+Bom Sucesso do Sul, - ,
+Borrazópolis, - ,
+Braganey, - ,
+Brasilândia do Sul, - ,
+Cafeara,1,18/1/2013
+Cafelândia, - ,
+Cafezal do Sul, - ,
+Califórnia,1,24/8/2017
+Cambará,1,15/1/2014
+Cambé, - ,
+Cambira, - ,
+Campina da Lagoa, - ,
+Campina do Simão, - ,
+Campina Grande do Sul, - ,
+Campo Bonito, - ,
+Campo do Tenente, - ,
+Campo Largo,1,24/7/2013
+Campo Magro, - ,
+Campo Mourão,1,21/1/2013
+Cândido de Abreu, - ,
+Candói,1,17/9/2013
+Cantagalo, - ,
+Capanema, - ,
+Capitão Leônidas Marques, - ,
+Carambeí,1,25/1/2013
+Carlópolis, - ,
+Cascavel,1,12/4/2013
+Castro, - ,
+Catanduvas, - ,
+Centenário do Sul,1,20/8/2013
+Cerro Azul, - ,
+Céu Azul,1,31/5/2016
+Chopinzinho, - ,
+Cianorte ,1,13/10/2017
+Cidade Gaúcha, - ,
+Clevelândia,1,3/7/2014
+Colombo,1,21/6/2016
+Colorado,1,17/9/2013
+Congonhinhas, - ,
+Conselheiro Mairinck, - ,
+Contenda, - ,
+Corbélia, - ,
+Cornélio Procópio,1,20/11/2014
+Coronel Domingos Soares,1,27/10/2015
+Coronel Vivida, - ,
+Corumbataí do Sul,1,20/11/2014
+Cruz Machado, - ,
+Cruzeiro do Iguaçu, - ,
+Cruzeiro do Oeste,1,6/10/2017
+Cruzeiro do Sul, - ,
+Cruzmaltina, - ,
+Curiúva, - ,
+Diamante d'Oeste, - ,
+Diamante do Norte, - ,
+Diamante do Sul, - ,
+Dois Vizinhos,1,19/4/2017
+Douradina, - ,
+Doutor Camargo, - ,
+Doutor Ulysses,1,19/4/2017
+Enéas Marques, - ,
+Engenheiro Beltrão,1,15/1/2014
+Entre Rios do Oeste,1,3/4/2014
+Esperança Nova, - ,
+Espigão Alto do Iguaçu, - ,
+Farol, - ,
+Faxinal, - ,
+Fazenda Rio Grande,1,29/5/2015
+Fênix,1,16/10/2014
+Fernandes Pinheiro, - ,
+Figueira, - ,
+Flor da Serra do Sul,1,19/10/2015
+Floraí, - ,
+Floresta, - ,
+Florestópolis, - ,
+Flórida, - ,
+Formosa do Oeste, - ,
+Foz do Iguaçu,1,21/1/2013
+Foz do Jordão, - ,
+Francisco Alves, - ,
+Francisco Beltrão,1,24/5/2017
+General Carneiro, - ,
+Godoy Moreira, - ,
+Goioerê,1,20/11/2014
+Goioxim, - ,
+Grandes Rios, - ,
+Guaíra,1,15/1/2014
+Guairaçá, - ,
+Guamiranga, - ,
+Guapirama, - ,
+Guaporema, - ,
+Guaraci, - ,
+Guaraniaçu,1,7/5/2014
+Guarapuava,1,12/8/2014
+Guaraqueçaba, - ,
+Guaratuba, - ,
+Honório Serpa, - ,
+Ibaiti, - ,
+Ibema, - ,
+Ibiporã,1,28/3/2017
+Icaraíma , - ,
+Iguaraçu, - ,
+Iguatu, - ,
+Imbaú, - ,
+Imbituva, - ,
+Inácio Martins, - ,
+Inajá, - ,
+Indianópolis, - ,
+Ipiranga, - ,
+Iporã, - ,
+Iracema do Oeste,1,8/9/2017
+Irati,1,16/9/2014
+Iretama,1,16/10/2014
+Itaguajé,1,13/12/2013
+Itaipulândia, - ,
+Itambaracá, - ,
+Itambé, - ,
+Itapejara D'Oeste,1,19/10/2015
+Itaperuçu,1,12/2/2014
+Itaúna do Sul, - ,
+Ivaí, - ,
+Ivaiporã, - ,
+Ivaté, - ,
+Ivatuba, - ,
+Jaboti, - ,
+Jacarezinho,1,12/4/2013
+Jaguapitã, - ,
+Jaguariaíva,1,4/3/2013
+Jandaia do Sul, - ,
+Janiópolis,1,21/8/2014
+Japira, - ,
+Japurá,1,18/1/2013
+Jardim Alegre, - ,
+Jardim Olinda,1,12/2/2014
+Jataizinho, - ,
+Jesuítas, - ,
+Joaquim Távora, - ,
+Jundiaí do Sul, - ,
+Juranda,1,12/8/2014
+Jussara,1,18/1/2013
+Kaloré, - ,
+Lapa,1,19/9/2013
+Laranjal, - ,
+Laranjeiras do Sul, - ,
+Leópolis, - ,
+Lidianópolis, - ,
+Lindoeste, - ,
+Loanda, - ,
+Lobato, - ,
+Londrina,1,28/12/2012
+Luiziana,1,3/12/2013
+Lunardelli, - ,
+Lupionópolis,1,2/1/2014
+Mallet, - ,
+Mamborê,1,19/8/2013
+Mandaguaçu, - ,
+Mandaguari,1,29/5/2015
+Mandirituba, - ,
+Manfrinópolis, - ,
+Mangueirinha, - ,
+Manoel Ribas, - ,
+Marechal Cândido Rondon,1,25/1/2013
+Maria Helena,1,12/4/2013
+Marialva, - ,
+Marilândia do Sul, - ,
+Marilena, - ,
+Mariluz, - ,
+Maringá,1,30/7/2014
+Mariópolis, - ,
+Maripá,1,28/12/2012
+Marmeleiro, - ,
+Marquinho, - ,
+Marumbi, - ,
+Matelândia,1,12/2/2014
+Matinhos, - ,
+Mato Rico,1,7/7/2016
+Mauá da Serra, - ,
+Medianeira,1,2/5/2016
+Mercedes,1,15/1/2014
+Mirador, - ,
+Miraselva, - ,
+Missal,1,21/3/2013
+Moreira Sales, - ,
+Morretes, - ,
+Munhoz de Melo,1,25/11/2013
+Nossa Senhora das Graças, - ,
+Nova Aliança do Ivaí, - ,
+Nova América da Colina, - ,
+Nova Aurora, - ,
+Nova Cantu, - ,
+Nova Esperança,1,25/11/2013
+Nova Esperança do Sudoeste, - ,
+Nova Fátima, - ,
+Nova Laranjeiras, - ,
+Nova Londrina, - ,
+Nova Olímpia,1,21/1/2013
+Nova Prata do Iguaçu, - ,
+Nova Santa Bárbara, - ,
+Nova Santa Rosa,1,15/1/2014
+Nova Tebas, - ,
+Novo Itacolomi, - ,
+Ortigueira,1,7/7/2016
+Ourizona, - ,
+Ouro Verde do Oeste, - ,
+Paiçandu,1,17/10/2018
+Palmas,1,7/7/2015
+Palmeira, - ,
+Palmital, - ,
+Palotina,1,4/3/2013
+Paraíso do Norte,1,21/1/2013
+Paranacity,1,15/1/2014
+Paranaguá,1,30/7/2014
+Paranapoema, - ,
+Paranavaí,1,21/1/2013
+Pato Bragado , - ,
+Pato Branco,1,12/9/2013
+Paula Freitas,1,8/2/2017
+Paulo Frontin, - ,
+Peabiru,1,12/8/2014
+Perobal,1,12/4/2013
+Pérola , - ,
+Pérola D'Oeste,1,27/7/2015
+Piên, - ,
+Pinhais,1,21/3/2013
+Pinhal de São Bento, - ,
+Pinhalão, - ,
+Pinhão,1,24/9/2018
+Piraí do Sul,1,16/10/2014
+Piraquara,1,15/1/2014
+Pitanga,1,20/11/2014
+Pitangueiras,1,12/4/2013
+Planaltina do Paraná, - ,
+Planalto,1,24/5/2017
+Ponta Grossa,1,21/1/2013
+Pontal do Paraná,1,24/4/2015
+Porecatu,1,4/3/2013
+Porto Amazonas, - ,
+Porto Barreiro, - ,
+Porto Rico, - ,
+Porto Vitória, - ,
+Prado Ferreira, - ,
+Pranchita, - ,
+Presidente Castelo Branco, - ,
+Primeiro de Maio, - ,
+Prudentópolis,1,19/4/2017
+Quarto Centenário,1,27/7/2015
+Quatiguá, - ,
+Quatro Barras , - ,
+Quatro Pontes,1,9/10/2013
+Quedas do Iguaçu, - ,
+Querência do Norte, - ,
+Quinta do Sol, - ,
+Quitandinha, - ,
+Ramilândia, - ,
+Rancho Alegre, - ,
+Rancho Alegre D'Oeste, - ,
+Realeza, - ,
+Rebouças, - ,
+Renascença,1,17/9/2015
+Reserva, - ,
+Reserva do Iguaçu,1,2/1/2013
+Ribeirão Claro,1,12/4/2013
+Ribeirão do Pinhal, - ,
+Rio Azul, - ,
+Rio Bom, - ,
+Rio Bonito do Iguaçu,1,21/6/2016
+Rio Branco do Ivaí, - ,
+Rio Branco do Sul, - ,
+Rio Negro,1,3/12/2013
+Rolândia,1,4/3/2013
+Roncador, - ,
+Rondon,1,18/1/2013
+Rosário do Ivaí, - ,
+Sabáudia,1,25/1/2013
+Salgado Filho,1,12/12/2014
+Salto do Itararé, - ,
+Salto do Lontra, - ,
+Santa Amélia,1,24/6/2016
+Santa Cecília do Pavão, - ,
+Santa Cruz de Monte Castelo, - ,
+Santa Fé,1,24/8/2017
+Santa Helena,1,21/8/2014
+Santa Inês, - ,
+Santa Isabel do Ivaí, - ,
+Santa Izabel do Oeste, - ,
+Santa Lúcia, - ,
+Santa Maria do Oeste, - ,
+Santa Mariana,1,30/10/2013
+Santa Mônica, - ,
+Santa Tereza do Oeste, - ,
+Santa Terezinha de Itaipu,1,13/11/2013
+Santana do Itararé,1,7/11/2017
+Santo Antônio da Platina,1,3/4/2014
+Santo Antônio do Caiuá, - ,
+Santo Antônio do Paraíso, - ,
+Santo Antônio do Sudoeste,1,12/8/2014
+Santo Inácio,1,21/8/2014
+São Carlos do Ivaí, - ,
+São Jerônimo da Serra, - ,
+São João, - ,
+São João do Caiuá, - ,
+São João do Ivaí, - ,
+São João do Triunfo, - ,
+São Jorge D'Oeste, - ,
+São Jorge do Ivaí, - ,
+São Jorge do Patrocínio,1,30/7/2014
+São José da Boa Vista,1,15/1/2014
+São José das Palmeiras, - ,
+São José dos Pinhais,1,20/8/2013
+São Manoel do Paraná, - ,
+São Mateus do Sul,1,7/7/2015
+São Miguel do Iguaçu,1,28/12/2012
+São Pedro do Iguaçu, - ,
+São Pedro do Ivaí, - ,
+São Pedro do Paraná, - ,
+São Sebastião da Amoreira,1,20/9/2018
+São Tomé, - ,
+Sapopema,1,31/5/2016
+Sarandi, - ,
+Saudade do Iguaçu, - ,
+Sengés, - ,
+Serranópolis do Iguaçu, - ,
+Sertaneja,1,16/5/2017
+Sertanópolis,1,3/4/2014
+Siqueira Campos, - ,
+Sulina, - ,
+Tamarana, - ,
+Tamboara, - ,
+Tapejara, - ,
+Tapira,1,28/9/2015
+Teixeira Soares, - ,
+Telêmaco Borba,1,4/3/2013
+Terra Boa,1,12/8/2014
+Terra Rica,1,23/11/2017
+Terra Roxa,1,3/7/2014
+Tibagi,1,12/8/2014
+Tijucas do Sul, - ,
+Toledo,1,4/3/2013
+Tomazina, - ,
+Três Barras do Paraná, - ,
+Tunas do Paraná,1,27/7/2015
+Tuneiras do Oeste,1,12/4/2013
+Tupãssi, - ,
+Turvo, - ,
+Ubiratã,1,27/4/2017
+Umuarama,1,29/5/2015
+União da Vitória, - ,
+Uniflor,1,24/7/2013
+Uraí,1,3/12/2013
+Ventania,1,20/11/2014
+Vera Cruz do Oeste, - ,
+Verê,1,17/9/2015
+Virmond, - ,
+Vitorino, - ,
+Wenceslau Braz,1,12/4/2013
+Xambrê,1,30/7/2014
+PERNAMBUCO, Sim ,26/2/2014
+Recife,1,21/12/2016
+Abreu e Lima, - , -
+Afogados da Ingazeira, - , -
+Afrânio,1,26/12/2017
+Agrestina, - , -
+Água Preta , - , -
+Águas Belas,1,4/2/2013
+Alagoinha, - , -
+Aliança,1,27/4/2017
+Altinho, - , -
+Amaraji, - , -
+Angelim, - , -
+Araçoiaba,1,3/6/2013
+Araripina, - , -
+Arcoverde,1,3/12/2013
+Barra de Guabiraba, - , -
+Barreiros, - , -
+Belém de Maria, - , -
+Belém de São Francisco,1,14/8/2013
+Belo Jardim,1,4/4/2016
+Betânia, - , -
+Bezerros,1,18/7/2017
+Bodocó,1,31/8/2015
+Bom Conselho,1,7/11/2017
+Bom Jardim,1,15/1/2014
+Bonito, - , -
+Brejão,1,3/12/2013
+Brejinho , - , -
+Brejo da Madre de Deus,1,30/7/2014
+Buenos Aires, - , -
+Buíque, - , -
+Cabo de Santo Agostinho,1,23/2/2015
+Cabrobó , - , -
+Cachoeirinha, - , -
+Caetés,1,12/4/2013
+Calçado, - , -
+Calumbi, - , -
+Camaragibe,1,19/8/2016
+Camocim de São Félix,1,13/8/2018
+Camutanga,1,2/3/2017
+Canhotinho,1,29/7/2013
+Capoeiras,1,25/11/2013
+Carnaíba,1,7/5/2014
+Carnaubeira da Penha, - , -
+Carpina, - , -
+Caruaru,1,7/7/2015
+Casinhas, - , -
+Catende,1,7/7/2015
+Cedro, - , -
+Chã de Alegria, - , -
+Chã Grande, - , -
+Condado,1,29/8/2017
+Correntes, - , -
+Cortês, - , -
+Cumaru, - , -
+Cupira, - , -
+Custódia, - , -
+Dormentes, - , -
+Escada,1,25/11/2013
+Exu,1,4/12/2015
+Feira Nova,1,3/5/2013
+Fernando de Noronha, - , -
+Ferreiros,1,12/4/2013
+Flores , - , -
+Floresta, - , -
+Frei Miguelinho,1,21/2/2018
+Gameleira,1,2/10/2017
+Garanhuns,1,16/8/2013
+Glória do Goitá,1,19/4/2017
+Goiana,1,24/4/2015
+Granito,1,14/11/2013
+Gravatá,1,3/12/2013
+Iati, - , -
+Ibimirim, - , -
+Ibirajuba, - , -
+Igarassu,1,12/8/2014
+Iguaraci, - , -
+Ilha de Itamaracá,1,4/2/2013
+Inajá, - , -
+Ingazeira, - , -
+Ipojuca,1,7/8/2013
+Ipubi, - , -
+Itacuruba, - , -
+Itaíba,1,12/12/2014
+Itambé,1,3/7/2014
+Itapetim, - , -
+Itapissuma,1,5/2/2014
+Itaquitinga,1,4/11/2014
+Jaboatão dos Guararapes,1,12/4/2013
+Jaqueira , - , -
+Jataúba,1,13/10/2017
+Jatobá,1,3/12/2013
+João Alfredo, - , -
+Joaquim Nabuco,1,19/9/2013
+Jucati, - , -
+Jupi,1,5/2/2014
+Jurema, - , -
+Lagoa do Carro,1,30/6/2017
+Lagoa do Itaenga, - , -
+Lagoa do Ouro, - , -
+Lagoa dos Gatos, - , -
+Lagoa Grande,1,29/8/2017
+Lajedo, - , -
+Limoeiro,1,7/8/2013
+Macaparana, - , -
+Machados, - , -
+Manari,1,6/9/2013
+Maraial,1,17/10/2018
+Mirandiba, - , -
+Moreilândia, - , -
+Moreno, - , -
+Nazaré da Mata, - , -
+Olinda,1,23/1/2013
+Orobó,1,16/8/2013
+Orocó,1,3/12/2013
+Ouricuri, - , -
+Palmares,1,18/6/2013
+Palmeirina, - , -
+Panelas, - , -
+Paranatama , - , -
+Parnamirim, - , -
+Passira, - , -
+Paudalho, - , -
+Paulista,1,17/9/2015
+Pedra,1,14/11/2013
+Pesqueira,1,1/3/2013
+Petrolândia,1,12/1/2018
+Petrolina,1,12/4/2013
+Poção, - , -
+Pombos, - , -
+Primavera,1,23/2/2015
+Quipapá,1,21/8/2014
+Quixaba,1,21/7/2014
+Riacho das Almas, - , -
+Ribeirão,1,2/10/2017
+Rio Formoso, - , -
+Sairé, - , -
+Salgadinho,1,3/10/2017
+Salgueiro,1,16/10/2014
+Saloá, - , -
+Sanharó, - , -
+Santa Cruz, - , -
+Santa Cruz da Baixa Verde, - , -
+Santa Cruz do Capibaribe,1,30/6/2017
+Santa Filomena, - , -
+Santa Maria da Boa Vista,1,21/2/2018
+Santa Maria do Cambucá, - , -
+Santa Terezinha, - , -
+São Benedito do Sul,1,23/11/2017
+São Bento do Uma, - , -
+São Caitano, - , -
+São João, - , -
+São Joaquim do Monte, - , -
+São José da Coroa Grande,1,23/6/2017
+São José do Belmonte, - , -
+São José do Egito,1,12/12/2014
+São Lourenço da Mata,1,14/11/2013
+São Vicente Ferrer,1,7/5/2014
+Serra Talhada,1,15/1/2014
+Serrita, - , -
+Sertânia, - , -
+Sirinhaém, - , -
+Solidão, - , -
+Surubim,1,29/8/2017
+Tabira,1,18/6/2013
+Tacaimbó,1,24/1/2018
+Tacaratu, - , -
+Tamandaré, - , -
+Taquaritinga do Norte,1,7/8/2013
+Terezinha, - , -
+Terra Nova, - , -
+Timbaúba,1,1/3/2013
+Toritama,1,30/11/2017
+Tracunhaém, - , -
+Trindade, - , -
+Triunfo,1,16/8/2013
+Tupanatinga,1,28/12/2012
+Tuparetama,1,28/9/2015
+Venturosa,1,3/5/2013
+Verdejante,1,7/8/2013
+Vertente do Lério, - , -
+Vertentes, - , -
+Vicência,1,5/12/2014
+Vitória de Santo Antão,1,3/4/2014
+Xexéu, - , -
+PIAUÍ, Sim ,7/3/2013
+Teresina,1,4/12/2015
+Acauã, - , -
+Agricolândia, - , -
+Água Branca,1,3/5/2013
+Alagoinha do Piauí, - , -
+Alegrete do Piauí,1,12/2/2014
+Alto Longá, - , -
+Altos, - , -
+Alvorada do Gurguéia, - , -
+Amarante,1,26/12/2017
+Angical do Piauí, - , -
+Anísio de Abreu,1,15/1/2014
+Antônio Almeida,1,28/9/2015
+Aroazes, - , -
+Aroeiras do Itaim, - , -
+Arraial, - , -
+Assunção do Piauí, - , -
+Avelino Lopes, - , -
+Baixa Grande do Ribeiro, - ,
+Barra D´Alcântara, - , -
+Barras,1,19/4/2017
+Barreiras do Piauí, - , -
+Barro Duro, - , -
+Batalha, - , -
+Bela Vista do Piauí, - , -
+Belém do Piauí,1,7/5/2014
+Beneditinos,1,4/2/2013
+Bertolínia, - , -
+Betânia do Piauí, - , -
+Boa Hora,1,"  02/05/2017
+"
+Bocaina, - , -
+Bom Jesus, - , -
+Bom Princípio do Piauí, - , -
+Bonfim do Piauí, - , -
+Boqueirão do Piauí, - , -
+Brasileira,1,7/7/2015
+Brejo do Piauí,1,16/5/2017
+Buriti dos Lopes,1,3/12/2013
+Buriti dos Montes, - , -
+Cabeceiras do Piauí, - , -
+Cajazeiras do Piauí, - , -
+Cajueiro da Praia, - , -
+Caldeirão Grande do Piauí, - , -
+Campinas do Piauí,1,12/4/2013
+Campo Alegre do Fidalgo, - , -
+Campo Grande do Piauí,1,7/5/2014
+Campo Largo do Piauí,1,3/7/2014
+Campo Maior,1,8/6/2017
+Canavieira, - , -
+Canto do Buriti,1,2/1/2013
+Capitão de Campos, - , -
+Capitão Gervásio Oliveira,1,7/8/2013
+Caracol,1,3/6/2013
+Caraúbas do Piauí, - , -
+Caridade do Piauí, - , -
+Castelo do Piauí, - , -
+Caxingó, - , -
+Cocal, - , -
+Cocal de Telha,1,3/12/2013
+Cocal dos Alves, - , -
+Coivaras,1,2/5/2016
+Colônia do Gurguéia,1,19/4/2013
+Colônia do Piauí,1,24/9/2018
+Conceição do Canindé, - , -
+Coronel José Dias,1,3/7/2014
+Corrente,1,5/9/2013
+Cristalândia do Piauí, - , -
+Cristino Castro,1,8/12/2017
+Curimatá, - , -
+Currais, - , -
+Curral Novo do Piauí, - , -
+Curralinhos,1,3/5/2013
+Demerval Lobão,1,26/6/2018
+Dirceu Arcoverde, - , -
+Dom Expedito Lopes, - , -
+Dom Inocêncio,1,7/8/2013
+Domingos Mourão, - , -
+Elesbão Veloso, - , -
+Eliseu Martins,1,22/6/2017
+Esperantina, - , -
+Fartura do Piauí,1,3/7/2014
+Flores do Piauí, - , -
+Floresta do Piauí,1,7/8/2013
+Floriano,1,12/2/2014
+Francinópolis, - , -
+Francisco Ayres,1,31/8/2015
+Francisco Macedo,1,5/2/2014
+Francisco Santos, - , -
+Fronteiras, - , -
+Geminiano, - , -
+Gilbués, - , -
+Guadalupe, - , -
+Guaribas, - , -
+Hugo Napoleão, - , -
+Ilha Grande,1,19/4/2017
+Inhuma, - , -
+Ipiranga do Piauí,1,7/7/2015
+Isaías Coelho, - , -
+Itainópolis,1,16/10/2014
+Itaueira,1,4/6/2018
+Jacobina do Piauí, - , -
+Jaicós,1,16/5/2017
+Jardim do Mulato, - , -
+Jatobá do Piauí, - , -
+Jerumenha, - , -
+João Costa,1,19/4/2017
+Joaquim Pires, - , -
+Joca Marques, - , -
+José de Freitas, - , -
+Juazeiro do Piauí,1,16/8/2013
+Júlio Borges, - , -
+Jurema,1,7/8/2013
+Lagoa Alegre, - , -
+Lagoa de São Francisco, - , -
+Lagoa do Barro do Piauí,1,3/5/2013
+Lagoa do Piauí, - , -
+Lagoa do Sítio, - , -
+Lagoinha do Piauí, - , -
+Landri Sales,1,3/12/2013
+Luís Correia, - , -
+Luzilândia,1,28/7/2017
+Madeiro, - , -
+Manoel Emídio, - , -
+Marcolândia,1,21/8/2018
+Marcos Parente,1,14/11/2013
+Massapê do Piauí,1,16/10/2014
+Matias Olímpio, - , -
+Miguel  Alves, - , -
+Miguel Leão, - , -
+Milton Brandão, - , -
+Monsenhor Gil,1,16/8/2013
+Monsenhor Hipólito, - , -
+Monte Alegre do Piauí, - , -
+Morro Cabeça no Tempo, - , -
+Morro do Chapéu do Piauí, - , -
+Murici dos Portelas,1,16/8/2013
+Nazaré do Piauí, - , -
+Nazária,, -
+Nossa Senhora de  Nazaré,1,22/3/2017
+Nossa Senhora dos Remédios,1,14/11/2013
+Nova Santa Rita, - , -
+Novo Oriente do Piauí, - , -
+Novo Santo Antônio, - , -
+Oeiras,1,27/7/2015
+Olho D'Água do Piauí, - , -
+Padre Marcos,1,3/4/2014
+Paes Landim, - , -
+Pajeú do Piauí, - , -
+Palmeira do Piauí, - , -
+Palmeirais, - , -
+Paquetá, - , -
+Parnaguá, - , -
+Parnaíba,1,3/12/2013
+Passagem Franca do Piauí, - , -
+Patos do Piauí, - , -
+Pau D`Arco do Piauí, - , -
+Paulistana,1,25/11/2013
+Pavussu, - , -
+Pedro II,1,3/1/2018
+Pedro Laurentino,1,1/3/2013
+Picos,1,18/6/2013
+Pimenteiras,1,12/2/2014
+Pio IX,1,15/1/2014
+Piracuruca, - , -
+Piripiri, - , -
+Porto,1,7/8/2013
+Porto Alegre do Piaui, - , -
+Prata do Piaui, - , -
+Queimada Nova, - , -
+Redenção do Gurguéia, - , -
+Regeneração,1,3/12/2013
+Riacho Frio, - , -
+Ribeira do Piauí, - , -
+Ribeiro Gonçalves, - , -
+Rio Grande do Piauí, - , -
+Santa Cruz do Piaui,1,"  02/05/2017
+"
+Santa Cruz dos Milagres, - , -
+Santa Filomena, - , -
+Santa Luz, - , -
+Santa Rosa do Piaui, - , -
+Santana do Piauí, - , -
+Santo Antônio de Lisboa, - , -
+Santo Antônio dos Milagres, - , -
+Santo Inácio do Piauí, - , -
+São Braz do Piauí, - , -
+São Félix do Piauí, - , -
+São Francisco do Piauí, - , -
+São Francisco de Assis do Piauí,1,24/4/2015
+São Gonçalo do Gurguéia, - , -
+São Gonçalo do Piauí,1,3/12/2013
+São João da Canabrava, - , -
+São João da Fronteira, - , -
+São João da Serra, - , -
+São João da Varjota,1,27/7/2015
+São João do Arraial,1,31/5/2016
+São João do Piauí,1,15/1/2014
+São José do Divino, - , -
+São José do Peixe, - , -
+São José do Piauí, - , -
+São Julião,1,21/7/2014
+São Lourenço do Piauí,1,12/2/2014
+São Luis do Piauí, - , -
+São Miguel da Baixa Grande, - , -
+São Miguel do Fidalgo, - , -
+São Miguel do Tapuio, - , -
+São Pedro do Piauí,1,3/12/2013
+São Raimundo Nonato,1,7/5/2014
+Sebastião Barros, - , -
+Sebastião Leal, - , -
+Sigefredo Pacheco, - , -
+Simões, - , -
+Simplício Mendes, - , -
+Socorro do Piauí, - , -
+Sussuapara, - , -
+Tamboril do Piauí, - , -
+Tanque do Piauí, - , -
+União, - , -
+Uruçuí, - , -
+Valença do Piauí, - , -
+Várzea Branca,1,3/7/2014
+Várzea Grande, - , -
+Vera Mendes, - , -
+Vila Nova do Piauí,1,13/11/2013
+Wall Ferraz, - , -
+RIO DE JANEIRO, Sim ,7/5/2014
+Rio de Janeiro ,1,16/6/2017
+Angra dos Reis,1,24/4/2015
+Aperibé,1,5/9/2013
+Araruama,1,13/11/2013
+Areal,1,21/3/2013
+Armação dos Búzios,1,30/7/2014
+Arraial do Cabo,1,30/4/2018
+Barra do Piraí, - ,
+Barra Mansa,1,14/8/2013
+Belford Roxo,1,13/12/2013
+Bom Jardim,1,14/6/2013
+Bom Jesus do Itabapoana,1,2/10/2017
+Cabo Frio,1,2/1/2013
+Cachoeiras de Macacu, - ,
+Cambuci, - ,
+Campos dos Goyatacazes,1,20/8/2013
+Cantagalo,1,16/10/2014
+Carapebus, - ,
+Cardoso Moreira,1,21/3/2013
+Carmo,1,16/10/2014
+Casimiro de Abreu,1,12/2/2014
+Comendador Levy Gasparian,1,25/11/2013
+Conceição de Macabu,1,17/9/2013
+Cordeiro,1,28/12/2012
+Duas Barras ,1,28/7/2017
+Duque de Caxias,1,12/9/2016
+Engenheiro Paulo de Frontin, - ,
+Guapimirim,1,3/5/2013
+Iguaba Grande,1,27/10/2015
+Itaboraí,1,21/8/2014
+Itaguaí,1,12/12/2014
+Italva,1,12/12/2014
+Itaocara, - ,
+Itaperuna, - ,
+Itatiaia,1,1/3/2013
+Japeri,1,12/4/2013
+Laje do Muriaé,1,12/9/2013
+Macaé,1,14/12/2012
+Macuco,1,3/5/2013
+Magé,1,31/8/2015
+Mangaratiba,1,16/8/2013
+Maricá,1,21/3/2013
+Mendes,1,16/6/2017
+Mesquita,1,6/9/2013
+Miguel Pereira,1,24/6/2016
+Miracema,1,2/10/2017
+Natividade, - ,
+Nilópolis,1,6/9/2013
+Niterói,1,12/8/2014
+Nova Friburgo,1,19/9/2013
+Nova Iguaçu,1,22/1/2013
+Paracambi,1,23/6/2017
+Paraíba do Sul,1,22/1/2013
+Parati,1,20/11/2014
+Paty do Alferes, - ,
+Petrópolis,1,29/5/2015
+Pinheiral,1,9/10/2013
+Piraí,1,3/12/2013
+Porciúncula,1,24/8/2017
+Porto Real, - ,
+Quatis,1,3/12/2013
+Queimados, - ,
+Quissamã,1,14/8/2013
+Resende,1,3/6/2013
+Rio Bonito,1,16/4/2014
+Rio Claro, - ,
+Rio das Flores,1,3/5/2013
+Rio das Ostras,1,30/7/2014
+Santa Maria Madalena,1,28/12/2012
+Santo Antônio de Pádua,1,3/12/2013
+São Fidélis,1,26/10/2016
+São Francisco de Itabapoana, - ,
+São Gonçalo,1,3/6/2013
+São João da Barra,1,12/2/2014
+São João de Meriti,1,19/10/2015
+São José de Ubá,1,5/12/2014
+São José do Vale do Rio Preto,1,18/4/2013
+São Pedro da Aldeia,1,16/10/2014
+São Sebastião do Alto,1,16/8/2013
+Sapucaia,1,20/4/2018
+Saquarema,1,12/2/2014
+Seropédica, - ,
+Silva Jardim,1,5/12/2014
+Sumidouro, - ,
+Tanguá,1,31/5/2016
+Teresópolis,1,14/6/2013
+Trajano de Morais,1,16/8/2013
+Três Rios,1,28/12/2012
+Valença, - ,
+Varre-Sai, - ,
+Vassouras,1,14/12/2017
+Volta Redonda,1,2/1/2013
+RIO GRANDE DO NORTE, Sim ,7/3/2013
+Natal,1,24/4/2013
+Acari, - , -
+Açu, - , -
+Afonso Bezerra, - , -
+Água Nova, - , -
+Alexandria,1,7/5/2014
+Almino Afonso,1,24/5/2017
+Alto do Rodrigues, - , -
+Angicos,1,7/8/2013
+Antônio Martins , - , -
+Apodi, - , -
+Areia Branca, - , -
+Arês, - , -
+Augusto Severo/Campo Grande,1,12/12/2014
+Baía Formosa, - , -
+Baraúna, - , -
+Barcelona, - , -
+Bento Fernandes, - , -
+Bodó, - , -
+Bom Jesus,1,14/6/2013
+Brejinho,1,16/10/2014
+Caiçara do Norte,1,7/11/2017
+Caiçara do Rio do Vento, - , -
+Caicó, - , -
+Campo Redondo,1,18/5/2017
+Canguaretama,1,30/7/2014
+Caraúbas,1,14/6/2013
+Carnaúba dos Dantas,1,24/8/2017
+Carnaubais, - , -
+Ceará-Mirim, - , -
+Cerro Corá, - , -
+Coronel Ezequiel,1,18/6/2013
+Coronel João Pessoa, - , -
+Cruzeta, - , -
+Currais Novos,1,5/9/2013
+Doutor Severiano,1,14/6/2013
+Encanto, - , -
+Equador, - , -
+Espírito Santo,1,7/1/2015
+Extremoz,1,14/12/2012
+Felipe Guerra,1,8/6/2017
+Florânia,1,3/12/2013
+Fernando Pedroza, - , -
+Francisco Dantas,1,19/10/2015
+Frutuoso Gomes,1,3/5/2013
+Galinhos, - , -
+Goianinha,1,14/11/2013
+Governador Dix-Sept Rosado,1,22/3/2017
+Grossos, - , -
+Guamaré, - , -
+Ielmo Marinho, - , -
+Ipanguaçu,1,22/7/2013
+Ipueira,1,14/6/2013
+Itajá,1,1/3/2013
+Itaú,1,14/6/2013
+Jaçanã,1,18/6/2013
+Jandaíra, - , -
+Janduís,1,16/8/2013
+Januário Cicco, - , -
+Japi, - , -
+Jardim de Angicos,1,29/7/2013
+Jardim de Piranhas,1,14/6/2013
+Jardim do Seridó,1,19/9/2013
+João Câmara, - , -
+João Dias, - , -
+José da Penha,1,15/1/2014
+Jucurutu,1,19/9/2013
+Jundiá, - , -
+Lagoa D'Anta,1,3/5/2013
+Lagoa de Pedras,1,16/10/2014
+Lagoa de Velhos,1,5/12/2014
+Lagoa Nova, - , -
+Lagoa Salgada, - , -
+Lajes, - , -
+Lajes Pintadas, - , -
+Lucrécia,1,18/6/2013
+Luís Gomes,1,20/9/2017
+Macaíba,1,7/8/2013
+Macau, - , -
+Major Sales,1,4/2/2013
+Marcelino Vieira,1,20/7/2017
+Martins,1,18/6/2013
+Maxaranguape , - , -
+Messias Targino , - , -
+Montanhas,1,28/3/2017
+Monte Alegre,1,4/11/2014
+Monte das Gameleiras, - , -
+Mossoró,1,19/08/2013
+Nísia Floresta,1,19/9/2013
+Nova Cruz,1,12/2/2014
+Olho D'Água dos Borges,1,18/6/2013
+Ouro Branco,1,15/1/2014
+Paraná,1,3/4/2014
+Paraú, - , -
+Parazinho,1,15/1/2014
+Parelhas, - , -
+Parnamirim , - , -
+Passa e Fica, - , -
+Passagem,1,12/9/2013
+Patu,1,3/7/2014
+Pau dos Ferros,1,14/6/2013
+Pedra Grande, - , -
+Pedra Preta, - , -
+Pedro Avelino,1,12/9/2013
+Pedro Velho,1,12/4/2013
+Pendências,1,14/6/2013
+Pilões, - , -
+Poço Branco,1,18/7/2017
+Portalegre,1,9/10/2013
+Porto do Mangue,1,21/3/2018
+Pureza, - , -
+Rafael Fernandes, - , -
+Rafael Godeiro, - , -
+Riacho da Cruz,1,14/6/2013
+Riacho de Santana,1,3/7/2014
+Riachuelo, - , -
+Rio do Fogo, - , -
+Rodolfo Fernandes,1,14/6/2013
+Ruy Barbosa, - , -
+Santa Cruz,1,13/12/2013
+Santa Maria, - , -
+Santana do Matos,1,3/12/2013
+Santana do Seridó,1,21/3/2013
+Santo Antônio,1,19/4/2013
+São Bento do Norte,1,3/1/2018
+São Bento do Trairí, - , -
+São Fernando,1,7/8/2013
+São Francisco do Oeste,1,16/6/2017
+São Gonçalo do Amarante,1,3/5/2013
+São João do Sabugi,1,3/5/2013
+São José de Mipibu,1,19/4/2013
+São José do Campestre,1,3/6/2013
+São José do Seridó, - , -
+São Miguel,1,12/2/2014
+São Miguel do Gostoso,1,4/11/2014
+São Paulo do Potengi, - , -
+São Pedro,1,3/12/2013
+São Rafael, - , -
+São Tomé,1,1/3/2013
+São Vicente,1,16/10/2014
+Senador Elói de Souza, - , -
+Senador Georgino Avelino,1,7/8/2013
+Serra Caiada- antiga Presidente Jucelino,,
+Serra de São Bento, - , -
+Serra do Mel, - , -
+Serra Negra do Norte,1,3/12/2013
+Serrinha,1,3/5/2013
+Serrinha dos Pintos, - , -
+Severiano Melo,1,29/7/2013
+Sítio Novo,1,18/6/2013
+Taboleiro Grande, - , -
+Taipu, - , -
+Tangará,1,3/12/2013
+Tenente Ananias , - , -
+Tenente Laurentino Cruz,1,21/7/2014
+Tibau,1,2/10/2017
+Tibau do Sul,1,15/1/2014
+Timbaúba dos Batistas, - , -
+Touros, - , -
+Triunfo Potiguar,1,16/9/2014
+Umarizal,, -
+Upanema, - , -
+Várzea,1,15/1/2014
+Venha-Ver,1,3/5/2013
+Vera Cruz,1,21/7/2014
+Viçosa,1,5/2/2014
+Vila Flor, - , -
+RIO GRANDE DO SUL, Sim ,5/3/2013
+Porto Alegre,1,12/9/2013
+Aceguá, - ,
+Água Santa, - ,
+Agudo,1,3/12/2013
+Ajuricaba,1,28/12/2012
+Alecrim, - ,
+Alegrete,1,16/10/2014
+Alegria,1,30/7/2014
+Almirante Tamandaré do Sul,1,9/10/2013
+Alpestre,1,7/5/2014
+Alto Alegre, - ,
+Alto Feliz, - ,
+Alvorada,1,14/8/2013
+Amaral Ferrador, - ,
+Ametista do Sul, - ,
+André da Rocha,1,4/11/2014
+Anta Gorda,1,8/9/2017
+Antônio Prado,1,25/11/2013
+Arambaré, - ,
+Araricá,1,12/4/2013
+Aratiba, - ,
+Arroio do Meio,1,25/1/2013
+Arroio do Padre, - ,
+Arroio do Sal,1,25/11/2013
+Arroio do Tigre,1,24/7/2013
+Arroio dos Ratos,1,14/8/2013
+Arroio Grande,1,2/10/2015
+Arvorezinha, - ,
+Augusto Pestana, - ,
+Áurea, - ,
+Bagé,1,28/3/2017
+Balneário Pinhal,1,18/1/2013
+Barão,1,12/11/2015
+Barão de Cotegipe,1,30/7/2014
+Barão do Triunfo, - ,
+Barra do Guarita, - ,
+Barra do Quaraí, - ,
+Barra do Ribeiro, - ,
+Barra do Rio Azul, - ,
+Barra Funda, - ,
+Barracão,1,14/8/2013
+Barros Cassal, - ,
+Benjamin Constant do Sul, - ,
+Bento Gonçalves,1,25/1/2013
+Boa Vista das Missões,1,3/5/2013
+Boa Vista do Buricá,1,13/12/2013
+Boa Vista do Cadeado, - ,
+Boa Vista do Incra,1,17/9/2013
+Boa Vista do Sul,1,19/10/2015
+Bom Jesus,1,21/6/2016
+Bom Princípio, - ,
+Bom Progresso, - ,
+Bom Retiro do Sul,1,25/1/2013
+Boqueirão do Leão, - ,
+Bossoroca, - ,
+Bozano, - ,
+Braga,1,20/11/2014
+Brochier,1,4/11/2014
+Butiá,1,4/3/2013
+Caçapava do Sul,1,3/6/2013
+Cacequi, - ,
+Cachoeira do Sul,1,24/7/2013
+Cachoeirinha,1,20/8/2013
+Cacique Doble,1,12/8/2014
+Caibaté, - ,
+Caiçara, - ,
+Camaquã,1,5/9/2013
+Camargo, - ,
+Cambará do Sul,1,29/8/2017
+Campestre da Serra, - ,
+Campina das Missões, - ,
+Campinas do Sul, - ,
+Campo Bom,1,7/7/2015
+Campo Novo, - ,
+Campos Borges,1,28/9/2015
+Candelária, - ,
+Cândido Godói, - ,
+Candiota,1,24/5/2017
+Canela, - ,
+Canguçu, - ,
+Canoas,1,25/1/2013
+Canudos do Vale, - ,
+Capão Bonito do Sul, - ,
+Capão da Canoa,1,12/4/2013
+Capão do Cipó, - ,
+Capão do Leão, - ,
+Capela de Santana, - ,
+Capitão, - ,
+Capivari do Sul,1,3/5/2013
+Caraá, - ,
+Carazinho,1,5/2/2014
+Carlos Barbosa,1,27/7/2015
+Carlos Gomes, - ,
+Casca,1,13/12/2013
+Caseiros,1,25/1/2013
+Catuípe, - ,
+Caxias do Sul,1,20/8/2013
+Centenário, - ,
+Cerrito,1,13/10/2017
+Cerro Branco,1,3/6/2013
+Cerro Grande, - ,
+Cerro Grande do Sul, - ,
+Cerro Largo, - ,
+Chapada,1,16/10/2014
+Charqueadas,1,21/3/2013
+Charrua, - ,
+Chiapetta,1,27/7/2015
+Chuí, - ,
+Chuvisca, - ,
+Cidreira, - ,
+Ciríaco,1,21/3/2013
+Colinas, - ,
+Colorado, - ,
+Condor,1,17/9/2013
+Constantina,1,3/12/2013
+Coqueiro Baixo, - ,
+Coqueiros do Sul,1,12/2/2014
+Coronel Barros, - ,
+Coronel Bicaco,1,3/7/2014
+Coronel Pilar, - ,
+Cotiporã, - ,
+Coxilha, - ,
+Crissiumal, - ,
+Cristal, - ,
+Cristal do Sul, - ,
+Cruz Alta,1,1/6/2017
+Cruzaltense, - ,
+Cruzeiro do Sul,1,15/1/2014
+David Canabarro, - ,
+Derrubadas,1,21/2/2018
+Dezesseis de Novembro, - ,
+Dilermando de  Aguiar, - ,
+Dois Irmãos,1,25/1/2013
+Dois Irmãos das Missões, - ,
+Dois Lajeados, - ,
+Dom Feliciano,1,20/8/2013
+Dom Pedrito,1,25/1/2013
+Dom Pedro de Alcântara,1,29/5/2015
+Dona Francisca,1,13/10/2017
+Doutor Maurício Cardoso, - ,
+Doutor Ricardo,1,25/1/2013
+Eldorado do Sul,1,25/1/2013
+Encantado,1,17/9/2013
+Encruzilhada do Sul, - ,
+Engenho Velho, - ,
+Entre Rios do Sul, - ,
+Entre-Ijuis, - ,
+Erebango, - ,
+Erechim,1,21/3/2013
+Ernestina, - ,
+Erval Grande, - ,
+Erval Seco, - ,
+Esmeralda, - ,
+Esperança do Sul, - ,
+Espumoso,1,3/12/2013
+Estação, - ,
+Estância Velha,1,3/12/2013
+Esteio,1,18/4/2013
+Estrela ,1,24/5/2017
+Estrela Velha,1,16/10/2014
+Eugênio de Castro, - ,
+Fagundes Varela, - ,
+Farroupilha,1,21/8/2014
+Faxinal do  Soturno,1,21/6/2016
+Faxinalzinho, - ,
+Fazenda Vilanova, - ,
+Feliz, - ,
+Flores da Cunha, - ,
+Floriano Peixoto, - ,
+Fontoura Xavier, - ,
+Formigueiro, - ,
+Forquetinha, - ,
+Fortaleza dos Valos,1,21/3/2013
+Frederico Westphalen,1,13/12/2013
+Garibaldi,1,19/9/2013
+Garruchos, - ,
+Gaurama, - ,
+General Câmara,1,25/1/2013
+Gentil, - ,
+Getúlio Vargas,1,12/11/2015
+Giruá,1,19/9/2013
+Glorinha, - ,
+Gramado,1,6/9/2013
+Gramado dos Loureiros, - ,
+Gramado Xavier, - ,
+Gravataí,1,3/12/2013
+Guabiju,1,12/4/2013
+Guaíba,1,25/1/2013
+Guaporé,1,20/4/2017
+Guarani das Missões,1,17/9/2015
+Harmonia, - ,
+Herval,1,21/3/2013
+Herveiras, - ,
+Horizontina, - ,
+Hulha Negra,1,20/9/2018
+Humaitá,1,12/4/2013
+Ibarama,1,3/7/2014
+Ibiaçá, - ,
+Ibiraiaras, - ,
+Ibirapuitã, - ,
+Ibirubá,1,28/7/2017
+Igrejinha,1,6/9/2013
+Ijuí, - ,
+Ilópolis, - ,
+Imbé,1,25/1/2013
+Imigrante, - ,
+Independência, - ,
+Inhacorá, - ,
+Ipê,1,22/3/2017
+Ipiranga do Sul, - ,
+Iraí,1,15/1/2014
+Itaara, - ,
+Itacurubi, - ,
+Itapuca, - ,
+Itaqui,1,31/5/2016
+Itati, - ,
+Itatiba do Sul,1,13/11/2018
+Ivorá, - ,
+Ivoti,1,21/8/2014
+Jaboticaba, - ,
+Jacuizinho,1,19/9/2013
+Jacutinga,1,18/5/2017
+Jaguarão,1,16/9/2014
+Jaguari,1,6/9/2013
+Jaquirana, - ,
+Jari, - ,
+Jóia,1,27/10/2015
+Júlio de Castilhos,1,20/11/2014
+Lagoa Bonita do Sul, - ,
+Lagoa dos Três Cantos,1,16/8/2013
+Lagoa Vermelha,1,6/10/2017
+Lagoão,1,12/9/2013
+Lajeado,1,18/4/2013
+Lajeado do Bugre, - ,
+Lavras do Sul, - ,
+Liberato Salzano, - ,
+Lindolfo Collor, - ,
+Linha Nova, - ,
+Maçambara, - ,
+Machadinho,1,14/11/2013
+Mampituba,1,25/1/2013
+Manoel Viana, - ,
+Maquiné, - ,
+Maratá, - ,
+Marau,1,8/9/2017
+Marcelino Ramos, - ,
+Mariana Pimentel, - ,
+Mariano Moro, - ,
+Marques de Souza,1,18/1/2013
+Mata,1,30/4/2018
+Mato Castelhano, - ,
+Mato Leitão, - ,
+Mato Queimado ,1,19/8/2013
+Maximiliano de Almeida, - ,
+Minas do Leão, - ,
+Miraguaí, - ,
+Montauri, - ,
+Monte Alegre dos Campos, - ,
+Monte Belo do Sul, - ,
+Montenegro,1,25/11/2013
+Mormaço, - ,
+Morrinhos do Sul, - ,
+Morro Redondo, - ,
+Morro Reuter, - ,
+Mostardas,1,28/3/2017
+Muçum,1,2/1/2013
+Muitos Capões, - ,
+Muliterno,,
+Não-Me-Toque,1,4/3/2013
+Nicolau Vergueiro,,
+Nonoai, - ,
+Nova Alvorada, - ,
+Nova Araçá, - ,
+Nova Bassano,1,7/5/2014
+Nova Boa Vista, - ,
+Nova  Bréscia, - ,
+Nova Candelária, - ,
+Nova Esperança do Sul,1,6/9/2013
+Nova Hartz, - ,
+Nova Pádua, - ,
+Nova Palma,1,4/12/2015
+Nova Petrópolis,1,25/1/2013
+Nova Prata,1,3/12/2013
+Nova Ramada,1,21/3/2013
+Nova Roma do Sul,1,21/1/2013
+Nova Santa Rita,1,30/7/2014
+Novo Barreiro, - ,
+Novo Cabrais, - ,
+Novo Hamburgo,1,21/3/2013
+Novo Machado, - ,
+Novo Tiradentes, - ,
+Novo Xingu, - ,
+Osório,1,14/11/2013
+Paim Filho,1,28/12/2012
+Palmares do Sul,1,3/5/2013
+Palmeira das Missões, - ,
+Palmitinho, - ,
+Panambi,1,14/8/2013
+Pantano Grande,1,2/5/2016
+Paraí,1,9/10/2013
+Paraíso do Sul,1,16/6/2017
+Pareci Novo,1,16/10/2014
+Parobé,1,16/10/2014
+Passa Sete,1,18/1/2013
+Passo do Sobrado, - ,
+Passo Fundo,1,18/1/2013
+Paulo Bento,1,21/2/2018
+Paverama,1,12/4/2013
+Pedras Altas,1,23/2/2015
+Pedro Osório, - ,
+Pejuçara,1,19/8/2013
+Pelotas,1,30/7/2014
+Picada Café,1,18/1/2013
+Pinhal,1,14/8/2013
+Pinhal da Serra, - ,
+Pinhal Grande,1,30/10/2013
+Pinheirinho do Vale,1,7/11/2017
+Pinheiro Machado, - ,
+Pinto Bandeira,1,3/12/2013
+Pirapó, - ,
+Piratini, - ,
+Planalto,1,3/12/2013
+Poço das Antas,1,12/8/2014
+Pontão, - ,
+Ponte Preta,1,24/8/2017
+Portão,1,14/8/2013
+Porto Lucena,1,21/3/2013
+Porto Mauá, - ,
+Porto Vera Cruz, - ,
+Porto Xavier,1,3/4/2014
+Pouso Novo,1,16/10/2014
+Presidente Lucena,1,24/4/2015
+Progresso,1,14/8/2013
+Protásio Alves,1,12/9/2013
+Putinga, - ,
+Quaraí, - ,
+Quatro Irmãos, - ,
+Quevedos, - ,
+Quinze de Novembro,1,15/1/2014
+Redentora,1,21/7/2014
+Relvado,1,25/1/2013
+Restinga Seca,1,30/10/2013
+Rio dos Índios, - ,
+Rio Grande,1,25/1/2013
+Rio Pardo,1,24/8/2017
+Riozinho,1,16/10/2014
+Roca Sales,1,27/4/2017
+Rodeio Bonito,1,4/3/2013
+Rolador, - ,
+Rolante,1,25/1/2013
+Ronda Alta,1,12/4/2013
+Rondinha, - ,
+Roque Gonzales, - ,
+Rosário do Sul,1,3/5/2013
+Sagrada Família, - ,
+Saldanha Marinho,,
+Salto do Jacuí, - ,
+Salvador das Missões, - ,
+Salvador do Sul, - ,
+Sananduva,1,29/7/2013
+Santa Bárbara do Sul,1,25/1/2013
+Santa Cecília do Sul,1,28/9/2015
+Santa Clara do Sul,1,16/9/2014
+Santa Cruz do Sul,1,30/7/2014
+Santa Margarida do Sul, - ,
+Santa Maria,1,16/6/2017
+Santa Maria do Herval, - ,
+Santa Rosa,1,3/12/2013
+Santa Tereza, - ,
+Santa Vitória do Palmar,1,2/5/2017
+Santana da Boa Vista, - ,
+Santana do Livramento,1,18/1/2013
+Santiago,1,18/6/2013
+Santo Ângelo,1,14/8/2013
+Santo Antônio da Patrulha,1,25/1/2013
+Santo Antônio das Missões, - ,
+Santo Antônio do Palma,1,18/1/2013
+Santo Antônio do Planalto, - ,
+Santo Augusto,1,7/8/2013
+Santo Cristo, - ,
+Santo Expedito do Sul,1,12/2/2014
+São Borja,1,16/8/2013
+São Domingos do Sul, - ,
+São Francisco de Assis, - ,
+São Francisco de Paula,1,4/3/2013
+São Gabriel,1,3/7/2014
+São Jerônimo,1,23/2/2015
+São João da Urtiga, - ,
+São João do Polêsine,1,3/5/2013
+São Jorge,1,4/3/2013
+São José das Missões, - ,
+São José do Herval, - ,
+São José do Hortêncio, - ,
+São Jose do Inhacorá, - ,
+São José do Norte,1,21/12/2016
+São José do Ouro, - ,
+São José do Sul,1,30/7/2014
+São José dos Ausentes,1,8/2/2017
+São Leopoldo,1,15/1/2014
+São Lourenço do Sul, - ,
+São Luiz Gonzaga,1,21/6/2016
+São Marcos,1,18/1/2013
+São Martinho ,1,30/7/2014
+São Martinho da Serra, - ,
+São Miguel das Missões, - ,
+São Nicolau, - ,
+São Paulo das Missões,1,20/11/2014
+São Pedro da Serra,1,3/7/2014
+São Pedro das Missões, - ,
+São Pedro do Butiá, - ,
+São Pedro do Sul,1,14/11/2013
+São Sebastião do Caí,1,12/8/2014
+São Sepé,1,30/7/2014
+São Valentim, - ,
+São Valentim do Sul, - ,
+São Valério do Sul, - ,
+São Vendelino, - ,
+São Vicente do Sul,1,3/4/2014
+Sapiranga,1,20/9/2017
+Sapucaia do Sul,1,12/12/2014
+Sarandi,1,18/1/2013
+Seberi, - ,
+Sede Nova, - ,
+Segredo,1,16/8/2013
+Selbach,1,16/8/2013
+Senador Salgado Filho, - ,
+Sentinela do Sul, - ,
+Serafina Corrêa,1,13/11/2013
+Sério, - ,
+Sertão, - ,
+Sertão Santana, - ,
+Sete de Setembro, - ,
+Severiano de Almeida, - ,
+Silveira Martins, - ,
+Sinimbu, - ,
+Sobradinho,1,21/3/2013
+Soledade, - ,
+Tabaí, - ,
+Tapejara,1,21/7/2014
+Tapera,1,21/1/2013
+Tapes, - ,
+Taquara,1,13/8/2018
+Taquari,1,3/5/2013
+Taquaruçu do Sul, - ,
+Tavares,1,13/8/2018
+Tenente Portela, - ,
+Terra de Areia, - ,
+Teutônia,1,24/8/2017
+Tio Hugo,1,19/10/2015
+Tiradentes do Sul, - ,
+Toropi,1,20/9/2017
+Torres,1,16/9/2014
+Tramandaí,1,13/11/2013
+Travesseiro, - ,
+Três Arroios, - ,
+Três Cachoeiras, - ,
+Três Coroas,1,28/12/2012
+Três de Maio,1,7/5/2018
+Três Forquilhas, - ,
+Três Palmeiras, - ,
+Três Passos,1,25/1/2013
+Trindade do Sul, - ,
+Triunfo,1,16/8/2013
+Tucunduva,1,20/11/2014
+Tunas,1,7/5/2014
+Tupanci do Sul, - ,
+Tupanciretã, - ,
+Tupandi,1,12/11/2015
+Tuparendi, - ,
+Turuçu, - ,
+Ubiretama, - ,
+União da Serra, - ,
+Unistalda, - ,
+Uruguaiana,1,25/11/2013
+Vacaria,1,26/7/2016
+Vale do Sol, - ,
+Vale Real, - ,
+Vale Verde,1,8/12/2017
+Vanini, - ,
+Venâncio Aires,1,12/8/2014
+Vera Cruz,1,4/3/2013
+Veranópolis,1,23/6/2017
+Vespasiano Correa, - ,
+Viadutos, - ,
+Viamão,1,16/8/2013
+Vicente Dutra, - ,
+Victor Graeff, - ,
+Vila Flores,1,12/9/2013
+Vila Lângaro, - ,
+Vila Maria, - ,
+Vila Nova do Sul, - ,
+Vista Alegre,1,12/9/2013
+Vista Alegre do Prata,1,4/3/2013
+Vista Gaúcha, - ,
+Vitória das Missões, - ,
+Westfalia, - ,
+Xangri-lá,1,16/10/2014
+RONDÔNIA, Sim ,18/4/2013
+Porto Velho,1,3/5/2013
+Alta Floresta d'Oeste, - ,
+Alto Alegre dos Parecis, - ,
+Alto Paraíso, - ,
+Alvorada D'Oeste, - ,
+Ariquemes,1,22/1/2013
+Buritis,1,29/5/2015
+Cabixi, - ,
+Cacaulândia, - ,
+Cacoal,1,21/3/2013
+Campo Novo de Rondônia, - ,
+Candeias do Jamari,1,24/7/2013
+Castanheiras, - ,
+Cerejeiras, - ,
+Chupinguaia, - ,
+Colorado do Oeste, - ,
+Corumbiara, - ,
+Costa Marques, - ,
+Cujubim,1,24/4/2015
+Espigão  DOeste, - ,
+Governador Jorge Teixeira, - ,
+Guajará – Mirim,1,23/4/2013
+Itapuã do Oeste, - ,
+Jaru, - ,
+Ji-Paraná,1,27/7/2015
+Machadinho D'Oeste, - ,
+Ministro Andreazza, - ,
+Mirante da Serra, - ,
+Monte Negro,1,7/1/2015
+"Nova Brasilândia D""Oeste", - ,
+Nova Mamoré, - ,
+Nova União, - ,
+Novo Horizonte do Oeste, - ,
+Ouro Preto do Oeste , - ,
+Parecis, - ,
+Pimenta Bueno,1,9/10/2013
+Pimenteiras do Oeste, - ,
+Presidente Médici,1,23/4/2013
+Primavera de Rondônia, - ,
+Rio Crespo,1,7/7/2015
+Rolim de Moura,1,22/1/2013
+Santa Luzia D'Oeste, - ,
+São Felipe D'Oeste , - ,
+São Francisco do Guaporé, - ,
+São Miguel do Guaporé, - ,
+Seringueiras, - ,
+Teixeirópolis, - ,
+Theobroma, - ,
+Urupá, - ,
+Vale do Anari, - ,
+Vale do Paraiso, - ,
+Vilhena,1,23/4/2013
+RORAIMA, Sim ,18/4/2013
+Boa Vista,1,28/12/2012
+Alto Alegre,1,21/8/2014
+Amajari,1,14/8/2013
+Bonfim, - , -
+Cantá,1,20/8/2013
+Caracaraí, - , -
+Caroebe,1,20/8/2013
+Iracema,1,14/11/2013
+Mucajaí,1,22/1/2013
+Normandia,1,19/9/2013
+Pacaraima, - , -
+Rorainópolis, - , -
+São João da Baliza, - , -
+São Luiz , - , -
+Uiramutã,1,30/10/2013
+SANTA CATARINA, Sim ,7/3/2013
+Florianópolis,1,19/9/2013
+Abdon Batista,1,16/5/2017
+Abelardo Luz,1,13/12/2013
+Agrolândia,1,16/10/2014
+Agronômica,1,2/12/2015
+Água Doce,1,7/5/2014
+Águas de Chapecó,1,7/5/2014
+Águas Frias,1,19/4/2017
+Águas Mornas,1,20/9/2018
+Alfredo Wagner, - ,
+Alto Bela Vista,1,12/8/2014
+Anchieta,1,24/4/2015
+Angelina, - ,
+Anita Garibaldi,1,25/11/2013
+Anitápolis, - ,
+Antônio Carlos,1,30/7/2014
+Apiúna,1,26/2/2014
+Arabutã, - ,
+Araquari,1,21/3/2013
+Araranguá,1,5/9/2013
+Armazém, - ,
+Arroio Trinta, - ,
+Arvoredo,1,19/4/2017
+Ascurra,1,3/12/2013
+Atalanta,1,16/6/2017
+Aurora, - ,
+Balneario Arroio do  Silva,1,12/12/2014
+Balneario Barra do Sul,1,3/12/2013
+Balneário Camboriú,1,22/7/2013
+Balneário Piçarras,1,21/6/2016
+Balneário Rincão,1,21/8/2014
+Balneário Gaivota,1,24/4/2015
+Bandeirante, - ,
+Barra Bonita, - ,
+Barra Velha,1,17/9/2013
+Bela Vista do Toldo, - ,
+Belmonte, - ,
+Benedito Novo, - ,
+Biguaçu,1,12/4/2013
+Blumenau,1,21/1/2013
+Bocaina do Sul, - ,
+Bom Jardim da Serra,1,12/4/2013
+Bom Jesus , - ,
+Bom Jesus do Oeste,1,21/8/2014
+Bom Retiro,1,15/1/2014
+Bombinhas,1,17/9/2013
+Botuverá, - ,
+Braço do Norte,1,14/8/2013
+Braço do Trombudo,1,16/6/2017
+Brunópolis,1,7/5/2014
+Brusque,1,12/4/2013
+Caçador,1,28/12/2012
+Caibi,1,16/9/2014
+Calmon,1,12/8/2014
+Camboriú,1,14/11/2013
+Campo Alegre,1,14/12/2012
+Campo Belo do Sul,1,26/2/2014
+Campo Erê,1,24/7/2013
+Campos Novos,1,29/5/2015
+Canelinha,1,31/5/2016
+Canoinhas,1,3/12/2013
+Capão Alto, - ,
+Capinzal,1,7/5/2014
+Capivari de Baixo,1,12/8/2014
+Catanduvas,1,25/11/2013
+Caxambu do Sul,1,18/1/2013
+Celso Ramos, - ,
+Cerro Negro, - ,
+Chapadão do Lageado,1,17/9/2013
+Chapecó,1,21/3/2013
+Cocal do Sul,1,31/5/2016
+Concórdia,1,23/11/2017
+Cordilheira Alta, - ,
+Coronel Freitas,1,16/9/2014
+Coronel Martins,1,21/8/2014
+Correia Pinto,1,17/9/2013
+Corupá,1,2/1/2013
+Criciúma,1,12/4/2013
+Cunha Porã,1,31/8/2015
+Cunhataí,1,31/8/2015
+Curitibanos,1,16/9/2014
+Descanso,1,28/7/2017
+Dionísio Cerqueira,1,31/5/2016
+Dona Emma, - ,
+Doutor Pedrinho,1,12/12/2014
+Entre Rios, - ,
+Ermo,1,21/8/2014
+Erval Velho,1,7/7/2015
+Faxinal dos Guedes,1,18/1/2013
+Flor do Sertão,1,12/11/2015
+Formosa do Sul,1,18/1/2013
+Forquilhinha,1,21/3/2013
+Fraiburgo,1,2/12/2015
+Frei Rogério,1,15/1/2014
+Galvão,1,16/9/2014
+Garopaba,1,15/1/2014
+Garuva,1,24/9/2018
+Gaspar,1,6/9/2013
+Governador Celso Ramos,1,3/7/2018
+Grão Pará, - ,
+Gravatal,1,19/9/2013
+Guabiruba,1,25/11/2013
+Guaraciaba,1,12/8/2014
+Guaramirim,1,4/11/2014
+Guarujá do Sul,1,26/6/2018
+Guatambú,1,3/12/2013
+Herval D'Oeste,1,21/3/2013
+Ibiam , - ,
+Ibicaré, - ,
+Ibirama,1,14/6/2013
+Içara,1,4/3/2013
+Ilhota,1,3/12/2013
+Imaruí, - ,
+Imbituba,1,20/8/2013
+Imbuia, - ,
+Indaial,1,18/1/2013
+Iomerê,1,21/8/2014
+Ipira,1,14/6/2013
+Iporã do Oeste,1,21/8/2014
+Ipuaçu,1,6/9/2013
+Ipumirim,1,21/8/2014
+Iraceminha,1,2/5/2017
+Irani,1,16/10/2014
+Irati,1,12/8/2014
+Irineópolis, - ,
+Itá,1,18/6/2013
+Itaiópolis,1,19/9/2013
+Itajaí,1,30/7/2014
+Itapema,1,15/1/2014
+Itapiranga,1,16/10/2014
+Itapoá,1,12/8/2014
+Ituporanga,1,3/5/2013
+Jaborá,1,30/7/2014
+Jacinto Machado,1,30/7/2014
+Jaguaruna,1,16/9/2014
+Jaraguá do Sul,1,7/7/2015
+Jardinópolis,1,30/7/2014
+Joaçaba,1,14/11/2013
+Joinville,1,18/1/2013
+José Boiteux,1,13/8/2018
+Jupiá,1,16/9/2014
+Lacerdópolis,1,21/7/2014
+Lages,1,12/9/2013
+Laguna,1,16/9/2014
+Lajeado Grande,1,18/1/2013
+Laurentino,1,13/8/2018
+Lauro Muller,1,16/10/2014
+Lebon Régis, - ,
+Leoberto Leal,1,31/5/2016
+Lindóia do Sul, - ,
+Lontras,1,30/4/2018
+Luiz Alves, - ,
+Luzerna,1,14/6/2013
+Macieira,1,25/1/2013
+Mafra,1,19/9/2013
+Major Gercino, - ,
+Major Vieira, - ,
+Maracajá,1,21/1/2013
+Maravilha,1,13/12/2013
+Marema,1,19/8/2013
+Massaranduba,1,24/4/2015
+Matos Costa, - ,
+Meleiro,1,5/2/2014
+Mirim Doce,1,16/5/2017
+Modelo,1,27/7/2015
+Mondaí, - ,
+Monte Carlo, - ,
+Monte Castelo,1,14/11/2013
+Morro da Fumaça, - ,
+Morro Grande, - ,
+Navegantes,1,21/3/2013
+Nova Erechim,1,18/1/2013
+Nova Itaberaba,1,21/8/2014
+Nova Trento,1,16/5/2017
+Nova Veneza,1,27/7/2015
+Novo Horizonte,1,21/1/2013
+Orleans,1,18/1/2013
+Otacílio Costa,1,3/12/2013
+Ouro,1,9/10/2013
+Ouro Verde,1,18/1/2013
+Paial,1,30/11/2018
+Painel, - ,
+Palhoça,1,16/10/2014
+Palma Sola,1,4/4/2018
+Palmeira, - ,
+Palmitos,1,18/1/2013
+Papanduva, - ,
+Paraíso, - ,
+Passo de Torres,1,13/12/2013
+Passos Maia,1,21/1/2013
+Paulo Lopes, - ,
+Pedras Grandes, - ,
+Penha, - ,
+Peritiba,1,25/11/2013
+Pescaria Brava,1,16/10/2014
+Petrolândia,1,15/1/2014
+Pinhalzinho,1,7/7/2015
+Pinheiro Preto,1,5/2/2014
+Piratuba,1,21/3/2013
+Planalto Alegre,1,20/11/2014
+Pomerode,1,9/10/2013
+Ponte Alta, - ,
+Ponte Alta do Norte, - ,
+Ponte Serrada,1,21/1/2013
+Porto Belo,1,26/2/2014
+Porto União,1,5/2/2014
+Pouso Redondo,1,3/4/2014
+Praia Grande,1,3/4/2014
+Presidente Castello Branco,1,12/4/2013
+Presidente Getúlio,1,31/8/2015
+Presidente Nereu,1,3/12/2013
+Princesa, - ,
+Quilombo,1,16/8/2013
+Rancho Queimado,1,22/3/2017
+Rio das Antas, - ,
+Rio do Campo,1,30/7/2014
+Rio do Oeste,1,12/4/2013
+Rio do Sul,1,18/4/2013
+Rio dos Cedros, - ,
+Rio Fortuna,1,25/1/2013
+Rio Negrinho,1,14/8/2013
+Rio Rufino,1,18/4/2013
+Riqueza,1,16/8/2013
+Rodeio,1,7/5/2014
+Romelândia, - ,
+Salete,1,21/8/2018
+Saltinho,1,3/12/2013
+Salto Veloso,1,12/9/2013
+Sangão,1,14/11/2013
+Santa Cecília, - ,
+Santa Helena, - ,
+Santa Rosa de Lima ,1,2/10/2017
+Santa Rosa do Sul,1,15/1/2014
+Santa Terezinha, - ,
+Santa Terezinha do Progresso,1,7/7/2015
+Santiago do Sul,1,16/6/2017
+Santo Amaro da Imperatriz,1,24/4/2015
+São Bento do Sul ,1,16/8/2013
+São Bernardino, - ,
+São Bonifácio,1,24/9/2018
+São Carlos,1,21/1/2013
+São Cristovão do Sul,1,16/10/2014
+São Domingos ,1,16/6/2017
+São Francisco do Sul,1,21/3/2013
+São João Batista,1,3/10/2017
+São João do Itaperiú,1,3/12/2013
+São João do Oeste,1,13/12/2013
+São João do Sul , - ,
+São Joaquim, - ,
+São José,1,3/6/2013
+São José do Cedro, - ,
+São José do Cerrito,1,20/8/2013
+São Lourenço do Oeste,1,4/3/2013
+São Ludgero,1,25/1/2013
+São Martinho, - ,
+São Miguel da Boa Vista,1,27/7/2015
+São Miguel do Oeste,1,23/2/2015
+São Pedro de Alcântara,1,7/11/2017
+Saudades,1,20/11/2014
+Schroeder,1,3/12/2013
+Seara,1,21/1/2013
+Serra Alta,1,3/4/2014
+Siderópolis, - ,
+Sombrio,1,16/6/2017
+Sul Brasil,1,4/3/2013
+Taió,1,18/5/2017
+Tangará , - ,
+Tigrinhos,1,26/2/2014
+Tijucas,1,12/8/2014
+Timbé do Sul,1,19/4/2017
+Timbó,1,3/12/2013
+Timbó Grande,1,3/5/2013
+Três Barras, - ,
+Treviso,1,12/4/2013
+Treze de Maio, - ,
+Treze Tílias,1,30/10/2013
+Trombudo Central,1,22/6/2017
+Tubarão,1,21/8/2014
+Tunápolis, - ,
+Turvo,1,3/7/2014
+União do Oeste,1,12/11/2015
+Urubici, - ,
+Urupema,1,27/7/2015
+Urussanga, - ,
+Vargeão,1,18/1/2013
+Vargem, - ,
+Vargem Bonita,1,7/7/2015
+Vidal Ramos,1,3/12/2013
+Videira, - ,
+Vitor Meireles,1,2/12/2015
+Witmarsum,1,8/9/2017
+Xanxerê,1,18/1/2013
+Xavantina,1,21/3/2013
+Xaxim,1,4/3/2013
+Zortéa,1,21/8/2014
+SÃO PAULO, Sim ,7/11/2013
+São Paulo,1,27/8/2015
+Adamantina,1,23/1/2013
+Adolfo, - , -
+Aguaí, - , -
+Águas da Prata, - ,
+Águas de Lindóia,1,16/6/2017
+Águas de Santa Bárbara, - , -
+Águas de São Pedro, - , -
+Agudos,1,21/3/2013
+Alambari, - , -
+Alfredo Marcondes, - , -
+Altair, - , -
+Altinópolis, - , -
+Alto Alegre, - , -
+Alumínio, - , -
+Álvares Florence, - , -
+Álvares Machado, - , -
+Álvaro de Carvalho,1,28/3/2017
+Alvinlândia, - , -
+Americana, - , -
+Américo Brasiliense, - , -
+Américo de Campos, - , -
+Amparo,1,3/4/2014
+Analândia, - , -
+Andradina,1,4/11/2014
+Angatuba, - , -
+Anhembi, - , -
+Anhumas,1,30/7/2014
+Aparecida,1,2/12/2015
+Aparecida D'Oeste, - , -
+Apiaí,1,24/5/2017
+Araçariguama,1,2/12/2015
+Araçatuba,1,28/12/2012
+Araçoiaba da Serra,1,3/6/2013
+Aramina, - , -
+Arandu, - , -
+Arapeí,1,17/9/2013
+Araraquara,1,21/3/2013
+Araras, - , -
+Arco-Íris, - , -
+Arealva, - , -
+Areias, - , -
+Areiópolis, - , -
+Ariranha, - , -
+Artur Nogueira, - , -
+Arujá,1,18/4/2013
+Aspásia, - , -
+Assis,1,29/2/2016
+Atibaia,1,7/11/2017
+Auriflama, - , -
+Avaí, - , -
+Avanhandava, - , -
+Avaré,1,4/11/2014
+Bady Bassitt, - , -
+Balbinos, - , -
+Bálsamo, - , -
+Bananal,1,5/9/2013
+Barão de Antonina, - , -
+Barbosa, - , -
+Bariri,1,24/5/2017
+Barra Bonita, - , -
+Barra do Chapéu,1,16/5/2017
+Barra do Turvo,1,2/5/2017
+Barretos,1,13/12/2013
+Barrinha, - , -
+Barueri,1,16/10/2014
+Bastos,1,6/10/2017
+Batatais,1,21/8/2014
+Bauru,1,12/2/2014
+Bebedouro, - , -
+Bento de Abreu,1,13/10/2017
+Bernardino de Campos, - , -
+Bertioga,1,2/1/2013
+Bilac, - , -
+Birigui,1,15/1/2014
+Biritiba-Mirim, - , -
+Boa Esperança do Sul, - , -
+Bocaina, - , -
+Bofete, - , -
+Boituva,1,31/8/2015
+Bom Jesus dos Perdões, - , -
+Bom Sucesso de Itararé,1,3/12/2013
+Borá,1,8/6/2017
+Boracéia, - , -
+Borborema, - , -
+Borebi, - , -
+Botucatu,1,24/4/2015
+Bragança Paulista,1,26/2/2014
+Braúna,1,26/2/2014
+Brejo Alegre, - , -
+Brodowski,1,5/9/2013
+Brotas, - , -
+Buri, - , -
+Buritama,1,21/3/2013
+Buritizal, - , -
+Cabrália Paulista, - , -
+Cabreúva,1,21/3/2013
+Caçapava, - , -
+Cachoeira Paulista, - , -
+Caconde, - , -
+Cafelândia, - , -
+Caiabu, - , -
+Caieiras,1,12/2/2014
+Caiuá, - , -
+Cajamar,1,2/1/2013
+Cajati,1,20/11/2014
+Cajobi, - , -
+Cajuru, - , -
+Campina do Monte Alegre, - , -
+Campinas,1,24/4/2013
+Campo Limpo Paulista,1,5/9/2013
+Campos do Jordão,1,2/1/2013
+Campos Novos Paulista, - , -
+Cananéia,1,18/4/2013
+Canas, - , -
+Cândido Mota, - , -
+Cândido Rodrigues, - , -
+Canitar,1,25/11/2013
+Capão Bonito , - , -
+Capela do Alto, - , -
+Capivari,1,18/4/2013
+Caraguatatuba,1,7/7/2015
+Carapicuíba,1,25/11/2013
+Cardoso, - , -
+Casa Branca,1,21/8/2014
+Cássia dos Coqueiros, - , -
+Castilho, - , -
+Catanduva,1,21/3/2013
+Catiguá, - , -
+Cedral, - , -
+Cerqueira César,1,2/5/2017
+Cerquilho, - ,
+Cesário Lange,1,8/6/2017
+Charqueada, - , -
+Chavantes, - , -
+Clementina, - , -
+Colina,1,21/3/2013
+Colômbia, - , -
+Conchal, - , -
+Conchas, - , -
+Cordeirópolis,1,24/7/2013
+Coroados, - , -
+Coronel Macedo, - , -
+Corumbataí, - , -
+Cosmópolis,1,7/5/2014
+Cosmorama,1,5/9/2013
+Cotia,1,21/3/2013
+Cravinhos, - , -
+Cristais Paulista, - , -
+Cruzália, - , -
+Cruzeiro ,1,8/9/2017
+Cubatão,1,11/4/2013
+Cunha, - , -
+Descalvado, - , -
+Diadema,1,26/2/2014
+Dirce Reis, - , -
+Divinolândia, - , -
+Dobrada, - , -
+Dois Córregos, - , -
+Dolcinópolis, - , -
+Dourado, - , -
+Dracena, - , -
+Duartina,1,23/8/2018
+Dumont, - , -
+Echaporã,1,13/12/2013
+Eldorado, - , -
+Elias Fausto, - , -
+Elisiário, - , -
+Embaúba, - , -
+Embu das Artes, - , -
+Embu-Guaçu,1,3/12/2013
+Emilianópolis, - , -
+Engenheiro Coelho, - , -
+Espírito Santo do Pinhal,1,16/10/2014
+Espírito Santo do Turvo, - , -
+Estiva Gerbi, - , -
+Estrela D'Oeste, - , -
+Estrela do Norte,1,7/7/2015
+Euclides da Cunha Paulista, - , -
+Fartura, - , -
+Fernando Prestes, - , -
+Fernandópolis , - , -
+Fernão, - , -
+Ferraz de Vasconcelos,1,21/8/2014
+Flora Rica, - , -
+Floreal, - , -
+Florínia,1,11/4/2013
+Flórida Paulista,1,3/12/2013
+Franca, - , -
+Francisco Morato,1,24/1/2018
+Franco da Rocha,1,24/4/2015
+Gabriel Monteiro, - , -
+Gália, - , -
+Garça,1,28/12/2012
+Gastão Vidigal, - , -
+Gavião Peixoto, - , -
+General Salgado, - , -
+Getulina,1,28/12/2012
+Glicério,1,3/12/2013
+Guaiçara, - , -
+Guaimbê, - , -
+Guaíra, - , -
+Guapiaçu, - , -
+Guapiara, - , -
+Guará, - , -
+Guaraçaí,1,25/11/2013
+Guaraci, - , -
+Guarani D'Oeste, - , -
+Guarantã, - , -
+Guararapes, - , -
+Guararema,1,21/3/2013
+Guaratinguetá,1,27/4/2017
+Guareí,1,3/12/2013
+Guariba,1,21/8/2014
+Guarujá,1,6/9/2013
+Guarulhos,1,21/6/2016
+Guatapará, - , -
+Guzolândia, - , -
+Herculândia, - , -
+Holambra, - , -
+Hortolândia,1,31/1/2013
+Iacanga, - , -
+Iacri, - , -
+Iaras, - , -
+Ibaté, - , -
+Ibirá, - , -
+Ibirarema,1,30/6/2017
+Ibitinga, - , -
+Ibiúna,1,18/7/2017
+Icém, - , -
+Iepê, - , -
+Igaraçu do Tietê, - , -
+Igarapava, - , -
+Igaratá, - , -
+Iguape,1,2/1/2013
+Ilha Comprida,1,2/12/2015
+Ilha Solteira,1,12/12/2014
+Ilhabela,1,21/3/2013
+Indaiatuba, - , -
+Indiana, - , -
+Indiaporã, - , -
+Inúbia Paulista, - , -
+Ipaussu,1,30/7/2014
+Iperó, - , -
+Ipeúna, - , -
+Ipiguá, - , -
+Iporanga,1,25/11/2013
+Ipuã,1,4/10/2018
+Iracemápolis, - , -
+Irapuã, - , -
+Irapuru, - , -
+Itaberá, - , -
+Itaí, - , -
+Itajobi, - , -
+Itaju, - , -
+Itanhaém,1,6/9/2013
+Itaóca,1,18/5/2017
+Itapecerica da Serra,1,2/5/2016
+Itapetininga,1,28/9/2015
+Itapeva,1,12/8/2014
+Itapevi,1,2/1/2013
+Itapira,1,20/11/2014
+Itapirapuã Paulista, - , -
+Itápolis, - , -
+Itaporanga, - , -
+Itapuí,1,24/4/2015
+Itapura,1,16/10/2014
+Itaquaquecetuba, - , -
+Itararé,1,16/10/2014
+Itariri,1,4/11/2014
+Itatiba, - , -
+Itatinga,1,3/12/2013
+Itirapina, - , -
+Itirapuã, - , -
+Itobi, - , -
+Itu,1,19/9/2013
+Itupeva,1,31/1/2013
+Ituverava,1,12/2/2014
+Jaborandi, - , -
+Jaboticabal, - , -
+Jacareí,1,13/11/2013
+Jaci, - , -
+Jacupiranga,1,29/5/2015
+Jaguariúna,1,3/7/2014
+Jales, - , -
+Jambeiro,1,12/8/2014
+Jandira,1,3/12/2013
+Jardinópolis,1,21/3/2013
+Jarinu, - , -
+Jaú,1,4/11/2014
+Jeriquara, - , -
+Joanópolis,1,11/4/2013
+João Ramalho, - , -
+José Bonifácio, - , -
+Júlio Mesquita,1,19/11/2012
+Jumirim, - , -
+Jundiaí,1,24/5/2017
+Junqueirópolis, - , -
+Juquiá,1,3/12/2013
+Juquitiba, - , -
+Lagoinha, - , -
+Laranjal Paulista, - , -
+Lavínia, - , -
+Lavrinhas, - , -
+Leme,1,3/12/2013
+Lençóis Paulista, - , -
+Limeira,1,19/9/2013
+Lindóia, - , -
+Lins,1,7/5/2014
+Lorena, - , -
+Lourdes, - , -
+Louveira, - , -
+Lucélia, - , -
+Lucianópolis, - , -
+Luis Antônio,1,24/4/2015
+Luiziânia, - , -
+Lupércio, - , -
+Lutécia,1,3/12/2013
+Macatuba, - , -
+Macaubal,1,3/10/2017
+Macedônia, - , -
+Magda, - , -
+Mairinque,1,6/9/2013
+Mairiporã,1,7/7/2015
+Manduri, - , -
+Marabá Paulista, - , -
+Maracaí, - , -
+Marapoama, - , -
+Mariápolis, - , -
+Marília,1,3/12/2013
+Marinópolis, - , -
+Martinópolis,1,19/9/2013
+Matão, - , -
+Mauá,1,19/8/2013
+Mendonça, - , -
+Meridiano, - , -
+Mesópolis, - , -
+Miguelópolis,1,28/12/2012
+Mineiros do Tietê, - , -
+Mira Estrela, - , -
+Miracatu, - , -
+Mirandópolis,1,16/9/2014
+Mirante do Paranapanema, - , -
+Mirassol  , - , -
+Mirassolândia,1,6/9/2013
+Mococa,1,16/10/2014
+Mogi das Cruzes,1,3/5/2013
+Mogi Guaçu,1,30/7/2014
+Mogi Mirim,1,24/8/2017
+Mombuca, - , -
+Monções, - , -
+Mongaguá,1,30/7/2014
+Monte Alegre do Sul, - , -
+Monte Alto, - , -
+Monte Aprazível, - , -
+Monte Azul Paulista, - , -
+Monte Castelo , - ,
+Monte Mor, - ,
+Monteiro Lobato,1,22/3/2017
+Morro Agudo , - , -
+Morungaba, - , -
+Motuca,1,21/12/2016
+Murutinga do Sul, - , -
+Nantes, - , -
+Narandiba, - , -
+Natividade da Serra, - , -
+Nazaré Paulista,1,12/2/2014
+Neves Paulista, - , -
+Nhandeara, - , -
+Nipoã, - , -
+Nova Aliança,1,6/9/2013
+Nova Campina, - , -
+Nova Canaã Paulista, - , -
+Nova Castilho,1,31/1/2013
+Nova Europa,1,2/10/2017
+Nova Granada, - , -
+Nova Guataporanga,1,11/4/2013
+Nova Independência,1,30/7/2014
+Nova Luzitânia,1,31/1/2013
+Nova Odessa,1,4/12/2015
+Novais, - , -
+Novo Horizonte,1,14/8/2013
+Nuporanga, - , -
+Ocauçu,1,7/5/2014
+Óleo,,
+Olímpia,1,21/3/2013
+Onda Verde, - , -
+Oriente, - , -
+Orindiúva, - , -
+Orlândia,1,31/1/2013
+Osasco,1,9/10/2013
+Oscar Bressane,1,19/4/2017
+Osvaldo Cruz, - , -
+Ourinhos, - , -
+Ouro Verde, - , -
+Ouroeste, - , -
+Pacaembu,1,30/7/2014
+Palestina, - , -
+Palmares Paulista,1,28/9/2015
+Palmeira D'Oeste,1,18/4/2013
+Palmital, - , -
+Panorama, - , -
+Paraguaçu Paulista, - , -
+Paraibuna,1,31/1/2013
+Paraíso, - , -
+Paranapanema, - , -
+Paranapuã, - , -
+Parapuã,1,6/9/2013
+Pardinho,1,26/6/2018
+Pariquera-Açu, - , -
+Parisi, - , -
+Patrocínio Paulista,1,18/4/2013
+Paulicéia,1,4/4/2018
+Paulínia,1,26/2/2014
+Paulistânia, - , -
+Paulo de Faria,1,9/10/2013
+Pederneiras,1,31/1/2013
+Pedra Bela, - , -
+Pedranópolis, - , -
+Pedregulho, - , -
+Pedreira, - , -
+Pedrinhas Paulista, - , -
+Pedro de Toledo,1,4/11/2014
+Penápolis,1,31/1/2013
+Pereira Barreto,1,2/1/2013
+Pereiras, - , -
+Peruíbe,1,7/5/2014
+Piacatu,1,21/3/2013
+Piedade, - , -
+Pilar do Sul, - , -
+Pindamonhangaba,1,11/4/2013
+Pindorama, - , -
+Pinhalzinho, - , -
+Piquerobi, - , -
+Piquete, - , -
+Piracaia,1,16/10/2014
+Piracicaba,1,4/11/2014
+Piraju, - , -
+Pirajuí, - , -
+Pirangi, - , -
+Pirapora do Bom Jesus, - , -
+Pirapozinho, - , -
+Pirassununga,1,12/12/2014
+Piratininga, - , -
+Pitangueiras, - , -
+Planalto, - , -
+Platina, - , -
+Poá, - , -
+Poloni,1,11/4/2013
+Pompéia, - , -
+Pongaí, - , -
+Pontal, - , -
+Pontalinda, - , -
+Pontes Gestal, - , -
+Populina, - , -
+Porangaba, - , -
+Porto Feliz,1,24/5/2017
+Porto Ferreira,1,4/11/2014
+Potim,1,31/1/2013
+Potirendaba, - , -
+Pracinha, - , -
+Pradópolis,1,3/7/2014
+Praia Grande,1,7/1/2015
+Pratânia, - , -
+Presidente Alves, - , -
+Presidente Bernardes, - , -
+Presidente Epitácio, - , -
+Presidente Prudente,1,31/1/2013
+Presidente Venceslau,1,12/2/2014
+Promissão, - , -
+Quadra,1,31/1/2013
+Quatá,1,19/4/2017
+Queiroz, - , -
+Queluz,1,14/8/2013
+Quintana, - , -
+Rafard, - , -
+Rancharia,1,3/12/2013
+Redenção da Serra,1,11/4/2013
+Regente Feijó,1,12/2/2014
+Reginópolis,1,31/1/2013
+Registro,1,16/5/2017
+Restinga,1,2/1/2013
+Ribeira,1,30/10/2013
+Ribeirão Bonito, - , -
+Ribeirão Branco, - , -
+Ribeirão Corrente,1,14/8/2013
+Ribeirão do Sul, - , -
+Ribeirão dos Índios, - , -
+Ribeirão Grande, - , -
+Ribeirão Pires,1,7/5/2014
+Ribeirão Preto,1,23/1/2013
+Rifaina, - , -
+Rincão, - , -
+Rinópolis, - , -
+Rio Claro,1,31/1/2013
+Rio das Pedras, - , -
+Rio Grande da Serra,1,12/9/2013
+Riolândia, - , -
+Riversul, - , -
+Rosana,1,30/7/2014
+Roseira, - , -
+Rubiácea, - , -
+Rubinéia,1,3/5/2013
+Sabino, - , -
+Sagres, - , -
+Sales, - , -
+Sales Oliveira, - , -
+Salesópolis,1,15/1/2014
+Salmourão, - , -
+Saltinho, - , -
+Salto,1,18/4/2013
+Salto de Pirapora, - , -
+Salto Grande,1,24/5/2018
+Sandovalina, - , -
+Santa Adélia, - , -
+Santa Albertina, - , -
+Santa Barbara D'Oeste,1,25/11/2013
+Santa Branca, - , -
+Santa Clara D'Oeste,1,13/10/2017
+Santa Cruz da Conceição, - , -
+Santa Cruz da Esperança, - , -
+Santa Cruz das Palmeiras, - , -
+Santa Cruz do Rio Pardo, - , -
+Santa Ernestina, - , -
+Santa Fé do Sul,1,3/5/2013
+Santa Gertrudes,1,28/7/2017
+Santa Isabel,1,27/10/2015
+Santa Lúcia, - , -
+Santa Maria da Serra, - , -
+Santa Mercedes, - , -
+Santa Rita D'Oeste, - , -
+Santa Rita do Passa Quatro, - , -
+Santa Rosa do Viterbo,1,21/3/2018
+Santa Salete, - , -
+Santana da Ponte Pensa, - , -
+Santana de Parnaiba,1,30/7/2014
+Santo Anastácio,1,4/11/2014
+Santo André,1,3/5/2013
+Santo Antônio da  Alegria,1,3/4/2014
+Santo Antônio de Posse, - , -
+Santo Antônio do Aracanguá,1,14/8/2013
+Santo Antônio do Jardim,1,12/8/2014
+Santo Antônio do Pinhal,1,14/12/2012
+Santo Expedito, - , -
+Santópolis do Aguapeí, - , -
+Santos,1,13/11/2013
+São Bento do Sapucaí,1,14/8/2013
+São Bernardo do Campo,1,4/2/2013
+São Caetano do Sul,1,12/12/2014
+São Carlos,1,3/7/2014
+São Francisco,1,18/4/2013
+São João da Boa Vista,1,20/11/2014
+São João das Duas Pontes, - , -
+São João de Iracema,1,23/1/2013
+São João do Pau D'Alho, - , -
+São Joaquim da Barra,1,21/8/2014
+São José da Bela Vista, - , -
+São José do Barreiro,1,3/12/2013
+São José do Rio Pardo, - , -
+São José do Rio Preto,1,21/2/2018
+São José dos Campos,1,11/4/2013
+São Lourenço da Serra, - , -
+São Luis do Paraitinga, - , -
+São Manuel,1,20/11/2014
+São Miguel Arcanjo, - , -
+São Pedro, - , -
+São Pedro do Turvo, - , -
+São Roque,1,16/8/2013
+São Sebastião ,1,2/1/2013
+São Sebastião da Grama, - , -
+São Simão,1,24/4/2015
+São Vicente,1,11/4/2013
+Sarapuí, - , -
+Sarutaiá, - , -
+Sebastinópolis do  Sul, - , -
+Serra Azul, - , -
+Serra Negra,1,24/4/2015
+Serrana, - , -
+Sertãozinho,1,14/12/2012
+Sete Barras, - , -
+Severínia, - , -
+Silveiras, - , -
+Socorro,1,3/7/2014
+Sorocaba,1,11/4/2013
+Sud Mennucci, - , -
+Sumaré, - , -
+Suzanápolis, - , -
+Suzano,1,24/4/2015
+Tabapuã, - , -
+Tabatinga, - , -
+Taboão da Serra,1,16/10/2014
+Taciba,1,28/12/2012
+Taguaí, - , -
+Taiaçu, - , -
+Taiúva, - , -
+Tambaú, - , -
+Tanabi , - , -
+Tapiraí, - , -
+Tapiratiba, - , -
+Taquaral, - , -
+Taquaritinga,1,13/11/2013
+Taquarituba, - , -
+Taquarivaí,1,11/4/2013
+Tarabaí, - , -
+Tarumã,1,3/7/2014
+Tatuí, - , -
+Taubaté,1,21/3/2013
+Tejupá, - , -
+Teodoro Sampaio, - , -
+Terra Roxa, - , -
+Tietê, - , -
+Timburi, - , -
+Torre de Pedra, - , -
+Torrinha, - , -
+Trabiju, - , -
+Tremembé,1,3/5/2013
+Três Fronteiras, - , -
+Tuiuti, - , -
+Tupã, - , -
+Tupi Paulista ,,
+Turiúba,1,7/5/2014
+Turmalina, - , -
+Ubarana, - , -
+Ubatuba,1,16/8/2013
+Ubirajara, - , -
+Uchoa, - , -
+União Paulista,1,11/4/2013
+Urânia, - , -
+Uru, - , -
+Urupês, - , -
+Valentim Gentil, - , -
+Valinhos,1,19/10/2015
+Valparaiso, - , -
+Vargem, - , -
+Vargem Grande do Sul, - , -
+Vargem Grande Paulista, - , -
+Várzea Paulista,1,5/2/2014
+Vera Cruz, - , -
+Vinhedo, - , -
+Viradouro, - , -
+Vista Alegre do Alto, - , -
+Vitória Brasil, - , -
+Votorantim,1,26/2/2014
+Votuporanga,1,3/12/2013
+Zacarias, - , -
+SERGIPE, Sim ,25/6/2013
+Aracaju,1,19/4/2013
+Amparo de São Francisco,1,20/4/2018
+Aquidabã,, -
+Arauá,, -
+Areia Branca,1,15/1/2014
+Barra dos Coqueiros,, -
+Boquim,, -
+Brejo Grande,, -
+Campo do Brito,, -
+Canhoba,1,4/4/2018
+Canindé de São Francisco,1,7/5/2014
+Capela,1,28/7/2017
+Carira,1,3/7/2014
+Carmópolis,, -
+Cedro de São João,, -
+Cristinápolis,1,5/2/2014
+Cumbe,, -
+Divina Pastora,1,15/1/2014
+Estância,1,23/11/2017
+Feira Nova,, -
+Frei Paulo,1,4/4/2018
+Gararu,, -
+General Maynard,1,16/5/2017
+Gracho Cardoso,, -
+Ilha das Flores,, -
+Indiaroba,1,26/6/2018
+Itabaiana,1,12/2/2014
+Itabaianinha,1,20/7/2017
+Itabi,, -
+Itaporanga D'Ajuda,1,24/5/2018
+Japaratuba,1,6/9/2013
+Japoatã,, -
+Lagarto,1,3/12/2013
+Laranjeiras,1,23/1/2013
+Macambira,, -
+Malhada dos Bois,, -
+Malhador,1,4/4/2018
+Maruim,1,24/5/2018
+Moita Bonita,1,20/4/2018
+Monte Alegre de Sergipe,1,3/10/2017
+Muribeca,, -
+Neópolis,, -
+Nossa Senhora Aparecida,, -
+Nossa Senhora da Glória,, -
+Nossa Senhora das Dores,1,5/2/2014
+Nossa Senhora de Lourdes,1,7/5/2018
+Nossa Senhora do Socorro,1,7/8/2013
+Pacatuba,, -
+Pedra Mole,1,20/4/2018
+Pedrinhas,, -
+Pinhão,, -
+Pirambu,1,16/9/2014
+Poço Redondo,, -
+Poço Verde,1,12/2/2014
+Porto da Folha,, -
+Propriá,1,30/7/2014
+Riachão do Dantas,1,2/3/2017
+Riachuelo,, -
+Ribeirópolis,1,4/4/2018
+Rosário do Catete,, -
+Salgado,, -
+Santa Luzia do Itanhiy,, -
+Santa Rosa de Lima,1,7/11/2017
+Santana do São Francisco,, -
+Santo Amaro das Brotas,1,24/5/2017
+São Cristóvão,1,3/5/2013
+São Domingos,, -
+São Francisco,, -
+São Miguel do Aleixo,1,20/4/2018
+Simão Dias,1,3/7/2014
+Siriri,1,3/7/2014
+Telha,, -
+Tobias Barreto,1,30/7/2014
+Tomar do Geru,1,22/6/2017
+Umbaúba,1,30/7/2014
+TOCANTINS, Sim ,7/3/2013
+Palmas,1,31/1/2013
+Abreulândia, - , -
+Aguiarnópolis, - , -
+Aliança do Tocantins,1,29/5/2015
+Almas, - , -
+Alvorada, - , -
+Ananás, - , -
+Angico, - , -
+Aparecida do  Rio Negro, - , -
+Aragominas,1,13/12/2013
+Araguacema, - , -
+Araguaçu,1,2/3/2017
+Araguaína,1,31/1/2013
+Araguanã,1,16/10/2014
+Araguatins,1,17/9/2013
+Arapoema, - , -
+Arraias,1,5/9/2013
+Augustinópolis, - , -
+Aurora do Tocantins,1,5/9/2013
+Axixá do Tocantins,1,7/5/2014
+Babaçulândia,1,3/5/2013
+Bandeirantes do Tocantins, - , -
+Barra do Ouro, - , -
+Barrolândia, - , -
+Bernardo Sayão, - , -
+Bom Jesus do Tocantins, - , -
+Brasilândia do Tocantins, - , -
+Brejinho de Nazaré, - , -
+Buriti do Tocantins, - , -
+Cachoeirinha, - , -
+Campos Lindos, - , -
+Cariri do Tocantins,1,3/4/2014
+Carmolândia, - , -
+Carrasco Bonito, - , -
+Caseara,1,27/7/2015
+Centenário, - , -
+Chapada da Natividade, - , -
+Chapada de Areia, - , -
+Colinas do Tocantins,1,14/11/2013
+Colméia, - , -
+Combinado, - , -
+Conceição do Tocantins,1,26/2/2014
+Couto de Magalhães,1,27/4/2017
+Cristalândia, - , -
+Crixás do Tocantins, - , -
+Darcinópolis, - , -
+Dianópolis,1,18/6/2013
+Divinópolis do Tocantins,1,29/5/2015
+Dois Irmãos do Tocantins,1,13/12/2013
+Dueré, - , -
+Esperantina, - , -
+Fátima, - , -
+Figueirópolis, - , -
+Filadélfia, - , -
+Formoso do Araguaia,1,4/11/2014
+Fortaleza do Tabocão, - , -
+Goianorte, - , -
+Goiatins, - , -
+Guaraí,1,19/9/2013
+Gurupi,1,11/4/2013
+Ipueiras, - , -
+Itacajá, - , -
+Itaguatins, - , -
+Itapiratins, - , -
+Itaporã do Tocantins, - , -
+Jaú do Tocantins, - , -
+Juarina, - , -
+Lagoa da Confusão,1,19/9/2013
+Lagoa do Tocantins,1,23/4/2013
+Lajeado, - , -
+Lavandeira, - , -
+Lizarda,1,26/12/2017
+Luzinópolis,1,18/5/2017
+Marianópolis do Tocantins, - , -
+Mateiros,1,7/5/2014
+Maurilândia do Tocantins, - , -
+Miracema do Tocantins,1,16/10/2014
+Miranorte,1,3/5/2013
+Monte do Carmo,1,31/1/2013
+Monte Santo do Tocantins, - , -
+Muricilândia,1,25/11/2013
+Natividade, - , -
+Nazaré, - , -
+Nova Olinda, - , -
+Nova Rosalândia, - , -
+Novo Acordo,1,3/5/2013
+Novo Alegre, - , -
+Novo Jardim, - , -
+Oliveira de Fátima, - , -
+Palmeirante, - , -
+Palmeiras do Tocantins, - , -
+Palmeirópolis, - , -
+Paraíso de Tocantins,1,30/10/2013
+Paranã, - , -
+Pau D'Arco, - , -
+Pedro Afonso,1,3/5/2013
+Peixe,1,12/2/2014
+Pequizeiro, - , -
+Pindorama do Tocantins,1,7/5/2014
+Piraquê, - , -
+Pium, - , -
+Ponte Alta do Bom Jesus, - , -
+Ponte Alta do Tocantins, - , -
+Porto Alegre do Tocantins, - , -
+Porto Nacional,1,3/6/2013
+Praia Norte,1,18/6/2013
+Presidente Kennedy,1,9/10/2013
+Pugmil, - , -
+Recursolândia, - , -
+Riachinho,1,12/12/2014
+Rio da Conceição,1,13/11/2013
+Rio dos Bois, - , -
+Rio Sono, - , -
+Sampaio,1,12/4/2013
+Sandolândia, - , -
+Santa Fé do Araguaia, - , -
+Santa Maria do Tocantins,1,4/11/2014
+Santa Rita do Tocantins, - , -
+Santa Rosa do Tocantins, - , -
+Santa Tereza do Tocantins, - , -
+Santa Terezinha do To, - , -
+São Bento do Tocantins, - , -
+São Félix do Tocantins, - , -
+São Miguel do Tocantins,1,3/12/2013
+São Salvador do Tocantins,1,16/10/2014
+São Sebastião do Tocantins,1,3/5/2013
+São Valério da Natividade,1,30/10/2013
+Silvanópolis,1,25/11/2013
+Sítio Novo do Tocantins, - ,
+Sucupira, - ,
+Taguatinga, - , -
+Taipas do Tocantins, - , -
+Talismã, - , -
+Tocantínia, - , -
+Tocantinópolis,1,12/9/2013
+Tupirama,1,23/4/2013
+Tupiratins,1,29/2/2016
+Wanderlândia,1,18/6/2013
+Xambioá, - , -

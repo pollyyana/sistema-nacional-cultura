@@ -7,10 +7,13 @@ from django.template.defaultfilters import filesizeformat
 from django.forms import formset_factory
 
 from dal import autocomplete
+from localflavor.br.forms import BRCNPJField, BRCPFField
+
+from snc.forms import RestrictedFileField
 
 from .models import Usuario, Municipio, Responsavel
 from .models import Secretario, Funcionario, SistemaCultura, Sede, Gestor
-from .utils import validar_cpf, validar_cnpj, limpar_mascara
+from .utils import limpar_mascara
 import re
 
 content_types = [
@@ -28,35 +31,8 @@ content_types = [
     'text/plain']
 
 
-class RestrictedFileField(forms.FileField):
-    def __init__(self, *args, **kwargs):
-        self.content_types = kwargs.pop("content_types")
-        self.max_upload_size = kwargs.pop("max_upload_size")
-
-        super(RestrictedFileField, self).__init__(*args, **kwargs)
-
-    def clean(self, data, initial=None):
-        file = super(RestrictedFileField, self).clean(data, initial)
-
-        try:
-            content_type = file.content_type
-            if content_type in self.content_types:
-                if file._size > self.max_upload_size:
-                    raise forms.ValidationError(
-                        'O arquivo deve ter menos de %s. Tamanho atual %s'
-                        % (filesizeformat(self.max_upload_size),
-                            filesizeformat(file._size)))
-            else:
-                raise forms.ValidationError(
-                    'Arquivos desse tipo não são aceitos.')
-        except AttributeError:
-            pass
-
-        return data
-
-
 class CadastrarUsuarioForm(UserCreationForm):
-    username = forms.CharField(max_length=14, required=True)
+    username = BRCPFField()
     confirmar_email = forms.EmailField(required=True)
     email = forms.EmailField(required=True)
     nome_usuario = forms.CharField(max_length=100)
@@ -80,9 +56,6 @@ class CadastrarUsuarioForm(UserCreationForm):
             return self.cleaned_data['email']
 
     def clean_username(self):
-        if not validar_cpf(self.cleaned_data['username']):
-            raise forms.ValidationError('Por favor, digite um CPF válido!')
-
         try:
             User.objects.get(username=''.join(re.findall(
                 '\d+',
@@ -111,8 +84,9 @@ class CadastrarUsuarioForm(UserCreationForm):
 
         return user
 
-class CadastrarGestor(ModelForm):
 
+class CadastrarGestor(ModelForm):
+    cpf = BRCPFField()
     termo_posse = RestrictedFileField(
         content_types=content_types,
         max_upload_size=5242880)
@@ -123,23 +97,13 @@ class CadastrarGestor(ModelForm):
         content_types=content_types,
         max_upload_size=5242880)
 
-    def clean_cpf(self):
-        if not validar_cpf(self.cleaned_data['cpf']):
-            raise forms.ValidationError('Por favor, digite um CPF válido!')
-
-        return self.cleaned_data['cpf']
-
     class Meta:
         model = Gestor
         exclude = ('tipo_funcionario',)
 
+
 class CadastrarSede(ModelForm):
-
-    def clean_cnpj(self):
-        if not validar_cnpj(self.cleaned_data['cnpj']):
-            raise forms.ValidationError('Por favor, digite um CNPJ válido!')
-
-        return self.cleaned_data['cnpj']
+    cnpj = BRCNPJField()
 
     class Meta:
         model = Sede
@@ -156,25 +120,25 @@ class CadastrarSistemaCulturaForm(ModelForm):
                 ente_federado=self.cleaned_data['ente_federado'])
 
             if sistema_cultura:
-                self.add_error('ente_federado', 'Este ente federado já foi cadastrado!')
+                self.add_error(
+                    'ente_federado', 'Este ente federado já foi cadastrado!')
 
     class Meta:
         model = SistemaCultura
         fields = ('ente_federado',)
-        widgets = {'ente_federado': autocomplete.ModelSelect2(url='gestao:ente_chain')}
+        widgets = {
+            'ente_federado': autocomplete.ModelSelect2(url='gestao:ente_chain')}
 
 
-SedeFormSet = formset_factory(CadastrarSistemaCulturaForm, CadastrarSede, extra=2)
+SedeFormSet = formset_factory(
+    CadastrarSistemaCulturaForm, CadastrarSede, extra=2)
 
-GestorFormSet = formset_factory(CadastrarSistemaCulturaForm, CadastrarGestor, extra=2)
+GestorFormSet = formset_factory(
+    CadastrarSistemaCulturaForm, CadastrarGestor, extra=2)
 
 
 class CadastrarFuncionarioForm(ModelForm):
-    def clean_cpf(self):
-        if not validar_cpf(self.cleaned_data['cpf']):
-            raise forms.ValidationError('Por favor, digite um CPF válido!')
-
-        return self.cleaned_data['cpf']
+    cpf = BRCPFField()
 
     class Meta:
         model = Funcionario

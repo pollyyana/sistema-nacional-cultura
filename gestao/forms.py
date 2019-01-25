@@ -3,29 +3,30 @@ from django.forms import ModelForm
 from django.contrib.auth.models import User
 from django.template.defaultfilters import filesizeformat
 
+from localflavor.br.forms import BRCPFField
+
 from dal import autocomplete
 
 from ckeditor.widgets import CKEditorWidget
+
+from snc.forms import RestrictedFileField
 
 from adesao.models import Usuario
 from adesao.models import Historico
 from adesao.models import Cidade
 from adesao.models import Uf
 from adesao.models import Municipio
-from adesao.models import SistemaCultura
 from adesao.models import LISTA_ESTADOS_PROCESSO
-from adesao.models import SistemaCultura
+from adesao.models import SistemaCultura, Gestor
 
 
 from planotrabalho.models import CriacaoSistema, FundoCultura, Componente
 from planotrabalho.models import PlanoCultura, OrgaoGestor, ConselhoCultural
 from planotrabalho.models import SituacoesArquivoPlano
 
-from gestao.models import Diligencia, DiligenciaSimples
+from gestao.models import Diligencia, DiligenciaSimples, LISTA_SITUACAO_ARQUIVO
 
 from .utils import enviar_email_alteracao_situacao
-
-from adesao.utils import validar_cpf
 
 import re
 
@@ -46,34 +47,6 @@ content_types = [
 
 max_upload_size = 5242880
 
-
-class RestrictedFileField(forms.FileField):
-    def __init__(self, *args, **kwargs):
-        self.content_types = kwargs.pop("content_types")
-        self.max_upload_size = kwargs.pop("max_upload_size")
-
-        super(RestrictedFileField, self).__init__(*args, **kwargs)
-
-    def clean(self, data, initial=None):
-        file = super(RestrictedFileField, self).clean(data, initial)
-
-        try:
-            content_type = file.content_type
-            if content_type in self.content_types:
-                if file._size > self.max_upload_size:
-                    raise forms.ValidationError(
-                        'O arquivo deve ter menos de %s. Tamanho atual %s'
-                        % (filesizeformat(self.max_upload_size),
-                            filesizeformat(file._size)))
-            else:
-                raise forms.ValidationError(
-                    'Arquivos desse tipo não são aceitos.')
-        except AttributeError:
-            pass
-
-        return data
-
-
 class InserirSEI(ModelForm):
     processo_sei = forms.CharField(max_length="50", required=False)
 
@@ -83,13 +56,10 @@ class InserirSEI(ModelForm):
 
 
 class CadastradorEnte(forms.ModelForm):
-    cpf_cadastrador = forms.CharField(max_length="20")
+    cpf_cadastrador = BRCPFField()
     data_publicacao_acordo = forms.DateField(required=False)
 
     def clean_cpf_cadastrador(self):
-        if not validar_cpf(self.cleaned_data['cpf_cadastrador']):
-            raise forms.ValidationError('Por favor, digite um CPF válido!')
-
         try:
             Usuario.objects.get(user__username=self.cleaned_data['cpf_cadastrador'])
         except Usuario.DoesNotExist:
@@ -118,39 +88,6 @@ class AlterarDadosEnte(ModelForm):
     justificativa = forms.CharField(required=False)
     localizacao = forms.CharField(max_length="10", required=False)
     estado_processo = forms.ChoiceField(choices=LISTA_ESTADOS_PROCESSO, required=False)
-
-    def clean_data_publicacao_acordo(self):
-        estado_processo = self.cleaned_data.get(
-            'estado_processo', self.instance.estado_processo)
-
-        if (estado_processo == '6' and
-                self.cleaned_data['data_publicacao_acordo'] is None):
-            raise forms.ValidationError(
-                'Por favor, preencha a data de publicação do acordo')
-
-        return self.cleaned_data['data_publicacao_acordo']
-
-    def clean_link_publicacao_acordo(self):
-        estado_processo = self.cleaned_data.get(
-            'estado_processo', self.instance.estado_processo)
-
-        if (estado_processo == '6' and
-                self.cleaned_data['link_publicacao_acordo'] is None):
-            raise forms.ValidationError(
-                'Por favor, preencha o link para acesso a publicação do acordo')
-
-        return self.cleaned_data['link_publicacao_acordo']
-
-    def clean_processo_sei(self):
-        estado_processo = self.cleaned_data.get(
-            'estado_processo', self.instance.estado_processo)
-
-        if (estado_processo == '6' and
-                self.cleaned_data['processo_sei'] is None):
-            raise forms.ValidationError(
-                'Por favor, preencha o número do processo no SEI')
-
-        return self.cleaned_data['processo_sei']
 
     def clean_estado_processo(self):
         if self.cleaned_data.get('estado_processo', None) != '6':
@@ -190,17 +127,8 @@ class DiligenciaForm(ModelForm):
 
 
 class DiligenciaComponenteForm(DiligenciaForm):
-    SITUACOES = (
-        (0, "Em preenchimento"),
-        (1, "Avaliando anexo"),
-        (2, "Concluída"),
-        (3, "Arquivo aprovado com ressalvas"),
-        (4, "Arquivo danificado"),
-        (5, "Arquivo incompleto"),
-        (6, "Arquivo incorreto")
-    )
-
-    classificacao_arquivo = forms.TypedChoiceField(choices=SITUACOES, required=False)
+    classificacao_arquivo = forms.TypedChoiceField(
+        choices=LISTA_SITUACAO_ARQUIVO, required=False)
 
     def __init__(self, *args, **kwargs):
         self.tipo_componente = kwargs.pop("componente")
@@ -233,42 +161,6 @@ class DiligenciaGeralForm(DiligenciaForm):
             self.sistema_cultura.save()
 
 
-class AlterarCadastradorForm(forms.Form):
-    cpf_usuario = forms.CharField(max_length=11)
-    data_publicacao_acordo = forms.DateField(required=False)
-
-    def __init__(self, cod_ibge=None, *args, **kwargs):
-        super(AlterarCadastradorForm, self).__init__(*args, **kwargs)
-        self.cod_ibge = cod_ibge
-
-    def clean_cpf_usuario(self):
-        if not validar_cpf(self.cleaned_data['cpf_usuario']):
-            raise forms.validationerror('por favor, digite um cpf válido!')
-
-        try:
-            user.objects.get(username=''.join(re.findall(
-                '\d+',
-                self.cleaned_data['cpf_usuario'])))
-            return self.cleaned_data['cpf_usuario']
-        except user.doesnotexist:
-            raise forms.validationerror('esse cpf não está cadastrado.')
-
-        return self.cleaned_data['cpf_usuario']
-
-    def save(self):
-        cadastrador_novo = usuario.objects.get(
-                user__username=self.cleaned_data['cpf_usuario'])
-        sistema = sistemacultura.sistema.get(ente_federado__cod_ibge=self.cod_ibge)
-        sistema.data_publicacao_acordo = self.cleaned_data['data_publicacao_acordo']
-        sistema.cadastrador = cadastrador_novo
-        sistema.save()
-
-        return sistema
-
-    class Meta:
-        fields = ('cpf_usuario', 'data_publicacao_acordo')
-
-
 class AlterarUsuarioForm(ModelForm):
     is_active = forms.BooleanField(required=False)
     is_staff = forms.BooleanField(required=False)
@@ -280,19 +172,19 @@ class AlterarUsuarioForm(ModelForm):
 
 
 class AlterarDocumentosEnteFederadoForm(ModelForm):
-    termo_posse_prefeito = RestrictedFileField(
+    termo_posse = RestrictedFileField(
         content_types=content_types,
         max_upload_size=max_upload_size)
-    rg_copia_prefeito = RestrictedFileField(
+    rg_copia = RestrictedFileField(
         content_types=content_types,
         max_upload_size=max_upload_size)
-    cpf_copia_prefeito = RestrictedFileField(
+    cpf_copia = RestrictedFileField(
         content_types=content_types,
         max_upload_size=max_upload_size)
 
     class Meta:
-        model = Municipio
-        fields = ('termo_posse_prefeito', 'rg_copia_prefeito', 'cpf_copia_prefeito')
+        model = Gestor
+        fields = ('termo_posse', 'rg_copia', 'cpf_copia')
 
 
 class AlterarComponenteForm(ModelForm):

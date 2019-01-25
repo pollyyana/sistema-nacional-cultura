@@ -3,9 +3,13 @@ from django import forms
 from django.forms import ModelForm
 from django.forms.widgets import FileInput
 
-from .models import CriacaoSistema, OrgaoGestor, ConselhoCultural, FundoCultura, Componente
-from .models import FundoCultura, FundoDeCultura, PlanoCultura, Conselheiro, SITUACAO_CONSELHEIRO
-from .utils import validar_cnpj, add_anos
+from localflavor.br.forms import BRCNPJField
+
+from .models import CriacaoSistema, OrgaoGestor, ConselhoCultural
+from .models import FundoCultura, Componente
+from .models import FundoDeCultura, PlanoCultura
+from .models import Conselheiro, SITUACAO_CONSELHEIRO
+from .utils import add_anos
 
 SETORIAIS = (
     ('0', '-- Selecione um Segmento --'),
@@ -75,6 +79,7 @@ class CriarComponenteForm(ModelForm):
 
 
 class CriarFundoForm(CriarComponenteForm):
+    cnpj = BRCNPJField()
 
     class Meta:
         model = FundoDeCultura

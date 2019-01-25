@@ -19,6 +19,10 @@
           </div>
         </form>
         <div class="dataTable_wrapper">
+            {% if not object_list %}
+            <p></p>
+            <p>Ente federado não encontrado</p>   
+            {% else %}
           <table class="table table-striped table-bordered table-hover" id="dataTables-example">
             <thead>
               <tr>
@@ -31,16 +35,17 @@
             <tbody>
               {% for sistema in object_list %}
                 <tr class="odd gradeX">
-                  <td><a href="{% url 'gestao:detalhar' sistema.id %}">{{ sistema.ente_federado }}</a></td>
+                  <td><a href="{% url 'gestao:detalhar' cod_ibge=sistema.ente_federado.cod_ibge %}">{{ sistema.ente_federado }}</a></td>
                   <td>{{ sistema.sede.cnpj }}</td>
                   <td><a href="{{ sistema.legislacao.arquivo.url }}">Download</a></td>
                   <td>
-                <a href="{% url 'gestao:diligencia_componente' pk=sistema.id componente='legislacao' %}">Criar Diligência</a>
+                <a href="{% url 'gestao:diligencia_componente' pk=sistema.id componente='legislacao' %}">Avaliar</a>
                   </td>
                 </tr>
               {% endfor %}
             </tbody>
           </table>
+          {% endif %}
           {% if is_paginated %}
           <div class="dataTables_paginate paging_simple_numbers">
             <ul class="pagination">

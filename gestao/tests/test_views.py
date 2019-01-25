@@ -1270,11 +1270,11 @@ def test_alterar_dados_adesao_detalhe_municipio(client, login_staff, sistema_cul
 
 def test_alterar_dados_adesao_sem_valores(client, login_staff):
     """ Testa retorno ao tentar alterar os dados da adesão sem passar dados válidos """
-    
+
     sistema_cultura = mommy.make("SistemaCultura", ente_federado__cod_ibge=123456,
         estado_processo=6)
 
-    url = reverse("gestao:alterar_dados_adesao", kwargs={"cod_ibge": 
+    url = reverse("gestao:alterar_dados_adesao", kwargs={"cod_ibge":
         sistema_cultura.ente_federado.cod_ibge})
     data = {}
 
@@ -1650,19 +1650,13 @@ def test_adicionar_prazo_permanecendo_na_mesma_pagina_apos_redirect(
 ):
     """ Testa se ao adicionar prazo a um Ente Federado, a tela permanecerá na mesma página (verificação pela url) """
 
-    users = mommy.make(
-        "Usuario", _fill_optional=["plano_trabalho", "municipio"], _quantity=15
-    )
-
-    for user in users:
-        user.estado_processo = "6"
-        user.data_publicacao_acordo = datetime.date(2018, 1, 1)
-        user.save()
+    sistemas = mommy.make("SistemaCultura", estado_processo=6,
+        data_publicacao_acordo=datetime.date(2018, 1, 1), _quantity=15)
 
     page = 2
 
     url = reverse(
-        "gestao:aditivar_prazo", kwargs={"id": str(users[14].id), "page": str(page)}
+        "gestao:aditivar_prazo", kwargs={"id": str(sistemas[14].id), "page": str(page)}
     )
     request = client.post(url)
 
@@ -1670,105 +1664,32 @@ def test_adicionar_prazo_permanecendo_na_mesma_pagina_apos_redirect(
     assert request.status_code == 302
 
 
-def test_se_o_ente_permanece_na_mesma_pagina_apos_adicionar_prazo(client, login_staff):
-    """ Testa se ao adicionar prazo a um Ente Federado, o Ente permanecerá na mesma página após
-    sucesso ao adicionar prazo (verificação pelo id do usuário na lista de entes)"""
-
-    resposta_ok = False
-    uf = mommy.make("Uf", nome_uf="Acre", sigla="AC")
-
-    users = mommy.make(
-        "Usuario",
-        prazo=2,
-        estado_processo=6,
-        data_publicacao_acordo=datetime.date(2018, 1, 1),
-        _fill_optional=["plano_trabalho"],
-        _quantity=20,
-    )
-
-    users[0].municipio = mommy.make(
-        "Municipio",
-        cidade=mommy.make("Cidade", nome_municipio="AAAAAA", uf=uf),
-        estado=uf,
-        cnpj_prefeitura="13.348.479/0001-01",
-    )
-    users[0].save()
-
-    for user in users[1:19]:
-        user.municipio = mommy.make(
-            "Municipio",
-            estado=uf,
-            cidade=mommy.make("Cidade", uf=uf),
-            cnpj_prefeitura="13.348.479/0001-01",
-        )
-        user.save()
-
-    url = reverse("gestao:aditivar_prazo", kwargs={"id": str(users[0].id), "page": "1"})
-    request = client.post(url)
-    url_apos_redirect = request.url
-
-    response = client.get(url_apos_redirect)
-
-    if users[0] in response.context_data["object_list"]:
-        resposta_ok = True
-
-    assert resposta_ok == True
-    assert request.status_code == 302
-    assert response.context_data["object_list"][0] == users[0]
-
 def test_verificacao_se_prazo_foi_alterado(client, login_staff):
-    """Verifica se o prazo"""
+    """Verifica se o prazo aumenta em dois"""
     prazo = 2
-    user = mommy.make(
-        "Usuario",
-        prazo=prazo,
-        estado_processo=6,
-        data_publicacao_acordo=datetime.date(2018, 1, 1),
-        _fill_optional=["plano_trabalho"]
-    )
 
-    uf = mommy.make("Uf", nome_uf="Acre", sigla="AC")
-    user.municipio = mommy.make(
-        "Municipio",
-        cidade=mommy.make("Cidade", nome_municipio="AAAAAA", uf=uf),
-        estado=uf,
-        cnpj_prefeitura="13.348.479/0001-01",
-    )
-    user.save()
+    sistema = mommy.make("SistemaCultura", ente_federado__cod_ibge=123456, estado_processo=6,
+        data_publicacao_acordo=datetime.date(2018, 1, 1), prazo=prazo)
 
-    url = reverse("gestao:aditivar_prazo", kwargs={"id": str(user.id), "page": "1"})
+    url = reverse("gestao:aditivar_prazo", kwargs={"id": str(sistema.id), "page": "1"})
     request = client.post(url)
-    url_apos_redirect = request.url
 
-    response = client.get(url_apos_redirect)
-
-    user.refresh_from_db()
-    assert user.prazo == prazo + 2
-
+    sistema = SistemaCultura.sistema.get(ente_federado__cod_ibge=123456)
+    assert sistema.prazo == prazo + 2
 
 
 def test_pesquisa_de_ente_federado_sem_acento_tela_adicionar_prazo(client, login_staff):
     """ Testa a pesquisa por nome do ente federado (sem acento) - Deve retornar o nome
     com o acento normalmente """
 
-    municipio = mommy.make(
-        "Municipio", cidade=mommy.make("Cidade", nome_municipio="Acrelândia")
-    )
+    sistema = mommy.make("SistemaCultura", ente_federado__cod_ibge=123456,
+        ente_federado__nome='Acrelândia', estado_processo=6,
+        data_publicacao_acordo=datetime.date(2018, 1, 1))
 
-    user = mommy.make("Usuario", _fill_optional=["plano_trabalho"], municipio=municipio)
-    user.estado_processo = "6"
-    user.save()
-    user.data_publicacao_acordo = datetime.date(2018, 1, 1)
-    user.save()
-
-    url = reverse("gestao:acompanhar_prazo") + "?municipio=Acrelandia"
+    url = reverse("gestao:acompanhar_prazo") + "?ente_federado=Acrelandia"
     response = client.get(url)
 
-    assert response.context_data["object_list"][0].municipio == user.municipio
-    assert (
-        response.context_data["object_list"][0].municipio.cidade.nome_municipio
-        == "Acrelândia"
-    )
+    assert response.context_data["object_list"][0].ente_federado == sistema.ente_federado
 
 
 def test_historico_diligencias_componentes(client, login_staff):
@@ -1787,6 +1708,7 @@ def test_historico_diligencias_componentes(client, login_staff):
     assert len(historico) == 1
     assert historico[0].diligencia == diligencia
 
+
 def test_ente_federado_nao_encontrado(client, login_staff):
     """ Testa se pesquisa retorna um ente federado.
     """
@@ -1800,3 +1722,131 @@ def test_ente_federado_nao_encontrado(client, login_staff):
     response = client.get(url)
 
     assert len(response.context_data["object_list"]) == 0
+
+
+def test_links_para_componentes(client, login_staff):
+
+    sistema = mommy.make(
+        "SistemaCultura", ente_federado__cod_ibge=123456, estado_processo=6,
+        _fill_optional=['legislacao', 'orgao_gestor', 'plano', 'fundo_cultura', 'conselho']
+    )
+
+    arquivo = SimpleUploadedFile("lei.txt", b"file_content", content_type="text/plain")
+
+    sistema.legislacao.tipo = 0
+    sistema.legislacao.arquivo = arquivo
+    sistema.legislacao.save()
+
+    sistema.orgao_gestor.tipo = 1
+    sistema.orgao_gestor.arquivo = arquivo
+    sistema.orgao_gestor.save()
+
+    sistema.fundo_cultura.tipo = 2
+    sistema.fundo_cultura.arquivo = arquivo
+    sistema.fundo_cultura.save()
+
+    sistema.conselho.tipo = 3
+    sistema.conselho.arquivo = arquivo
+    sistema.conselho.save()
+
+    sistema.plano.tipo = 4
+    sistema.plano.arquivo = arquivo
+    sistema.plano.save()
+
+    url = reverse("gestao:detalhar", kwargs={"cod_ibge": sistema.ente_federado.cod_ibge})
+    response = client.get(url)
+
+    assert "<a href=\"/media/" + sistema.legislacao.arquivo.name + "\">Download</a>" in response.rendered_content
+    assert "<a href=\"/media/" + sistema.orgao_gestor.arquivo.name + "\">Download</a>" in response.rendered_content
+    assert "<a href=\"/media/" + sistema.fundo_cultura.arquivo.name + "\">Download</a>" in response.rendered_content
+    assert "<a href=\"/media/" + sistema.conselho.arquivo.name + "\">Download</a>" in response.rendered_content
+    assert "<a href=\"/media/" + sistema.plano.arquivo.name + "\">Download</a>" in response.rendered_content
+
+
+def test_historico_cadastradores(client, login_staff):
+
+    cadastrador_antigo = mommy.make("Usuario")
+    sistema = mommy.make("SistemaCultura", ente_federado__cod_ibge=123456, cadastrador=cadastrador_antigo)
+
+    cadastrador_novo = mommy.make("Usuario")
+    sistema.cadastrador = cadastrador_novo
+    sistema.save()
+
+    url = reverse("gestao:detalhar", kwargs={"cod_ibge": sistema.ente_federado.cod_ibge})
+    response = client.get(url)
+
+    assert response.context["historico"][0].cadastrador == cadastrador_antigo
+    assert response.context["historico"][1].cadastrador == cadastrador_novo
+
+
+def test_links_download_plano_trabalho(client, login_staff):
+
+    sistema = mommy.make(
+        "SistemaCultura", ente_federado__cod_ibge=123456, estado_processo=6,
+        _fill_optional=['legislacao', 'orgao_gestor', 'plano', 'fundo_cultura', 'conselho']
+    )
+
+    arquivo = SimpleUploadedFile("lei.txt", b"file_content", content_type="text/plain")
+
+    sistema.legislacao.tipo = 0
+    sistema.legislacao.arquivo = arquivo
+    sistema.legislacao.situacao = 1
+    sistema.legislacao.save()
+
+    sistema.orgao_gestor.tipo = 1
+    sistema.orgao_gestor.arquivo = arquivo
+    sistema.orgao_gestor.situacao = 1
+    sistema.orgao_gestor.save()
+
+    sistema.fundo_cultura.tipo = 2
+    sistema.fundo_cultura.arquivo = arquivo
+    sistema.fundo_cultura.situacao = 1
+    sistema.fundo_cultura.save()
+
+    sistema.conselho.tipo = 3
+    sistema.conselho.arquivo = arquivo
+    sistema.conselho.situacao = 1
+    sistema.conselho.save()
+
+    sistema.plano.tipo = 4
+    sistema.plano.arquivo = arquivo
+    sistema.plano.situacao = 1
+    sistema.plano.save()
+
+    componentes = ["legislacao", "orgao_gestor", "fundo_cultura", "conselho", "plano"]
+
+    for nome_componente in componentes:
+        url = reverse("gestao:acompanhar_componente", kwargs={"componente": nome_componente})
+        response = client.get(url + '?anexo=arquivo')
+
+        componente = getattr(sistema, nome_componente)
+        assert "<a href=\"/media/" + componente.arquivo.name + "\">Download</a>" in response.rendered_content
+
+
+def test_listar_documentos_ente_federado(client, login_staff):
+    sistema_cultura = mommy.make("SistemaCultura", estado_processo=5, ente_federado__cod_ibge=123456,
+        ente_federado__nome='Acrelândia', _fill_optional='gestor')
+
+    url = reverse("gestao:inserir_entefederado")
+    response = client.get(url + '?ente_federado=acrelandia')
+
+    assert len(response.context_data["object_list"]) == 1
+    assert response.context_data["object_list"][0] == sistema_cultura
+
+
+def test_alterar_documentos_ente_federado(client, login_staff):
+    sistema_cultura = mommy.make("SistemaCultura", ente_federado__cod_ibge=123456,
+        _fill_optional='gestor')
+
+    rg_copia = SimpleUploadedFile("rg_copia.txt", b"file_content", content_type="text/plain")
+    termo_posse = SimpleUploadedFile("termo_posse.txt", b"file_content", content_type="text/plain")
+    cpf_copia = SimpleUploadedFile("cpf_copia.txt", b"file_content", content_type="text/plain")
+
+    url = reverse("gestao:alterar_entefederado", kwargs={"pk": sistema_cultura.gestor.id})
+    response = client.post(url, data={"rg_copia": rg_copia, "termo_posse": termo_posse, "cpf_copia": cpf_copia})
+
+    sistema_atualizado = SistemaCultura.sistema.get(ente_federado__cod_ibge=123456)
+
+    assert sistema_atualizado.gestor.termo_posse.name.split('/')[1] == termo_posse.name
+    assert sistema_atualizado.gestor.rg_copia.name.split('/')[1] == rg_copia.name
+    assert sistema_atualizado.gestor.cpf_copia.name.split('/')[1] == cpf_copia.name
