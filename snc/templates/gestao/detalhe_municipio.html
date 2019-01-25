@@ -3,11 +3,11 @@
 
 <div class="row">
     <div class="col-sm-12 col-md-6">
-        <div class="panel panel-info">
-          <div class="panel-heading">
+        <div class=" card  card-info" style="margin-bottom: 20px">
+          <div class=" card-header" style="color: #31708f; background-color: #d9edf7; border-color: #bce8f1">
             Dados do Ente Federado
           </div>
-          <div class="panel-body">
+          <div class=" card-body">
               <div class="row">
                   <div class="col-md-7">
                     <p><strong>Localização: </strong></p>
@@ -75,11 +75,11 @@
     </div>
 
     <div class="col-sm-12 col-md-6">
-       <div class="panel panel-info">
-          <div class="panel-heading">
+       <div class=" card  card-info" style="margin-bottom: 20px">
+          <div class=" card-header" style="color: #31798f; background-color: #d9edf7; border-color: #bce8f1">
             Dados do Interlocutor
           </div>
-          <div class="panel-body">
+          <div class=" card-body">
             <p><strong>Nome:</strong> {{ object.secretario.nome_secretario }}</p>
             <p><strong>CPF:</strong> {{ object.secretario.cpf_secretario }}</p>
             <p><strong>RG:</strong> {{ object.secretario.rg_secretario }}</p>
@@ -94,11 +94,11 @@
 
 <div class="row">
     <div class="col-sm-12 col-md-6">
-        <div class="panel panel-info">
-          <div class="panel-heading">
+        <div class=" card  card-info" style="margin-bottom: 20px">
+          <div class=" card-header" style="color: #31798f; background-color: #d9edf7; border-color: #bce8f1">
             Dados do Responsável Indicado
           </div>
-          <div class="panel-body">
+          <div class=" card-body">
               <div class="row">
                   <div class="col-md-6">
                     <p><strong>Nome:</strong> {{ object.responsavel.nome_responsavel }}</p>
@@ -120,11 +120,11 @@
     </div>
 
     <div class="col-sm-12 col-md-6">
-        <div class="panel panel-info">
-          <div class="panel-heading">
+        <div class=" card  card-info" style="margin-bottom: 20px">
+          <div class=" card-header" style="color: #31798f; background-color: #d9edf7; border-color: #bce8f1">
             Dados do Cadastrador
           </div>
-          <div class="panel-body">
+          <div class=" card-body">
             <p><strong>CPF:</strong> {{ object.user.username }}</p>
             <p><strong>Nome:</strong> {{ object.nome_usuario }}</p>
             <p><strong>E-mail:</strong> {{ object.user.email }}</p>
@@ -135,62 +135,62 @@
 </div>
 
 {% if object.estado_processo == '6' %}
-<div class="panel panel-info">
-  <div class="panel-heading">
+<div class=" card  card-info" style="margin-bottom: 20px">
+  <div class=" card-header" style="color: #31798f; background-color: #d9edf7; border-color: #bce8f1">
     Dados do Plano de Trabalho
   </div>
 
-  <div class="panel-body">
+  <div class=" card-body">
   {% if object.plano_trabalho.criacao_sistema.arquivo %}
-    <div class="list-group row">
-        <div class="col-md-12">
-            <div  class="list-group-item col-xs-8">
+    <div class="list-group row align-items-center" style="margin-bottom: 20px" style="margin-bottom: 20px">
+        <div class="col-md-12 row">
+            <div  class="list-group-item col-8">
                 Criação do Sistema - Lei
             </div>
 
-            <div class="list-group-item col-xs-2 text-center">
+            <div class="list-group-item col-2 text-center">
               <a href="{{ object.plano_trabalho.criacao_sistema.arquivo.url}}">Download</a>
             </div>
             {% if object.plano_trabalho.criacao_sistema.situacao.id == 1 %}
 
-              <div class="list-group-item col-xs-1 text-center ">
+              <div class="list-group-item col-1 text-center ">
                 <a href="{% url 'gestao:diligencia_componente' pk=object.plano_trabalho.id componente='criacao_sistema' resultado='0' %}"><i class="fa fa-thumbs-down"></i></a>
             </div>
 
-            <div class="list-group-item col-xs-1 text-center">
+            <div class="list-group-item col-1 text-center">
                 <a href="{% url 'gestao:diligencia_componente' pk=object.plano_trabalho.id componente='criacao_sistema' resultado='1' %}"><i class="fa fa-thumbs-up"></i></a>
             </div>
             {% else %}
-            <div class="list-group-item col-xs-2 text-center">
+            <div class="list-group-item col-2 text-center">
                 <b>{{ object.plano_trabalho.criacao_sistema.situacao.descricao }}</b>
             </div>
         {% endif %}
 
-        </div>
     </div>
+  </div>
   {% endif %}
 
     {% if object.plano_trabalho.orgao_gestor.arquivo %}
-    <div class="list-group row">
-      <div class="col-md-12">
-          <div  class="list-group-item col-xs-8">
+    <div class="list-group row align-items-center" style="margin-bottom: 20px">
+      <div class="col-md-12 row">
+          <div  class="list-group-item col-8">
             Órgão Gestor - Ato normativo
           </div>
 
-          <div class="list-group-item col-xs-2 text-center">
+          <div class="list-group-item col-2 text-center">
             <a href="{{ object.plano_trabalho.orgao_gestor.arquivo.url }}">Download</a>
           </div>
           {% if object.plano_trabalho.orgao_gestor.situacao.id  == 1 %}
 
-          <div class="list-group-item col-xs-1 text-center">
+          <div class="list-group-item col-1 text-center">
               <a href="{% url 'gestao:diligencia_componente' pk=object.plano_trabalho.id componente='orgao_gestor' resultado='0' %}"><i class="fa fa-thumbs-down"></i></a>
           </div>
 
-          <div class="list-group-item col-xs-1 text-center">
+          <div class="list-group-item col-1 text-center">
               <a href="{% url 'gestao:diligencia_componente' pk=object.plano_trabalho.id componente='orgao_gestor' resultado='1' %}"><i class="fa fa-thumbs-up"></i></a>
           </div>
           {% else %}
-          <div class="list-group-item col-xs-2 text-center">
+          <div class="list-group-item col-2 text-center">
               <b>{{ object.plano_trabalho.orgao_gestor.situacao.descricao }}</b>
           </div>
           {% endif %}
@@ -200,26 +200,26 @@
     {% endif %}
 
     {% if object.plano_trabalho.conselho_cultural.arquivo %}
-    <div class="list-group row">
-      <div class="col-md-12">
-          <div  class="list-group-item col-xs-8">
+    <div class="list-group row align-items-center" style="margin-bottom: 20px">
+      <div class="col-md-12 row">
+          <div  class="list-group-item col-8">
             Conselho Cultural - Ata
           </div>
 
-          <div class="list-group-item col-xs-2 text-center">
+          <div class="list-group-item col-2 text-center">
             <a href="{{ object.plano_trabalho.conselho_cultural.arquivo.url }}">Download</a>
           </div>
           {% if object.plano_trabalho.conselho_cultural.situacao.id == 1 %}
 
-          <div class="list-group-item col-xs-1 text-center">
+          <div class="list-group-item col-1 text-center">
               <a href="{% url 'gestao:diligencia_componente' pk=object.plano_trabalho.id componente='conselho_cultural' resultado='0' %}"><i class="fa fa-thumbs-down"></i></a>
           </div>
 
-          <div class="list-group-item col-xs-1 text-center">
+          <div class="list-group-item col-1 text-center">
               <a href="{% url 'gestao:diligencia_componente' pk=object.plano_trabalho.id componente='conselho_cultural' resultado='1' %}"><i class="fa fa-thumbs-up"></i></a>
           </div>
           {% else %}
-          <div class="list-group-item col-xs-2 text-center">
+          <div class="list-group-item col-2 text-center">
               <b>{{ object.plano_trabalho.conselho_cultural.situacao.descricao }}</b>
           </div>
           {% endif %}
@@ -229,26 +229,26 @@
     {% endif %}
 
     {% if object.plano_trabalho.fundo_cultura.arquivo %}
-    <div class="list-group row">
-       <div class="col-md-12">
-          <div  class="list-group-item col-xs-8">
+    <div class="list-group row align-items-center" style="margin-bottom: 20px">
+       <div class="col-md-12 row">
+          <div  class="list-group-item col-8">
             Fundo de Cultura - Lei {% if object.plano_trabalho.fundo_cultura.cnpj_fundo_cultura %} (CNPJ: {{object.plano_trabalho.fundo_cultura.cnpj_fundo_cultura}}) {% endif %}
           </div>
 
-          <div class="list-group-item col-xs-2 text-center">
+          <div class="list-group-item col-2 text-center">
             <a href="{{ object.plano_trabalho.fundo_cultura.arquivo.url }}">Download</a>
           </div>
           {% if object.plano_trabalho.fundo_cultura.situacao.id == 1 %}
 
-          <div class="list-group-item col-xs-1 text-center">
+          <div class="list-group-item col-1 text-center">
               <a href="{% url 'gestao:diligencia_componente' pk=object.plano_trabalho.id componente='fundo_cultura' resultado='0' %}"><i class="fa fa-thumbs-down"></i></a>
           </div>
 
-          <div class="list-group-item col-xs-1 text-center">
+          <div class="list-group-item col-1 text-center">
               <a href="{% url 'gestao:diligencia_componente' pk=object.plano_trabalho.id componente='fundo_cultura' resultado='1' %}"><i class="fa fa-thumbs-up"></i></a>
           </div>
           {% else %}
-          <div class="list-group-item col-xs-2 text-center">
+          <div class="list-group-item col-2 text-center">
               <b>{{ object.plano_trabalho.fundo_cultura.situacao.descricao }}</b>
           </div>
           {% endif %}
@@ -260,26 +260,26 @@
 
 
     {% if object.plano_trabalho.plano_cultura.arquivo %}
-    <div class="list-group row">
-        <div class="col-md-12">
-          <div  class="list-group-item col-xs-8">
+    <div class="list-group row align-items-center" style="margin-bottom: 20px">
+        <div class="col-md-12 row">
+          <div  class="list-group-item col-8">
             Plano de Cultura - Lei
           </div>
 
-          <div class="list-group-item col-xs-2 text-center">
+          <div class="list-group-item col-2 text-center">
             <a href="{{ object.plano_trabalho.plano_cultura.arquivo.url}}">Download</a>
           </div>
           {% if object.plano_trabalho.plano_cultura.situacao.id == 1 %}
 
-          <div class="list-group-item col-xs-1 text-center">
+          <div class="list-group-item col-1 text-center">
               <a href="{% url 'gestao:diligencia_componente' pk=object.plano_trabalho.id componente='plano_cultura' resultado='0' %}"><i class="fa fa-thumbs-down"></i></a>
           </div>
 
-          <div class="list-group-item col-xs-1 text-center">
+          <div class="list-group-item col-1 text-center">
               <a href="{% url 'gestao:diligencia_componente' pk=object.plano_trabalho.id componente='plano_cultura' resultado='1' %}"><i class="fa fa-thumbs-up"></i></a>            
           </div>
           {% else %}
-          <div class="list-group-item col-xs-2 text-center">
+          <div class="list-group-item col-2 text-center">
               <b>{{ object.plano_trabalho.plano_cultura.situacao.descricao }}</b>
           </div>
           {% endif %}
@@ -291,29 +291,28 @@
 
 <!-- situaçao geral do plano de trabalho -->
 
-    <div class="list-group row">
-          <div class="col-md-12">
-            <div class="list-group-item col-xs-8">
+    <div class="list-group row align-items-center" style="margin-bottom: 20px">
+          <div class="col-md-12 row">
+            <div class="list-group-item col-8">
               <b>Situação Geral do Plano de Trabalho</b>
             </div>
-                <div class="list-group-item col-xs-4 text-center">
+                <div class="list-group-item col-4 text-center">
                     <a href="{% url 'gestao:diligencia_componente' pk=object.plano_trabalho.id componente='plano_trabalho' resultado='1'%}">Criar Diligência</a>
                 </div>
           </div>
         </div>
-    </div>
-    
+  </div>  
 </div>
 {% endif %}
 
 <div class="row">
     {% if historico_sistemas %}
       <div class="col-md-6">
-          <div class="panel panel-info">
-            <div class="panel-heading">
+          <div class=" card  card-info">
+            <div class=" card-header" style="color: #31798f; background-color: #d9edf7; border-color: #bce8f1">
               Histórico de cadastradores
             </div>
-            <div class="panel-body">
+            <div class=" card-body">
               {% for sistema in historico_sistemas %}
                 <ul class="list-group">            
                     {% if sistema.cadastrador.nome_usuario %}
@@ -335,12 +334,12 @@
     {% endif %}
 
     <div class="col-md-6">
-        <div class="panel panel-info">
-          <div class="panel-heading">
+        <div class=" card  card-info">
+          <div class=" card-header" style="color: #31798f; background-color: #d9edf7; border-color: #bce8f1">
             Dados da Adesão
           </div>
           <form name="form" action="{% url 'gestao:alterar_dados_adesao' object.id %}" method="post">
-              <div class="panel-body ">
+              <div class=" card-body ">
                   {% csrf_token %}
                   <div class="list-group-item col-md-12 text-center">
                       <div class="form-group">
@@ -355,21 +354,23 @@
                       </div>
 
                       <div class="form-group">
-                        <textarea id="justificativa_situacao" name="justificativa" class="form-control hide" style="resize:none" placeholder="Justificativa" rows="4" cols="20">{% if object.estado_processo == '3' %} {{dado_situacao}} {% endif %}</textarea>
-                        <input type="text" id="data_acordo_situacao" name="data_publicacao_acordo" class="form-control date hide" value="{% if object.estado_processo == '6' %} {{dado_situacao}} {% endif %}" placeholder="Data de Publicação"></input>
-                        <input type="text" id="localizacao_situacao" name="localizacao" class="form-control hide" placeholder="Localização" value="{% if object.estado_processo == '2' %} {{dado_situacao}} {% endif %}"></input>
-                        <input type="text" id="num_processo_situacao" name="num_processo" class="form-control hide" placeholder="Número do Processo" value="{% if object.estado_processo == '4' %} {{dado_situacao}} {% endif %}"></input>
+                       <div style="margin-bottom: 20px"> <textarea id="justificativa_situacao" name="justificativa" class="form-control hide" style="resize:none" placeholder="Justificativa" rows="4" cols="20" >{% if object.estado_processo == '3' %} {{dado_situacao}} {% endif %}</textarea> </div>
+                        <div style="margin-bottom: 15px"><input type="text" id="data_acordo_situacao" name="data_publicacao_acordo" class="form-control date hide" value="{% if object.estado_processo == '6' %} {{dado_situacao}} {% endif %}" placeholder="Data de Publicação"></input></div>
+                        <div style="margin-bottom: 15px">                        <input type="text" id="localizacao_situacao" name="localizacao" class="form-control hide" placeholder="Localização" value="{% if object.estado_processo == '2' %} {{dado_situacao}} {% endif %}"></input>
+                        </div>
+                        
+                        <div style="margin-bottom: 15px"><input type="text" id="num_processo_situacao" name="num_processo" class="form-control hide" placeholder="Número do Processo" value="{% if object.estado_processo == '4' %} {{dado_situacao}} {% endif %}"></input></div>
                       </div>
 
-                      <div class="form-group">
+                      <div class="form-group" style="margin-bottom: 15px">
                          <input type="text" id="link_acordo_situacao" name="link_publicacao_acordo" class="form-control hide" placeholder="Link da Publicação" value="{% if object.estado_processo == '6' and link_publicacao %} {{link_publicacao}} {% endif %}"></input>
                       </div>
 
-                     <div class="form-group">
+                     <div class="form-group" style="margin-bottom: 15px">
                         <input type="text" id="processo_sei" name="processo_sei" class="form-control" placeholder="Número do Processo SEI" value="{% if object.estado_processo == '6' and processo_sei %} {{processo_sei}} {% endif %}"></input>
                       </div>
 
-                      <div class="row">
+                      <div class="row" style="margin-bottom: 15px">
                           <div class="col-md-12">
                             <button type="submit" class="btn btn-primary btn-xs" title="Alterar Situação" >Salvar</button>
                             <a href="{% url 'gestao:detalhar' object.id %}" class="btn btn-default btn-xs" value="Cancelar" >Cancelar</a>
