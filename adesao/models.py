@@ -17,6 +17,7 @@ from adesao.managers import SistemaManager
 from adesao.managers import HistoricoManager
 
 from datetime import date
+from adesao.middleware import get_current_user
 
 
 LISTA_ESTADOS_PROCESSO = (
@@ -459,31 +460,6 @@ class SistemaCultura(models.Model):
             if False in comparacao:
                 self.pk = None
                 self.alterado_em = timezone.now()
-
-            # if not self.compara_valores(anterior, "cadastrador"):
-            #     self.alterar_cadastrador(anterior.cadastrador)
+                self.alterado_por = get_current_user()
 
         super().save(*args, **kwargs)
-
-    # def alterar_cadastrador(self, cadastrador_atual):
-    #     """
-    #     Altera cadastrador de um ente federado fazendo as alterações
-    #     necessárias nas models associadas ao cadastrador, gerando uma nova
-    #     versão do sistema cultura
-    #     """
-
-    #     cadastrador = self.cadastrador
-    #     if cadastrador_atual:
-    #         cadastrador.recebe_permissoes_sistema_cultura(cadastrador_atual)
-    #     else:
-    #         try:
-    #             ente_federado = Municipio.objects.get(estado=self.uf,
-    #                                                   cidade=self.cidade)
-    #             cadastrador_atual = getattr(ente_federado, 'usuario', None)
-    #             if cadastrador_atual:
-    #                 cadastrador.recebe_permissoes_sistema_cultura(cadastrador_atual)
-    #             else:
-    #                 cadastrador.municipio = ente_federado
-    #                 cadastrador.save()
-    #         except Municipio.DoesNotExist:
-    #             return
