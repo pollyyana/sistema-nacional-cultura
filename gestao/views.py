@@ -35,6 +35,8 @@ from adesao.models import SistemaCultura
 from adesao.models import EnteFederado
 from adesao.models import Gestor
 
+from adesao.forms import CadastrarSistemaCulturaForm
+
 from planotrabalho.models import PlanoTrabalho
 from planotrabalho.models import CriacaoSistema
 from planotrabalho.models import PlanoCultura
@@ -330,6 +332,16 @@ class DetalharEnte(DetailView, LookUpAnotherFieldMixin):
         context['historico'] = historico.distinct('cadastrador').order_by('cadastrador')[:10]
 
         return context
+
+
+class AlterarDadosSistemaCultura(UpdateView, LookUpAnotherFieldMixin):
+    model = SistemaCultura
+    form_class = CadastrarSistemaCulturaForm
+    context_object_name = "ente"
+    template_name = "alterar_ente.html"
+    pk_url_kwarg = "cod_ibge"
+    lookup_field = "ente_federado__cod_ibge"
+    queryset = SistemaCultura.sistema.all()
 
 
 class AlterarDadosEnte(UpdateView, LookUpAnotherFieldMixin):
