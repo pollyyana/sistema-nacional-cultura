@@ -130,13 +130,6 @@ class CadastrarSistemaCulturaForm(ModelForm):
             'ente_federado': autocomplete.ModelSelect2(url='gestao:ente_chain')}
 
 
-SedeFormSet = formset_factory(
-    CadastrarSistemaCulturaForm, CadastrarSede, extra=2)
-
-GestorFormSet = formset_factory(
-    CadastrarSistemaCulturaForm, CadastrarGestor, extra=2)
-
-
 class CadastrarFuncionarioForm(ModelForm):
     cpf = BRCPFField()
 

@@ -67,6 +67,8 @@ from .forms import CadastradorEnte
 from itertools import chain
 import datetime
 
+from adesao.views import AlterarSistemaCultura
+
 
 class EnteChain(autocomplete.Select2QuerySetView):
     def get_queryset(self):
@@ -334,14 +336,12 @@ class DetalharEnte(DetailView, LookUpAnotherFieldMixin):
         return context
 
 
-class AlterarDadosSistemaCultura(UpdateView, LookUpAnotherFieldMixin):
-    model = SistemaCultura
-    form_class = CadastrarSistemaCulturaForm
-    context_object_name = "ente"
+class AlterarDadosSistemaCultura(AlterarSistemaCultura):
     template_name = "alterar_ente.html"
-    pk_url_kwarg = "cod_ibge"
-    lookup_field = "ente_federado__cod_ibge"
-    queryset = SistemaCultura.sistema.all()
+
+    def get_success_url(self):
+        sistema = SistemaCultura.objects.get(id=self.kwargs['pk'])
+        return reverse_lazy('gestao:detalhar', kwargs={'cod_ibge': sistema.ente_federado.cod_ibge})
 
 
 class AlterarDadosEnte(UpdateView, LookUpAnotherFieldMixin):
