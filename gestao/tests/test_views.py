@@ -14,6 +14,8 @@ from gestao.forms import DiligenciaForm
 from adesao.models import Uf
 from adesao.models import SistemaCultura
 from adesao.models import EnteFederado
+from adesao.models import Gestor
+from adesao.models import Sede
 
 from planotrabalho.models import OrgaoGestor
 from planotrabalho.models import CriacaoSistema
@@ -1850,3 +1852,59 @@ def test_alterar_documentos_ente_federado(client, login_staff):
     assert sistema_atualizado.gestor.termo_posse.name.split('/')[1] == termo_posse.name
     assert sistema_atualizado.gestor.rg_copia.name.split('/')[1] == rg_copia.name
     assert sistema_atualizado.gestor.cpf_copia.name.split('/')[1] == cpf_copia.name
+
+
+def test_alterar_dados_sistema_cultura(client, login_staff):
+    sistema_cultura = mommy.make("SistemaCultura", ente_federado__cod_ibge=123456,
+        _fill_optional=['gestor', 'sede'])
+
+    gestor = Gestor(cpf="590.328.900-26", rg="1234567", orgao_expeditor_rg="ssp", estado_expeditor=29,
+        nome="nome", email_institucional="email@email.com")
+    sede = Sede(cnpj="70.658.964/0001-07", endereco="endereco", complemento="complemento",
+        cep="72430101", bairro="bairro", telefone_um="123456")
+    rg_copia = SimpleUploadedFile("rg_copia.txt", b"file_content", content_type="text/plain")
+    termo_posse = SimpleUploadedFile("termo_posse.txt", b"file_content", content_type="text/plain")
+    cpf_copia = SimpleUploadedFile("cpf_copia.txt", b"file_content", content_type="text/plain")
+
+    url = reverse("gestao:alterar_sistema", kwargs={"pk": sistema_cultura.id})
+
+    response = client.post(
+        url,
+        {
+            "cpf": gestor.cpf,
+            "rg": gestor.rg,
+            "nome": gestor.nome,
+            "orgao_expeditor_rg": gestor.orgao_expeditor_rg,
+            "estado_expeditor": 29,
+            "email_institucional": gestor.email_institucional,
+            "termo_posse": termo_posse,
+            "cpf_copia": cpf_copia,
+            "rg_copia": rg_copia,
+            "cnpj": sede.cnpj,
+            "endereco": sede.endereco,
+            "complemento": sede.complemento,
+            "cep": sede.cep,
+            "bairro": sede.bairro,
+            "telefone_um": sede.telefone_um,
+        },
+    )
+
+    sistema_cultura = SistemaCultura.sistema.get(ente_federado__cod_ibge=123456)
+
+    assert sistema_cultura.gestor.cpf == gestor.cpf
+    assert sistema_cultura.gestor.rg == gestor.rg
+    assert sistema_cultura.gestor.orgao_expeditor_rg == gestor.orgao_expeditor_rg
+    assert sistema_cultura.gestor.estado_expeditor == 29
+    assert sistema_cultura.gestor.email_institucional == gestor.email_institucional
+    assert sistema_cultura.gestor.termo_posse.name.split('/')[1] == termo_posse.name
+    assert sistema_cultura.gestor.cpf_copia.name.split('/')[1] == cpf_copia.name
+    assert sistema_cultura.gestor.rg_copia.name.split('/')[1] == rg_copia.name
+
+    assert sistema_cultura.sede.cnpj == sede.cnpj
+    assert sistema_cultura.sede.endereco == sede.endereco
+    assert sistema_cultura.sede.bairro == sede.bairro
+    assert sistema_cultura.sede.complemento == sede.complemento
+    assert sistema_cultura.sede.cep == sede.cep
+    assert sistema_cultura.sede.telefone_um == sede.telefone_um
+
+

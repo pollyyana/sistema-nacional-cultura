@@ -376,8 +376,8 @@ class AlterarSistemaCultura(UpdateView):
     def get_context_data(self, **kwargs):
         context = super(AlterarSistemaCultura, self).get_context_data(**kwargs)
         if self.request.POST:
-            context['form_sede'] = CadastrarSede(self.request.POST, instance=self.object.sede)
-            context['form_gestor'] = CadastrarGestor(self.request.POST, instance=self.object.gestor)
+            context['form_sede'] = CadastrarSede(self.request.POST, self.request.FILES, instance=self.object.sede)
+            context['form_gestor'] = CadastrarGestor(self.request.POST, self.request.FILES, instance=self.object.gestor)
         else:
             context['form_sede'] = CadastrarSede(instance=self.object.sede)
             context['form_gestor'] = CadastrarGestor(instance=self.object.gestor)
