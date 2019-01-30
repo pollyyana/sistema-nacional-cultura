@@ -71,6 +71,17 @@
         {% endif %}
         <br />
         <br />
+
+        {% if sistema.fundo_cultura.situacao != 2 %}
+          {% if sistema.fundo_cultura.situacao == 1 %}
+            <a class="btn btn-warning" style="color:#FFF" href="{% url 'planotrabalho:cadastrar_componente' tipo='fundo_cultura' %}">Aguarda Análise</a>
+          {% elif request.session.sistema_cultura_selecionado.estado_processo == '6' %}
+            <a class="btn btn-success" style="color:#FFF" href="{% url 'planotrabalho:cadastrar_componente' tipo='fundo_cultura' %}" >Enviar Regulamentação</a>
+          {% endif %}
+        {% endif %}
+
+        <br />
+        <br />
     </li>
     <hr /><br />
     <li class="list-group-item">
