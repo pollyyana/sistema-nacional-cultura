@@ -16,6 +16,7 @@ from adesao.models import SistemaCultura
 from adesao.models import EnteFederado
 from adesao.models import Gestor
 from adesao.models import Sede
+from adesao.models import Funcionario
 
 from planotrabalho.models import OrgaoGestor
 from planotrabalho.models import CriacaoSistema
@@ -1908,3 +1909,73 @@ def test_alterar_dados_sistema_cultura(client, login_staff):
     assert sistema_cultura.sede.telefone_um == sede.telefone_um
 
 
+def test_alterar_dados_secretario(client, login_staff):
+    sistema_cultura = mommy.make("SistemaCultura", ente_federado__cod_ibge=123456,
+        secretario__tipo_funcionario=0)
+
+    funcionario = Funcionario(cpf="381.390.630-29", rg="48.464.068-9",
+        orgao_expeditor_rg="SSP", estado_expeditor=29, telefone_um="999999999",
+        nome="Joao silva", email_institucional="joao@email.com")
+
+    url = reverse("gestao:alterar_funcionario", kwargs={"pk": sistema_cultura.secretario.id,
+        "tipo": "secretario"})
+
+    response = client.post(
+        url,
+        {
+            "cpf": funcionario.cpf,
+            "rg": funcionario.rg,
+            "orgao_expeditor_rg": funcionario.orgao_expeditor_rg,
+            "estado_expeditor": funcionario.estado_expeditor,
+            "nome": funcionario.nome,
+            "email_institucional": funcionario.email_institucional,
+            "telefone_um": funcionario.telefone_um
+        },
+    )
+
+    sistema_cultura = SistemaCultura.sistema.get(ente_federado__cod_ibge=123456)
+
+    assert sistema_cultura.secretario.cpf == funcionario.cpf
+    assert sistema_cultura.secretario.rg == funcionario.rg
+    assert sistema_cultura.secretario.orgao_expeditor_rg == funcionario.orgao_expeditor_rg
+    assert sistema_cultura.secretario.estado_expeditor == funcionario.estado_expeditor
+    assert sistema_cultura.secretario.nome == funcionario.nome
+    assert sistema_cultura.secretario.email_institucional == funcionario.email_institucional
+    assert sistema_cultura.secretario.telefone_um == funcionario.telefone_um
+    assert sistema_cultura.secretario.tipo_funcionario == 0
+
+
+def test_alterar_dados_responsavel(client, login_staff):
+    sistema_cultura = mommy.make("SistemaCultura", ente_federado__cod_ibge=123456,
+        responsavel__tipo_funcionario=1)
+
+    funcionario = Funcionario(cpf="381.390.630-29", rg="48.464.068-9",
+        orgao_expeditor_rg="SSP", estado_expeditor=29, telefone_um="999999999",
+        nome="Joao silva", email_institucional="joao@email.com")
+
+    url = reverse("gestao:alterar_funcionario", kwargs={"pk": sistema_cultura.responsavel.id,
+        "tipo": "responsavel"})
+
+    response = client.post(
+        url,
+        {
+            "cpf": funcionario.cpf,
+            "rg": funcionario.rg,
+            "orgao_expeditor_rg": funcionario.orgao_expeditor_rg,
+            "estado_expeditor": funcionario.estado_expeditor,
+            "nome": funcionario.nome,
+            "email_institucional": funcionario.email_institucional,
+            "telefone_um": funcionario.telefone_um
+        },
+    )
+
+    sistema_cultura = SistemaCultura.sistema.get(ente_federado__cod_ibge=123456)
+
+    assert sistema_cultura.responsavel.cpf == funcionario.cpf
+    assert sistema_cultura.responsavel.rg == funcionario.rg
+    assert sistema_cultura.responsavel.orgao_expeditor_rg == funcionario.orgao_expeditor_rg
+    assert sistema_cultura.responsavel.estado_expeditor == funcionario.estado_expeditor
+    assert sistema_cultura.responsavel.nome == funcionario.nome
+    assert sistema_cultura.responsavel.email_institucional == funcionario.email_institucional
+    assert sistema_cultura.responsavel.telefone_um == funcionario.telefone_um
+    assert sistema_cultura.responsavel.tipo_funcionario == 1
