@@ -68,6 +68,9 @@
        <div class="panel panel-info">
           <div class="panel-heading">
             Dados do Interlocutor
+            <a href="{% url 'gestao:alterar_funcionario' pk=ente.secretario.id tipo='secretario' %}">
+              <span class="glyphicon glyphicon-pencil"></span>
+            </a>
           </div>
           <div class="panel-body">
             <p><strong>Nome:</strong> {{ ente.secretario.nome }}</p>
@@ -87,6 +90,9 @@
         <div class="panel panel-info">
           <div class="panel-heading">
             Dados do Responsável Indicado
+            <a href="{% url 'gestao:alterar_funcionario' pk=ente.responsavel.id tipo='responsavel' %}">
+              <span class="glyphicon glyphicon-pencil"></span>
+            </a>
           </div>
           <div class="panel-body">
               <div class="row">
@@ -99,7 +105,7 @@
                   </div>
                   <div class="col-md-6">
 
-                    <p><strong>Instituição:</strong> {{ ente.responsavel.instituicaol }}</p>
+                    <p><strong>Instituição:</strong> {{ ente.responsavel.instituicao }}</p>
                     <p><strong>E-mail:</strong> {{ ente.responsavel.email_institucional }}</p>
                     <p><strong>Telefone:</strong> {{ ente.responsavel.telefone_um }}</p>
                   </div>
@@ -208,7 +214,7 @@
     {% if ente.fundo_cultura.arquivo %}
     <div class="list-group row">
        <div class="col-md-12">
-          <div  class="list-group-item col-xs-8">
+          <div class="list-group-item col-xs-8">
             Fundo de Cultura - Lei {% if ente.fundo_cultura.cnpj_fundo_cultura %} (CNPJ: {{ente.fundo_cultura.cnpj_fundo_cultura}}) {% endif %}
           </div>
 
