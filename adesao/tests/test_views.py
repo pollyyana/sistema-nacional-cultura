@@ -101,12 +101,12 @@ Telefone de Contato: {sistema.sede.telefone_um}
 Link da Adesão: http://snc.cultura.gov.br/gestao/detalhar/{sistema.id}
 
 Equipe SNC
-Ministério da Cultura"""
+SECRETARIA ESPECIAL DA CULTURA / MINISTÉRIO DA CIDADANIA"""
 
     assert len(mail.outbox) == 1
     assert (
         mail.outbox[0].subject
-        == "MINISTÉRIO DA CULTURA - SNC - SOLICITAÇÃO NOVA ADESÃO"
+        == "SECRETARIA ESPECIAL DA CULTURA / MINISTÉRIO DA CIDADANIA - SNC - SOLICITAÇÃO NOVA ADESÃO"
     )
     assert mail.outbox[0].from_email == "naoresponda@cultura.gov.br"
     assert mail.outbox[0].to == [user.email]

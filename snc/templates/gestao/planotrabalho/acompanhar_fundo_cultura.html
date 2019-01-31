@@ -27,7 +27,8 @@
             <thead>
               <tr>
                 <th>Município/Estado</th>
-                <th>CNPJ</th>
+                <th>CNPJ do Ente</th>
+                <th>CNPJ do Fundo</th>
                 <th>Anexo</th>
                 <th></th>
               </tr>
@@ -37,6 +38,7 @@
                 <tr class="odd gradeX">
                   <td><a href="{% url 'gestao:detalhar' cod_ibge=sistema.ente_federado.cod_ibge %}">{{ sistema.ente_federado }}</a></td>
                   <td>{{ sistema.sede.cnpj }}</td>
+                  <td>{{sistema.fundo_cultura.cnpj}}</td>
                   <td>
                     <a href="{{ sistema.fundo_cultura.arquivo.url }}">Download</a>
                   </td>
