@@ -70,6 +70,7 @@ import datetime
 
 from adesao.views import AlterarSistemaCultura
 from adesao.views import AlterarFuncionario
+from adesao.views import CadastrarFuncionario
 
 
 class EnteChain(autocomplete.Select2QuerySetView):
@@ -347,12 +348,20 @@ class AlterarDadosSistemaCultura(AlterarSistemaCultura):
 
 
 class AlterarFuncionario(AlterarFuncionario):
-    template_name = "alterar_funcionario.html"
+    template_name = "criar_funcionario.html"
 
     def get_success_url(self):
         funcionario = Funcionario.objects.get(id=self.kwargs['pk'])
         sistema = getattr(funcionario, 'sistema_cultura_%s' % self.kwargs['tipo'])
         return reverse_lazy('gestao:detalhar', kwargs={'cod_ibge': sistema.all()[0].ente_federado.cod_ibge})
+
+
+class CadastrarFuncionario(CadastrarFuncionario):
+    template_name = "criar_funcionario.html"
+
+    def get_success_url(self):
+        sistema = SistemaCultura.objects.get(id=self.kwargs['sistema'])
+        return reverse_lazy('gestao:detalhar', kwargs={'cod_ibge': sistema.ente_federado.cod_ibge})
 
 
 class AlterarDadosEnte(UpdateView, LookUpAnotherFieldMixin):

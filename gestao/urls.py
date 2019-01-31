@@ -20,6 +20,9 @@ urlpatterns = [
      path('alterar/funcionario/<str:tipo>/<int:pk>',
         staff_member_required(views.AlterarFuncionario.as_view()),
         name='alterar_funcionario'),
+    path('funcionario/<int:sistema>/<str:tipo>',
+        staff_member_required(views.CadastrarFuncionario.as_view()),
+        name='cadastrar_funcionario'),
     
     # Rota para AlterarCadastrador
     path('ente/<int:cod_ibge>/alterarcadastrador',

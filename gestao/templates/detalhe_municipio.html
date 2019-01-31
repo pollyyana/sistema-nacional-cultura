@@ -68,9 +68,15 @@
        <div class="panel panel-info">
           <div class="panel-heading">
             Dados do Interlocutor
-            <a href="{% url 'gestao:alterar_funcionario' pk=ente.secretario.id tipo='secretario' %}">
-              <span class="glyphicon glyphicon-pencil"></span>
-            </a>
+            {% if ente.secretario %}
+              <a href="{% url 'gestao:alterar_funcionario' pk=ente.secretario.id tipo='secretario' %}">
+                <span class="glyphicon glyphicon-pencil"></span>
+              </a>
+            {% else %}
+              <a href="{% url 'gestao:cadastrar_funcionario' sistema=ente.id tipo='secretario' %}">
+                <span class="glyphicon glyphicon-pencil"></span>
+              </a>
+            {% endif %}
           </div>
           <div class="panel-body">
             <p><strong>Nome:</strong> {{ ente.secretario.nome }}</p>
@@ -90,9 +96,15 @@
         <div class="panel panel-info">
           <div class="panel-heading">
             Dados do Responsável Indicado
-            <a href="{% url 'gestao:alterar_funcionario' pk=ente.responsavel.id tipo='responsavel' %}">
-              <span class="glyphicon glyphicon-pencil"></span>
-            </a>
+            {% if ente.responsavel %}
+              <a href="{% url 'gestao:alterar_funcionario' pk=ente.responsavel.id tipo='responsavel' %}">
+                <span class="glyphicon glyphicon-pencil"></span>
+              </a>
+            {% else %}
+              <a href="{% url 'gestao:cadastrar_funcionario' sistema=ente.id tipo='responsavel' %}">
+                <span class="glyphicon glyphicon-pencil"></span>
+              </a>
+            {% endif %}
           </div>
           <div class="panel-body">
               <div class="row">
