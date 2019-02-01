@@ -90,9 +90,6 @@ class ArquivoComponente2(models.Model):
     )
     data_envio = models.DateField(default=datetime.date.today)
 
-    class Meta:
-        abstract = True
-
 
 class PlanoTrabalho(models.Model):
     criacao_sistema = models.OneToOneField(
@@ -147,6 +144,8 @@ class FundoDeCultura(Componente):
         blank=True,
         null=True,
         default=None)
+    regulamentacao = models.ForeignKey('ArquivoComponente2', on_delete=models.CASCADE, blank=True, null=True,
+        related_name='fundos')
 
 
 class CriacaoSistema(ArquivoComponente):
