@@ -122,10 +122,12 @@ class PlanoTrabalho(models.Model):
         return str(self.id)
 
 
-class Componente(ArquivoComponente2):
+class Componente(models.Model):
+    arquivocomponente2_ptr = models.OneToOneField('ArquivoComponente2', on_delete=models.CASCADE, primary_key=True, db_column='id', db_index=False)
     tipo = models.IntegerField(
         choices=LISTA_TIPOS_COMPONENTES,
         default=0)
+    arquivo = models.ForeignKey('ArquivoComponente2', on_delete=models.CASCADE, blank=True, null=True)
     diligencia = models.ForeignKey('gestao.DiligenciaSimples', on_delete=models.CASCADE, related_name="componente", blank=True, null=True)
     data_publicacao = models.DateField(_("Data de Publicação do Componente"), null=True, blank=True)
 
