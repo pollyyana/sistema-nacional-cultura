@@ -244,7 +244,7 @@ class CadastrarUsuario(CreateView):
         Thread(
             target=send_mail,
             args=(
-                "MINISTÉRIO DA CULTURA - SNC - CREDENCIAIS DE ACESSO",
+                "Secretaria Especial da Cultura / Ministério da Cidadania - SNC - CREDENCIAIS DE ACESSO",
                 "Prezad@ "
                 + self.object.usuario.nome_usuario
                 + ",\n"
@@ -258,7 +258,7 @@ class CadastrarUsuario(CreateView):
                 )
                 + "\n\n"
                 + "Atenciosamente,\n\n"
-                + "Equipe SNC\nMinistério da Cultura",
+                + "Equipe SNC\nSecretaria Especial da Cultura / Ministério da Cidadania",
                 "naoresponda@cultura.gov.br",
                 [self.object.email],
             ),

@@ -2,16 +2,9 @@ import os, sys
 import environ
 import csv
 import django
-import pandas as pd
 
 from datetime import datetime as dt
 
-# from django.conf import settings
-# from snc import settings as snc_settings
-
-# ROOT_DIR = environ.Path(__file__)
-# sys.path.append(ROOT_DIR)
-# settings.configure(default_settings=snc_settings, DEBUG=True)
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'snc.settings')
 django.setup()
 
