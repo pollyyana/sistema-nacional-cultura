@@ -488,6 +488,7 @@ def test_insere_link_publicacao_dou(client, sistema_cultura, login_staff):
     sistema_atualizado = SistemaCultura.sistema.get(ente_federado__cod_ibge=sistema_cultura
         .ente_federado.cod_ibge)
     assert sistema_atualizado.link_publicacao_acordo == "https://www.google.com/"
+    assert sistema_atualizado.alterado_por == login_staff
 
 
 def test_remocao_data_publicacao_para_nao_publicados(client, sistema_cultura, login_staff):
@@ -511,6 +512,7 @@ def test_remocao_data_publicacao_para_nao_publicados(client, sistema_cultura, lo
         .ente_federado.cod_ibge)
     assert sistema_atualizado.estado_processo == '4'
     assert sistema_atualizado.data_publicacao_acordo == None
+    assert sistema_atualizado.alterado_por == login_staff
 
 
 def test_insere_sei(client, sistema_cultura, login_staff):
@@ -527,6 +529,7 @@ def test_insere_sei(client, sistema_cultura, login_staff):
     sistema_atualizado = SistemaCultura.sistema.get(ente_federado__cod_ibge=sistema_cultura
         .ente_federado.cod_ibge)
     assert sistema_atualizado.processo_sei == "123456"
+    assert sistema_atualizado.alterado_por == login_staff
 
 
 def test_retorno_200_para_detalhar_ente(client, sistema_cultura, login_staff):
@@ -906,6 +909,7 @@ def test_salvar_informacoes_no_banco_diligencia_geral(url, client, login_staff):
 
     assert DiligenciaSimples.objects.count() == 1
     assert DiligenciaSimples.objects.first() == sistema_cultura.diligencia
+    assert sistema_cultura.alterado_por == login_staff   
 
 
 def test_redirecionamento_de_pagina_apos_POST_diligencia_geral(
@@ -1269,6 +1273,7 @@ def test_alterar_dados_adesao_detalhe_municipio(client, login_staff, sistema_cul
     assert sistema_atualizado.justificativa == "texto de justificativa"
     assert sistema_atualizado.localizacao == "1234567890"
     assert sistema_atualizado.link_publicacao_acordo == "https://www.google.com"
+    assert sistema_atualizado.alterado_por == login_staff
 
 
 def test_alterar_dados_adesao_sem_valores(client, login_staff):
@@ -1311,6 +1316,7 @@ def test_alterar_cadastrador_sem_data_publicacao(client, login_staff):
 
     sistema_atualizado = SistemaCultura.sistema.get(ente_federado__cod_ibge=sistema.ente_federado.cod_ibge)
     assert sistema_atualizado.cadastrador == new_user
+    assert sistema_atualizado.alterado_por == login_staff
 
 
 def test_alterar_cadastrador_com_data_publicacao(client, login_staff):
@@ -1332,6 +1338,7 @@ def test_alterar_cadastrador_com_data_publicacao(client, login_staff):
     sistema_atualizado = SistemaCultura.sistema.get(ente_federado__cod_ibge=sistema.ente_federado.cod_ibge)
     assert sistema_atualizado.cadastrador == new_user
     assert sistema_atualizado.data_publicacao_acordo == datetime.date(2016, 2, 2)
+    assert sistema_atualizado.alterado_por == login_staff
 
 
 def test_ajax_cadastrador_cpf(client, login_staff):
@@ -1679,6 +1686,7 @@ def test_verificacao_se_prazo_foi_alterado(client, login_staff):
 
     sistema = SistemaCultura.sistema.get(ente_federado__cod_ibge=123456)
     assert sistema.prazo == prazo + 2
+    assert sistema.alterado_por == login_staff
 
 
 def test_pesquisa_de_ente_federado_sem_acento_tela_adicionar_prazo(client, login_staff):
@@ -1710,21 +1718,6 @@ def test_historico_diligencias_componentes(client, login_staff):
 
     assert len(historico) == 1
     assert historico[0].diligencia == diligencia
-
-
-def test_ente_federado_nao_encontrado(client, login_staff):
-    """ Testa se pesquisa retorna um ente federado.
-    """
-
-    sistema = mommy.make(
-        "SistemaCultura", ente_federado__cod_ibge=123456, ente_federado__nome="abaete",
-    )
-
-
-    url = reverse("gestao:acompanhar_adesao") + "?ente_federado=aaaa"
-    response = client.get(url)
-
-    assert len(response.context_data["object_list"]) == 0
 
 
 def test_links_para_componentes(client, login_staff):
@@ -1766,14 +1759,33 @@ def test_links_para_componentes(client, login_staff):
     assert "<a href=\"/media/" + sistema.plano.arquivo.name + "\">Download</a>" in response.rendered_content
 
 
+def test_ente_federado_nao_encontrado(client, login_staff):
+    """ Testa se pesquisa retorna um ente federado.
+    """
+
+    sistema = mommy.make(
+        "SistemaCultura", ente_federado__cod_ibge=123456, ente_federado__nome="abaete",
+    )
+
+    url = reverse("gestao:acompanhar_adesao") + "?ente_federado=aaaa"
+    response = client.get(url)
+
+    assert len(response.context_data["object_list"]) == 0
+
+
 def test_historico_cadastradores(client, login_staff):
 
     cadastrador_antigo = mommy.make("Usuario")
+    cadastrador_novo = mommy.make('Usuario', user__username='34701068004')
     sistema = mommy.make("SistemaCultura", ente_federado__cod_ibge=123456, cadastrador=cadastrador_antigo)
 
-    cadastrador_novo = mommy.make("Usuario")
-    sistema.cadastrador = cadastrador_novo
-    sistema.save()
+    url = reverse('gestao:alterar_cadastrador', kwargs={'cod_ibge': sistema.ente_federado.cod_ibge})
+
+    data = {
+        'cpf_cadastrador': cadastrador_novo.user.username,
+    }
+
+    client.post(url, data=data)
 
     url = reverse("gestao:detalhar", kwargs={"cod_ibge": sistema.ente_federado.cod_ibge})
     response = client.get(url)
@@ -1841,9 +1853,9 @@ def test_alterar_documentos_ente_federado(client, login_staff):
     sistema_cultura = mommy.make("SistemaCultura", ente_federado__cod_ibge=123456,
         _fill_optional='gestor')
 
-    rg_copia = SimpleUploadedFile("rg_copia.txt", b"file_content", content_type="text/plain")
-    termo_posse = SimpleUploadedFile("termo_posse.txt", b"file_content", content_type="text/plain")
-    cpf_copia = SimpleUploadedFile("cpf_copia.txt", b"file_content", content_type="text/plain")
+    rg_copia = SimpleUploadedFile("rg_copia_ente.txt", b"file_content", content_type="text/plain")
+    termo_posse = SimpleUploadedFile("termo_posse_ente.txt", b"file_content", content_type="text/plain")
+    cpf_copia = SimpleUploadedFile("cpf_copia_ente.txt", b"file_content", content_type="text/plain")
 
     url = reverse("gestao:alterar_entefederado", kwargs={"pk": sistema_cultura.gestor.id})
     response = client.post(url, data={"rg_copia": rg_copia, "termo_posse": termo_posse, "cpf_copia": cpf_copia})
@@ -1863,9 +1875,9 @@ def test_alterar_dados_sistema_cultura(client, login_staff):
         nome="nome", email_institucional="email@email.com")
     sede = Sede(cnpj="70.658.964/0001-07", endereco="endereco", complemento="complemento",
         cep="72430101", bairro="bairro", telefone_um="123456")
-    rg_copia = SimpleUploadedFile("rg_copia.txt", b"file_content", content_type="text/plain")
-    termo_posse = SimpleUploadedFile("termo_posse.txt", b"file_content", content_type="text/plain")
-    cpf_copia = SimpleUploadedFile("cpf_copia.txt", b"file_content", content_type="text/plain")
+    rg_copia = SimpleUploadedFile("rg_copia_sistema.txt", b"file_content", content_type="text/plain")
+    termo_posse = SimpleUploadedFile("termo_posse_sistema.txt", b"file_content", content_type="text/plain")
+    cpf_copia = SimpleUploadedFile("cpf_copia_sistema.txt", b"file_content", content_type="text/plain")
 
     url = reverse("gestao:alterar_sistema", kwargs={"pk": sistema_cultura.id})
 
@@ -2007,6 +2019,8 @@ def test_criar_dados_responsavel(client, login_staff):
 
     sistema_cultura = SistemaCultura.sistema.get(ente_federado__cod_ibge=123456)
 
+    assert sistema_cultura.alterado_por == login_staff
+
     assert sistema_cultura.responsavel.cpf == funcionario.cpf
     assert sistema_cultura.responsavel.rg == funcionario.rg
     assert sistema_cultura.responsavel.orgao_expeditor_rg == funcionario.orgao_expeditor_rg
@@ -2042,6 +2056,8 @@ def test_criar_dados_secretario(client, login_staff):
     )
 
     sistema_cultura = SistemaCultura.sistema.get(ente_federado__cod_ibge=123456)
+
+    assert sistema_cultura.alterado_por == login_staff
 
     assert sistema_cultura.secretario.cpf == funcionario.cpf
     assert sistema_cultura.secretario.rg == funcionario.rg
