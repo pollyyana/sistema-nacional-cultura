@@ -19,6 +19,8 @@ from adesao.managers import HistoricoManager
 from datetime import date
 from adesao.middleware import get_current_user
 
+from itertools import tee
+
 
 LISTA_ESTADOS_PROCESSO = (
     ('0', 'Aguardando preenchimento dos dados cadastrais'),
@@ -437,12 +439,37 @@ class SistemaCultura(models.Model):
 
         return situacoes
 
-    def compara_valores(self, obj_anterior, propriedade):
+    def compara_valores(self, obj_anterior, fields):
         """
         Compara os valores de determinada propriedade entre dois objetos.
         """
 
-        return getattr(obj_anterior, propriedade) == getattr(self, propriedade)
+        return (getattr(obj_anterior, field.attname) == getattr(self, field.attname) for field in
+                          fields)
+
+    def compara_fks(self, obj_anterior, fields):
+        comparacao_fk = True
+
+        for field in fields:
+            if field.get_internal_type() == 'ForeignKey':
+
+                objeto_fk_anterior = getattr(obj_anterior, field.name)
+                objeto_fk_atual = getattr(self, field.name)
+
+                if objeto_fk_anterior and objeto_fk_atual:
+                    for field in field.related_model._meta.fields[1:]:
+                        objeto_fk_anterior_value = getattr(objeto_fk_anterior, field.name)
+                        objeto_fk_atual_value = getattr(objeto_fk_atual, field.name)
+
+                        if objeto_fk_anterior_value != objeto_fk_atual_value:
+                            comparacao_fk = False
+                            break
+
+                    if not comparacao_fk:
+                        break
+
+        return comparacao_fk
+
 
     def save(self, *args, **kwargs):
         """
@@ -454,39 +481,12 @@ class SistemaCultura(models.Model):
             fields = self._meta.fields[1:-1]
             anterior = SistemaCultura.objects.get(pk=self.pk)
 
-            print(fields)
+            comparacao_fk = True
 
-            comparacao = (self.compara_valores(anterior, field.attname) for field in
-                          fields)
+            if all(self.compara_valores(anterior, fields)):
+                comparacao_fk = self.compara_fks(anterior, fields)
 
-            import ipdb; ipdb.set_trace()
-
-            #comparacao_fk = True
-            if all(comparacao):
-                print("AAAAAAAAAAAAAAAAAAAA")
-                # for field in fields:
-                #     if field.get_internal_type() == 'ForeignKey':
-
-                #         objeto_fk_anterior = getattr(anterior, field.name)
-                #         objeto_fk_atual = getattr(self, field.name)
-                        
-                #         for field in field.related_model._meta.fields[1:]:
-                #             try:
-                #                 objeto_fk_anterior_value = getattr(objeto_fk_anterior, field.name)
-                #                 objeto_fk_atual_value = getattr(objeto_fk_atual, field.name)
-
-                #                 if objeto_fk_anterior_value != objeto_fk_atual_value:
-                #                     comparacao_fk = False
-                #                     break
-
-                #             except AttributeError:
-                #                 pass
-
-                #         if not comparacao_fk:
-                #             break
-
-            if False in comparacao:
-                print("BBBBBBBBBBBBBBBBBB")
+            if False in self.compara_valores(anterior, fields) or comparacao_fk == False:
                 self.pk = None
                 self.alterado_em = timezone.now()
                 self.alterado_por = get_current_user()

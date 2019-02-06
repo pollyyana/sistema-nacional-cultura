@@ -1923,7 +1923,7 @@ def test_alterar_dados_sistema_cultura(client, login_staff):
 
 def test_alterar_dados_secretario(client, login_staff):
     sistema_cultura = mommy.make("SistemaCultura", ente_federado__cod_ibge=123456,
-        secretario__tipo_funcionario=0)
+        secretario__tipo_funcionario=0, _fill_optional=['sede', 'gestor'])
 
     funcionario = Funcionario(cpf="381.390.630-29", rg="48.464.068-9",
         orgao_expeditor_rg="SSP", estado_expeditor=29, telefone_um="999999999",
@@ -1959,7 +1959,7 @@ def test_alterar_dados_secretario(client, login_staff):
 
 def test_alterar_dados_responsavel(client, login_staff):
     sistema_cultura = mommy.make("SistemaCultura", ente_federado__cod_ibge=123456,
-        responsavel__tipo_funcionario=1)
+        responsavel__tipo_funcionario=1, _fill_optional=['sede', 'gestor'])
 
     funcionario = Funcionario(cpf="381.390.630-29", rg="48.464.068-9",
         orgao_expeditor_rg="SSP", estado_expeditor=29, telefone_um="999999999",
