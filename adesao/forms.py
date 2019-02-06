@@ -112,7 +112,7 @@ class CadastrarSede(ModelForm):
 
 class CadastrarSistemaCulturaForm(ModelForm):
 
-    def clean(self):
+    def clean(self):    
         super(CadastrarSistemaCulturaForm, self).clean()
 
         if 'ente_federado' in self.changed_data:
@@ -132,6 +132,20 @@ class CadastrarSistemaCulturaForm(ModelForm):
 
 class CadastrarFuncionarioForm(ModelForm):
     cpf = BRCPFField()
+
+    def __init__(self, *args, **kwargs):
+        self.tipo = kwargs.pop('tipo', None)
+        super(CadastrarFuncionarioForm, self).__init__(*args, **kwargs)
+
+    def save(self, commit=True):
+        funcionario = super(CadastrarFuncionarioForm, self).save(commit=False)
+
+        if funcionario:
+            sistema = getattr(funcionario, 'sistema_cultura_%s' % self.tipo)
+            sistema.all()[0].save()
+            funcionario.save()
+
+        return funcionario
 
     class Meta:
         model = Funcionario

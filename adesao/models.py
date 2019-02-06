@@ -454,10 +454,39 @@ class SistemaCultura(models.Model):
             fields = self._meta.fields[1:-1]
             anterior = SistemaCultura.objects.get(pk=self.pk)
 
+            print(fields)
+
             comparacao = (self.compara_valores(anterior, field.attname) for field in
                           fields)
 
+            import ipdb; ipdb.set_trace()
+
+            #comparacao_fk = True
+            if all(comparacao):
+                print("AAAAAAAAAAAAAAAAAAAA")
+                # for field in fields:
+                #     if field.get_internal_type() == 'ForeignKey':
+
+                #         objeto_fk_anterior = getattr(anterior, field.name)
+                #         objeto_fk_atual = getattr(self, field.name)
+                        
+                #         for field in field.related_model._meta.fields[1:]:
+                #             try:
+                #                 objeto_fk_anterior_value = getattr(objeto_fk_anterior, field.name)
+                #                 objeto_fk_atual_value = getattr(objeto_fk_atual, field.name)
+
+                #                 if objeto_fk_anterior_value != objeto_fk_atual_value:
+                #                     comparacao_fk = False
+                #                     break
+
+                #             except AttributeError:
+                #                 pass
+
+                #         if not comparacao_fk:
+                #             break
+
             if False in comparacao:
+                print("BBBBBBBBBBBBBBBBBB")
                 self.pk = None
                 self.alterado_em = timezone.now()
                 self.alterado_por = get_current_user()

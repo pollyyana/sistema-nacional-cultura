@@ -1983,6 +1983,8 @@ def test_alterar_dados_responsavel(client, login_staff):
 
     sistema_cultura = SistemaCultura.sistema.get(ente_federado__cod_ibge=123456)
 
+    assert sistema_cultura.alterado_por == login_staff
+
     assert sistema_cultura.responsavel.cpf == funcionario.cpf
     assert sistema_cultura.responsavel.rg == funcionario.rg
     assert sistema_cultura.responsavel.orgao_expeditor_rg == funcionario.orgao_expeditor_rg

@@ -388,6 +388,12 @@ class CadastrarFuncionario(CreateView):
     form_class = CadastrarFuncionarioForm
     template_name = "cadastrar_funcionario.html"
 
+    def get_form_kwargs(self):
+        kwargs = super(CadastrarFuncionario, self).get_form_kwargs()
+        kwargs['tipo'] = self.kwargs['tipo']
+
+        return kwargs
+
     def get_sistema_cultura(self):
         return get_object_or_404(SistemaCultura, pk=int(self.kwargs['sistema']))
 
@@ -457,6 +463,12 @@ class AlterarFuncionario(UpdateView):
     model = Funcionario
     template_name = "cadastrar_funcionario.html"
     success_url = reverse_lazy("adesao:sucesso_funcionario")
+
+    def get_form_kwargs(self):
+        kwargs = super(AlterarFuncionario, self).get_form_kwargs()
+        kwargs['tipo'] = self.kwargs['tipo']
+
+        return kwargs
 
 
 class GeraPDF(WeasyTemplateView):
