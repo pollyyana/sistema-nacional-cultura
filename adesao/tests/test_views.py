@@ -255,7 +255,8 @@ def test_cadastrar_funcionario_tipo_secretario(login, client):
 def test_alterar_funcionario_tipo_secretario(login, client):
 
     secretario = mommy.make("Funcionario", tipo_funcionario=0)
-    sistema_cultura = mommy.make("SistemaCultura", secretario=secretario)
+    sistema_cultura = mommy.make("SistemaCultura", secretario=secretario,
+        _fill_optional=['ente_federado', 'sede', 'gestor'])
 
     url = reverse("adesao:alterar_funcionario",
         kwargs={"tipo": "secretario", "pk": sistema_cultura.secretario.id})
@@ -292,7 +293,8 @@ def test_alterar_funcionario_tipo_secretario(login, client):
 def test_alterar_funcionario_tipo_responsavel(login, client):
 
     responsavel = mommy.make("Funcionario",tipo_funcionario=1)
-    sistema_cultura = mommy.make("SistemaCultura", responsavel=responsavel)
+    sistema_cultura = mommy.make("SistemaCultura", responsavel=responsavel,
+        _fill_optional=['ente_federado', 'gestor', 'sede'])
 
     url = reverse("adesao:alterar_funcionario",
         kwargs={"tipo": "responsavel", "pk": sistema_cultura.responsavel.id})
