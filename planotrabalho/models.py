@@ -123,7 +123,6 @@ class PlanoTrabalho(models.Model):
 
 
 class Componente(models.Model):
-    arquivocomponente2_ptr = models.OneToOneField('ArquivoComponente2', on_delete=models.CASCADE, primary_key=True, db_column='id', db_index=False)
     tipo = models.IntegerField(
         choices=LISTA_TIPOS_COMPONENTES,
         default=0)

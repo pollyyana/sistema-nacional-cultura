@@ -28,16 +28,6 @@ class Migration(migrations.Migration):
             componente.arquivo_temp = arquivo
             componente.save()
 
-    def migra_para_nova_estrutura(apps, schema_editor):
-        Componente = apps.get_model('planotrabalho', 'Componente')
-        ArquivoComponente2 = apps.get_model(
-            'planotrabalho', 'ArquivoComponente2')
-
-        for componente in Componente.objects.all():
-            arquivo = ArquivoComponente2.objects.get(id=componente.id)
-            componente.arquivo_temp = arquivo
-            componente.save()
-
     operations = [
         migrations.CreateModel(
             name='ArquivoComponente2',
