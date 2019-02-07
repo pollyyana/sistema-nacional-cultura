@@ -89,13 +89,13 @@ class CadastrarGestor(ModelForm):
     cpf = BRCPFField()
     termo_posse = RestrictedFileField(
         content_types=content_types,
-        max_upload_size=5242880)
+        max_upload_size=52428800)
     rg_copia = RestrictedFileField(
         content_types=content_types,
-        max_upload_size=5242880)
+        max_upload_size=52428800)
     cpf_copia = RestrictedFileField(
         content_types=content_types,
-        max_upload_size=5242880)
+        max_upload_size=52428800)
 
     class Meta:
         model = Gestor
