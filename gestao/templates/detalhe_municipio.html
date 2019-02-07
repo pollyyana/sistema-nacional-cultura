@@ -4,6 +4,9 @@
         <div class="panel panel-info">
           <div class="panel-heading">
             Dados do Ente Federado
+            <a href="{% url 'gestao:alterar_sistema' pk=ente.id %}">
+              <span class="glyphicon glyphicon-pencil"></span>
+            </a>
           </div>
           <div class="panel-body">
               <div class="row">
