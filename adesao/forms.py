@@ -112,7 +112,7 @@ class CadastrarSede(ModelForm):
 
 class CadastrarSistemaCulturaForm(ModelForm):
 
-    def clean(self):
+    def clean(self):    
         super(CadastrarSistemaCulturaForm, self).clean()
 
         if 'ente_federado' in self.changed_data:
@@ -128,13 +128,6 @@ class CadastrarSistemaCulturaForm(ModelForm):
         fields = ('ente_federado',)
         widgets = {
             'ente_federado': autocomplete.ModelSelect2(url='gestao:ente_chain')}
-
-
-SedeFormSet = formset_factory(
-    CadastrarSistemaCulturaForm, CadastrarSede, extra=2)
-
-GestorFormSet = formset_factory(
-    CadastrarSistemaCulturaForm, CadastrarGestor, extra=2)
 
 
 class CadastrarFuncionarioForm(ModelForm):

@@ -35,7 +35,7 @@ from adesao.models import (
 )
 from planotrabalho.models import Conselheiro, PlanoTrabalho
 from adesao.forms import CadastrarUsuarioForm, CadastrarSistemaCulturaForm
-from adesao.forms import SedeFormSet, GestorFormSet
+from adesao.forms import CadastrarSede, CadastrarGestor
 from adesao.forms import CadastrarFuncionarioForm
 from adesao.utils import enviar_email_conclusao, verificar_anexo, atualiza_session, preenche_planilha
 
@@ -327,12 +327,12 @@ class CadastrarSistemaCultura(TemplatedEmailFormViewMixin, CreateView):
         context = super(CadastrarSistemaCultura, self).get_context_data(**kwargs)
         if self.request.POST:
             context['form_sistema'] = CadastrarSistemaCulturaForm(self.request.POST, self.request.FILES)
-            context['form_sede'] = SedeFormSet(self.request.POST, self.request.FILES)
-            context['form_gestor'] = GestorFormSet(self.request.POST, self.request.FILES)
+            context['form_sede'] = CadastrarSede(self.request.POST, self.request.FILES)
+            context['form_gestor'] = CadastrarGestor(self.request.POST, self.request.FILES)
         else:
             context['form_sistema'] = CadastrarSistemaCulturaForm()
-            context['form_sede'] = SedeFormSet()
-            context['form_gestor'] = GestorFormSet()
+            context['form_sede'] = CadastrarSede()
+            context['form_gestor'] = CadastrarGestor()
         return context
 
     def templated_email_get_recipients(self, form):
@@ -350,44 +350,37 @@ class CadastrarSistemaCultura(TemplatedEmailFormViewMixin, CreateView):
 
 
 class AlterarSistemaCultura(UpdateView):
-    form_class = CadastrarSistemaCulturaForm
+    form_class = CadastrarSede
     model = SistemaCultura
     template_name = "cadastrar_sistema.html"
-    success_url = reverse_lazy("adesao:sucesso_municipio")
 
     def form_valid(self, form):
         context = self.get_context_data()
-
-        form_sistema = context['form_sistema']
         form_sede = context['form_sede']
         form_gestor = context['form_gestor']
 
-        if form_sistema.is_valid() and form_gestor.is_valid() and form_sede.is_valid():
+        if form_gestor.is_valid() and form_sede.is_valid():
             sede = form_sede.save()
             gestor = form_gestor.save()
 
-            form_sistema.instance.sede = sede
-            form_sistema.instance.gestor = gestor
-            form_sistema.instance.cadastrador = self.request.user.usuario
-            sistema = form_sistema.save()
-
-            return redirect(self.success_url)
+            return redirect(self.get_success_url())
         else:
             return self.render_to_response(self.get_context_data(form=form))
 
     def form_invalid(self, form):
         return self.render_to_response(self.get_context_data(form=form))
 
+    def get_success_url(self):
+        return reverse_lazy("adesao:sucesso_municipio")
+
     def get_context_data(self, **kwargs):
         context = super(AlterarSistemaCultura, self).get_context_data(**kwargs)
         if self.request.POST:
-            context['form_sistema'] = CadastrarSistemaCulturaForm(self.request.POST, instance=self.object)
-            context['form_sede'] = SedeFormSet(self.request.POST, instance=self.object.sede)
-            context['form_gestor'] = GestorFormSet(self.request.POST, instance=self.object.gestor)
+            context['form_sede'] = CadastrarSede(self.request.POST, self.request.FILES, instance=self.object.sede)
+            context['form_gestor'] = CadastrarGestor(self.request.POST, self.request.FILES, instance=self.object.gestor)
         else:
-            context['form_sistema'] = CadastrarSistemaCulturaForm(instance=self.object)
-            context['form_sede'] = SedeFormSet(instance=self.object.sede)
-            context['form_gestor'] = GestorFormSet(instance=self.object.gestor)
+            context['form_sede'] = CadastrarSede(instance=self.object.sede)
+            context['form_gestor'] = CadastrarGestor(instance=self.object.gestor)
         return context
 
 
@@ -464,6 +457,19 @@ class AlterarFuncionario(UpdateView):
     model = Funcionario
     template_name = "cadastrar_funcionario.html"
     success_url = reverse_lazy("adesao:sucesso_funcionario")
+
+    def form_valid(self, form):
+        funcionario = form.instance
+
+        if funcionario:
+            sistema = getattr(funcionario, 'sistema_cultura_%s' % self.kwargs['tipo']).all().first()
+            sistema.save()
+            funcionario.save()
+
+        sistema_atualizado = SistemaCultura.sistema.get(ente_federado__id=sistema.ente_federado.id)
+        atualiza_session(sistema_atualizado, self.request)
+
+        return super(AlterarFuncionario, self).form_valid(form)
 
 
 class GeraPDF(WeasyTemplateView):
