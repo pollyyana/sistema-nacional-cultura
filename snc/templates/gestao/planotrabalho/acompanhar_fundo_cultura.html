@@ -29,7 +29,10 @@
                 <th>Município/Estado</th>
                 <th>CNPJ do Ente</th>
                 <th>CNPJ do Fundo</th>
-                <th>Anexo</th>
+                <th>Anexo da Lei</th>
+                <th>Avaliar Lei</th>
+                <th>Anexo da Regulamentação</th>
+                <th>Avaliar Regulamentação</th>
                 <th></th>
               </tr>
             </thead>
@@ -44,6 +47,12 @@
                   </td>
                   <td>
                     <a href="{% url 'gestao:diligencia_componente' pk=sistema.id componente='fundo_cultura' %}">Avaliar</a>                  
+                  </td>
+                  <td>
+                    <a href="{{ sistema.fundo_cultura.regulamentacao.arquivo.url }}">Download</a>
+                  </td>
+                  <td>
+                    <a href="{% url 'gestao:diligencia_componente' pk=sistema.id componente='fundo_cultura' %}">Avaliar</a>
                   </td>
                 </tr>
               {% endfor %}

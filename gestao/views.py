@@ -264,10 +264,15 @@ class AcompanharComponente(ListView):
         sistemas = sistemas.exclude(**kwargs)
 
         if anexo == 'arquivo':
-            kwargs = {'{0}__situacao'.format(self.kwargs['componente']): 1}
-            sistemas = sistemas.filter(**kwargs)
-            kwargs = {'{0}__arquivo'.format(self.kwargs['componente']): None}
-            sistemas = sistemas.exclude(**kwargs)
+            if self.kwargs['componente'] == 'fundo_cultura':
+                sistemas = sistemas.filter((Q(fundo_cultura__regulamentacao__situacao=1)
+                    & ~Q(fundo_cultura__regulamentacao__arquivo=None)) |
+                    (Q(fundo_cultura__arquivo__situacao=1) & ~Q(fundo_cultura__arquivo__arquivo=None)))
+            else:
+                kwargs = {'{0}__arquivo__situacao'.format(self.kwargs['componente']): 1}
+                sistemas = sistemas.filter(**kwargs)
+                kwargs = {'{0}__arquivo__arquivo'.format(self.kwargs['componente']): None}
+                sistemas = sistemas.exclude(**kwargs)
         else:
             raise Http404
 

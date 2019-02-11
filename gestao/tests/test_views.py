@@ -40,7 +40,7 @@ def test_url_diligencia_retorna_200(url, client, login_staff):
     Testa se há url referente à página de diligências.
     A url teria o formato: gestao/id_sistema_cultura/diligencia/componente_plano_trabalho
     """
-    orgao_gestor = mommy.make("Componente", tipo=1, situacao=1)
+    orgao_gestor = mommy.make("Componente", tipo=1)
     sistema_cultura = mommy.make(
         "SistemaCultura",
         ente_federado__cod_ibge=123456,
@@ -49,8 +49,12 @@ def test_url_diligencia_retorna_200(url, client, login_staff):
     )
 
     arquivo = SimpleUploadedFile("lei.txt", b"file_content", content_type="text/plain")
-    orgao_gestor.arquivo = arquivo
+
+    lei = mommy.make("ArquivoComponente2", situacao=1)
+    orgao_gestor.arquivo = lei
     orgao_gestor.save()
+    orgao_gestor.arquivo.arquivo = arquivo
+    orgao_gestor.arquivo.save()
 
     request = client.get(
         url.format(id=sistema_cultura.pk, componente="orgao_gestor")
@@ -1850,3 +1854,21 @@ def test_alterar_documentos_ente_federado(client, login_staff):
     assert sistema_atualizado.gestor.termo_posse.name.split('/')[1] == termo_posse.name
     assert sistema_atualizado.gestor.rg_copia.name.split('/')[1] == rg_copia.name
     assert sistema_atualizado.gestor.cpf_copia.name.split('/')[1] == cpf_copia.name
+
+
+def test_acompanhar_regulamentacao_fundo_cultura(client, login_staff):
+    arquivo = SimpleUploadedFile("arquivo.txt", b"file_content", content_type="text/plain")
+    sistema_cultura = mommy.make("SistemaCultura", ente_federado__cod_ibge=123456,
+        _fill_optional='fundo_cultura', estado_processo='6')
+
+    regulamentacao = mommy.make("ArquivoComponente2", situacao=1)
+    sistema_cultura.fundo_cultura.regulamentacao = regulamentacao
+    sistema_cultura.fundo_cultura.tipo  = 2
+    sistema_cultura.fundo_cultura.save()
+    sistema_cultura.fundo_cultura.regulamentacao.arquivo = arquivo
+    sistema_cultura.fundo_cultura.regulamentacao.save()
+
+    url = reverse("gestao:acompanhar_componente", kwargs={"componente":"fundo_cultura"}) + "?anexo=arquivo"
+    response = client.get(url)
+
+    assert response.context_data["object_list"][0] == sistema_cultura
