@@ -4,6 +4,9 @@
         <div class="panel panel-info">
           <div class="panel-heading">
             Dados do Ente Federado
+            <a href="{% url 'gestao:alterar_sistema' pk=ente.id %}">
+              <span class="glyphicon glyphicon-pencil"></span>
+            </a>
           </div>
           <div class="panel-body">
               <div class="row">
@@ -68,6 +71,15 @@
        <div class="panel panel-info">
           <div class="panel-heading">
             Dados do Interlocutor
+            {% if ente.secretario %}
+              <a href="{% url 'gestao:alterar_funcionario' pk=ente.secretario.id tipo='secretario' %}">
+                <span class="glyphicon glyphicon-pencil"></span>
+              </a>
+            {% else %}
+              <a href="{% url 'gestao:cadastrar_funcionario' sistema=ente.id tipo='secretario' %}">
+                <span class="glyphicon glyphicon-pencil"></span>
+              </a>
+            {% endif %}
           </div>
           <div class="panel-body">
             <p><strong>Nome:</strong> {{ ente.secretario.nome }}</p>
@@ -87,6 +99,15 @@
         <div class="panel panel-info">
           <div class="panel-heading">
             Dados do Responsável Indicado
+            {% if ente.responsavel %}
+              <a href="{% url 'gestao:alterar_funcionario' pk=ente.responsavel.id tipo='responsavel' %}">
+                <span class="glyphicon glyphicon-pencil"></span>
+              </a>
+            {% else %}
+              <a href="{% url 'gestao:cadastrar_funcionario' sistema=ente.id tipo='responsavel' %}">
+                <span class="glyphicon glyphicon-pencil"></span>
+              </a>
+            {% endif %}
           </div>
           <div class="panel-body">
               <div class="row">
@@ -99,7 +120,7 @@
                   </div>
                   <div class="col-md-6">
 
-                    <p><strong>Instituição:</strong> {{ ente.responsavel.instituicaol }}</p>
+                    <p><strong>Instituição:</strong> {{ ente.responsavel.instituicao }}</p>
                     <p><strong>E-mail:</strong> {{ ente.responsavel.email_institucional }}</p>
                     <p><strong>Telefone:</strong> {{ ente.responsavel.telefone_um }}</p>
                   </div>
@@ -144,7 +165,7 @@
             {% if ente.legislacao.situacao == 1 %}
 
               <div class="list-group-item col-xs-2 text-center ">
-                <a href="{% url 'gestao:diligencia_componente' pk=ente.id componente='legislacao' %}">Criar Diligência</a>
+                <a href="{% url 'gestao:diligencia_componente' pk=ente.id componente='legislacao' %}">Avaliar</a>
               </div>
             {% else %}
             <div class="list-group-item col-xs-2 text-center">
@@ -169,7 +190,7 @@
           {% if ente.orgao_gestor.situacao == 1 %}
 
           <div class="list-group-item col-xs-2 text-center">
-              <a href="{% url 'gestao:diligencia_componente' pk=ente.id componente='orgao_gestor' %}">Criar Diligência</a>
+              <a href="{% url 'gestao:diligencia_componente' pk=ente.id componente='orgao_gestor' %}"> Avaliar</a>
           </div>
           {% else %}
           <div class="list-group-item col-xs-2 text-center">
@@ -193,7 +214,7 @@
           </div>
           {% if ente.conselho.situacao == 1 %}
             <div class="list-group-item col-xs-2 text-center">
-                <a href="{% url 'gestao:diligencia_componente' pk=ente.id componente='conselho' %}">Criar Diligência</a>
+                <a href="{% url 'gestao:diligencia_componente' pk=ente.id componente='conselho' %}">Avaliar</a>
             </div>
           {% else %}
           <div class="list-group-item col-xs-2 text-center">
@@ -208,7 +229,7 @@
     {% if ente.fundo_cultura.arquivo %}
     <div class="list-group row">
        <div class="col-md-12">
-          <div  class="list-group-item col-xs-8">
+          <div class="list-group-item col-xs-8">
             Fundo de Cultura - Lei {% if ente.fundo_cultura.cnpj_fundo_cultura %} (CNPJ: {{ente.fundo_cultura.cnpj_fundo_cultura}}) {% endif %}
           </div>
 
@@ -217,7 +238,7 @@
           </div>
           {% if ente.fundo_cultura.situacao == 1 %}
             <div class="list-group-item col-xs-2 text-center">
-                <a href="{% url 'gestao:diligencia_componente' pk=ente.id componente='fundo_cultura' %}">Criar Diligência</a>
+                <a href="{% url 'gestao:diligencia_componente' pk=ente.id componente='fundo_cultura' %}">Avaliar</a>
             </div>
           {% else %}
           <div class="list-group-item col-xs-2 text-center">
@@ -244,7 +265,7 @@
           {% if ente.plano.situacao == 1 %}
 
           <div class="list-group-item col-xs-2 text-center">
-              <a href="{% url 'gestao:diligencia_componente' pk=ente.id componente='plano' %}">Criar Diligência</a>
+              <a href="{% url 'gestao:diligencia_componente' pk=ente.id componente='plano' %}"> Avaliar</a>
           </div>
           {% else %}
           <div class="list-group-item col-xs-2 text-center">
@@ -392,6 +413,18 @@
               </div>
           </form>
         </div>
+    </div>
+
+    <div class="col-md-6">
+      <div class="panel panel-info">
+        <div class="panel-heading">
+          Administração da Adesão
+        </div>
+        <div class="panel-body">
+          <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#cadastradorModal" data-cadastrador-nome="{{ object.cadastrador.nome_usuario }}" data-cadastrador-cpf="{{ object.cadastrador.user.username }}">Alterar Cadastrador</button>
+          <a href="{% url 'gestao:alterar_sistema' pk=ente.id %}" type="button" class="btn btn-primary">Alterar dados do ente</a>
+        </div>
+      </div>
     </div>
 
     {% include "cadastrador.html" %}
