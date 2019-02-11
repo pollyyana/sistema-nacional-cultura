@@ -11,230 +11,527 @@
 
 
     {% load static %}
+
+    <link href="{% static 'css/material-dashboard.css' %}" rel="stylesheet">
+
+
     <!-- Bootstrap Core CSS -->
-    <link href="{% static 'css/bootstrap.min.css' %}" rel="stylesheet">
-    <link href="{% static 'css/jquery-ui.min.css' %}" rel="stylesheet">
+    <!-- <link href="{% static 'css/bootstrap.min.css' %}" rel="stylesheet"> -->
+    <!-- <link href="{% static 'css/jquery-ui.min.css' %}" rel="stylesheet"> -->
 
     <!-- MetisMenu CSS -->
-    <link href="{% static 'css/metisMenu.min.css' %}" rel="stylesheet">
+    <!-- <link href="{% static 'css/metisMenu.min.css' %}" rel="stylesheet"> -->
 
     <!-- DataTables CSS -->
-    <link href="{% static 'css/dataTables.bootstrap.css' %}" rel="stylesheet">
-    <link href="{% static 'css/dataTables.responsive.css' %}" rel="stylesheet">
+    <!-- <link href="{% static 'css/dataTables.bootstrap.css' %}" rel="stylesheet"> -->
+    <!-- <link href="{% static 'css/dataTables.responsive.css' %}" rel="stylesheet"> -->
+    <link href="https://cdn.datatables.net/1.10.19/css/dataTables.bootstrap4.min.css" rel="stylesheet">
 
     <!-- Custom CSS -->
-    <link href="{% static 'css/dashboard.css' %}" rel="stylesheet">
+    <!-- <link href="{% static 'css/dashboard.css' %}" rel="stylesheet"> -->
 
     <!-- Custom Fonts -->
-    <link href="{% static 'css/font-awesome.min.css' %}" rel="stylesheet" type="text/css">
+    <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700|Roboto+Slab:400,700|Material+Icons" />
+    <!-- <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/latest/css/font-awesome.min.css"> -->
 
-    <!-- jQuery -->
-    <script src="{% static 'js/jquery.min.js'%}"></script>
+    <link href="{% static 'css/font-awesome.min.css' %}?v=2.1.0" rel="stylesheet" type="text/css">
 
+    <style>
+      .page-item .page-link{
+        border-radius: 16px;
+        margin: 3px
+      }
+    </style>
 </head>
 
-<body>
+<body class="dark-edition">
+    <div class="wrapper ">
+        <div class="sidebar" data-color="green" data-background-color="black" data-image="http://localhost:8000/static/img/teste2.png">
+          <!--
+            Tip 1: You can change the color of the sidebar using: data-color="blue | azure | green | orange | danger"
 
-  <div id="wrapper">
-
-      <!-- Navigation -->
-      <nav class="navbar navbar-default navbar-static-top" role="navigation" style="margin-bottom: 0">
-          <div class="navbar-header">
-              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
-                  <span class="sr-only">Toggle navigation</span>
-                  <span class="icon-bar"></span>
-                  <span class="icon-bar"></span>
-                  <span class="icon-bar"></span>
-              </button>
-              <a class="navbar-brand" href="{% url 'gestao:acompanhar_adesao' %}" >SNC</a>
+            Tip 2: you can also add an image using data-image tag
+        -->
+          <div class="logo">
+            <a href="/" class="simple-text logo-normal">
+              SNC
+            </a>
           </div>
-          <!-- /.navbar-header -->
+          <div class="sidebar-wrapper">
+            <ul class="nav">
 
-          <ul class="nav navbar-top-links navbar-right">
-              <li class="dropdown">
-                  <a class="dropdown-toggle" data-toggle="dropdown" href="#">
-                      <i class="fa fa-user fa-fw"></i> {{ request.user.usuario.nome_usuario }} <i class="fa fa-caret-down"></i>
-                  </a>
-                  <ul class="dropdown-menu dropdown-user">
-                      <li><a href="{% url 'mudar_senha_gestao' %}"><i class="fa fa-user fa-fw"></i> Alterar Senha</a>
-                      </li>
-                      <li class="divider"></li>
-                      <li><a href="{% url 'adesao:logout' %}"><i class="fa fa-sign-out fa-fw"></i> Sair</a>
-                      </li>
-                  </ul>
-                  <!-- /.dropdown-user -->
+              <li class="nav-item active">
+                <a class="nav-link" href="{% url 'gestao:acompanhar_adesao' %}">
+                  <i class="material-icons">dashboard</i>
+                  <p>Inicio</p>
+                </a>
               </li>
-              <!-- /.dropdown -->
-          </ul>
-          <!-- /.navbar-top-links -->
 
-          <div class="navbar-default sidebar" role="navigation">
-              <div class="sidebar-nav navbar-collapse">
-                  <ul class="nav" id="side-menu">
-                      <li class="sidebar-search">
-                          <div class="input-group custom-search-form">
-                            <form action="{% url 'gestao:acompanhar_adesao' %}" method="get">
-                              <input type="text" name="ente_federado" class="form-control" placeholder="Buscar...">
-                              <span class="input-group-btn">
-                                  <button class="btn btn-default" type="submit">
-                                      <i class="fa fa-search"></i>
-                                  </button>
-                              </span>
-                            </form>
-                          </div>
-                          <!-- /input-group -->
-                      </li>
-                      <!--<li>
-                        <a href="#"><i class="fa fa-dashboard fa-fw"></i>  Dashboard</a>
-                      </li>-->
-                      <li>
-                        <a href="{% url 'gestao:acompanhar_adesao' %}">Início</a>
-                      </li>
-                      <li>
-                        <a href="{% url 'gestao:usuarios' %}">Usuários</a>
-                      </li>
-                      <li>
-                        <a href="{% url 'gestao:acompanhar_prazo' %}">
-                          Alterar Prazos
-                        </a>
-                      </li>
-                      <li>
-                        <a href="{% url 'exportar_ods' %}">Exportar Planilha ODS</a>
-                      </li>
-                      <li>
-                        <a href="{% url 'exportar_xls' %}">Exportar Planilha XLS</a>
-                      </li>
-                        
-                         <!-- Acompanhamento da execução do Plano de Trabalho -->
-                          <li>
-                           <a href="#" data-toggle="collapse" data-target="#plano_trabalho"><i class="fa fa-sitemap fa-fw"></i>  Plano de Trabalho<span class="fa arrow"></span></a>
-                           <div class="collapse" id="plano_trabalho" style="height: 0px;">
-                           <ul class="nav nav-second-level">
-                             <li>
-                               <a href="{% url 'gestao:acompanhar_componente' componente='legislacao' %}?anexo=arquivo" >  
-                                Lei - Sistema de Cultura
-                               </a>
-                            
-                             </li>
+              <li class="nav-item ">
+                <a class="nav-link" href="{% url 'gestao:usuarios' %}">
+                  <i class="material-icons">person</i>
+                  <p>Usuarios</p>
+                </a>
+              </li>
 
-                               <li>
-                                 <a href="{% url 'gestao:acompanhar_componente' componente='orgao_gestor' %}?anexo=arquivo">
-                                  Ato Normativo - Órgão Gestor
-                                 </a>
-                                
-                               </li>
+              <li class="nav-item">
+                  <a class="nav-link" href="{% url 'gestao:acompanhar_prazo' %}">
+                    <i class="material-icons">place</i>
+                    <p>Ente Federado</p>
+                  </a>
+                </li>
 
-                               <li>
-                                 <a href="{% url 'gestao:acompanhar_componente' componente='conselho' %}?anexo=arquivo">
-                                  Ata - Conselho Cultural
-                                 </a>
-                                 
-                               </li>
+              <li class="nav-item">
+                <a class="nav-link" href="{% url 'gestao:acompanhar_prazo' %}">
+                  <i class="material-icons">hourglass_full</i>
+                  <p>Prazos</p>
+                </a>
+              </li>
 
-                               <li>
-                                 <a href="{% url 'gestao:acompanhar_componente' componente='fundo_cultura' %}?anexo=arquivo">
-                                  Lei - Fundo de Cultura
-                                 </a>
-                             </li>
+              <li class="nav-item ">
+                <a class="nav-link" href="./map.html">
+                  <i class="material-icons">location_ons</i>
+                  <p>Plano de Trabalho</p>
+                </a>
+              </li>
 
-                             <li>
-                               <a href="{% url 'gestao:acompanhar_componente' componente='plano' %}?anexo=arquivo">
-                                Lei - Plano de Cultura
-                               </a> 
-                               
-                             </li>
-                           </ul>
-                          </div>
-                         </li>
+              <li class="nav-item ">
+                <a class="nav-link" href="./notifications.html">
+                  <i class="material-icons">backup</i>
+                  <p>Inserção de Documentação</p>
+                </a>
+              </li>
 
-                        <!-- Inserção de documentos faltantes-->
-
-                        <li>
-                          <a href="#" data-toggle="collapse" data-target="#inserir_documentos"><i class="fa fa-upload fa-fw"></i>  Inserir Documentos<span class="fa arrow"></span></a>
-                          <div class="collapse" id="inserir_documentos" style="height: 0px;">
-                            <ul class="nav nav-second-level">
-                                <li>
-                                  <a href="{% url 'gestao:listar_documentos' template='listar_legislacao' %}" data-toggle="collapse" data-target="#sistemacult">
-                                  Lei - Sistema de Cultura
-                                  </a>
-                              </li>
-
-                              <li>
-                                <a href="{% url 'gestao:listar_documentos' template='listar_orgao_gestor' %}" data-toggle="collapse" data-target="#orgaogestor">
-                                Ato normativo - Órgão Gestor
-                                </a>
-                              </li>
-
-                              <li>
-                                <a  href="{% url 'gestao:listar_documentos' template='listar_conselho' %}" data-toggle="collapse" data-target="#conselhocult">
-                                Ata - Conselho Cultural
-                                </a>
-                              </li>
-
-                              <li>
-                                <a href="{% url 'gestao:listar_documentos' template='listar_fundo_cultura' %}" data-toggle="collapse" data-target="#fundocult">
-                                Lei - Fundo de Cultura
-                                </a>
-                              </li>
-
-                              <li>
-                                <a href="{% url 'gestao:listar_documentos' template='listar_plano' %}" data-toggle="collapse" data-target="#planocult">
-                                Lei - Plano de Cultura
-                                </a>
-                              </li>
-
-                              <li>
-                                <a href="{% url 'gestao:inserir_entefederado' %}">
-                                  Ente Federado
-                                </a>
-                              </li>
-                            </ul>
-                          </div>
-                        </li>
-                    </ul>
-                </div>
-                <!-- /.sidebar-collapse -->
-            </div>
-            <!-- /.navbar-static-side -->
-        </nav>
-
-        <!-- Page Content -->
-        <div id="page-wrapper">
-            <div class="container-fluid">
-              {% block content %}
-                <div class="row">
-                    <div class="col-lg-12">
-                        <h1 class="page-header">Blank</h1>
-                    </div>
-                    <!-- /.col-lg-12 -->
-                </div>
-                <!-- /.row -->
-              {% endblock content %}
-            </div>
-            <!-- /.container-fluid -->
+            </ul>
+          </div>
         </div>
-        <!-- /#page-wrapper -->
+        <div class="main-panel">
+          <!-- Navbar -->
+          <nav class="navbar navbar-expand-lg navbar-transparent navbar-absolute fixed-top " id="navigation-example">
+            <div class="container-fluid">
+              <button class="navbar-toggler" type="button" data-toggle="collapse" aria-controls="navigation-index" aria-expanded="false" aria-label="Toggle navigation" data-target="#navigation-example">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="navbar-toggler-icon icon-bar"></span>
+                <span class="navbar-toggler-icon icon-bar"></span>
+                <span class="navbar-toggler-icon icon-bar"></span>
+              </button>
+              <div class="collapse navbar-collapse justify-content-end">
+                <form class="navbar-form">
+                  <div class="input-group no-border">
+                    <input type="text" value="" class="form-control" placeholder="Pesquisar...">
+                    <button type="submit" class="btn btn-default btn-round btn-just-icon">
+                      <i class="material-icons">search</i>
+                      <div class="ripple-container"></div>
+                    </button>
+                  </div>
+                </form>
+                <ul class="navbar-nav">
+                  <li class="nav-item dropdown" title="Exportar">
+                    <a class="nav-link" href="javscript:void(0)" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                      <i class="material-icons">save_alt</i>
+                      <p class="d-lg-none d-md-block">
+                        Exportar Planilha
+                      </p>
+                    </a>
+                    <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdownMenuLink">
+                      <a class="dropdown-item" href="{% url 'exportar_xls' %}">XLS</a>
+                      <a class="dropdown-item" href="{% url 'exportar_ods' %}">ODS</a>
+                    </div>
+                  </li>
+                  <li class="nav-item dropdown">
+                    <a class="nav-link" href="javscript:void(0)" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                      <span>
+                        {{ request.user.usuario.nome_usuario |truncatewords:2 |slice:"-4" }}&nbsp;&nbsp;
+                      </span>
+                      <i class="material-icons">person</i>
+                      <p class="d-lg-none d-md-block">
+                        Conta
+                      </p>
+                    </a>
+                    <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdownMenuLink">
+                      <a class="dropdown-item" href="{% url 'mudar_senha_gestao' %}">Alterar Senha</a>
+                      <a class="dropdown-item" href="{% url 'adesao:logout' %}">Sair</a>
+                    </div>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </nav>
+          <!-- End Navbar -->
+          <div class="content">
+            <div class="container-fluid">
 
-    </div>
-    <!-- /#wrapper -->
 
-    <!-- Bootstrap JavaScript -->
-    <script src="{% static 'js/bootstrap.min.js' %}"></script>
 
-    <!-- Metis Menu Plugin JavaScript -->
-    <script src="{% static 'js/metisMenu.min.js' %}"></script>
+                {% block content %}
+                {% endblock content %}
 
-    <!-- DataTables Javascript -->
-    <script src="{% static 'js/jquery.dataTables.min.js' %}"></script>
-    <script src="{% static 'js/dataTables.bootstrap.min.js' %}"></script>
 
-    <!-- Custom Theme JavaScript -->
-    <script src="{% static 'js/dashboard.js' %}"></script>
-    <script src="{% static 'js/jquery-ui.min.js' %}"></script>
+
+
+
+
+
+
+
+              <div class="row">
+                <div class="col-xl-4 col-lg-12">
+                  <div class="card card-chart">
+                    <div class="card-header card-header-success">
+                      <div class="ct-chart" id="dailySalesChart"></div>
+                    </div>
+                    <div class="card-body">
+                      <h4 class="card-title">Daily Sales</h4>
+                      <p class="card-category">
+                        <span class="text-success"><i class="fa fa-long-arrow-up"></i> 55% </span> increase in today sales.</p>
+                    </div>
+                    <div class="card-footer">
+                      <div class="stats">
+                        <i class="material-icons">access_time</i> updated 4 minutes ago
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-xl-4 col-lg-12">
+                  <div class="card card-chart">
+                    <div class="card-header card-header-warning">
+                      <div class="ct-chart" id="websiteViewsChart"></div>
+                    </div>
+                    <div class="card-body">
+                      <h4 class="card-title">Email Subscriptions</h4>
+                      <p class="card-category">Last Campaign Performance</p>
+                    </div>
+                    <div class="card-footer">
+                      <div class="stats">
+                        <i class="material-icons">access_time</i> campaign sent 2 days ago
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-xl-4 col-lg-12">
+                  <div class="card card-chart">
+                    <div class="card-header card-header-danger">
+                      <div class="ct-chart" id="completedTasksChart"></div>
+                    </div>
+                    <div class="card-body">
+                      <h4 class="card-title">Completed Tasks</h4>
+                      <p class="card-category">Last Campaign Performance</p>
+                    </div>
+                    <div class="card-footer">
+                      <div class="stats">
+                        <i class="material-icons">access_time</i> campaign sent 2 days ago
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-xl-3 col-lg-6 col-md-6 col-sm-6">
+                  <div class="card card-stats">
+                    <div class="card-header card-header-warning card-header-icon">
+                      <div class="card-icon">
+                        <i class="material-icons">content_copy</i>
+                      </div>
+                      <p class="card-category">Used Space</p>
+                      <h3 class="card-title">49/50
+                        <small>GB</small>
+                      </h3>
+                    </div>
+                    <div class="card-footer">
+                      <div class="stats">
+                        <i class="material-icons text-warning">warning</i>
+                        <a href="#pablo" class="warning-link">Get More Space...</a>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-xl-3 col-lg-6 col-md-6 col-sm-6">
+                  <div class="card card-stats">
+                    <div class="card-header card-header-success card-header-icon">
+                      <div class="card-icon">
+                        <i class="material-icons">store</i>
+                      </div>
+                      <p class="card-category">Revenue</p>
+                      <h3 class="card-title">$34,245</h3>
+                    </div>
+                    <div class="card-footer">
+                      <div class="stats">
+                        <i class="material-icons">date_range</i> Last 24 Hours
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-xl-3 col-lg-6 col-md-6 col-sm-6">
+                  <div class="card card-stats">
+                    <div class="card-header card-header-danger card-header-icon">
+                      <div class="card-icon">
+                        <i class="material-icons">info_outline</i>
+                      </div>
+                      <p class="card-category">Fixed Issues</p>
+                      <h3 class="card-title">75</h3>
+                    </div>
+                    <div class="card-footer">
+                      <div class="stats">
+                        <i class="material-icons">local_offer</i> Tracked from Github
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-xl-3 col-lg-6 col-md-6 col-sm-6">
+                  <div class="card card-stats">
+                    <div class="card-header card-header-info card-header-icon">
+                      <div class="card-icon">
+                        <i class="fa fa-twitter"></i>
+                      </div>
+                      <p class="card-category">Followers</p>
+                      <h3 class="card-title">+245</h3>
+                    </div>
+                    <div class="card-footer">
+                      <div class="stats">
+                        <i class="material-icons">update</i> Just Updated
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-lg-12 col-md-12">
+                  <div class="card">
+                    <div class="card-header card-plain card-header-primary">
+                      <h4 class="card-title">Entes Federados</h4>
+                      <p class="card-category">Unidades que concluíram o preenchimento dos dados</p>
+                    </div>
+                    <div class="card-body table-responsive">
+                      <table class="table table-hover" id="tabela-ente">
+                        <thead class="text-warning">
+                          <th>Análise</th>
+                          <th>Município/Estado</th>
+                          <th>Prefeito/Governador</th>
+                          <th>RG</th>
+                          <th>CPF</th>
+                          <th>CNPJ</th>
+                          <th>Situação</th>
+                        </thead>
+                        <tbody>
+                          <tr>
+                            <td>
+                              <button type="button" rel="tooltip" title="Detalhar" class="btn btn-white btn-link btn-sm">
+                                <i class="material-icons">visibility</i>
+                              </button>
+                            </td>
+                            <td>Xique-Xique/BA</td>
+                            <td>REINALDO TEIXEIRA BRAGA FILHO</td>
+                            <td>2162410</td>
+                            <td>36250406972</td>
+                            <td>75392019000120</td>
+                            <td>Publicado no DOU</td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-lg-12  col-md-12">
+                  <div class="card">
+
+                    <div class="card-header card-header-tabs card-header-primary">
+                      <div class="nav-tabs-navigation">
+                        <div class="nav-tabs-wrapper">
+                          <span class="nav-tabs-title">Documentos:</span>
+                          <ul class="nav nav-tabs" data-tabs="tabs">
+
+                            <li class="nav-item">
+                              <a class="nav-link active" href="#sistema" data-toggle="tab">
+                                Sistema de Cultura
+                                <div class="ripple-container"></div>
+                              </a>
+                            </li>
+
+                            <li class="nav-item">
+                              <a class="nav-link" href="#orgao" data-toggle="tab">
+                                Órgão Gestor
+                                <div class="ripple-container"></div>
+                              </a>
+                            </li>
+
+                            <li class="nav-item">
+                                <a class="nav-link" href="#conselho" data-toggle="tab">
+                                  Conselho Cultura
+                                  <div class="ripple-container"></div>
+                                </a>
+                            </li>
+
+                            <li class="nav-item">
+                                <a class="nav-link" href="#fundo" data-toggle="tab">
+                                  Fundo de Cultura
+                                  <div class="ripple-container"></div>
+                                </a>
+                            </li>
+
+                            <li class="nav-item">
+                                <a class="nav-link" href="#plano" data-toggle="tab">
+                                  Plano de Cultura
+                                  <div class="ripple-container"></div>
+                                </a>
+                            </li>
+
+                          </ul>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="card-body">
+                      <div class="tab-content">
+                        <div class="tab-pane active" id="sistema">
+                         asdasd
+                        </div>
+                        <div class="tab-pane" id="orgao">
+                          bbbbbbb
+                        </div>
+                        <div class="tab-pane" id="conselho">
+                          ccccccc
+                        </div>
+                        <div class="tab-pane" id="fundo">
+                            ddddd
+                        </div>
+                        <div class="tab-pane" id="plano">
+                            ff
+                        </div>
+                      </div>
+                    </div>
+
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <footer class="footer">
+            <div class="container-fluid">
+              <nav class="float-left">
+                <ul>
+                  <li>
+                    <a href="#">
+                      Link 1
+                    </a>
+                  </li>
+                  <li>
+                    <a href="#">
+                      Link 2
+                    </a>
+                  </li>
+                  <li>
+                    <a href="#">
+                      Link 3
+                    </a>
+                  </li>
+                </ul>
+              </nav>
+              <div class="copyright float-right" id="date">
+                 <i class="material-icons">favorite</i>
+                Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+              </div>
+            </div>
+          </footer>
+          <script>
+            const x = new Date().getFullYear();
+            let date = document.getElementById('date');
+            date.innerHTML = '&copy; ' + x + date.innerHTML;
+          </script>
+        </div>
+      </div>
+      <div class="fixed-plugin">
+        <div class="dropdown show-dropdown">
+          <a href="#" data-toggle="dropdown">
+            <i class="fa fa-cog fa-2x"> </i>
+          </a>
+          <ul class="dropdown-menu">
+            <li class="header-title"> Sidebar Filters</li>
+            <li class="adjustments-line">
+              <a href="javascript:void(0)" class="switch-trigger active-color">
+                <div class="badge-colors ml-auto mr-auto">
+                  <span class="badge filter badge-purple active" data-color="purple"></span>
+                  <span class="badge filter badge-azure" data-color="azure"></span>
+                  <span class="badge filter badge-green" data-color="green"></span>
+                  <span class="badge filter badge-warning" data-color="orange"></span>
+                  <span class="badge filter badge-danger" data-color="danger"></span>
+                </div>
+                <div class="clearfix"></div>
+              </a>
+            </li>
+            <li class="header-title">Images</li>
+            <li>
+              <a class="img-holder switch-trigger" href="javascript:void(0)">
+                <img src="http://localhost:8000/static/img/teste2.png" alt="">
+              </a>
+            </li>
+            <li class="active">
+              <a class="img-holder switch-trigger" href="javascript:void(0)">
+                <img src="../assets/img/sidebar-2.jpg" alt="">
+              </a>
+            </li>
+            <li>
+              <a class="img-holder switch-trigger" href="javascript:void(0)">
+                <img src="../assets/img/sidebar-3.jpg" alt="">
+              </a>
+            </li>
+            <li>
+              <a class="img-holder switch-trigger" href="javascript:void(0)">
+                <img src="../assets/img/sidebar-4.jpg" alt="">
+              </a>
+            </li>
+            <li class="button-container">
+              <a href="https://www.creative-tim.com/product/material-dashboard-dark" target="_blank" class="btn btn-primary btn-block">Free Download</a>
+            </li>
+            <li class="button-container">
+              <a href="https://demos.creative-tim.com/material-dashboard-dark/docs/2.0/getting-started/introduction.html" target="_blank" class="btn btn-default btn-block">
+                View Documentation
+              </a>
+            </li>
+            <li class="button-container github-star">
+              <a class="github-button" href="https://github.com/creativetimofficial/material-dashboard/tree/dark-edition" data-icon="octicon-star" data-size="large" data-show-count="true" aria-label="Star ntkme/github-buttons on GitHub">Star</a>
+            </li>
+            <li class="header-title">Thank you for 95 shares!</li>
+            <li class="button-container text-center">
+              <button id="twitter" class="btn btn-round btn-twitter"><i class="fa fa-twitter"></i> &middot; 45</button>
+              <button id="facebook" class="btn btn-round btn-facebook"><i class="fa fa-facebook-f"></i> &middot; 50</button>
+              <br>
+              <br>
+            </li>
+          </ul>
+        </div>
+      </div>
+
+    <script src="{% static 'js/jquery.min.js'%}"></script>
+    <script src="{% static 'js/popper.min.js' %}"></script>
+    <script src="{% static 'js/bootstrap-material-design.min.js' %}"></script>
+    <script src="{% static 'js/chartist.min.js' %}"></script>
+    <script src="{% static 'js/material-dashboard.min.js' %}?v=2.1.0"></script>
+
+    <script src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.10.19/js/dataTables.bootstrap4.min.js"></script>
+
     <script src="{% static 'js/datepicker-pt-BR.js' %}"></script>
 
     <script type="text/javascript">
       $(document).ready(function(){
+
+        $('#tabela-ente').DataTable({
+          "bLengthChange": false,
+          "language":{
+            "url": "http://cdn.datatables.net/plug-ins/1.10.19/i18n/Portuguese-Brasil.json"
+          }
+        });
+
+        $('.tabela-datatable').DataTable({
+          "bLengthChange": false,
+          "pageLength": 10,
+          "language":{
+            "url": "http://cdn.datatables.net/plug-ins/1.10.19/i18n/Portuguese-Brasil.json"
+          }
+        });
+
+
+        md.initDashboardPageCharts();
         $(".date").datepicker({
           showButtonPanel: true,
           regional: "pt-BR"
