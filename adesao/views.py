@@ -152,7 +152,10 @@ def exportar_csv(request):
             if sistema.ente_federado.is_municipio:
                 nome = sistema.ente_federado.__str__()
             else:
-                nome = "Estado de " + sistema.ente_federado.nome
+                if sistema.ente_federado.cod_ibge == 53:
+                    nome = sistema.ente_federado.nome
+                else:    
+                    nome = "Estado de " + sistema.ente_federado.nome
             cod_ibge = sistema.ente_federado.cod_ibge
         else:
             nome = "Nome não cadastrado"
