@@ -54,7 +54,7 @@ def preenche_planilha(planilha):
 
     for i, sistema in enumerate(SistemaCultura.sistema.all(), start=1):
         if sistema.ente_federado:
-            if sistema.ente_federado.is_municipio:
+            if sistema.ente_federado.is_municipio or sistema.ente_federado.cod_ibge == 53:
                 nome = sistema.ente_federado.__str__()
             else:
                 nome = "Estado de " + sistema.ente_federado.nome

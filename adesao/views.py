@@ -149,7 +149,7 @@ def exportar_csv(request):
 
     for sistema in SistemaCultura.sistema.all():
         if sistema.ente_federado:
-            if sistema.ente_federado.is_municipio:
+            if sistema.ente_federado.is_municipio or sistema.ente_federado.cod_ibge:
                 nome = sistema.ente_federado.__str__()
             else:
                 if sistema.ente_federado.cod_ibge == 53:
