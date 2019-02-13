@@ -139,6 +139,9 @@ def exportar_csv(request):
             "Situação do Conselho de Política Cultural",
             "Situação do Fundo de Cultura",
             "Situação do Plano de Cultura",
+            "IDH",
+            "PIB",
+            "População",
             "Endereço",
             "Bairro",
             "CEP",
@@ -157,6 +160,9 @@ def exportar_csv(request):
                 else:    
                     nome = "Estado de " + sistema.ente_federado.nome
             cod_ibge = sistema.ente_federado.cod_ibge
+            idh = sistema.ente_federado.idh
+            pib = sistema.ente_federado.pib
+            populacao = sistema.ente_federado.populacao
         else:
             nome = "Nome não cadastrado"
             cod_ibge = "Código não cadastrado"
@@ -189,6 +195,9 @@ def exportar_csv(request):
                 verificar_anexo(sistema, "conselho"),
                 verificar_anexo(sistema, "fundo_cultura"),
                 verificar_anexo(sistema, "plano"),
+                idh,
+                pib,
+                populacao,
                 endereco,
                 bairro,
                 cep,

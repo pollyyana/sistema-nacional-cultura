@@ -42,23 +42,30 @@ def preenche_planilha(planilha):
     planilha.write(0, 5, "Situação do Conselho de Política Cultural")
     planilha.write(0, 6, "Situação do Fundo de Cultura")
     planilha.write(0, 7, "Situação do Plano de Cultura")
-    planilha.write(0, 8, "Endereço")
-    planilha.write(0, 9, "Bairro")
-    planilha.write(0, 10, "CEP")
-    planilha.write(0, 11, "Telefone")
-    planilha.write(0, 12, "Email Prefeito")
-    planilha.write(0, 13, "Email do Cadastrador")
-    planilha.write(0, 14, "Email do Responsável")
-    planilha.write(0, 15, "Localização do processo")
+    planilha.write(0, 8, "IDH")
+    planilha.write(0, 9, "PIB")
+    planilha.write(0, 10, "População")
+    planilha.write(0, 11, "Endereço")
+    planilha.write(0, 12, "Bairro")
+    planilha.write(0, 13, "CEP")
+    planilha.write(0, 14, "Telefone")
+    planilha.write(0, 15, "Email Prefeito")
+    planilha.write(0, 16, "Email do Cadastrador")
+    planilha.write(0, 17, "Email do Responsável")
+    planilha.write(0, 18, "Localização do processo")
+    
     ultima_linha = 0
 
     for i, sistema in enumerate(SistemaCultura.sistema.all(), start=1):
         if sistema.ente_federado:
-            if sistema.ente_federado.is_municipio or sistema.ente_federado.cod_ibge == 53:
+            if sistema.ente_federado.is_municipio:
                 nome = sistema.ente_federado.__str__()
             else:
                 nome = "Estado de " + sistema.ente_federado.nome
             cod_ibge = sistema.ente_federado.cod_ibge
+            idh = sistema.ente_federado.idh
+            pib = sistema.ente_federado.pib
+            populacao = sistema.ente_federado.populacao
         else:
             nome = "Nome não cadastrado"
             cod_ibge = "Código não cadastrado"
@@ -101,15 +108,18 @@ def preenche_planilha(planilha):
         planilha.write(i, 5, verificar_anexo(sistema, "conselho"),)
         planilha.write(i, 6, verificar_anexo(sistema, "fundo_cultura"))
         planilha.write(i, 7, verificar_anexo(sistema, "plano"))
-        planilha.write(i, 8, endereco)
-        planilha.write(i, 9, bairro)
-        planilha.write(i, 10, cep)
-        planilha.write(i, 11, telefone)
-        planilha.write(i, 12, email_gestor)
-        planilha.write(i, 13, email_cadastrador)
-        planilha.write(i, 14, email_responsavel)
-        planilha.write(i, 15, local)
-
+        planilha.write(i, 8, idh)
+        planilha.write(i, 9, pib)
+        planilha.write(i, 10, populacao)
+        planilha.write(i, 11, endereco)
+        planilha.write(i, 12, bairro)
+        planilha.write(i, 13, cep)
+        planilha.write(i, 14, telefone)
+        planilha.write(i, 15, email_gestor)
+        planilha.write(i, 16, email_cadastrador)
+        planilha.write(i, 17, email_responsavel)
+        planilha.write(i, 18, local)
+        
         ultima_linha = i
 
     return ultima_linha
