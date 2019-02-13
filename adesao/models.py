@@ -99,7 +99,7 @@ class EnteFederado(models.Model):
 
         digits = int(math.log10(self.cod_ibge))+1
 
-        if digits > 2:
+        if digits > 2 or self.cod_ibge == 53:
             return f"{self.nome}/{uf}"
 
         return f"Estado de {self.nome} ({uf})"
