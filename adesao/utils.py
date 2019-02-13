@@ -35,29 +35,31 @@ def verificar_anexo(sistema, componente):
 
 def preenche_planilha(planilha):
     planilha.write(0, 0, "Ente Federado")
-    planilha.write(0, 1, "Cod.IBGE")
-    planilha.write(0, 2, "Situação")
-    planilha.write(0, 3, "Situação da Lei do Sistema de Cultura")
-    planilha.write(0, 4, "Situação do Órgão Gestor")
-    planilha.write(0, 5, "Situação do Conselho de Política Cultural")
-    planilha.write(0, 6, "Situação do Fundo de Cultura")
-    planilha.write(0, 7, "Situação do Plano de Cultura")
-    planilha.write(0, 8, "IDH")
-    planilha.write(0, 9, "PIB")
-    planilha.write(0, 10, "População")
-    planilha.write(0, 11, "Endereço")
-    planilha.write(0, 12, "Bairro")
-    planilha.write(0, 13, "CEP")
-    planilha.write(0, 14, "Telefone")
-    planilha.write(0, 15, "Email Prefeito")
-    planilha.write(0, 16, "Email do Cadastrador")
-    planilha.write(0, 17, "Email do Responsável")
-    planilha.write(0, 18, "Localização do processo")
-    planilha.write(0, 19, "Região")
+    planilha.write(0, 1, "UF")
+    planilha.write(0, 2, "Região")
+    planilha.write(0, 3, "Cod.IBGE")
+    planilha.write(0, 4, "Situação")
+    planilha.write(0, 5, "Situação da Lei do Sistema de Cultura")
+    planilha.write(0, 6, "Situação do Órgão Gestor")
+    planilha.write(0, 7, "Situação do Conselho de Política Cultural")
+    planilha.write(0, 8, "Situação do Fundo de Cultura")
+    planilha.write(0, 9, "Situação do Plano de Cultura")
+    planilha.write(0, 10, "IDH")
+    planilha.write(0, 11, "PIB")
+    planilha.write(0, 12, "População")
+    planilha.write(0, 13, "Endereço")
+    planilha.write(0, 14, "Bairro")
+    planilha.write(0, 15, "CEP")
+    planilha.write(0, 16, "Telefone")
+    planilha.write(0, 17, "Email Prefeito")
+    planilha.write(0, 18, "Email do Cadastrador")
+    planilha.write(0, 19, "Email do Responsável")
+    planilha.write(0, 20, "Localização do processo")
+    
     
     ultima_linha = 0
 
-    for i, sistema in enumerate(SistemaCultura.sistema.all(), start=1):
+    for i, sistema in enumerate(SistemaCultura.objects.distinct('ente_federado').order_by('ente_federado', 'ente_federado__nome'), start=1):
         if sistema.ente_federado:
             if sistema.ente_federado.is_municipio:
                 nome = sistema.ente_federado.__str__()
@@ -65,6 +67,7 @@ def preenche_planilha(planilha):
                 nome = "Estado de " + sistema.ente_federado.nome
             cod_ibge = sistema.ente_federado.cod_ibge
             regiao = sistema.ente_federado.get_regiao()
+            sigla = sistema.ente_federado.sigla
             idh = sistema.ente_federado.idh
             pib = sistema.ente_federado.pib
             populacao = sistema.ente_federado.populacao
@@ -103,25 +106,26 @@ def preenche_planilha(planilha):
         local = sistema.localizacao
 
         planilha.write(i, 0, nome)
-        planilha.write(i, 1, cod_ibge)
-        planilha.write(i, 2, estado_processo)
-        planilha.write(i, 3, verificar_anexo(sistema, "legislacao"))
-        planilha.write(i, 4, verificar_anexo(sistema, "orgao_gestor"),)
-        planilha.write(i, 5, verificar_anexo(sistema, "conselho"),)
-        planilha.write(i, 6, verificar_anexo(sistema, "fundo_cultura"))
-        planilha.write(i, 7, verificar_anexo(sistema, "plano"))
-        planilha.write(i, 8, idh)
-        planilha.write(i, 9, pib)
-        planilha.write(i, 10, populacao)
-        planilha.write(i, 11, endereco)
-        planilha.write(i, 12, bairro)
-        planilha.write(i, 13, cep)
-        planilha.write(i, 14, telefone)
-        planilha.write(i, 15, email_gestor)
-        planilha.write(i, 16, email_cadastrador)
-        planilha.write(i, 17, email_responsavel)
-        planilha.write(i, 18, local)
-        planilha.write(i, 19, regiao)
+        planilha.write(i, 1, sigla)
+        planilha.write(i, 2, regiao)
+        planilha.write(i, 3, cod_ibge)
+        planilha.write(i, 4, estado_processo)
+        planilha.write(i, 5, verificar_anexo(sistema, "legislacao"))
+        planilha.write(i, 6, verificar_anexo(sistema, "orgao_gestor"),)
+        planilha.write(i, 7, verificar_anexo(sistema, "conselho"),)
+        planilha.write(i, 8, verificar_anexo(sistema, "fundo_cultura"))
+        planilha.write(i, 9, verificar_anexo(sistema, "plano"))
+        planilha.write(i, 10, idh)
+        planilha.write(i, 11, pib)
+        planilha.write(i, 12, populacao)
+        planilha.write(i, 13, endereco)
+        planilha.write(i, 14, bairro)
+        planilha.write(i, 15, cep)
+        planilha.write(i, 16, telefone)
+        planilha.write(i, 17, email_gestor)
+        planilha.write(i, 18, email_cadastrador)
+        planilha.write(i, 19, email_responsavel)
+        planilha.write(i, 20, local)
         
         ultima_linha = i
 

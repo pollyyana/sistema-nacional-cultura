@@ -111,12 +111,12 @@ class EnteFederado(models.Model):
             return f"{self.nome}/{uf}"
 
         return f"Estado de {self.nome} ({uf})"
-    
+
     def get_regiao(self):
         digito = str(self.cod_ibge)[0]
         regiao = REGIOES[digito]  
         return regiao
- 
+    
     @property
     def is_municipio(self):
         digits = int(math.log10(self.cod_ibge))+1
@@ -127,7 +127,7 @@ class EnteFederado(models.Model):
 
     @property
     def sigla(self):
-        if self.is_municipio is False:
+        if self.is_municipio is False and self.cod_ibge != 53:
             uf = re.search('\(([A-Z]+)\)', self.__str__())[0]
             return re.search('[A-Z]+', uf)[0]
 
