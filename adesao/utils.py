@@ -53,6 +53,7 @@ def preenche_planilha(planilha):
     planilha.write(0, 16, "Email do Cadastrador")
     planilha.write(0, 17, "Email do Responsável")
     planilha.write(0, 18, "Localização do processo")
+    planilha.write(0, 19, "Região")
     
     ultima_linha = 0
 
@@ -63,6 +64,7 @@ def preenche_planilha(planilha):
             else:
                 nome = "Estado de " + sistema.ente_federado.nome
             cod_ibge = sistema.ente_federado.cod_ibge
+            regiao = sistema.ente_federado.get_regiao()
             idh = sistema.ente_federado.idh
             pib = sistema.ente_federado.pib
             populacao = sistema.ente_federado.populacao
@@ -119,6 +121,7 @@ def preenche_planilha(planilha):
         planilha.write(i, 16, email_cadastrador)
         planilha.write(i, 17, email_responsavel)
         planilha.write(i, 18, local)
+        planilha.write(i, 19, regiao)
         
         ultima_linha = i
 
