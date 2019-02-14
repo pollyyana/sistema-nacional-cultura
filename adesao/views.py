@@ -132,6 +132,8 @@ def exportar_csv(request):
     writer.writerow(
         [
             "Nome",
+            "UF",
+            "Região",
             "Cod.IBGE",
             "Situação",
             "Situação da Lei do Sistema de Cultura",
@@ -150,7 +152,7 @@ def exportar_csv(request):
         ]
     )
 
-    for sistema in SistemaCultura.sistema.all():
+    for sistema in SistemaCultura.objects.distinct('ente_federado').order_by('ente_federado', 'ente_federado__nome'):
         if sistema.ente_federado:
             if sistema.ente_federado.is_municipio or sistema.ente_federado.cod_ibge:
                 nome = sistema.ente_federado.__str__()
@@ -160,6 +162,8 @@ def exportar_csv(request):
                 else:    
                     nome = "Estado de " + sistema.ente_federado.nome
             cod_ibge = sistema.ente_federado.cod_ibge
+            sigla = sistema.ente_federado.sigla
+            regiao = sistema.ente_federado.get_regiao()
             idh = sistema.ente_federado.idh
             pib = sistema.ente_federado.pib
             populacao = sistema.ente_federado.populacao
@@ -188,6 +192,8 @@ def exportar_csv(request):
         writer.writerow(
             [
                 nome,
+                sigla,
+                regiao,
                 cod_ibge,
                 estado_processo,
                 verificar_anexo(sistema, "legislacao"),
