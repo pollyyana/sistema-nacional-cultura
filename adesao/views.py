@@ -132,6 +132,8 @@ def exportar_csv(request):
     writer.writerow(
         [
             "Nome",
+            "UF",
+            "Região",
             "Cod.IBGE",
             "Situação",
             "Situação da Lei do Sistema de Cultura",
@@ -139,6 +141,9 @@ def exportar_csv(request):
             "Situação do Conselho de Política Cultural",
             "Situação do Fundo de Cultura",
             "Situação do Plano de Cultura",
+            "IDH",
+            "PIB",
+            "População",
             "Endereço",
             "Bairro",
             "CEP",
@@ -147,16 +152,24 @@ def exportar_csv(request):
         ]
     )
 
-    for sistema in SistemaCultura.sistema.all():
+    for sistema in SistemaCultura.objects.distinct('ente_federado__cod_ibge').order_by(
+        'ente_federado__cod_ibge', 'ente_federado__nome'):
         if sistema.ente_federado:
-            if sistema.ente_federado.is_municipio:
-                nome = sistema.ente_federado.__str__()
-            else:
-                nome = "Estado de " + sistema.ente_federado.nome
+            nome = sistema.ente_federado.__str__()
             cod_ibge = sistema.ente_federado.cod_ibge
+            sigla = sistema.ente_federado.sigla
+            regiao = sistema.ente_federado.get_regiao()
+            idh = sistema.ente_federado.idh
+            pib = sistema.ente_federado.pib
+            populacao = sistema.ente_federado.populacao
         else:
             nome = "Nome não cadastrado"
             cod_ibge = "Código não cadastrado"
+            regiao = "Não encontrada"
+            sigla = "Não encontrada"
+            idh = "Não encontrado"
+            pib = "Não encontrado"
+            populacao = "Não encontrada"
 
         estado_processo = sistema.get_estado_processo_display()
 
@@ -179,6 +192,8 @@ def exportar_csv(request):
         writer.writerow(
             [
                 nome,
+                sigla,
+                regiao,
                 cod_ibge,
                 estado_processo,
                 verificar_anexo(sistema, "legislacao"),
@@ -186,6 +201,9 @@ def exportar_csv(request):
                 verificar_anexo(sistema, "conselho"),
                 verificar_anexo(sistema, "fundo_cultura"),
                 verificar_anexo(sistema, "plano"),
+                idh,
+                pib,
+                populacao,
                 endereco,
                 bairro,
                 cep,

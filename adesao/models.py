@@ -67,6 +67,14 @@ UFS = {
     53: "DF"
 }
 
+REGIOES = {
+    '1': "Norte",
+    '2': "Nordeste",
+    '3': "Sudeste",
+    '4': "Sul",
+    '5': "Centro Oeste",
+}
+
 
 # Create your models here.
 class Uf(models.Model):
@@ -102,11 +110,16 @@ class EnteFederado(models.Model):
 
         digits = int(math.log10(self.cod_ibge))+1
 
-        if digits > 2:
+        if digits > 2 or self.cod_ibge == 53:
             return f"{self.nome}/{uf}"
 
         return f"Estado de {self.nome} ({uf})"
 
+    def get_regiao(self):
+        digito = str(self.cod_ibge)[0]
+        regiao = REGIOES[digito]  
+        return regiao
+    
     @property
     def is_municipio(self):
         digits = int(math.log10(self.cod_ibge))+1
@@ -117,7 +130,7 @@ class EnteFederado(models.Model):
 
     @property
     def sigla(self):
-        if self.is_municipio is False:
+        if self.is_municipio is False and self.cod_ibge != 53:
             uf = re.search('\(([A-Z]+)\)', self.__str__())[0]
             return re.search('[A-Z]+', uf)[0]
 
