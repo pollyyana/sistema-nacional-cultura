@@ -85,11 +85,48 @@ class ArquivoComponente(models.Model):
 
 class ArquivoComponente2(models.Model):
     arquivo = models.FileField(upload_to=upload_to, null=True, blank=True)
-    situacao = models.IntegerField("Situação do Arquivo", choices=LISTA_SITUACAO_ARQUIVO,
+    situacao = models.IntegerField(
+        "Situação do Arquivo",
+        choices=LISTA_SITUACAO_ARQUIVO,
         default=0,
     )
     data_envio = models.DateField(default=datetime.date.today)
 
+
+class ArquivoComponente3(models.Model):
+    arquivo = models.FileField(upload_to=upload_to, null=True, blank=True)
+    situacao = models.IntegerField(
+        "Situação do Arquivo",
+        choices=LISTA_SITUACAO_ARQUIVO,
+        default=0,
+    )
+    data_envio = models.DateField(default=datetime.date.today)
+
+
+class Componente2(ArquivoComponente3):
+    tipo = models.IntegerField(
+        choices=LISTA_TIPOS_COMPONENTES,
+        default=0)
+    diligencia = models.ForeignKey(
+        'gestao.DiligenciaSimples', on_delete=models.CASCADE, blank=True, null=True)
+    data_publicacao = models.DateField(
+        _("Data de Publicação do Componente"), null=True, blank=True)
+
+    def __str__(self):
+        return str(self.id)
+
+    def get_absolute_url(self):
+        url = reverse_lazy("gestao:detalhar", kwargs={"pk": self.sistema_cultura.pk})
+        return url
+
+
+class FundoDeCultura2(Componente2):
+    cnpj = models.CharField(
+        max_length=18,
+        verbose_name='CNPJ',
+        blank=True,
+        null=True,
+        default=None)
 
 class PlanoTrabalho(models.Model):
     criacao_sistema = models.OneToOneField(

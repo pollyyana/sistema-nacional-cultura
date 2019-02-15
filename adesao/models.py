@@ -9,10 +9,10 @@ from django.urls import reverse_lazy
 from django.contrib.contenttypes.fields import GenericRelation
 
 from planotrabalho.models import PlanoTrabalho
-from planotrabalho.models import Componente
+from planotrabalho.models import Componente, Componente2
 from gestao.models import Diligencia
 
-from planotrabalho.models import FundoDeCultura
+from planotrabalho.models import FundoDeCultura, FundoDeCultura2
 from adesao.managers import SistemaManager
 from adesao.managers import HistoricoManager
 
@@ -384,6 +384,11 @@ class SistemaCultura(models.Model):
     fundo_cultura = models.ForeignKey(FundoDeCultura, on_delete=models.SET_NULL, null=True, related_name="fundo_cultura")
     conselho = models.ForeignKey(Componente, on_delete=models.SET_NULL, null=True, related_name="conselho")
     plano = models.ForeignKey(Componente, on_delete=models.SET_NULL, null=True, related_name="plano")
+    legislacao2 = models.ForeignKey(Componente2, on_delete=models.SET_NULL, null=True, related_name="legislacao")
+    orgao_gestor2 = models.ForeignKey(Componente2, on_delete=models.SET_NULL, null=True, related_name="orgao_gestor")
+    fundo_cultura2 = models.ForeignKey(FundoDeCultura2, on_delete=models.SET_NULL, null=True, related_name="fundo_cultura")
+    conselho2 = models.ForeignKey(Componente2, on_delete=models.SET_NULL, null=True, related_name="conselho")
+    plano2 = models.ForeignKey(Componente2, on_delete=models.SET_NULL, null=True, related_name="plano")
     secretario = models.ForeignKey(Funcionario, on_delete=models.SET_NULL, null=True, related_name="sistema_cultura_secretario")
     responsavel = models.ForeignKey(Funcionario, on_delete=models.SET_NULL, null=True, related_name="sistema_cultura_responsavel")
     gestor = models.ForeignKey(Gestor, on_delete=models.SET_NULL, null=True)
