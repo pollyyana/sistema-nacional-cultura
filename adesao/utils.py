@@ -56,15 +56,12 @@ def preenche_planilha(planilha):
     planilha.write(0, 19, "Email do Responsável")
     planilha.write(0, 20, "Localização do processo")
     
-    
     ultima_linha = 0
 
-    for i, sistema in enumerate(SistemaCultura.objects.distinct('ente_federado').order_by('ente_federado', 'ente_federado__nome'), start=1):
+    for i, sistema in enumerate(SistemaCultura.objects.distinct('ente_federado__cod_ibge').order_by(
+        'ente_federado__cod_ibge', 'ente_federado__nome'), start=1):
         if sistema.ente_federado:
-            if sistema.ente_federado.is_municipio:
-                nome = sistema.ente_federado.__str__()
-            else:
-                nome = "Estado de " + sistema.ente_federado.nome
+            nome = sistema.ente_federado.__str__()
             cod_ibge = sistema.ente_federado.cod_ibge
             regiao = sistema.ente_federado.get_regiao()
             sigla = sistema.ente_federado.sigla
@@ -72,8 +69,13 @@ def preenche_planilha(planilha):
             pib = sistema.ente_federado.pib
             populacao = sistema.ente_federado.populacao
         else:
-            nome = "Nome não cadastrado"
-            cod_ibge = "Código não cadastrado"
+            nome = "Não cadastrado"
+            cod_ibge = "Não cadastrado"
+            regiao = "Não encontrada"
+            sigla = "Não encontrada"
+            idh = "Não encontrado"
+            pib = "Não encontrado"
+            populacao = "Não encontrada"
 
         estado_processo = sistema.get_estado_processo_display()
 

@@ -152,15 +152,10 @@ def exportar_csv(request):
         ]
     )
 
-    for sistema in SistemaCultura.objects.distinct('ente_federado').order_by('ente_federado', 'ente_federado__nome'):
+    for sistema in SistemaCultura.objects.distinct('ente_federado__cod_ibge').order_by(
+        'ente_federado__cod_ibge', 'ente_federado__nome'):
         if sistema.ente_federado:
-            if sistema.ente_federado.is_municipio or sistema.ente_federado.cod_ibge:
-                nome = sistema.ente_federado.__str__()
-            else:
-                if sistema.ente_federado.cod_ibge == 53:
-                    nome = sistema.ente_federado.nome
-                else:    
-                    nome = "Estado de " + sistema.ente_federado.nome
+            nome = sistema.ente_federado.__str__()
             cod_ibge = sistema.ente_federado.cod_ibge
             sigla = sistema.ente_federado.sigla
             regiao = sistema.ente_federado.get_regiao()
@@ -170,6 +165,11 @@ def exportar_csv(request):
         else:
             nome = "Nome não cadastrado"
             cod_ibge = "Código não cadastrado"
+            regiao = "Não encontrada"
+            sigla = "Não encontrada"
+            idh = "Não encontrado"
+            pib = "Não encontrado"
+            populacao = "Não encontrada"
 
         estado_processo = sistema.get_estado_processo_display()
 
