@@ -1,11 +1,41 @@
 {% extends "gestao/base_gestao.html" %} {% load gestao_tags %} {% block content %}
+{% load widget_tweaks %}
 
 <div class="panel panel-info">
 	<div class="panel-heading">
 		Dados do Ente Federado
     </div>
 	<div class="panel-body">
-		{% include "formulario_sistema.html" %}
+		<form class="form-horizontal" method="post" enctype="multipart/form-data">{% csrf_token %}
+			<div class="form-group">
+			    <label class="col-sm-4 control-label">Ente Federado (Estado ou Município)</label>
+
+			    <div class="col-sm-2">
+			        <input type="text" class="form-control" value="{{object.ente_federado}}" disabled>
+			    </div>
+			</div>
+
+			{% include "formulario_sistema.html" %}
+
+			<div class="form-group {% if form_sistema.conferencia_nacional.errors %} has-error {% endif %}">
+				<label for="{{ form_sistema.conferencia_nacional.id_for_label }}" class="col-sm-4 control-label">
+					Participou da Conferência Nacional:</label>
+
+				<div class="col-sm-4">
+					{% render_field form_sistema.conferencia_nacional %}
+					{% if form_sistema.conferencia_nacional.errors %}
+						<span class="help-block">{{ form_sistema.conferencia_nacional.errors }}</span>
+					{% endif %}
+				</div>
+			</div>
+
+			<div class="form-group">
+			    <div class="col-sm-offset-3 col-sm-10">
+					<a class="btn btn-default" href="{% url 'adesao:home' %}">Cancelar</a>
+					<input type="submit" class="btn btn-success" value="Salvar" />
+			    </div>
+			</div>
+		</form>
 	</div>
 </div>
 

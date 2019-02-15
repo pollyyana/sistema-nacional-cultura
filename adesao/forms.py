@@ -125,7 +125,7 @@ class CadastrarSistemaCulturaForm(ModelForm):
 
     class Meta:
         model = SistemaCultura
-        fields = ('ente_federado',)
+        fields = ('ente_federado', 'conferencia_nacional')
         widgets = {
             'ente_federado': autocomplete.ModelSelect2(url='gestao:ente_chain')}
 
