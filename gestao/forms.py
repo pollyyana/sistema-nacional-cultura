@@ -45,7 +45,7 @@ content_types = [
     'application/octet-stream',
     'text/plain']
 
-max_upload_size = 5242880
+max_upload_size = 52428800
 
 class InserirSEI(ModelForm):
     processo_sei = forms.CharField(max_length="50", required=False)
@@ -95,22 +95,6 @@ class AlterarDadosEnte(ModelForm):
                 self.instance.data_publicacao_acordo = None
 
         return self.cleaned_data['estado_processo']
-
-    def clean(self):
-        cleaned_data = super().clean()
-        acordo_publicado = cleaned_data.get('estado_processo', self.instance.estado_processo)
-
-        if acordo_publicado == '6':
-            if cleaned_data['data_publicacao_acordo'] is None:
-                self.add_error('data_publicacao_acordo', forms.ValidationError('Preencha a data de publicação do acordo'))
-
-            if cleaned_data['link_publicacao_acordo'] is None:
-                self.add_error('link_publicacao_acordo', forms.ValidationError('Preencha o link para acesso a publicação do acordo'))
-
-            if cleaned_data['processo_sei'] is None:
-                self.add_error('processo_sei', forms.ValidationError('Preencha o número do processo no SEI'))
-
-        return cleaned_data
 
     class Meta:
         model = SistemaCultura

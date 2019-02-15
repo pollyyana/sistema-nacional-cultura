@@ -19,6 +19,32 @@ class SistemaCulturaFilter(filters.FilterSet):
         field_name='data_publicacao_acordo', lookup_expr=('gte'))
     data_adesao_max = filters.DateFilter(
         field_name='data_publicacao_acordo', lookup_expr=('lte'))
+    data_componente_min = filters.DateFilter(
+        field_name='data_componente_acordo', lookup_expr=('gte'),
+        method='data_componente_min')
+    data_componente_max = filters.DateFilter(
+        field_name='data_componente_acordo', lookup_expr=('lte'),
+        method='data_componente_max')
+    data_lei_min = filters.DateFilter(
+        field_name='legislacao__data_publicacao', lookup_expr=('gte'))
+    data_lei_max = filters.DateFilter(
+        field_name='legislacao__data_publicacao', lookup_expr=('lte'))
+    data_orgao_gestor_min = filters.DateFilter(
+        field_name='orgao_gestor__data_publicacao', lookup_expr=('gte'))
+    data_orgao_gestor_max = filters.DateFilter(
+        field_name='orgao_gestor__data_publicacao', lookup_expr=('lte'))
+    data_conselho_min = filters.DateFilter(
+        field_name='conselho__data_publicacao', lookup_expr=('gte'))
+    data_conselho_max = filters.DateFilter(
+        field_name='conselho__data_publicacao', lookup_expr=('lte'))
+    data_fundo_cultura_min = filters.DateFilter(
+        field_name='fundo_cultura__data_publicacao', lookup_expr=('gte'))
+    data_fundo_cultura_max = filters.DateFilter(
+        field_name='fundo_cultura__data_publicacao', lookup_expr=('lte'))
+    data_plano_min = filters.DateFilter(
+        field_name='plano__data_publicacao', lookup_expr=('gte'))
+    data_plano_max = filters.DateFilter(
+        field_name='plano__data_publicacao', lookup_expr=('lte'))
     situacao_lei_sistema = filters.ModelMultipleChoiceFilter(
         queryset=Componente.objects.all(),
         field_name='legislacao__situacao',

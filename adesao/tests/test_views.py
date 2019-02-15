@@ -101,12 +101,12 @@ Telefone de Contato: {sistema.sede.telefone_um}
 Link da Adesão: http://snc.cultura.gov.br/gestao/detalhar/{sistema.id}
 
 Equipe SNC
-Ministério da Cultura"""
+SECRETARIA ESPECIAL DA CULTURA / MINISTÉRIO DA CIDADANIA"""
 
     assert len(mail.outbox) == 1
     assert (
         mail.outbox[0].subject
-        == "MINISTÉRIO DA CULTURA - SNC - SOLICITAÇÃO NOVA ADESÃO"
+        == "SECRETARIA ESPECIAL DA CULTURA / MINISTÉRIO DA CIDADANIA - SNC - SOLICITAÇÃO NOVA ADESÃO"
     )
     assert mail.outbox[0].from_email == "naoresponda@cultura.gov.br"
     assert mail.outbox[0].to == [user.email]
@@ -255,7 +255,8 @@ def test_cadastrar_funcionario_tipo_secretario(login, client):
 def test_alterar_funcionario_tipo_secretario(login, client):
 
     secretario = mommy.make("Funcionario", tipo_funcionario=0)
-    sistema_cultura = mommy.make("SistemaCultura", secretario=secretario)
+    sistema_cultura = mommy.make("SistemaCultura", secretario=secretario,
+        _fill_optional=['ente_federado', 'sede', 'gestor'])
 
     url = reverse("adesao:alterar_funcionario",
         kwargs={"tipo": "secretario", "pk": sistema_cultura.secretario.id})
@@ -292,7 +293,8 @@ def test_alterar_funcionario_tipo_secretario(login, client):
 def test_alterar_funcionario_tipo_responsavel(login, client):
 
     responsavel = mommy.make("Funcionario",tipo_funcionario=1)
-    sistema_cultura = mommy.make("SistemaCultura", responsavel=responsavel)
+    sistema_cultura = mommy.make("SistemaCultura", responsavel=responsavel,
+        _fill_optional=['ente_federado', 'gestor', 'sede'])
 
     url = reverse("adesao:alterar_funcionario",
         kwargs={"tipo": "responsavel", "pk": sistema_cultura.responsavel.id})
