@@ -403,7 +403,7 @@ class SistemaCultura(models.Model):
     justificativa = models.TextField(_("Justificativa"), blank=True, null=True)
     diligencia = models.ForeignKey("gestao.DiligenciaSimples", on_delete=models.SET_NULL, related_name="sistema_cultura", blank=True, null=True)
     prazo = models.IntegerField(default=2)
-    conferencia_nacional = models.BooleanField(blank=True)
+    conferencia_nacional = models.BooleanField(blank=True, default=False)
     alterado_em = models.DateTimeField("Alterado em", default=timezone.now)
     alterado_por = models.ForeignKey("Usuario", on_delete=models.SET_NULL, null=True, related_name="sistemas_alterados")
 

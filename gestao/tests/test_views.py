@@ -1884,6 +1884,7 @@ def test_alterar_dados_sistema_cultura(client, login_staff):
     response = client.post(
         url,
         {
+            "ente_federado": sistema_cultura.ente_federado.id,
             "cpf": gestor.cpf,
             "rg": gestor.rg,
             "nome": gestor.nome,
