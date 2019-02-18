@@ -42,6 +42,8 @@ class Migration(migrations.Migration):
                 value = getattr(componente, field.name)
                 setattr(novo_componente, field.name, value)
 
+            novo_componente.save()
+
     operations = [
         migrations.CreateModel(
             name='ArquivoComponente3',

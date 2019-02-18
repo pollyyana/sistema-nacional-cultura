@@ -14,13 +14,25 @@ class Migration(migrations.Migration):
     def copia_fks(apps, schema_editor):
         SistemaCultura = apps.get_model('adesao', 'SistemaCultura')
         Componente = apps.get_model('planotrabalho', 'Componente')
+        Componente2 = apps.get_model('planotrabalho', 'Componente2')
+        FundoDeCultura2 = apps.get_model('planotrabalho', 'FundoDeCultura2')
 
         componentes = ('legislacao', 'orgao_gestor',
-                       'fundo_cultura', 'conselho', 'plano_cultura')
+                       'fundo_cultura', 'conselho', 'plano')
 
         for sistema in SistemaCultura.objects.all():
-            for c in componentes:
-                setattr(sistema, c+'2', getattr(sistema, c))
+            for componente in componentes:
+                if not getattr(sistema, componente):
+                    continue
+
+                old_componente = getattr(sistema, componente)
+
+                if componente != 'fundo_cultura':
+                    new_componente = Componente2.objects.get(id=old_componente.id)
+                else:
+                    new_componente = FundoDeCultura2.objects.get(id=old_componente.id)
+
+                setattr(sistema, componente+'2', new_componente)
             sistema.save()
 
     operations = [

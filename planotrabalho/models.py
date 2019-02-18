@@ -83,6 +83,19 @@ class ArquivoComponente(models.Model):
         abstract = True
 
 
+# class ArquivoComponente2(models.Model):
+#     arquivo = models.FileField(upload_to=upload_to, null=True, blank=True)
+#     situacao = models.IntegerField(
+#         "Situação do Arquivo",
+#         choices=LISTA_SITUACAO_ARQUIVO,
+#         default=0,
+#     )
+#     data_envio = models.DateField(default=datetime.date.today)
+
+#     class Meta:
+#         abstract = True
+
+
 class ArquivoComponente2(models.Model):
     arquivo = models.FileField(upload_to=upload_to, null=True, blank=True)
     situacao = models.IntegerField(
@@ -92,26 +105,13 @@ class ArquivoComponente2(models.Model):
     )
     data_envio = models.DateField(default=datetime.date.today)
 
-    class Meta:
-        abstract = True
 
-
-class ArquivoComponente3(models.Model):
-    arquivo = models.FileField(upload_to=upload_to, null=True, blank=True)
-    situacao = models.IntegerField(
-        "Situação do Arquivo",
-        choices=LISTA_SITUACAO_ARQUIVO,
-        default=0,
-    )
-    data_envio = models.DateField(default=datetime.date.today)
-
-
-class Componente2(ArquivoComponente3):
+class Componente(ArquivoComponente2):
     tipo = models.IntegerField(
         choices=LISTA_TIPOS_COMPONENTES,
         default=0)
     diligencia = models.ForeignKey(
-        'gestao.DiligenciaSimples', on_delete=models.CASCADE, blank=True, null=True)
+        'gestao.DiligenciaSimples', on_delete=models.CASCADE, related_name='Componente', blank=True, null=True)
     data_publicacao = models.DateField(
         _("Data de Publicação do Componente"), null=True, blank=True)
 
@@ -123,7 +123,7 @@ class Componente2(ArquivoComponente3):
         return url
 
 
-class FundoDeCultura2(Componente2):
+class FundoDeCultura(Componente):
     cnpj = models.CharField(
         max_length=18,
         verbose_name='CNPJ',
@@ -162,28 +162,28 @@ class PlanoTrabalho(models.Model):
         return str(self.id)
 
 
-class Componente(ArquivoComponente2):
-    tipo = models.IntegerField(
-        choices=LISTA_TIPOS_COMPONENTES,
-        default=0)
-    diligencia = models.ForeignKey('gestao.DiligenciaSimples', on_delete=models.CASCADE, related_name="componente", blank=True, null=True)
-    data_publicacao = models.DateField(_("Data de Publicação do Componente"), null=True, blank=True)
+# class Componente(ArquivoComponente2):
+#     tipo = models.IntegerField(
+#         choices=LISTA_TIPOS_COMPONENTES,
+#         default=0)
+#     diligencia = models.ForeignKey('gestao.DiligenciaSimples', on_delete=models.CASCADE, related_name="componente", blank=True, null=True)
+#     data_publicacao = models.DateField(_("Data de Publicação do Componente"), null=True, blank=True)
 
-    def __str__(self):
-        return str(self.id)
+#     def __str__(self):
+#         return str(self.id)
 
-    def get_absolute_url(self):
-        url = reverse_lazy("gestao:detalhar", kwargs={"pk": self.sistema_cultura.pk})
-        return url
+#     def get_absolute_url(self):
+#         url = reverse_lazy("gestao:detalhar", kwargs={"pk": self.sistema_cultura.pk})
+#         return url
 
 
-class FundoDeCultura(Componente):
-    cnpj = models.CharField(
-        max_length=18,
-        verbose_name='CNPJ',
-        blank=True,
-        null=True,
-        default=None)
+# class FundoDeCultura(Componente):
+#     cnpj = models.CharField(
+#         max_length=18,
+#         verbose_name='CNPJ',
+#         blank=True,
+#         null=True,
+#         default=None)
     # regulamentacao = models.ForeignKey('ArquivoComponente2', on_delete=models.CASCADE, blank=True, null=True,
         # related_name='fundos')
 
