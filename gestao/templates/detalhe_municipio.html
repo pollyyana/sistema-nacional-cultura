@@ -316,6 +316,13 @@
                          <b>E-mail:</b> {{sistema.cadastrador.user.email}}
                       </li>
                     {% endif %}
+
+
+                    {% if sistema.alterado_em %}
+                      <li class="list-group-item">
+                         <b>Data:</b> {{sistema.alterado_em}}
+                      </li>
+                    {% endif %}
                 </ul>
               {% endfor %}
             </div>
