@@ -1,27 +1,16 @@
 {% extends "gestao/base_gestao.html" %} {% load gestao_tags %} {% block content %}
 {% include 'messages.html' %}
-
+<menu data-target="prazo" ></menu>
 <div class="row">
   <div class="col-lg-12">
     <div class=" card  ">
-      <div class=" card-header">
-        Acompanhar Prazos
+      <div class="card-header card-plain card-header-primary">
+        <h4 class="card-title">Acompanhar Prazos</h4>
+            <p class="card-category">Aditivar prazo da adesão</p>
       </div>
       <!-- /.panel-heading -->
       <div class="card-body">
-        <form method="get" action="" style="margin-bottom: 5px">
-          <div class="input-group custom-search-form col-lg-3" style="padding: 0px">
-              <input type="text" name="ente_federado" class="form-control" placeholder="Município ou Estado">
-
-              <span class="input-group-btn">
-                  <button class="btn btn-default" type="submit">
-                      <i class="fa fa-search"></i>
-                  </button>
-              </span>
-          </div>
-        </form>
-        <div class="dataTable_wrapper">
-          <table class="table table-striped table-bordered table-hover" id="dataTables-example">
+          <table class="table table-hover tabela-datatable" >
             <thead>
               <tr>
                 <th>Município/Estado</th>
@@ -44,39 +33,17 @@
                   <td>{{ sistema.prazo }} anos</td>
                   <td>
                     <form method="post" action="{% url 'gestao:aditivar_prazo' sistema.id page_obj.number%}">{% csrf_token %}
-                      <button type="submit" class="btn btn-primary"><i class="fa fa-plus"></i></input>
+                        <button type="submit" rel="tooltip" title="Adicionar 2 anos" class="btn btn-white btn-link btn-sm">
+                            <i class="material-icons">add</i>
+                        </button>
                     </form>
                   </td>
                 </tr>
               {% endfor %}
             </tbody>
           </table>
-          {% if is_paginated %}
-          <div class="dataTables_paginate paging_simple_numbers">
-            <ul class="pagination">
-              {% if page_obj.has_previous %}
-              <li class="page-item">
-                <a class="previous page-link" href="?{% url_replace 'page' page_obj.previous_page_number %}">Anterior</a>
-              </li>
-              {% endif %}
-              <li class="page-item">
-                <a class="page-link">Página {{ page_obj.number }} de {{ page_obj.paginator.num_pages }}</a>
-              </li>
-              {% if page_obj.has_next %}
-              <li class="page-item">
-                <a class="next page-link" href="?{% url_replace 'page' page_obj.next_page_number %}">Próximo</a>
-              </li>
-              {% endif %}
-            </ul>
-          </div>
-          {% endif %}
         </div>
-        <!-- /.table-responsive -->
       </div>
-      <!-- /. card-body -->
-    </div>
-    <!-- /. card -->
   </div>
-  <!-- /.col-lg-12 -->
 </div>
 {% endblock content %}

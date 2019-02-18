@@ -1,5 +1,5 @@
 {% extends "gestao/base_gestao.html" %} {% load gestao_tags %} {% block content %}
-
+<menu data-target="ente" ></menu>
 <div class="row">
   <div class="col-lg-12">
     <div class="card card-default">
@@ -7,7 +7,7 @@
           <h4 class="card-title">Ente Federados</h4>
           <p class="card-category">Aderidos ao Sistema Nacional de Cultura</p>
       </div>
-      <div class="card-body">
+      <div class="card-body table-responsive">
           {% if not object_list %}
           <p></p>
           <p>Ente federado não encontrado</p>   
@@ -22,7 +22,6 @@
                   <th>CPF</th>
                   <th>CNPJ</th>
                   <th>Situação <a data-toggle="modal" data-target="#situacoes" ><i class="fa fa-search" title="Filtrar Por Situação"></i><a/></th>
-                  <!-- <th></th> -->
                 </tr>
               </thead>
               <tbody>
