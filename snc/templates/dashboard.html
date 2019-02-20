@@ -1,0 +1,127 @@
+{% extends "gestao/base_gestao.html" %} {% load gestao_tags %} {% block content %}
+<link href="http://themetrace.com/templates/bracketplus/lib/leaflet/leaflet.css" rel="stylesheet">
+
+<menu data-target="inicio" ></menu>
+<div class="row">
+    <div class="col-xl-4 col-lg-12">
+      <div class="card card-chart">
+        <div class="card-header card-header-success">
+          <div class="ct-chart" id="wtf"></div>
+        </div>
+        <div class="card-body">
+          <h4 class="card-title">Daily Sales</h4>
+          <p class="card-category">
+            <span class="text-success"><i class="fa fa-long-arrow-up"></i> 55% </span> increase in today sales.</p>
+        </div>
+        <div class="card-footer">
+          <div class="stats">
+            <i class="material-icons">access_time</i> updated 4 minutes ago
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-xl-4 col-lg-12">
+      <div class="card card-chart">
+        <div class="card-header card-header-warning">
+          <div class="ct-chart" id="websiteViewsChart"></div>
+        </div>
+        <div class="card-body">
+          <h4 class="card-title">Email Subscriptions</h4>
+          <p class="card-category">Last Campaign Performance</p>
+        </div>
+        <div class="card-footer">
+          <div class="stats">
+            <i class="material-icons">access_time</i> campaign sent 2 days ago
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-xl-4 col-lg-12">
+      <div class="card card-chart">
+        <div class="card-header card-header-danger">
+          <div class="ct-chart" id="completedTasksChart"></div>
+        </div>
+        <div class="card-body">
+          <h4 class="card-title">Completed Tasks</h4>
+          <p class="card-category">Last Campaign Performance</p>
+        </div>
+        <div class="card-footer">
+          <div class="stats">
+            <i class="material-icons">access_time</i> campaign sent 2 days ago
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-lg-12 col-md-12">
+        <div class="card">
+            <div class="card-header card-header-danger">
+                <div >Teste</div>
+            </div>
+            <div class="card-body">
+                <h4 class="card-title">Completed Tasks</h4>
+                <div class="row h-75 map-container flex-fill" id="leafletMap">
+
+                    </div>
+            </div>
+        </div>
+    </div>
+  </div>
+
+
+{% endblock content %}
+
+{% block js%}
+<script src="http://themetrace.com/templates/bracketplus/lib/leaflet/leaflet-src.js"></script>
+
+<script>
+    $('.chat').on('hide.bs.collapse',function(){
+    mymap.invalidateSize();
+    $('#chatToggle').text("Show Chat");
+}).on('show.bs.collapse',function(){
+    mymap.invalidateSize();
+    $('#chatToggle').text("Hide Chat");
+});
+
+// leafleft map
+var mymap = L.map('leafletMap').setView([51.505, -0.09], 13);
+L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={accessToken}', {
+    attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="http://mapbox.com">Mapbox</a>',
+    maxZoom: 18,
+    id: 'mapbox.streets',
+    accessToken: 'pk.eyJ1IjoiY3NrZWxseSIsImEiOiJjamV1NTd1eXIwMTh2MzN1bDBhN3AyamxoIn0.Z2euk6_og32zgG6nQrbFLw'
+}).addTo(mymap);
+ $(document).ready(function(){
+     
+
+    var names = {
+        labels: ['M', 'T', 'W', 'T', 'F', 'S', 'S'],
+        series: [
+          [12, 17, 7, 17, 23, 18, 38]
+        ]
+      };
+
+    var options = {
+        lineSmooth: Chartist.Interpolation.cardinal({
+          tension: 0
+        }),
+        low: 0,
+        high: 100, // creative tim: we recommend you to set the high sa the biggest value + something for a better look
+        chartPadding: {
+          top: 0,
+          right: 0,
+          bottom: 0,
+          left: 0
+        },
+      }
+
+      var chart = new Chartist.Line('#wtf', names, options);
+
+      md.startAnimationForLineChart(chart);
+ })
+</script>
+
+
+{% endblock js%}

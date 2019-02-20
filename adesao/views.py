@@ -67,7 +67,7 @@ def home(request):
     request.session['sistemas'] = list(sistemas_cultura.values('id', 'ente_federado__nome'))
 
     if request.user.is_staff:
-        return redirect("gestao:acompanhar_adesao")
+        return redirect("gestao:dashboard")
 
     if sistemas_cultura.count() == 1:
         atualiza_session(sistemas_cultura[0], request)

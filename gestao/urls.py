@@ -9,6 +9,9 @@ app_name = 'gestao'
 urlpatterns = [
     # Acompanhar andamento dos processos de adesão
     path('', staff_member_required(
+        views.dashboard,
+        login_url='adesao:login'), name='dashboard'),
+    path('entes', staff_member_required(
         views.AcompanharSistemaCultura.as_view(),
         login_url='adesao:login'), name='acompanhar_adesao'),
     path('ente/<int:cod_ibge>/dados-adesao',

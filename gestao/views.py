@@ -17,6 +17,7 @@ from django.views.generic.detail import SingleObjectMixin
 from django.views.generic import CreateView
 from django.views.generic import DetailView
 from django.views.generic import ListView
+from django.views.generic import View
 
 from django.views.generic.edit import FormView
 from django.views.generic.edit import UpdateView
@@ -73,6 +74,18 @@ from adesao.views import AlterarFuncionario
 from adesao.views import CadastrarFuncionario
 
 
+class DashboardHome(ListView):
+    # model = SistemaCultura
+    template_name = "dashboard.html"
+
+    def get_queryset(self):
+        return SistemaCultura.sistema.all()
+
+
+def dashboard(request, **kwargs):
+    return render(request, "dashboard.html")
+
+    
 class EnteChain(autocomplete.Select2QuerySetView):
     def get_queryset(self):
         """ Filtra todas as cidade de uma determinada UF """
