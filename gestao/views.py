@@ -1,3 +1,4 @@
+from django.core import serializers
 from django.db.models import Case, When, DateField, Count, Q
 from django.db.models.functions import Least
 from django.utils.translation import gettext as _
@@ -8,6 +9,7 @@ from django.shortcuts import get_object_or_404
 
 from django.http import Http404
 from django.http import JsonResponse
+from django.http import HttpResponse
 
 from django.contrib.auth.models import User
 from django.contrib import messages
@@ -74,18 +76,28 @@ from adesao.views import AlterarFuncionario
 from adesao.views import CadastrarFuncionario
 
 
-class DashboardHome(ListView):
-    # model = SistemaCultura
-    template_name = "dashboard.html"
-
-    def get_queryset(self):
-        return SistemaCultura.sistema.all()
-
-
 def dashboard(request, **kwargs):
     return render(request, "dashboard.html")
 
-    
+
+def ajax_consulta_entes(request):
+
+    if not request.is_ajax():
+        return JsonResponse(
+            data={"message": "Esta não é uma requisição AJAX"}, status=400)
+
+    ente_ids = SistemaCultura.sistema.filter(
+        ente_federado__isnull=False).values_list(
+                'ente_federado', flat=True) 
+
+    ente_queryset = EnteFederado.objects.filter(
+        id__in=ente_ids).filter(
+            Q(latitude__isnull=False) &
+            Q(longitude__isnull=False))
+    entes = serializers.serialize('json', ente_queryset)
+    return HttpResponse(entes, content_type='application/json')
+
+
 class EnteChain(autocomplete.Select2QuerySetView):
     def get_queryset(self):
         """ Filtra todas as cidade de uma determinada UF """

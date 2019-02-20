@@ -114,4 +114,8 @@ urlpatterns = [
     path("ajax/consultar_cpf",
             staff_member_required(views.ajax_consulta_cpf),
             name="ajax-consulta-cpf"),
+            
+    # ajax leaflet
+    url(r'^ajax_consulta_entes$', staff_member_required(views.ajax_consulta_entes), name='ajax_consulta_entes'),
+
     ]

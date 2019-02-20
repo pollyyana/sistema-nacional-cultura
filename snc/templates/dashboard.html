@@ -1,5 +1,21 @@
 {% extends "gestao/base_gestao.html" %} {% load gestao_tags %} {% block content %}
-<link href="http://themetrace.com/templates/bracketplus/lib/leaflet/leaflet.css" rel="stylesheet">
+<link rel="stylesheet" href="http://localhost:8000/static/css/leaflet.css" />
+<link rel="stylesheet" type="text/css" href="http://localhost:8000/static/css/MarkerCluster.css" />
+<link rel="stylesheet" type="text/css" href="http://localhost:8000/static/css/MarkerCluster.Default.css" />
+<style>
+.info {
+    padding: 6px 8px;
+    font: 14px/16px Arial, Helvetica, sans-serif;
+    background: white;
+    background: rgba(255,255,255,0.8);
+    box-shadow: 0 0 15px rgba(0,0,0,0.2);
+    border-radius: 5px;
+}
+.info h4 {
+    margin: 0 0 5px;
+    color: #777;
+}
+</style>
 
 <menu data-target="inicio" ></menu>
 <div class="row">
@@ -58,13 +74,13 @@
     <div class="col-lg-12 col-md-12">
         <div class="card">
             <div class="card-header card-header-danger">
-                <div >Teste</div>
+                <div >Mapa da Adesão</div>
             </div>
             <div class="card-body">
-                <h4 class="card-title">Completed Tasks</h4>
-                <div class="row h-75 map-container flex-fill" id="leafletMap">
+                <h4 class="card-title">Pesquisa vai ficar aqui</h4>
 
-                    </div>
+                <div id="mapid1" style="width: 100%; height: 600px; border-radius: 4px;"></div>
+
             </div>
         </div>
     </div>
@@ -74,53 +90,214 @@
 {% endblock content %}
 
 {% block js%}
-<script src="http://themetrace.com/templates/bracketplus/lib/leaflet/leaflet-src.js"></script>
+<script type='text/javascript' src='http://cdn.leafletjs.com/leaflet/v0.7.7/leaflet.js'></script>
+  <script type='text/javascript' src='http://localhost:8000/static/js/leaflet.markercluster.js'></script>
 
 <script>
-    $('.chat').on('hide.bs.collapse',function(){
-    mymap.invalidateSize();
-    $('#chatToggle').text("Show Chat");
-}).on('show.bs.collapse',function(){
-    mymap.invalidateSize();
-    $('#chatToggle').text("Hide Chat");
-});
+	
 
-// leafleft map
-var mymap = L.map('leafletMap').setView([51.505, -0.09], 13);
-L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={accessToken}', {
-    attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="http://mapbox.com">Mapbox</a>',
-    maxZoom: 18,
-    id: 'mapbox.streets',
-    accessToken: 'pk.eyJ1IjoiY3NrZWxseSIsImEiOiJjamV1NTd1eXIwMTh2MzN1bDBhN3AyamxoIn0.Z2euk6_og32zgG6nQrbFLw'
-}).addTo(mymap);
- $(document).ready(function(){
-     
+$(document).ready(function(){
+  function inside(point, vs) {
+    // ray-casting algorithm based on
+    // http://www.ecse.rpi.edu/Homepages/wrf/Research/Short_Notes/pnpoly.html
 
-    var names = {
-        labels: ['M', 'T', 'W', 'T', 'F', 'S', 'S'],
-        series: [
-          [12, 17, 7, 17, 23, 18, 38]
-        ]
-      };
+    var x = point[0], y = point[1];
 
-    var options = {
-        lineSmooth: Chartist.Interpolation.cardinal({
-          tension: 0
-        }),
-        low: 0,
-        high: 100, // creative tim: we recommend you to set the high sa the biggest value + something for a better look
-        chartPadding: {
-          top: 0,
-          right: 0,
-          bottom: 0,
-          left: 0
-        },
-      }
+    var inside = false;
+    for (var i = 0, j = vs.length - 1; i < vs.length; j = i++) {
+        var xi = vs[i][0], yi = vs[i][1];
+        var xj = vs[j][0], yj = vs[j][1];
 
-      var chart = new Chartist.Line('#wtf', names, options);
+        var intersect = ((yi > y) != (yj > y))
+            && (x < (xj - xi) * (y - yi) / (yj - yi) + xi);
+        if (intersect) inside = !inside;
+    }
 
-      md.startAnimationForLineChart(chart);
- })
+    return inside;
+};
+
+  var lat = -2.885310540095;
+  var lng = -40.1182414711655;
+  var markers = []
+  
+
+  var mymap = L.map('mapid1').setView([lat, lng], 4);
+  L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token=pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4NXVycTA2emYycXBndHRqcmZ3N3gifQ.rJcFIG214AriISLbB6B5aw', {
+
+  // L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token=pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4NXVycTA2emYycXBndHRqcmZ3N3gifQ.rJcFIG214AriISLbB6B5aw', {
+    maxZoom: 12,
+    attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, ' +
+      '<a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, ' +
+      'Imagery © <a href="http://mapbox.com">Mapbox</a>',
+    // id: 'mapbox.streets', 
+    id: 'mapbox.light',
+  }).addTo(mymap);
+
+    $.ajax({ 
+      type: 'GET', 
+      url: '{% url 'gestao:ajax_consulta_entes' %}', 
+      data: {}, 
+      dataType: 'json',
+      success: function (entes) {
+        var clusters = new L.markerClusterGroup();
+        entes.forEach(function(ente){
+            var marker = new L.marker(
+                new L.LatLng(ente.fields.latitude, ente.fields.longitude),
+                {
+                    title: 'Clique para ver mais.',
+                    riseOnHover: false
+                }
+            ).bindPopup(ente.fields.nome)
+            .on('click', function(e){
+              mymap.setView(e.latlng, 13);
+            });
+
+            markers.push(marker);
+
+            clusters.addLayer(marker);
+        });
+      mymap.addLayer(clusters);
+    }
+  });
+
+  $.ajax({ 
+    type: 'GET', 
+    url: 'https://servicodados.ibge.gov.br/api/v2/malhas/?resolucao=2&formato=application/vnd.geo+json', 
+    // url: 'https://raw.githubusercontent.com/tbrugz/geodata-br/master/geojson/geojs-100-mun.json',
+    data: {}, 
+    dataType: 'json',
+    success: function (data) {
+      data.features.forEach(function(estado){
+        console.log(estado)
+      })
+      markers.forEach(function(mark){
+          // console.log(mark.getLatLng())
+          // console.log()
+      })
+      
+      geojson = L.geoJson(data, {
+        style: style,
+        onEachFeature: onEachFeature
+      }).addTo(mymap);
+    }
+  });
+
+  function getColor(d) {
+    return d > 1000 ? '#800026' :
+           d > 500  ? '#BD0026' :
+           d > 200  ? '#E31A1C' :
+           d > 100  ? '#FC4E2A' :
+           d > 50   ? '#FD8D3C' :
+           d > 20   ? '#FEB24C' :
+           d > 10   ? '#FED976' :
+                      '#FFEDA0';
+  }
+
+  function style(feature) {
+    return {
+        fillColor: '#e53935',
+        weight: 2,
+        opacity: 1,
+        color: 'white',
+        dashArray: '3',
+        fillOpacity: 0.3
+    };
+  }
+
+  function styleAderido(feature) {
+    return {
+        fillColor: '#e53935',
+        weight: 2,
+        opacity: 1,
+        color: 'white',
+        dashArray: '3',
+        fillOpacity: 0.3
+    };
+  }
+
+  function highlightFeature(e) {
+    var layer = e.target;
+    info.update(layer.feature.properties);
+
+    layer.setStyle({
+        weight: 5,
+        color: '#666',
+        dashArray: '',
+        fillOpacity: 0.7
+    });
+
+    if (!L.Browser.ie && !L.Browser.opera && !L.Browser.edge) {
+        layer.bringToFront();
+    }
+  }
+
+  function resetHighlight(e) {
+    geojson.resetStyle(e.target);
+    info.update();
+  }
+
+  function zoomToFeature(e) {
+    // console.log(markers)
+    // console.log(e.target.getBounds().getCenter());
+    // console.log(e.target.getBounds().contains([-26.9637194992369,-52.5349325183039]))
+    mymap.fitBounds(e.target.getBounds());
+
+  }
+
+  function onEachFeature(feature, layer) {
+    layer.on({
+        mouseover: highlightFeature,
+        mouseout: resetHighlight,
+        click: zoomToFeature
+    });
+  }
+
+  var info = L.control();
+
+  info.onAdd = function (map) {
+      this._div = L.DomUtil.create('div', 'info'); // create a div with a class "info"
+      this.update();
+      return this._div;
+  };
+
+  info.update = function (props) {
+    this._div.innerHTML = '<h4>Dados do Ente Federado</h4>' +  (props ?
+        '<b>' + props.name + '</b><br />' + props.density + ' people / mi<sup>2</sup>'
+        : 'Passe o mouse sobre um estado');
+  };
+  info.addTo(mymap);
+
+  
+  // mymap.on('zoomend', function(e) {
+  //   console.log(e.target);
+  //   console.log(geojson);
+  // });
+
+  var names = {
+      labels: ['M', 'T', 'W', 'T', 'F', 'S', 'S'],
+      series: [
+        [12, 17, 7, 17, 23, 18, 38]
+      ]
+    };
+
+  var options = {
+      lineSmooth: Chartist.Interpolation.cardinal({
+        tension: 0
+      }),
+      low: 0,
+      high: 100, // creative tim: we recommend you to set the high sa the biggest value + something for a better look
+      chartPadding: {
+        top: 0,
+        right: 0,
+        bottom: 0,
+        left: 0
+      },
+    }
+
+    var chart = new Chartist.Line('#wtf', names, options);
+
+    md.startAnimationForLineChart(chart);
+ });
 </script>
 
 
