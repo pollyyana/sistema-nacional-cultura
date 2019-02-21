@@ -35,7 +35,14 @@
                          {% endif %}
                     </p>
                     <p><strong>E-mail:</strong> {{ ente.gestor.email_institucional }}</p>
-
+                    <p>
+                      <strong>Participou da Conferência Nacional:</strong>
+                      {% if ente.conferencia_nacional %}
+                        Sim
+                      {% else %}
+                        Não
+                      {% endif %}
+                    </p>
                 </div>
 
                 <div class="col-md-5">
