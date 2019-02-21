@@ -54,6 +54,7 @@ class Migration(migrations.Migration):
 
     dependencies = [
         ('planotrabalho', '0014_auto_20190208_1733'),
+        ('adesao', '0031_auto_20190218_1800')
     ]
 
     operations = [
@@ -61,11 +62,11 @@ class Migration(migrations.Migration):
             old_name='ArquivoComponente3',
             new_name='ArquivoComponente2',
         ),
-        # migrations.RenameField(
-        #     model_name='Componente2',
-        #     old_name='arquivocomponente3_ptr',
-        #     new_name='arquivocomponente2_ptr',
-        # ),
+        migrations.RenameField(
+            model_name='Componente2',
+            old_name='arquivocomponente3_ptr',
+            new_name='arquivocomponente2_ptr',
+        ),
         migrations.DeleteModel(
             name='Componente',
         ),
@@ -73,11 +74,11 @@ class Migration(migrations.Migration):
             old_name='Componente2',
             new_name='Componente',
         ),
-        # migrations.RenameField(
-        #     model_name='FundoDeCultura2',
-        #     old_name='componente2_ptr',
-        #     new_name='componente_ptr',
-        # ),
+        migrations.RenameField(
+            model_name='FundoDeCultura2',
+            old_name='componente2_ptr',
+            new_name='componente_ptr',
+        ),
         migrations.DeleteModel(
             name='FundoDeCultura',
         ),
