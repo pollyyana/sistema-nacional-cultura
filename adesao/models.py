@@ -440,6 +440,20 @@ class SistemaCultura(models.Model):
                 diligencias_componentes.append(componente)
         return diligencias_componentes
 
+    def historico_cadastradores(self):
+        sistemas = SistemaCultura.historico.ente(self.ente_federado.cod_ibge)
+        sistema_base = sistemas.first()
+        historico_cadastradores = [sistema_base]
+
+        #import ipdb; ipdb.set_trace()
+
+        for sistema in sistemas:
+            if sistema.cadastrador != sistema_base.cadastrador:
+                historico_cadastradores.append(sistema)
+                sistema_base = sistema
+
+        return historico_cadastradores
+
 
     def get_situacao_componentes(self):
         """
@@ -457,7 +471,6 @@ class SistemaCultura(models.Model):
         """
         Compara os valores de determinada propriedade entre dois objetos.
         """
-
         return (getattr(obj_anterior, field.attname) == getattr(self, field.attname) for field in
                           fields)
 

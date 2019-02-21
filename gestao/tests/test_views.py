@@ -1790,8 +1790,8 @@ def test_historico_cadastradores(client, login_staff):
     url = reverse("gestao:detalhar", kwargs={"cod_ibge": sistema.ente_federado.cod_ibge})
     response = client.get(url)
 
-    assert response.context["historico"][0].cadastrador == cadastrador_antigo
-    assert response.context["historico"][1].cadastrador == cadastrador_novo
+    assert response.context["historico"][0].cadastrador == cadastrador_novo
+    assert response.context["historico"][1].cadastrador == cadastrador_antigo
 
 
 def test_links_download_plano_trabalho(client, login_staff):
