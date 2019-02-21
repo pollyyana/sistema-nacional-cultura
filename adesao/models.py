@@ -17,6 +17,9 @@ from adesao.managers import SistemaManager
 from adesao.managers import HistoricoManager
 
 from datetime import date
+from adesao.middleware import get_current_user
+
+from itertools import tee
 
 
 LISTA_ESTADOS_PROCESSO = (
@@ -64,6 +67,14 @@ UFS = {
     53: "DF"
 }
 
+REGIOES = {
+    '1': "Norte",
+    '2': "Nordeste",
+    '3': "Sudeste",
+    '4': "Sul",
+    '5': "Centro Oeste",
+}
+
 
 # Create your models here.
 class Uf(models.Model):
@@ -83,9 +94,9 @@ class EnteFederado(models.Model):
     nome = models.CharField(_("Nome do EnteFederado"), max_length=300)
     gentilico = models.CharField(_("Gentilico"), max_length=300, null=True, blank=True)
     mandatario = models.CharField(_("Nome do Mandataio"), max_length=300, null=True, blank=True)
-    territorio = models.DecimalField(_("Área territorial - km²"), max_digits=10, decimal_places=3)
+    territorio = models.DecimalField(_("Área territorial - km²"), max_digits=15, decimal_places=3)
     populacao = models.IntegerField(_("População Estimada - pessoas"))
-    densidade = models.DecimalField(_("Densidade demográfica - hab/km²"), max_digits=10, decimal_places=2)
+    densidade = models.DecimalField(_("Densidade demográfica - hab/km²"), null=True, blank=True, max_digits=10, decimal_places=2)
     idh = models.DecimalField(_("IDH / IDHM"), max_digits=10, decimal_places=3, null=True, blank=True)
     receita = models.IntegerField(_("Receitas realizadas - R$ (×1000)"), null=True, blank=True)
     despesas = models.IntegerField(_("Despesas empenhadas - R$ (×1000)"), null=True, blank=True)
@@ -99,11 +110,16 @@ class EnteFederado(models.Model):
 
         digits = int(math.log10(self.cod_ibge))+1
 
-        if digits > 2:
+        if digits > 2 or self.cod_ibge == 53:
             return f"{self.nome}/{uf}"
 
         return f"Estado de {self.nome} ({uf})"
 
+    def get_regiao(self):
+        digito = str(self.cod_ibge)[0]
+        regiao = REGIOES[digito]  
+        return regiao
+    
     @property
     def is_municipio(self):
         digits = int(math.log10(self.cod_ibge))+1
@@ -114,7 +130,7 @@ class EnteFederado(models.Model):
 
     @property
     def sigla(self):
-        if self.is_municipio is False:
+        if self.is_municipio is False and self.cod_ibge != 53:
             uf = re.search('\(([A-Z]+)\)', self.__str__())[0]
             return re.search('[A-Z]+', uf)[0]
 
@@ -400,7 +416,9 @@ class SistemaCultura(models.Model):
     justificativa = models.TextField(_("Justificativa"), blank=True, null=True)
     diligencia = models.ForeignKey("gestao.DiligenciaSimples", on_delete=models.SET_NULL, related_name="sistema_cultura", blank=True, null=True)
     prazo = models.IntegerField(default=2)
+    conferencia_nacional = models.BooleanField(blank=True, default=False)
     alterado_em = models.DateTimeField("Alterado em", default=timezone.now)
+    alterado_por = models.ForeignKey("Usuario", on_delete=models.SET_NULL, null=True, related_name="sistemas_alterados")
 
     objects = models.Manager()
     sistema = SistemaManager()
@@ -422,6 +440,20 @@ class SistemaCultura(models.Model):
                 diligencias_componentes.append(componente)
         return diligencias_componentes
 
+    def historico_cadastradores(self):
+        sistemas = SistemaCultura.historico.ente(self.ente_federado.cod_ibge)
+        sistema_base = sistemas.first()
+        historico_cadastradores = [sistema_base]
+
+        #import ipdb; ipdb.set_trace()
+
+        for sistema in sistemas:
+            if sistema.cadastrador != sistema_base.cadastrador:
+                historico_cadastradores.append(sistema)
+                sistema_base = sistema
+
+        return historico_cadastradores
+
 
     def get_situacao_componentes(self):
         """
@@ -435,12 +467,36 @@ class SistemaCultura(models.Model):
 
         return situacoes
 
-    def compara_valores(self, obj_anterior, propriedade):
+    def compara_valores(self, obj_anterior, fields):
         """
         Compara os valores de determinada propriedade entre dois objetos.
         """
+        return (getattr(obj_anterior, field.attname) == getattr(self, field.attname) for field in
+                          fields)
 
-        return getattr(obj_anterior, propriedade) == getattr(self, propriedade)
+    def compara_fks(self, obj_anterior, fields):
+        comparacao_fk = True
+
+        for field in fields:
+            if field.get_internal_type() == 'ForeignKey':
+
+                objeto_fk_anterior = getattr(obj_anterior, field.name)
+                objeto_fk_atual = getattr(self, field.name)
+
+                if objeto_fk_anterior and objeto_fk_atual:
+                    for field in field.related_model._meta.fields[1:]:
+                        objeto_fk_anterior_value = getattr(objeto_fk_anterior, field.name)
+                        objeto_fk_atual_value = getattr(objeto_fk_atual, field.name)
+
+                        if objeto_fk_anterior_value != objeto_fk_atual_value:
+                            comparacao_fk = False
+                            break
+
+                    if not comparacao_fk:
+                        break
+
+        return comparacao_fk
+
 
     def save(self, *args, **kwargs):
         """
@@ -452,37 +508,14 @@ class SistemaCultura(models.Model):
             fields = self._meta.fields[1:-1]
             anterior = SistemaCultura.objects.get(pk=self.pk)
 
-            comparacao = (self.compara_valores(anterior, field.attname) for field in
-                          fields)
+            comparacao_fk = True
 
-            if False in comparacao:
+            if all(self.compara_valores(anterior, fields)):
+                comparacao_fk = self.compara_fks(anterior, fields)
+
+            if False in self.compara_valores(anterior, fields) or comparacao_fk == False:
                 self.pk = None
                 self.alterado_em = timezone.now()
-
-            # if not self.compara_valores(anterior, "cadastrador"):
-            #     self.alterar_cadastrador(anterior.cadastrador)
+                self.alterado_por = get_current_user()
 
         super().save(*args, **kwargs)
-
-    # def alterar_cadastrador(self, cadastrador_atual):
-    #     """
-    #     Altera cadastrador de um ente federado fazendo as alterações
-    #     necessárias nas models associadas ao cadastrador, gerando uma nova
-    #     versão do sistema cultura
-    #     """
-
-    #     cadastrador = self.cadastrador
-    #     if cadastrador_atual:
-    #         cadastrador.recebe_permissoes_sistema_cultura(cadastrador_atual)
-    #     else:
-    #         try:
-    #             ente_federado = Municipio.objects.get(estado=self.uf,
-    #                                                   cidade=self.cidade)
-    #             cadastrador_atual = getattr(ente_federado, 'usuario', None)
-    #             if cadastrador_atual:
-    #                 cadastrador.recebe_permissoes_sistema_cultura(cadastrador_atual)
-    #             else:
-    #                 cadastrador.municipio = ente_federado
-    #                 cadastrador.save()
-    #         except Municipio.DoesNotExist:
-    #             return

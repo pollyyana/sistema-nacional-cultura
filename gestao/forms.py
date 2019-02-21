@@ -45,7 +45,7 @@ content_types = [
     'application/octet-stream',
     'text/plain']
 
-max_upload_size = 5242880
+max_upload_size = 52428800
 
 class InserirSEI(ModelForm):
     processo_sei = forms.CharField(max_length="50", required=False)

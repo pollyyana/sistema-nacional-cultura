@@ -3,6 +3,7 @@ from datetime import datetime
 
 from django.utils import timezone
 from django.db.utils import DataError
+from django.urls import reverse
 from model_mommy import mommy
 
 from adesao.models import SistemaCultura
@@ -12,6 +13,7 @@ from adesao.models import Responsavel
 from adesao.models import Funcionario
 from adesao.models import Sede
 from adesao.models import Gestor
+from django.contrib.auth.models import User
 
 from planotrabalho.models import PlanoTrabalho
 
@@ -321,3 +323,26 @@ def test_get_diligencias_componentes():
     sistema_diligencias  = sistema_cultura.get_componentes_diligencias()
     assert len(sistema_diligencias) == 1
     assert sistema_diligencias[0] == sistema_cultura.legislacao
+
+
+def test_historico_cadastradores(client, login_staff):
+    cadastrador_antigo = mommy.make("Usuario")
+    sistema_cultura = mommy.make("SistemaCultura", _fill_optional='ente_federado',
+        cadastrador=cadastrador_antigo, ente_federado__cod_ibge=123456)
+    novo_cadastrador = mommy.make("Usuario", user__username='175.591.950-67')
+
+    url = reverse('gestao:alterar_cadastrador', kwargs={'cod_ibge': sistema_cultura.ente_federado.cod_ibge})
+
+    data = {
+        'cpf_cadastrador': novo_cadastrador.user.username,
+    }
+
+    client.post(url, data=data)
+
+    historico = sistema_cultura.historico_cadastradores()
+
+    assert historico[0].cadastrador == novo_cadastrador
+    assert historico[1].cadastrador == cadastrador_antigo
+
+    SistemaCultura.objects.all().delete()
+    User.objects.all().delete()

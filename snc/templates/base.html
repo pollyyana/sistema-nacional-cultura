@@ -79,7 +79,7 @@
         <div id="logo">
           <a href="{% url 'adesao:index' %}" title="#">
             <span id="portal-title">Sistema Nacional de Cultura</span>
-            <span id="portal-description" style="color:#FC0">Ministério da Cultura</span>
+            <span id="portal-description" style="color:#FC0">Secretaria Especial da Cultura / Ministério da Cidadania</span>
           </a>
 
         </div>
@@ -340,7 +340,7 @@
       </div>
       <div id="extra-footer">
         <p>
-          Ministério da Cultura -
+          Secretaria Especial da Cultura / Ministério da Cidadaniaa -
           <a href="#">MinC - 2018</a>
         </p>
       </div>
@@ -362,14 +362,6 @@
           }
         });
         $("body").prepend('<div id="overlay" style="height: 100%; width: 100%; opacity: 0.3; z-index: 100; position: fixed; background: url({% static "img/spinner.gif"%}) no-repeat center center; background-color: gray; display: none;"></div>');
-
-        $(".add").click(function() {
-          $(".telefone2").fadeIn();
-        });
-
-        $(".add2").click(function() {
-          $(".telefone3").fadeIn();
-        });
 
         $(".date").datepicker({
           showButtonPanel: true,
