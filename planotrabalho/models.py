@@ -90,6 +90,12 @@ class ArquivoComponente2(models.Model):
         choices=LISTA_SITUACAO_ARQUIVO,
         default=0,
     )
+    diligencia = models.ForeignKey(
+        'gestao.DiligenciaSimples',
+        on_delete=models.CASCADE,
+        blank=True,
+        null=True
+    )
     data_envio = models.DateField(default=datetime.date.today)
 
 
@@ -97,8 +103,6 @@ class Componente(ArquivoComponente2):
     tipo = models.IntegerField(
         choices=LISTA_TIPOS_COMPONENTES,
         default=0)
-    diligencia = models.ForeignKey(
-        'gestao.DiligenciaSimples', on_delete=models.CASCADE, related_name='Componente', blank=True, null=True)
     data_publicacao = models.DateField(
         _("Data de Publicação do Componente"), null=True, blank=True)
 
@@ -117,6 +121,13 @@ class FundoDeCultura(Componente):
         blank=True,
         null=True,
         default=None)
+    regulamentacao = models.ForeignKey(
+        'ArquivoComponente2',
+        on_delete=models.CASCADE,
+        blank=True,
+        null=True,
+        related_name='fundos')
+
 
 class PlanoTrabalho(models.Model):
     criacao_sistema = models.OneToOneField(
