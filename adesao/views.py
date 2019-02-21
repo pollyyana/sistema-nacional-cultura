@@ -141,6 +141,7 @@ def exportar_csv(request):
             "Situação do Conselho de Política Cultural",
             "Situação do Fundo de Cultura",
             "Situação do Plano de Cultura",
+            "Participou da Conferência Nacional",
             "IDH",
             "PIB",
             "População",
@@ -201,6 +202,7 @@ def exportar_csv(request):
                 verificar_anexo(sistema, "conselho"),
                 verificar_anexo(sistema, "fundo_cultura"),
                 verificar_anexo(sistema, "plano"),
+                "Sim" if sistema.conferencia_nacional else "Não",
                 idh,
                 pib,
                 populacao,
@@ -368,18 +370,20 @@ class CadastrarSistemaCultura(TemplatedEmailFormViewMixin, CreateView):
 
 
 class AlterarSistemaCultura(UpdateView):
-    form_class = CadastrarSede
+    form_class = CadastrarSistemaCulturaForm
     model = SistemaCultura
     template_name = "cadastrar_sistema.html"
 
     def form_valid(self, form):
         context = self.get_context_data()
+        form_sistema = context['form_sistema']
         form_sede = context['form_sede']
         form_gestor = context['form_gestor']
 
-        if form_gestor.is_valid() and form_sede.is_valid():
+        if form_gestor.is_valid() and form_sede.is_valid() and form_sistema.is_valid():
             sede = form_sede.save()
             gestor = form_gestor.save()
+            sistema = form_sistema.save()
 
             return redirect(self.get_success_url())
         else:
@@ -394,11 +398,14 @@ class AlterarSistemaCultura(UpdateView):
     def get_context_data(self, **kwargs):
         context = super(AlterarSistemaCultura, self).get_context_data(**kwargs)
         if self.request.POST:
+            context['form_sistema'] = CadastrarSistemaCulturaForm(self.request.POST, self.request.FILES, instance=self.object)
             context['form_sede'] = CadastrarSede(self.request.POST, self.request.FILES, instance=self.object.sede)
             context['form_gestor'] = CadastrarGestor(self.request.POST, self.request.FILES, instance=self.object.gestor)
         else:
+            context['form_sistema'] = CadastrarSistemaCulturaForm(instance=self.object)
             context['form_sede'] = CadastrarSede(instance=self.object.sede)
             context['form_gestor'] = CadastrarGestor(instance=self.object.gestor)
+
         return context
 
 

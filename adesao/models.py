@@ -96,9 +96,9 @@ class EnteFederado(models.Model):
     nome = models.CharField(_("Nome do EnteFederado"), max_length=300)
     gentilico = models.CharField(_("Gentilico"), max_length=300, null=True, blank=True)
     mandatario = models.CharField(_("Nome do Mandataio"), max_length=300, null=True, blank=True)
-    territorio = models.DecimalField(_("Área territorial - km²"), max_digits=10, decimal_places=3)
+    territorio = models.DecimalField(_("Área territorial - km²"), max_digits=15, decimal_places=3)
     populacao = models.IntegerField(_("População Estimada - pessoas"))
-    densidade = models.DecimalField(_("Densidade demográfica - hab/km²"), max_digits=10, decimal_places=2)
+    densidade = models.DecimalField(_("Densidade demográfica - hab/km²"), null=True, blank=True, max_digits=10, decimal_places=2)
     idh = models.DecimalField(_("IDH / IDHM"), max_digits=10, decimal_places=3, null=True, blank=True)
     receita = models.IntegerField(_("Receitas realizadas - R$ (×1000)"), null=True, blank=True)
     despesas = models.IntegerField(_("Despesas empenhadas - R$ (×1000)"), null=True, blank=True)
@@ -425,6 +425,7 @@ class SistemaCultura(models.Model):
     justificativa = models.TextField(_("Justificativa"), blank=True, null=True)
     diligencia = models.ForeignKey("gestao.DiligenciaSimples", on_delete=models.SET_NULL, related_name="sistema_cultura", blank=True, null=True)
     prazo = models.IntegerField(default=2)
+    conferencia_nacional = models.BooleanField(blank=True, default=False)
     alterado_em = models.DateTimeField("Alterado em", default=timezone.now)
     alterado_por = models.ForeignKey("Usuario", on_delete=models.SET_NULL, null=True, related_name="sistemas_alterados")
 
@@ -448,6 +449,20 @@ class SistemaCultura(models.Model):
                 diligencias_componentes.append(componente)
         return diligencias_componentes
 
+    def historico_cadastradores(self):
+        sistemas = SistemaCultura.historico.ente(self.ente_federado.cod_ibge)
+        sistema_base = sistemas.first()
+        historico_cadastradores = [sistema_base]
+
+        #import ipdb; ipdb.set_trace()
+
+        for sistema in sistemas:
+            if sistema.cadastrador != sistema_base.cadastrador:
+                historico_cadastradores.append(sistema)
+                sistema_base = sistema
+
+        return historico_cadastradores
+
 
     def get_situacao_componentes(self):
         """
@@ -465,7 +480,6 @@ class SistemaCultura(models.Model):
         """
         Compara os valores de determinada propriedade entre dois objetos.
         """
-
         return (getattr(obj_anterior, field.attname) == getattr(self, field.attname) for field in
                           fields)
 
