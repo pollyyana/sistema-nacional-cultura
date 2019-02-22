@@ -145,7 +145,8 @@ $(document).ready(function(){
                 new L.LatLng(ente.fields.latitude, ente.fields.longitude),
                 {
                     title: 'Clique para ver mais.',
-                    riseOnHover: false
+                    riseOnHover: false,
+                    enteObject: ente
                 }
             ).bindPopup(ente.fields.nome)
             .on('click', function(e){
@@ -162,19 +163,20 @@ $(document).ready(function(){
 
   $.ajax({ 
     type: 'GET', 
-    url: 'https://servicodados.ibge.gov.br/api/v2/malhas/?resolucao=2&formato=application/vnd.geo+json', 
+    url: 'https://servicodados.ibge.gov.br/api/v2/malhas/?resolucao=5&formato=application/vnd.geo+json', 
     // url: 'https://raw.githubusercontent.com/tbrugz/geodata-br/master/geojson/geojs-100-mun.json',
     data: {}, 
     dataType: 'json',
     success: function (data) {
-      data.features.forEach(function(estado){
-        console.log(estado)
-      })
-      markers.forEach(function(mark){
-          // console.log(mark.getLatLng())
-          // console.log()
-      })
-      
+      data.features.forEach(function(enteGeoJson, key){
+        for(let i = 0; i < markers.length; i++){
+          if(markers[i].options.enteObject.fields.cod_ibge == enteGeoJson.properties.codarea){
+            data.features[key].properties['enteObject'] = markers[i].options.enteObject;
+            continue;
+          }
+        }
+      });
+
       geojson = L.geoJson(data, {
         style: style,
         onEachFeature: onEachFeature
@@ -194,8 +196,13 @@ $(document).ready(function(){
   }
 
   function style(feature) {
+    let color = '#ACDF87'
+    // console.log()
+    if (feature.properties.hasOwnProperty('enteObject')) { 
+      color = '#1E5631'
+    }
     return {
-        fillColor: '#e53935',
+        fillColor: color,
         weight: 2,
         opacity: 1,
         color: 'white',
@@ -260,10 +267,17 @@ $(document).ready(function(){
       return this._div;
   };
 
-  info.update = function (props) {
-    this._div.innerHTML = '<h4>Dados do Ente Federado</h4>' +  (props ?
-        '<b>' + props.name + '</b><br />' + props.density + ' people / mi<sup>2</sup>'
-        : 'Passe o mouse sobre um estado');
+  info.update = function (props) {    
+
+    console.log(props)
+
+    this._div.innerHTML = '<h4>Dados do Ente Federado</h4>' +  (props && props.hasOwnProperty('enteObject') ?
+      '<b>Nome:</b> '+ props.enteObject.fields.nome + '</br>' +
+      '<b>idh:</b> '+ props.enteObject.fields.idh + '</br>' +
+      '<b>População:</b> '+ props.enteObject.fields.populacao + '</br>' +
+      '<b>Densidade:</b> '+ props.enteObject.fields.densidade + ' hab./km<sup>2</sup>'
+      : 'Passe o mouse sob um ente aderido');
+    
   };
   info.addTo(mymap);
 
