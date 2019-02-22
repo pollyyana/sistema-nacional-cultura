@@ -96,7 +96,7 @@ urlpatterns = [
         staff_member_required(views.DiligenciaGeralCreateView.as_view()),
         name="diligencia_geral_adicionar"),
 
-    path("<int:pk>/diligencia/<str:componente>", 
+    path("<int:pk>/diligencia/<str:componente>/<str:arquivo>", 
         staff_member_required(views.DiligenciaComponenteView.as_view()),
         name="diligencia_componente"),
 

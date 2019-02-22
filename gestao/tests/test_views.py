@@ -35,7 +35,7 @@ pytestmark = pytest.mark.django_db
 def url():
     """Retorna uma string contendo a URL preparada para ser formatada."""
 
-    return "/gestao/{id}/diligencia/{componente}"
+    return "/gestao/{id}/diligencia/{componente}/{arquivo}"
 
 
 def test_url_diligencia_retorna_200(url, client, login_staff):
@@ -43,7 +43,7 @@ def test_url_diligencia_retorna_200(url, client, login_staff):
     Testa se há url referente à página de diligências.
     A url teria o formato: gestao/id_sistema_cultura/diligencia/componente_plano_trabalho
     """
-    orgao_gestor = mommy.make("Componente", tipo=1)
+    orgao_gestor = mommy.make("Componente", tipo=1, situacao=1)
     sistema_cultura = mommy.make(
         "SistemaCultura",
         ente_federado__cod_ibge=123456,
@@ -52,15 +52,11 @@ def test_url_diligencia_retorna_200(url, client, login_staff):
     )
 
     arquivo = SimpleUploadedFile("lei.txt", b"file_content", content_type="text/plain")
-
-    lei = mommy.make("ArquivoComponente2", situacao=1)
-    orgao_gestor.arquivo = lei
+    orgao_gestor.arquivo = arquivo
     orgao_gestor.save()
-    orgao_gestor.arquivo.arquivo = arquivo
-    orgao_gestor.arquivo.save()
 
     request = client.get(
-        url.format(id=sistema_cultura.pk, componente="orgao_gestor")
+        url.format(id=sistema_cultura.pk, componente="orgao_gestor", arquivo="arquivo")
     )
 
     assert request.status_code == 200
@@ -70,7 +66,7 @@ def test_resolve_url_atraves_sua_view_name(url, client, plano_trabalho):
     """Testa se o Django retorna a url através da sua view_name"""
 
     resolved = resolve(
-        url.format(id=plano_trabalho.id, componente="plano_cultura")
+        url.format(id=plano_trabalho.id, componente="plano_cultura", arquivo="arquivo")
     )
 
     assert resolved.url_name == "diligencia_componente"
@@ -81,7 +77,7 @@ def test_recepcao_componente_na_url_diligencia(url, client, plano_trabalho):
     """Testa se a url esta recebendo o componente correspondente a diligencia que sera escrita"""
 
     resolved = resolve(
-        url.format(id=plano_trabalho.id, componente="lei_sistema")
+        url.format(id=plano_trabalho.id, componente="lei_sistema", arquivo="arquivo")
     )
 
     assert resolved.kwargs["componente"] == "lei_sistema"
@@ -103,7 +99,7 @@ def test_url_componente_retorna_200(url, client, login_staff):
     orgao_gestor.save()
 
     request = client.get(
-        url.format(id=sistema_cultura.id, componente="orgao_gestor")
+        url.format(id=sistema_cultura.id, componente="orgao_gestor", arquivo="arquivo")
     )
 
     assert request.status_code == 200
@@ -116,7 +112,7 @@ def test_url_retorna_404_caso_componente_nao_exista(
 
     request = client.get(
         url.format(
-            id=plano_trabalho.id, componente="um_componente_qualquer"
+            id=plano_trabalho.id, componente="um_componente_qualquer", arquivo="arquivo"
         )
     )
 
@@ -127,7 +123,7 @@ def test_renderiza_template(url, client, plano_trabalho, login_staff):
     """ Testa se o método da view renderiza um template"""
 
     request = client.get(
-        url.format(id=plano_trabalho.id, componente="criacao_sistema")
+        url.format(id=plano_trabalho.id, componente="criacao_sistema", arquivo="arquivo")
     )
     assert request.content
 
@@ -150,7 +146,7 @@ def test_renderiza_template_diligencia(url, client, login_staff):
     conselho.save()
 
     request = client.get(
-        url.format(id=sistema_cultura.id, componente="conselho")
+        url.format(id=sistema_cultura.id, componente="conselho", arquivo="arquivo")
     )
     assert "diligencia.html" == request.templates[0].name
 
@@ -189,7 +185,7 @@ def test_retorno_400_post_criacao_diligencia(url, client, login_staff):
     orgao_gestor.save()
 
     request = client.post(
-        url.format(id=sistema_cultura.id, componente="orgao_gestor"),
+        url.format(id=sistema_cultura.id, componente="orgao_gestor", arquivo="arquivo"),
         data={"cla": ""},
     )
 
@@ -214,7 +210,7 @@ def test_retorna_400_POST_classificacao_inexistente(url, client, login_staff):
     orgao_gestor.save()
 
     request = client.post(
-        url.format(id=sistema_cultura.id, componente="orgao_gestor"),
+        url.format(id=sistema_cultura.id, componente="orgao_gestor", arquivo="arquivo"),
         data={"classificacao_arquivo": ""},
     )
     user = login_staff.user
@@ -239,7 +235,7 @@ def test_tipo_do_form_utilizado_na_diligencia_view(url, client, login_staff):
     orgao_gestor.save()
 
     request = client.get(
-        url.format(id=sistema_cultura.id, componente="orgao_gestor")
+        url.format(id=sistema_cultura.id, componente="orgao_gestor", arquivo="arquivo")
     )
 
     assert isinstance(request.context["form"], DiligenciaForm)
@@ -261,7 +257,7 @@ def test_invalido_form_para_post_diligencia(url, client, login_staff):
     orgao_gestor.save()
 
     request = client.post(
-        url.format(id=sistema_cultura.id, componente="orgao_gestor"),
+        url.format(id=sistema_cultura.id, componente="orgao_gestor", arquivo="arquivo"),
         data={"classificacao_arquivo": "", "texto_diligencia": ""},
     )
 
@@ -284,7 +280,7 @@ def test_obj_ente_federado(url, client, login_staff):
     orgao_gestor.save()
 
     request = client.get(
-        url.format(id=sistema_cultura.id, componente="orgao_gestor")
+        url.format(id=sistema_cultura.id, componente="orgao_gestor", arquivo="arquivo")
     )
 
     assert isinstance(request.context["ente_federado"], str)
@@ -294,7 +290,7 @@ def test_obj_ente_federado(url, client, login_staff):
 def test_404_para_plano_trabalho_invalido_diligencia(url, client, login_staff):
     """ Testa se a view da diligência retorna 404 para um plano de trabalho inválido """
 
-    request = client.get(url.format(id="7", componente="orgao_gestor"))
+    request = client.get(url.format(id="7", componente="orgao_gestor", arquivo="arquivo"))
 
     assert request.status_code == 404
 
@@ -319,7 +315,7 @@ def test_ente_federado_retornado_na_diligencia(url, client, login_staff):
     conselho.save()
 
     request = client.get(
-        url.format(id=sistema_cultura.id, componente="conselho")
+        url.format(id=sistema_cultura.id, componente="conselho", arquivo="arquivo")
     )
 
     assert request.context["ente_federado"] == sistema_cultura.ente_federado.nome
@@ -343,7 +339,7 @@ def test_salvar_informacoes_no_banco(url, client, login_staff):
     orgao_gestor.save()
 
     response = client.post(
-        url.format(id=sistema_cultura.id, componente="orgao_gestor"),
+        url.format(id=sistema_cultura.id, componente="orgao_gestor", arquivo="arquivo"),
         data={"classificacao_arquivo": "4", "texto_diligencia": "bla"},
     )
     diligencia = DiligenciaSimples.objects.first()
@@ -371,7 +367,7 @@ def test_redirecionamento_de_pagina_apos_POST(url, client, login_staff):
     orgao_gestor.save()
 
     request = client.post(
-        url.format(id=sistema_cultura.id, componente="orgao_gestor"),
+        url.format(id=sistema_cultura.id, componente="orgao_gestor", arquivo="arquivo"),
         data={"classificacao_arquivo": "4", "texto_diligencia": "Ta errado cara"},
     )
     url_redirect = request.url.split("http://testserver/")
@@ -400,7 +396,7 @@ def test_arquivo_enviado_pelo_componente(url, client, login_staff):
     conselho.save()
 
     request = client.get(
-        url.format(id=sistema_cultura.id, componente="conselho")
+        url.format(id=sistema_cultura.id, componente="conselho", arquivo="arquivo")
     )
 
     assert request.context["arquivo"] == conselho.arquivo
@@ -465,7 +461,7 @@ def test_captura_nome_usuario_logado_na_diligencia(
     orgao_gestor.save()
 
     request = client.post(
-        url.format(id=sistema_cultura.id, componente="orgao_gestor"),
+        url.format(id=sistema_cultura.id, componente="orgao_gestor", arquivo="arquivo"),
         data={"classificacao_arquivo": "4", "texto_diligencia": "Muito legal"},
     )
 
@@ -570,7 +566,7 @@ def test_retorno_do_form_da_diligencia(url, client, login_staff):
     orgao_gestor.save()
 
     request = client.get(
-        url.format(id=sistema_cultura.id, componente="orgao_gestor")
+        url.format(id=sistema_cultura.id, componente="orgao_gestor", arquivo="arquivo")
     )
 
     classificacao = set(
@@ -597,7 +593,7 @@ def test_criacao_diligencia_exclusiva_para_gestor(client, url, plano_trabalho, l
     que não é autorizado é redirecionado para a tela de login"""
 
     url_diligencia = url.format(
-        id=plano_trabalho.id, componente="orgao_gestor"
+        id=plano_trabalho.id, componente="orgao_gestor", arquivo="arquivo"
     )
 
     request = client.get(url_diligencia)
@@ -995,7 +991,7 @@ def test_tipo_diligencia_componente(url, client, plano_trabalho, login_staff):
     orgao_gestor.save()
 
     request = client.post(
-        url.format(id=sistema_cultura.id, componente="orgao_gestor"),
+        url.format(id=sistema_cultura.id, componente="orgao_gestor", arquivo="arquivo"),
         data={"classificacao_arquivo": "4", "texto_diligencia": "Ta errado cara"},
     )
 
@@ -2092,4 +2088,3 @@ def test_criar_dados_secretario(client, login_staff):
     assert sistema_cultura.secretario.email_institucional == funcionario.email_institucional
     assert sistema_cultura.secretario.telefone_um == funcionario.telefone_um
     assert sistema_cultura.secretario.tipo_funcionario == 0
->>>>>>> 79c08694553fce039cb0052174cab26e76422ba0

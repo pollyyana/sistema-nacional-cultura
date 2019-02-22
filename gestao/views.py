@@ -274,11 +274,11 @@ class AcompanharComponente(ListView):
             if self.kwargs['componente'] == 'fundo_cultura':
                 sistemas = sistemas.filter((Q(fundo_cultura__regulamentacao__situacao=1)
                     & ~Q(fundo_cultura__regulamentacao__arquivo=None)) |
-                    (Q(fundo_cultura__arquivo__situacao=1) & ~Q(fundo_cultura__arquivo__arquivo=None)))
+                    (Q(fundo_cultura__situacao=1) & ~Q(fundo_cultura__arquivo=None)))
             else:
-                kwargs = {'{0}__arquivo__situacao'.format(self.kwargs['componente']): 1}
+                kwargs = {'{0}__situacao'.format(self.kwargs['componente']): 1}
                 sistemas = sistemas.filter(**kwargs)
-                kwargs = {'{0}__arquivo__arquivo'.format(self.kwargs['componente']): None}
+                kwargs = {'{0}__arquivo'.format(self.kwargs['componente']): None}
                 sistemas = sistemas.exclude(**kwargs)
         else:
             raise Http404
@@ -542,6 +542,7 @@ class DiligenciaComponenteView(CreateView):
 
     def get_form_kwargs(self):
         kwargs = super(DiligenciaComponenteView, self).get_form_kwargs()
+        kwargs['arquivo'] = self.kwargs['arquivo']
         kwargs['componente'] = self.kwargs['componente']
         kwargs['sistema_cultura'] = self.get_sistema_cultura()
         kwargs['usuario'] = self.request.user.usuario
@@ -573,8 +574,10 @@ class DiligenciaComponenteView(CreateView):
         context = super().get_context_data(**kwargs)
         componente = self.get_componente()
         ente_federado = self.get_sistema_cultura().ente_federado.nome
-
-        context['arquivo'] = componente.arquivo
+        if self.kwargs['arquivo'] == 'arquivo':
+            context['arquivo'] = componente.arquivo
+        else:
+            context['arquivo'] = getattr(componente, self.kwargs['arquivo'])
         context['ente_federado'] = ente_federado
         context['sistema_cultura'] = self.get_sistema_cultura()
         context['data_envio'] = "--/--/----"

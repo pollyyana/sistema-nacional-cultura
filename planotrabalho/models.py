@@ -66,16 +66,19 @@ def upload_to(instance, filename):
 
     componente = instance.fundos.all().first()
 
-    if not componente:
-        componente = instance.componente_set.all().first()
+    if componente:
+        nome_componente = componentes.get(componente.tipo)
+        sistema_cultura = getattr(componente, nome_componente)
+    else:
+        nome_componente = componentes.get(instance.tipo)
+        sistema_cultura = getattr(instance, nome_componente)
 
-    nome_componente = componentes.get(componente.tipo)
-    sistema_cultura = getattr(componente, nome_componente)
     entefederado = sistema_cultura.first().ente_federado.cod_ibge
 
-    name = f"{entefederado}/docs/{componente}/{new_name}.{ext}"
+    name = f"{entefederado}/docs/{nome_componente}/{new_name}.{ext}"
 
     return name
+
 
 class ArquivoComponente(models.Model):
     arquivo = models.FileField(upload_to=upload_to_componente, null=True, blank=True)

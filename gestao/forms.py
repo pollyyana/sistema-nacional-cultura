@@ -132,6 +132,7 @@ class DiligenciaComponenteForm(DiligenciaForm):
 
     def __init__(self, *args, **kwargs):
         self.tipo_componente = kwargs.pop("componente")
+        self.arquivo = kwargs.pop("arquivo")
         super(DiligenciaComponenteForm, self).__init__(*args, **kwargs)
 
     def save(self, commit=True):
@@ -139,9 +140,15 @@ class DiligenciaComponenteForm(DiligenciaForm):
 
         if commit:
             componente = getattr(self.sistema_cultura, self.tipo_componente)
-            componente.diligencia = diligencia
-            componente.situacao = self.cleaned_data['classificacao_arquivo']
-            componente.save()
+            if self.arquivo == 'arquivo':     
+                componente.diligencia = diligencia
+                componente.situacao = self.cleaned_data['classificacao_arquivo']
+                componente.save()
+            else:
+                arquivo = getattr(componente, self.arquivo)
+                arquivo.diligencia = diligencia
+                arquivo.situacao = self.cleaned_data['classificacao_arquivo']
+                arquivo.save()
 
     class Meta:
         model = DiligenciaSimples

@@ -42,18 +42,20 @@
                   <td><a href="{% url 'gestao:detalhar' cod_ibge=sistema.ente_federado.cod_ibge %}">{{ sistema.ente_federado }}</a></td>
                   <td>{{ sistema.sede.cnpj }}</td>
                   <td>{{sistema.fundo_cultura.cnpj}}</td>
-                  <td>
-                    <a href="{{ sistema.fundo_cultura.arquivo.url }}">Download</a>
-                  </td>
-                  <td>
-                    <a href="{% url 'gestao:diligencia_componente' pk=sistema.id componente='fundo_cultura' %}">Avaliar</a>                  
-                  </td>
-                  <td>
-                    <a href="{{ sistema.fundo_cultura.regulamentacao.arquivo.url }}">Download</a>
-                  </td>
-                  <td>
-                    <a href="{% url 'gestao:diligencia_componente' pk=sistema.id componente='fundo_cultura' %}">Avaliar</a>
-                  </td>
+                  {% if sistema.fundo_cultura.arquivo %}
+                    <td><a href="{{ sistema.fundo_cultura.arquivo.url }}">Download</a></td>
+                    <td><a href="{% url 'gestao:diligencia_componente' pk=sistema.id componente='fundo_cultura' arquivo='arquivo' %}">Avaliar</a></td>
+                  {% else %}
+                    <td></td>
+                    <td></td>
+                  {% endif %}
+                  {% if sistema.fundo_cultura.regulamentacao.arquivo %}
+                    <td><a href="{{ sistema.fundo_cultura.regulamentacao.arquivo.url }}">Download</a></td>
+                    <td><a href="{% url 'gestao:diligencia_componente' pk=sistema.id componente='fundo_cultura' arquivo='regulamentacao' %}">Avaliar</a></td>
+                  {% else %}
+                    <td></td>
+                    <td></td>
+                  {% endif %}
                 </tr>
               {% endfor %}
             </tbody>
