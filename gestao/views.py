@@ -1,4 +1,7 @@
+import json
+
 from django.core import serializers
+from django.core.serializers.json import DjangoJSONEncoder
 from django.db.models import Case, When, DateField, Count, Q
 from django.db.models.functions import Least
 from django.utils.translation import gettext as _
@@ -39,6 +42,7 @@ from adesao.models import EnteFederado
 from adesao.models import Gestor
 from adesao.models import Funcionario
 
+
 from adesao.forms import CadastrarSistemaCulturaForm
 
 from planotrabalho.models import PlanoTrabalho
@@ -51,7 +55,7 @@ from planotrabalho.models import SituacoesArquivoPlano
 from planotrabalho.models import Componente
 from planotrabalho.models import FundoDeCultura
 
-from gestao.utils import empty_to_none
+from gestao.utils import empty_to_none, get_uf_by_mun_cod
 
 from adesao.models import Uf
 
@@ -86,15 +90,30 @@ def ajax_consulta_entes(request):
         return JsonResponse(
             data={"message": "Esta não é uma requisição AJAX"}, status=400)
 
-    ente_ids = SistemaCultura.sistema.filter(
-        ente_federado__isnull=False).values_list(
-                'ente_federado', flat=True) 
+    queryset = SistemaCultura.sistema.filter(
+            ente_federado__isnull=False).filter(
+                Q(ente_federado__latitude__isnull=False) &
+                Q(ente_federado__longitude__isnull=False)
+        ).values(
+            'id',
+            'estado_processo',
+            'ente_federado__nome',
+            'ente_federado__cod_ibge',
+            'ente_federado__longitude',
+            'ente_federado__latitude',
+        )
 
-    ente_queryset = EnteFederado.objects.filter(
-        id__in=ente_ids).filter(
-            Q(latitude__isnull=False) &
-            Q(longitude__isnull=False))
-    entes = serializers.serialize('json', ente_queryset)
+    sistemaList = [{
+        'id': ente['id'],
+        'estado_processo': ente['estado_processo'],
+        'nome': ente['ente_federado__nome'],
+        'sigla': get_uf_by_mun_cod(ente['ente_federado__cod_ibge']),
+        'cod_ibge': ente['ente_federado__cod_ibge'],
+        'latitude': ente['ente_federado__latitude'],
+        'longitude': ente['ente_federado__longitude'],
+        } for ente in queryset]
+
+    entes = json.dumps(sistemaList, cls=DjangoJSONEncoder)
     return HttpResponse(entes, content_type='application/json')
 
 

@@ -15,6 +15,18 @@
     margin: 0 0 5px;
     color: #777;
 }
+
+.legend {
+    line-height: 18px;
+    color: #555;
+}
+.legend i {
+    width: 18px;
+    height: 18px;
+    float: left;
+    margin-right: 8px;
+    opacity: 0.7;
+}
 </style>
 
 <menu data-target="inicio" ></menu>
@@ -91,34 +103,56 @@
 
 {% block js%}
 <script type='text/javascript' src='http://cdn.leafletjs.com/leaflet/v0.7.7/leaflet.js'></script>
-  <script type='text/javascript' src='http://localhost:8000/static/js/leaflet.markercluster.js'></script>
-
+<script type='text/javascript' src='http://localhost:8000/static/js/leaflet.markercluster.js'></script>
+<script type='text/javascript' src='https://cdnjs.cloudflare.com/ajax/libs/lz-string/1.4.4/lz-string.js'></script>
 <script>
 	
 
 $(document).ready(function(){
-  function inside(point, vs) {
-    // ray-casting algorithm based on
-    // http://www.ecse.rpi.edu/Homepages/wrf/Research/Short_Notes/pnpoly.html
-
-    var x = point[0], y = point[1];
-
-    var inside = false;
-    for (var i = 0, j = vs.length - 1; i < vs.length; j = i++) {
-        var xi = vs[i][0], yi = vs[i][1];
-        var xj = vs[j][0], yj = vs[j][1];
-
-        var intersect = ((yi > y) != (yj > y))
-            && (x < (xj - xi) * (y - yi) / (yj - yi) + xi);
-        if (intersect) inside = !inside;
-    }
-
-    return inside;
-};
 
   var lat = -2.885310540095;
   var lng = -40.1182414711655;
   var markers = []
+  //@TODO Trazer a label da requisição dos entes
+  var colorGrade = [
+    {
+      id: 7,
+      color: '#FFEDA0',
+      label: 'Responsável confirmado'
+    },
+    {
+      id: 6,
+      color: '#FED976',
+      label: 'Publicado no DOU'
+    },
+    {
+      id: 5,
+      color:'#FEB24C',
+      label:'Aguarda Publicação no DOU'
+    },
+    {
+      id: 4,
+      color: '#FD8D3C',
+      label: 'Encaminhado para assinatura do Secretário SAI'},
+    {
+      id: 3,
+      color: '#FC4E2A',
+      label: 'Diligência Documental'
+    },
+    {
+      id: 2,
+      color: '#E31A1C',
+      label:'Documentação Recebida - Aguarda Análise'},
+    {
+      id: 1,
+      color: '#BD0026',
+      label: 'Aguardando envio da documentação'},
+    {
+      id: 0,
+      color: '#800026',
+      label: 'Aguardando preenchimento dos dados cadastrais'
+    },
+  ]
   
 
   var mymap = L.map('mapid1').setView([lat, lng], 4);
@@ -133,73 +167,84 @@ $(document).ready(function(){
     id: 'mapbox.light',
   }).addTo(mymap);
 
-    $.ajax({ 
-      type: 'GET', 
-      url: '{% url 'gestao:ajax_consulta_entes' %}', 
-      data: {}, 
-      dataType: 'json',
-      success: function (entes) {
-        var clusters = new L.markerClusterGroup();
-        entes.forEach(function(ente){
-            var marker = new L.marker(
-                new L.LatLng(ente.fields.latitude, ente.fields.longitude),
-                {
-                    title: 'Clique para ver mais.',
-                    riseOnHover: false,
-                    enteObject: ente
-                }
-            ).bindPopup(ente.fields.nome)
-            .on('click', function(e){
-              mymap.setView(e.latlng, 13);
-            });
+  
+  $.ajax({
+    type: 'GET', 
+    url: '{% url 'gestao:ajax_consulta_entes' %}', 
+    data: {}, 
+    dataType: 'json',
+    success: function (entes) {
+      var clusters = new L.markerClusterGroup();
+      entes.forEach(function(ente){
+        // console.log(ente)
+          var marker = new L.marker(
+              new L.LatLng(ente.latitude, ente.longitude),
+              {
+                  title: 'Clique para ver mais.',
+                  riseOnHover: false,
+                  enteObject: ente
+              }
+          ).bindPopup(ente.nome)
+          .on('click', function(e){
+            mymap.setView(e.latlng, 13);
+          });
 
-            markers.push(marker);
+          markers.push(marker);
 
-            clusters.addLayer(marker);
-        });
+          clusters.addLayer(marker);
+      });
       mymap.addLayer(clusters);
     }
   });
 
-  $.ajax({ 
-    type: 'GET', 
-    url: 'https://servicodados.ibge.gov.br/api/v2/malhas/?resolucao=5&formato=application/vnd.geo+json', 
-    // url: 'https://raw.githubusercontent.com/tbrugz/geodata-br/master/geojson/geojs-100-mun.json',
-    data: {}, 
-    dataType: 'json',
-    success: function (data) {
-      data.features.forEach(function(enteGeoJson, key){
-        for(let i = 0; i < markers.length; i++){
-          if(markers[i].options.enteObject.fields.cod_ibge == enteGeoJson.properties.codarea){
-            data.features[key].properties['enteObject'] = markers[i].options.enteObject;
-            continue;
+  if(!localStorage.getItem('geoJson')){
+    $.ajax({
+      type: 'GET', 
+      url: 'https://servicodados.ibge.gov.br/api/v2/malhas/?resolucao=5&formato=application/vnd.geo+json', 
+      data: {}, 
+      dataType: 'json',
+      success: function (data) {
+        data.features.forEach(function(enteGeoJson, key){
+          for(let i = 0; i < markers.length; i++){
+            if(markers[i].options.enteObject.cod_ibge == enteGeoJson.properties.codarea){
+              data.features[key].properties['enteObject'] = markers[i].options.enteObject;
+              continue;
+            }
           }
-        }
-      });
+        });
+        localStorage.setItem('geoJson', LZString.compress(JSON.stringify(data)));
 
-      geojson = L.geoJson(data, {
+        geojson = L.geoJson(data, {
+          style: style,
+          onEachFeature: onEachFeature
+        }).addTo(mymap);
+      }
+    });
+  }else{
+    var geoJsonString = LZString.decompress(localStorage.getItem('geoJson'));
+    geojson = L.geoJson(JSON.parse(geoJsonString), {
         style: style,
         onEachFeature: onEachFeature
       }).addTo(mymap);
-    }
-  });
+  }
 
-  function getColor(d) {
-    return d > 1000 ? '#800026' :
-           d > 500  ? '#BD0026' :
-           d > 200  ? '#E31A1C' :
-           d > 100  ? '#FC4E2A' :
-           d > 50   ? '#FD8D3C' :
-           d > 20   ? '#FEB24C' :
-           d > 10   ? '#FED976' :
-                      '#FFEDA0';
+  function getColor(situacao) {
+    //@TODO ajustar cores
+    return '#800026';
+    // return d > '7'  ? '#800026' :
+    //        d > '6'  ? '#BD0026' :
+    //        d > '5'  ? '#E31A1C' :
+    //        d > '4'  ? '#FC4E2A' :
+    //        d > '3'  ? '#FD8D3C' :
+    //        d > '2'  ? '#FEB24C' :
+    //        d > '1'  ? '#FED976' :
+    //                   '#FFEDA0' ;
   }
 
   function style(feature) {
-    let color = '#ACDF87'
-    // console.log()
+    let color = '#D3D3D3';
     if (feature.properties.hasOwnProperty('enteObject')) { 
-      color = '#1E5631'
+      color = getColor(feature.properties.enteObject.estado_processo);
     }
     return {
         fillColor: color,
@@ -207,18 +252,7 @@ $(document).ready(function(){
         opacity: 1,
         color: 'white',
         dashArray: '3',
-        fillOpacity: 0.3
-    };
-  }
-
-  function styleAderido(feature) {
-    return {
-        fillColor: '#e53935',
-        weight: 2,
-        opacity: 1,
-        color: 'white',
-        dashArray: '3',
-        fillOpacity: 0.3
+        fillOpacity: 0.7
     };
   }
 
@@ -226,12 +260,17 @@ $(document).ready(function(){
     var layer = e.target;
     info.update(layer.feature.properties);
 
-    layer.setStyle({
+    // console.log(layer.feature);
+    if (layer.feature.properties.hasOwnProperty('enteObject')) { 
+      color = getColor(layer.feature.properties.enteObject.estado_processo);
+      layer.setStyle({
         weight: 5,
         color: '#666',
         dashArray: '',
         fillOpacity: 0.7
-    });
+      });
+    }
+    
 
     if (!L.Browser.ie && !L.Browser.opera && !L.Browser.edge) {
         layer.bringToFront();
@@ -244,11 +283,7 @@ $(document).ready(function(){
   }
 
   function zoomToFeature(e) {
-    // console.log(markers)
-    // console.log(e.target.getBounds().getCenter());
-    // console.log(e.target.getBounds().contains([-26.9637194992369,-52.5349325183039]))
     mymap.fitBounds(e.target.getBounds());
-
   }
 
   function onEachFeature(feature, layer) {
@@ -267,25 +302,39 @@ $(document).ready(function(){
       return this._div;
   };
 
-  info.update = function (props) {    
-
-    console.log(props)
-
+  info.update = function (props) {
     this._div.innerHTML = '<h4>Dados do Ente Federado</h4>' +  (props && props.hasOwnProperty('enteObject') ?
-      '<b>Nome:</b> '+ props.enteObject.fields.nome + '</br>' +
-      '<b>idh:</b> '+ props.enteObject.fields.idh + '</br>' +
-      '<b>População:</b> '+ props.enteObject.fields.populacao + '</br>' +
-      '<b>Densidade:</b> '+ props.enteObject.fields.densidade + ' hab./km<sup>2</sup>'
+      '<b>Nome:</b> '+ props.enteObject.nome + '</br>' +
+
+      // '<b>idh:</b> '+ props.enteObject.fields.idh + '</br>' +
+      // '<b>População:</b> '+ props.enteObject.fields.populacao + '</br>' +
+      '<b>Densidade:</b> '+ props.enteObject.densidade + ' hab./km<sup>2</sup>'
       : 'Passe o mouse sob um ente aderido');
     
   };
   info.addTo(mymap);
 
-  
-  // mymap.on('zoomend', function(e) {
-  //   console.log(e.target);
-  //   console.log(geojson);
-  // });
+  var legend = L.control({position: 'bottomright'});
+
+  legend.onAdd = function (mymap) {
+
+      var div = L.DomUtil.create('div', 'info legend'),
+          grades = [1, 2, 3, 4, 5, 6, 7],
+          labels = [];
+
+      // loop through our density intervals and generate a label with a colored square for each interval
+      for (var i = 0; i < colorGrade.length; i++) {
+          div.innerHTML +=
+              '<i style="background:' + colorGrade[i].color + '"></i> ' +
+              colorGrade[i].label + '<br>';
+      }
+
+
+      return div;
+  };
+
+  legend.addTo(mymap);
+
 
   var names = {
       labels: ['M', 'T', 'W', 'T', 'F', 'S', 'S'],
@@ -299,7 +348,7 @@ $(document).ready(function(){
         tension: 0
       }),
       low: 0,
-      high: 100, // creative tim: we recommend you to set the high sa the biggest value + something for a better look
+      high: 100, 
       chartPadding: {
         top: 0,
         right: 0,
