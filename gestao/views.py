@@ -34,6 +34,9 @@ from adesao.models import Historico
 from adesao.models import SistemaCultura
 from adesao.models import EnteFederado
 from adesao.models import Gestor
+from adesao.models import Funcionario
+
+from adesao.forms import CadastrarSistemaCulturaForm
 
 from planotrabalho.models import PlanoTrabalho
 from planotrabalho.models import CriacaoSistema
@@ -64,6 +67,10 @@ from .forms import CadastradorEnte
 
 from itertools import chain
 import datetime
+
+from adesao.views import AlterarSistemaCultura
+from adesao.views import AlterarFuncionario
+from adesao.views import CadastrarFuncionario
 
 
 class EnteChain(autocomplete.Select2QuerySetView):
@@ -330,11 +337,34 @@ class DetalharEnte(DetailView, LookUpAnotherFieldMixin):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        ente_federado = context['object'].ente_federado
-        historico = SistemaCultura.historico.filter(ente_federado=ente_federado)
-        context['historico'] = historico.distinct('cadastrador').order_by('cadastrador')[:10]
+        context['historico'] = context['object'].historico_cadastradores()[:10]
 
         return context
+
+
+class AlterarDadosSistemaCultura(AlterarSistemaCultura):
+    template_name = "alterar_ente.html"
+
+    def get_success_url(self):
+        sistema = SistemaCultura.objects.get(id=self.kwargs['pk'])
+        return reverse_lazy('gestao:detalhar', kwargs={'cod_ibge': sistema.ente_federado.cod_ibge})
+
+
+class AlterarFuncionario(AlterarFuncionario):
+    template_name = "criar_funcionario.html"
+
+    def get_success_url(self):
+        funcionario = Funcionario.objects.get(id=self.kwargs['pk'])
+        sistema = getattr(funcionario, 'sistema_cultura_%s' % self.kwargs['tipo'])
+        return reverse_lazy('gestao:detalhar', kwargs={'cod_ibge': sistema.all()[0].ente_federado.cod_ibge})
+
+
+class CadastrarFuncionario(CadastrarFuncionario):
+    template_name = "criar_funcionario.html"
+
+    def get_success_url(self):
+        sistema = SistemaCultura.objects.get(id=self.kwargs['sistema'])
+        return reverse_lazy('gestao:detalhar', kwargs={'cod_ibge': sistema.ente_federado.cod_ibge})
 
 
 class AlterarDadosEnte(UpdateView, LookUpAnotherFieldMixin):

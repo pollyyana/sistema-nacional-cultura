@@ -70,7 +70,7 @@ def test_entidades_principais_sistema_cultura_local(client, sistema_cultura):
     request = client.get(url, content_type="application/hal+json")
 
     entidades = set(["data_adesao", "situacao_adesao",
-                        "cod_situacao_adesao", "_embedded",
+                        "cod_situacao_adesao", "conferencia_nacional", "_embedded",
                         "_links", "id", "acoes_plano_trabalho"])
 
     assert entidades.symmetric_difference(request.data) == set()
@@ -969,3 +969,53 @@ def test_pesquisa_por_nome_ente_para_entes_com_acento_no_nome(client):
     request = client.get(url, content_type="application/hal+json")
 
     assert request.data["_embedded"]["items"][0]["_embedded"]["ente_federado"]["nome"] == 'Goiás'
+
+
+@pytest.mark.parametrize("query, componente", [
+    ("data_lei_min", "legislacao"),
+    ("data_orgao_gestor_min", "orgao_gestor"),
+    ("data_conselho_min", "conselho"),
+    ("data_fundo_cultura_min", "fundo_cultura"),
+    ("data_plano_min", "plano")
+    ])
+def test_filtra_por_data_min_componente_sistema_de_cultura(client, query, componente):
+    """ Testa retorno ao filtrar sistemas de cultura por data de publicação mínima
+    dos componentes do plano de trabalho """
+
+    sistema_cultura = mommy.make("SistemaCultura", _fill_optional=['legislacao',
+        'orgao_gestor', 'conselho', 'fundo_cultura', 'plano'])
+
+    componente = getattr(sistema_cultura, componente)
+    componente.data_publicacao = "2016-01-01"
+    componente.save()
+
+    url = url_sistemadeculturalocal + '?{}=1/1/2016'.format(query)
+
+    response = client.get(url)
+
+    assert len(response.data['_embedded']['items']) == 1
+
+
+@pytest.mark.parametrize("query, componente", [
+    ("data_lei_max", "legislacao"),
+    ("data_orgao_gestor_max", "orgao_gestor"),
+    ("data_conselho_max", "conselho"),
+    ("data_fundo_cultura_max", "fundo_cultura"),
+    ("data_plano_max", "plano")
+    ])
+def test_filtra_por_data_max_componente_sistema_de_cultura(client, query, componente):
+    """ Testa retorno ao filtrar sistemas de cultura por data de publicação máxima
+    dos componentes do plano de trabalho """
+
+    sistema_cultura = mommy.make("SistemaCultura", _fill_optional=['legislacao',
+        'orgao_gestor', 'conselho', 'fundo_cultura', 'plano'])
+
+    componente = getattr(sistema_cultura, componente)
+    componente.data_publicacao = "2016-01-01"
+    componente.save()
+
+    url = url_sistemadeculturalocal + '?{}=1/1/2019'.format(query)
+
+    response = client.get(url)
+
+    assert len(response.data['_embedded']['items']) == 1
