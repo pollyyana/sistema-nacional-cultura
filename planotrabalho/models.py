@@ -79,6 +79,7 @@ def upload_to(instance, filename):
 
     return name
 
+
 class ArquivoComponente(models.Model):
     arquivo = models.FileField(upload_to=upload_to_componente, null=True, blank=True)
     situacao = models.ForeignKey('SituacoesArquivoPlano',

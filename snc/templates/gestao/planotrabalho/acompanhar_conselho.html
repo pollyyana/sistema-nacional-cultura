@@ -41,8 +41,22 @@
                       <a href="{{ sistema.conselho.arquivo.url }}">Download</a>
                     </td>
                     <td>
-                      <a href="{% url 'gestao:diligencia_componente' pk=sistema.id componente='conselho' %}">Avaliar</a>
+                      <a href="{% url 'gestao:diligencia_componente' pk=sistema.id componente='conselho' arquivo='arquivo' %}">Avaliar</a>
                     </td>
+                    {% if sistema.conselho.arquivo %}
+                      <td><a href="{{ sistema.conselho.arquivo.url }}">Download</a></td>
+                      <td><a href="{% url 'gestao:diligencia_componente' pk=sistema.id componente='conselho' arquivo='arquivo' %}">Avaliar</a></td>
+                    {% else %}
+                      <td></td>
+                      <td></td>
+                    {% endif %}
+                    {% if sistema.conselho.lei.arquivo %}
+                      <td><a href="{{ sistema.conselho.lei.arquivo.url }}">Download</a></td>
+                      <td><a href="{% url 'gestao:diligencia_componente' pk=sistema.id componente='conselho' arquivo='lei' %}">Avaliar</a></td>
+                    {% else %}
+                      <td></td>
+                      <td></td>
+                    {% endif %}
                   </tr>
                 {% endfor %}
               </tbody>
