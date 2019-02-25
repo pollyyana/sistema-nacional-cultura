@@ -1,7 +1,10 @@
+
 {% extends "gestao/base_gestao.html" %} {% load gestao_tags %} {% block content %}
 <link rel="stylesheet" href="http://localhost:8000/static/css/leaflet.css" />
 <link rel="stylesheet" type="text/css" href="http://localhost:8000/static/css/MarkerCluster.css" />
 <link rel="stylesheet" type="text/css" href="http://localhost:8000/static/css/MarkerCluster.Default.css" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet-easybutton@2/src/easy-button.css">
+
 <style>
 .info {
     padding: 6px 8px;
@@ -27,6 +30,10 @@
     margin-right: 8px;
     opacity: 0.7;
 }
+
+.leaflet-button-icon{
+  font-size: 1.5em;
+} 
 </style>
 
 <menu data-target="inicio" ></menu>
@@ -105,6 +112,7 @@
 <script type='text/javascript' src='http://cdn.leafletjs.com/leaflet/v0.7.7/leaflet.js'></script>
 <script type='text/javascript' src='http://localhost:8000/static/js/leaflet.markercluster.js'></script>
 <script type='text/javascript' src='https://cdnjs.cloudflare.com/ajax/libs/lz-string/1.4.4/lz-string.js'></script>
+<script src="https://cdn.jsdelivr.net/npm/leaflet-easybutton@2/src/easy-button.js"></script>
 <script>
 	
 
@@ -116,41 +124,45 @@ $(document).ready(function(){
   //@TODO Trazer a label da requisição dos entes
   var colorGrade = [
     {
-      id: 7,
+      id: 0,
       color: '#FFEDA0',
-      label: 'Responsável confirmado'
+      label: 'Aguardando preenchimento dos dados cadastrais'
+
     },
     {
-      id: 6,
+      id: 1,
       color: '#FED976',
-      label: 'Publicado no DOU'
-    },
-    {
-      id: 5,
-      color:'#FEB24C',
-      label:'Aguarda Publicação no DOU'
-    },
-    {
-      id: 4,
-      color: '#FD8D3C',
-      label: 'Encaminhado para assinatura do Secretário SAI'},
-    {
-      id: 3,
-      color: '#FC4E2A',
-      label: 'Diligência Documental'
+      label: 'Aguardando envio da documentação'
     },
     {
       id: 2,
+      color:'#FEB24C',
+      label:'Documentação Recebida - Aguarda Análise',
+    },
+    {
+      id: 3,
+      color: '#FD8D3C',
+      label: 'Diligência Documental'
+    },
+    {
+      id: 4,
+      color: '#FC4E2A',
+      label: 'Encaminhado para assinatura do Secretário SAI'
+    },
+    {
+      id: 5,
       color: '#E31A1C',
-      label:'Documentação Recebida - Aguarda Análise'},
+      label:'Aguarda Publicação no DOU'
+    },
     {
-      id: 1,
+      id: 6,
       color: '#BD0026',
-      label: 'Aguardando envio da documentação'},
+      label: 'Publicado no DOU'
+    },
     {
-      id: 0,
+      id: 7,
       color: '#800026',
-      label: 'Aguardando preenchimento dos dados cadastrais'
+      label: 'Responsável confirmado'
     },
   ]
   
@@ -230,15 +242,7 @@ $(document).ready(function(){
 
   function getColor(situacao) {
     //@TODO ajustar cores
-    return '#800026';
-    // return d > '7'  ? '#800026' :
-    //        d > '6'  ? '#BD0026' :
-    //        d > '5'  ? '#E31A1C' :
-    //        d > '4'  ? '#FC4E2A' :
-    //        d > '3'  ? '#FD8D3C' :
-    //        d > '2'  ? '#FEB24C' :
-    //        d > '1'  ? '#FED976' :
-    //                   '#FFEDA0' ;
+    return colorGrade[situacao].color;
   }
 
   function style(feature) {
@@ -303,12 +307,10 @@ $(document).ready(function(){
   };
 
   info.update = function (props) {
+    console.log(props)
     this._div.innerHTML = '<h4>Dados do Ente Federado</h4>' +  (props && props.hasOwnProperty('enteObject') ?
-      '<b>Nome:</b> '+ props.enteObject.nome + '</br>' +
-
-      // '<b>idh:</b> '+ props.enteObject.fields.idh + '</br>' +
-      // '<b>População:</b> '+ props.enteObject.fields.populacao + '</br>' +
-      '<b>Densidade:</b> '+ props.enteObject.densidade + ' hab./km<sup>2</sup>'
+      '<b>Nome:</b> '+ props.enteObject.nome + ' - ' + props.enteObject.sigla + '</br>' +
+      '<b>Situação:</b> '+ colorGrade[props.enteObject.estado_processo].label
       : 'Passe o mouse sob um ente aderido');
     
   };
@@ -334,6 +336,11 @@ $(document).ready(function(){
   };
 
   legend.addTo(mymap);
+
+  L.easyButton( '<span class="leaflet-button-icon">&#x21bb;</span>', function(){
+    localStorage.clear();
+    location.reload();
+  }).addTo(mymap);
 
 
   var names = {
