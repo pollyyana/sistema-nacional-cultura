@@ -1,0 +1,79 @@
+{% extends "gestao/base_gestao.html" %} {% load gestao_tags %} {% block content %}
+<menu data-target="plano" ></menu>
+
+<div class="row">
+    <div class="col-lg-12  col-md-12">
+        <div class="card">
+        <div class="card-header card-header-tabs card-header-primary">
+            <div class="nav-tabs-navigation">
+            <div class="nav-tabs-wrapper">
+                <span class="nav-tabs-title">Componentes:</span>
+                <ul class="nav nav-tabs" data-tabs="tabs">
+
+                <li class="nav-item">
+                    <a class="nav-link active" href="#sistema" data-toggle="tab">
+                    Sistema de Cultura
+                    <div class="ripple-container"></div>
+                    </a>
+                </li>
+
+                <li class="nav-item">
+                    <a class="nav-link" href="#orgao" data-toggle="tab">
+                    Órgão Gestor
+                    <div class="ripple-container"></div>
+                    </a>
+                </li>
+
+                <li class="nav-item">
+                    <a class="nav-link" href="#conselho" data-toggle="tab">
+                        Conselho Cultura
+                        <div class="ripple-container"></div>
+                    </a>
+                </li>
+
+                <li class="nav-item">
+                    <a class="nav-link" href="#fundo" data-toggle="tab">
+                        Fundo de Cultura
+                        <div class="ripple-container"></div>
+                    </a>
+                </li>
+
+                <li class="nav-item">
+                    <a class="nav-link" href="#plano" data-toggle="tab">
+                        Plano de Cultura
+                        <div class="ripple-container"></div>
+                    </a>
+                </li>
+
+                </ul>
+            </div>
+            </div>
+        </div>
+
+        <div class="card-body">
+            <div class="tab-content">
+            <div class="tab-pane active" id="sistema">
+                {% include "gestao/planotrabalho/acompanhar_legislacao.html" %}
+            </div>
+            <div class="tab-pane" id="orgao">
+                {% include "gestao/planotrabalho/acompanhar_orgao_gestor.html" %}
+            </div>
+            <div class="tab-pane" id="conselho">
+                {% include "gestao/planotrabalho/acompanhar_conselho.html" %}
+            </div>
+            <div class="tab-pane" id="fundo">
+                {% include "gestao/planotrabalho/acompanhar_fundo_cultura.html" %}
+            </div>
+            <div class="tab-pane" id="plano">
+                {% include "gestao/planotrabalho/acompanhar_plano.html" %}
+            </div>
+            </div>
+        </div>
+
+        </div>
+    </div>
+</div>
+{% endblock content %}
+{% block js%}
+
+{% endblock js%}
