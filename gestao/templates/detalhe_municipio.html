@@ -35,7 +35,14 @@
                          {% endif %}
                     </p>
                     <p><strong>E-mail:</strong> {{ ente.gestor.email_institucional }}</p>
-
+                    <p>
+                      <strong>Participou da Conferência Nacional:</strong>
+                      {% if ente.conferencia_nacional %}
+                        Sim
+                      {% else %}
+                        Não
+                      {% endif %}
+                    </p>
                 </div>
 
                 <div class="col-md-5">
@@ -314,6 +321,13 @@
                     {% if sistema.cadastrador.user.email %}
                       <li class="list-group-item">
                          <b>E-mail:</b> {{sistema.cadastrador.user.email}}
+                      </li>
+                    {% endif %}
+
+
+                    {% if sistema.alterado_em %}
+                      <li class="list-group-item">
+                         <b>Data:</b> {{sistema.alterado_em}}
                       </li>
                     {% endif %}
                 </ul>

@@ -132,6 +132,8 @@ def exportar_csv(request):
     writer.writerow(
         [
             "Nome",
+            "UF",
+            "Região",
             "Cod.IBGE",
             "Situação",
             "Situação da Lei do Sistema de Cultura",
@@ -139,6 +141,10 @@ def exportar_csv(request):
             "Situação do Conselho de Política Cultural",
             "Situação do Fundo de Cultura",
             "Situação do Plano de Cultura",
+            "Participou da Conferência Nacional",
+            "IDH",
+            "PIB",
+            "População",
             "Endereço",
             "Bairro",
             "CEP",
@@ -147,19 +153,24 @@ def exportar_csv(request):
         ]
     )
 
-    for sistema in SistemaCultura.sistema.all():
+    for sistema in SistemaCultura.objects.distinct('ente_federado__cod_ibge').order_by(
+        'ente_federado__cod_ibge', 'ente_federado__nome'):
         if sistema.ente_federado:
-            if sistema.ente_federado.is_municipio or sistema.ente_federado.cod_ibge:
-                nome = sistema.ente_federado.__str__()
-            else:
-                if sistema.ente_federado.cod_ibge == 53:
-                    nome = sistema.ente_federado.nome
-                else:    
-                    nome = "Estado de " + sistema.ente_federado.nome
+            nome = sistema.ente_federado.__str__()
             cod_ibge = sistema.ente_federado.cod_ibge
+            sigla = sistema.ente_federado.sigla
+            regiao = sistema.ente_federado.get_regiao()
+            idh = sistema.ente_federado.idh
+            pib = sistema.ente_federado.pib
+            populacao = sistema.ente_federado.populacao
         else:
             nome = "Nome não cadastrado"
             cod_ibge = "Código não cadastrado"
+            regiao = "Não encontrada"
+            sigla = "Não encontrada"
+            idh = "Não encontrado"
+            pib = "Não encontrado"
+            populacao = "Não encontrada"
 
         estado_processo = sistema.get_estado_processo_display()
 
@@ -182,6 +193,8 @@ def exportar_csv(request):
         writer.writerow(
             [
                 nome,
+                sigla,
+                regiao,
                 cod_ibge,
                 estado_processo,
                 verificar_anexo(sistema, "legislacao"),
@@ -189,6 +202,10 @@ def exportar_csv(request):
                 verificar_anexo(sistema, "conselho"),
                 verificar_anexo(sistema, "fundo_cultura"),
                 verificar_anexo(sistema, "plano"),
+                "Sim" if sistema.conferencia_nacional else "Não",
+                idh,
+                pib,
+                populacao,
                 endereco,
                 bairro,
                 cep,
@@ -353,18 +370,20 @@ class CadastrarSistemaCultura(TemplatedEmailFormViewMixin, CreateView):
 
 
 class AlterarSistemaCultura(UpdateView):
-    form_class = CadastrarSede
+    form_class = CadastrarSistemaCulturaForm
     model = SistemaCultura
     template_name = "cadastrar_sistema.html"
 
     def form_valid(self, form):
         context = self.get_context_data()
+        form_sistema = context['form_sistema']
         form_sede = context['form_sede']
         form_gestor = context['form_gestor']
 
-        if form_gestor.is_valid() and form_sede.is_valid():
+        if form_gestor.is_valid() and form_sede.is_valid() and form_sistema.is_valid():
             sede = form_sede.save()
             gestor = form_gestor.save()
+            sistema = form_sistema.save()
 
             return redirect(self.get_success_url())
         else:
@@ -379,11 +398,14 @@ class AlterarSistemaCultura(UpdateView):
     def get_context_data(self, **kwargs):
         context = super(AlterarSistemaCultura, self).get_context_data(**kwargs)
         if self.request.POST:
+            context['form_sistema'] = CadastrarSistemaCulturaForm(self.request.POST, self.request.FILES, instance=self.object)
             context['form_sede'] = CadastrarSede(self.request.POST, self.request.FILES, instance=self.object.sede)
             context['form_gestor'] = CadastrarGestor(self.request.POST, self.request.FILES, instance=self.object.gestor)
         else:
+            context['form_sistema'] = CadastrarSistemaCulturaForm(instance=self.object)
             context['form_sede'] = CadastrarSede(instance=self.object.sede)
             context['form_gestor'] = CadastrarGestor(instance=self.object.gestor)
+
         return context
 
 

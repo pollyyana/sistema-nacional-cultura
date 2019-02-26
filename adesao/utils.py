@@ -42,26 +42,38 @@ def preenche_planilha(planilha):
     planilha.write(0, 5, "Situação do Conselho de Política Cultural")
     planilha.write(0, 6, "Situação do Fundo de Cultura")
     planilha.write(0, 7, "Situação do Plano de Cultura")
-    planilha.write(0, 8, "Endereço")
-    planilha.write(0, 9, "Bairro")
-    planilha.write(0, 10, "CEP")
-    planilha.write(0, 11, "Telefone")
-    planilha.write(0, 12, "Email Prefeito")
-    planilha.write(0, 13, "Email do Cadastrador")
-    planilha.write(0, 14, "Email do Responsável")
-    planilha.write(0, 15, "Localização do processo")
+    planilha.write(0, 8, "Participou da Conferência Nacional")
+    planilha.write(0, 9, "IDH")
+    planilha.write(0, 10, "PIB")
+    planilha.write(0, 11, "População")
+    planilha.write(0, 12, "Endereço")
+    planilha.write(0, 13, "Bairro")
+    planilha.write(0, 14, "CEP")
+    planilha.write(0, 15, "Telefone")
+    planilha.write(0, 16, "Email Prefeito")
+    planilha.write(0, 17, "Email do Cadastrador")
+    planilha.write(0, 18, "Email do Responsável")
+    planilha.write(0, 19, "Localização do processo")
     ultima_linha = 0
 
-    for i, sistema in enumerate(SistemaCultura.sistema.all(), start=1):
+    for i, sistema in enumerate(SistemaCultura.objects.distinct('ente_federado__cod_ibge').order_by(
+        'ente_federado__cod_ibge', 'ente_federado__nome'), start=1):
         if sistema.ente_federado:
-            if sistema.ente_federado.is_municipio or sistema.ente_federado.cod_ibge == 53:
-                nome = sistema.ente_federado.__str__()
-            else:
-                nome = "Estado de " + sistema.ente_federado.nome
+            nome = sistema.ente_federado.__str__()
             cod_ibge = sistema.ente_federado.cod_ibge
+            regiao = sistema.ente_federado.get_regiao()
+            sigla = sistema.ente_federado.sigla
+            idh = sistema.ente_federado.idh
+            pib = sistema.ente_federado.pib
+            populacao = sistema.ente_federado.populacao
         else:
-            nome = "Nome não cadastrado"
-            cod_ibge = "Código não cadastrado"
+            nome = "Não cadastrado"
+            cod_ibge = "Não cadastrado"
+            regiao = "Não encontrada"
+            sigla = "Não encontrada"
+            idh = "Não encontrado"
+            pib = "Não encontrado"
+            populacao = "Não encontrada"
 
         estado_processo = sistema.get_estado_processo_display()
 
@@ -101,15 +113,18 @@ def preenche_planilha(planilha):
         planilha.write(i, 5, verificar_anexo(sistema, "conselho"),)
         planilha.write(i, 6, verificar_anexo(sistema, "fundo_cultura"))
         planilha.write(i, 7, verificar_anexo(sistema, "plano"))
-        planilha.write(i, 8, endereco)
-        planilha.write(i, 9, bairro)
-        planilha.write(i, 10, cep)
-        planilha.write(i, 11, telefone)
-        planilha.write(i, 12, email_gestor)
-        planilha.write(i, 13, email_cadastrador)
-        planilha.write(i, 14, email_responsavel)
-        planilha.write(i, 15, local)
-
+        planilha.write(i, 8, "Sim" if sistema.conferencia_nacional else "Não")
+        planilha.write(i, 9, idh)
+        planilha.write(i, 10, pib)
+        planilha.write(i, 11, populacao)
+        planilha.write(i, 12, endereco)
+        planilha.write(i, 13, bairro)
+        planilha.write(i, 14, cep)
+        planilha.write(i, 15, telefone)
+        planilha.write(i, 16, email_gestor)
+        planilha.write(i, 17, email_cadastrador)
+        planilha.write(i, 18, email_responsavel)
+        planilha.write(i, 19, local)
         ultima_linha = i
 
     return ultima_linha
