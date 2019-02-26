@@ -193,6 +193,10 @@ def sistema_cultura():
             estado_processo=6,
             ente_federado=ente_federado,
             conselho=conselho,
+            legislacao=mommy.make("Componente", tipo=0),
+            orgao_gestor=mommy.make("Componente", tipo=1),
+            fundo_cultura=mommy.make("FundoDeCultura", tipo=2),
+            plano=mommy.make("Componente", tipo=4),
             _fill_optional=True
             )
 

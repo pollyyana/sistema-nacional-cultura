@@ -6,7 +6,7 @@
   <div class="panel-body">
     <form class="form-horizontal" method="post" enctype=multipart/form-data>{% csrf_token %}
       <div class="form-group {% if form.arquivo.errors %} has-error {% endif %}">
-        <label class="col-sm-3 control-label">Anexo</label>
+        <label class="col-sm-3 control-label">Anexo da Lei</label>
 
         <div class="col-sm-7">
           {% render_field form.arquivo %}
@@ -35,6 +35,17 @@
         </div>
         <div class="col-sm-offset-3 col-sm-9 has-error">
             <span class="help-block">{{ form.data_publicacao.errors}}</span>
+        </div>
+      </div>
+
+      <div class="form-group {% if form.regulamentacao_arquivo.errors %} has-error {% endif %}">
+        <label class="col-sm-3 control-label">Anexo da Regulamentação</label>
+
+        <div class="col-sm-7">
+          {% render_field form.regulamentacao_arquivo %}
+        </div>
+        <div class="col-sm-offset-3 col-sm-9">
+          <span class="help-block">{{ form.regulamentacao_arquivo.errors}}</span>
         </div>
       </div>
 

@@ -2088,3 +2088,19 @@ def test_criar_dados_secretario(client, login_staff):
     assert sistema_cultura.secretario.email_institucional == funcionario.email_institucional
     assert sistema_cultura.secretario.telefone_um == funcionario.telefone_um
     assert sistema_cultura.secretario.tipo_funcionario == 0
+
+
+def test_insere_fundo_regulamentacao(client, login_staff, sistema_cultura):
+    arquivo = SimpleUploadedFile(
+        "regulamentacao.txt", b"file_content", content_type="text/plain"
+    )
+
+    url = reverse(
+        "gestao:inserir_componente", kwargs={"pk": sistema_cultura.id, "componente": "fundo_cultura"}
+    )
+
+    client.post(url, data={"regulamentacao_arquivo": arquivo})
+
+    sistema_atualizado = SistemaCultura.sistema.get(ente_federado__cod_ibge=sistema_cultura.ente_federado.cod_ibge)
+
+    assert sistema_atualizado.fundo_cultura.regulamentacao.arquivo.name.split("fundo_cultura/")[1]

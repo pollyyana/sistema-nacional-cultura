@@ -185,9 +185,13 @@ def test_alterar_fundo_cultura(client, login):
     arquivo = SimpleUploadedFile(
         "novo.txt", b"file_content", content_type="text/plain"
     )
+    arquivo_regulamentacao = SimpleUploadedFile(
+        "novo_regulamentacao.txt", b"file_content", content_type="text/plain"
+    )
     response = client.post(url, data={"arquivo": arquivo,
                                       "data_publicacao": "25/06/2018",
-                                      "cnpj": "56.385.239/0001-81"})
+                                      "cnpj": "56.385.239/0001-81",
+                                      "regulamentacao_arquivo": arquivo_regulamentacao})
 
     sistema_atualizado = SistemaCultura.sistema.get(
         ente_federado__nome=sistema_cultura.ente_federado.nome)
@@ -199,6 +203,7 @@ def test_alterar_fundo_cultura(client, login):
     assert numero_componentes == numero_componentes_apos_update
     assert response.status_code == 302
     assert arquivo.name.split(".")[0] in sistema_atualizado.fundo_cultura.arquivo.name.split("/")[-1]
+    assert arquivo_regulamentacao.name.split(".")[0] in sistema_atualizado.fundo_cultura.regulamentacao.arquivo.name.split("/")[-1]
     assert sistema_atualizado.fundo_cultura.data_publicacao == datetime.date(2018, 6, 25)
     assert sistema_atualizado.fundo_cultura.cnpj == "56.385.239/0001-81"
     assert sistema_atualizado.fundo_cultura.tipo == 2

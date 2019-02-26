@@ -257,6 +257,30 @@
     </div>
     {% endif %}
 
+    {% if ente.fundo_cultura.regulamentacao.arquivo %}
+    <div class="list-group row">
+       <div class="col-md-12">
+          <div class="list-group-item col-xs-8">
+            Fundo de Cultura - Regulamentação {% if ente.fundo_cultura.cnpj_fundo_cultura %} (CNPJ: {{ente.fundo_cultura.cnpj_fundo_cultura}}) {% endif %}
+          </div>
+
+          <div class="list-group-item col-xs-2 text-center">
+            <a href="{{ ente.fundo_cultura.regulamentacao.arquivo.url }}">Download</a>
+          </div>
+          {% if ente.fundo_cultura.regulamentacao.situacao == 1 %}
+            <div class="list-group-item col-xs-2 text-center">
+                <a href="{% url 'gestao:diligencia_componente' pk=ente.id componente='fundo_cultura' arquivo='regulamentacao' %}">Avaliar</a>
+            </div>
+          {% else %}
+          <div class="list-group-item col-xs-2 text-center">
+              <b>{{ ente.fundo_cultura.regulamentacao.get_situacao_display }}</b>
+          </div>
+          {% endif %}
+
+       </div>
+    </div>
+    {% endif %}
+
 
 
     {% if ente.plano.arquivo %}

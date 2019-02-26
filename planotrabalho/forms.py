@@ -2,6 +2,7 @@ import datetime
 from django import forms
 from django.forms import ModelForm
 from django.forms.widgets import FileInput
+from django.forms import inlineformset_factory
 
 from localflavor.br.forms import BRCNPJField
 
@@ -9,6 +10,8 @@ from .models import CriacaoSistema, OrgaoGestor, ConselhoCultural
 from .models import FundoCultura, Componente
 from .models import FundoDeCultura, PlanoCultura
 from .models import Conselheiro, SITUACAO_CONSELHEIRO
+from planotrabalho.models import ArquivoComponente2
+from planotrabalho.models import upload_to
 from .utils import add_anos
 
 SETORIAIS = (
@@ -80,10 +83,43 @@ class CriarComponenteForm(ModelForm):
 
 class CriarFundoForm(CriarComponenteForm):
     cnpj = BRCNPJField()
+    regulamentacao_arquivo = forms.FileField(required=False, widget=FileInput)
+
+    def save(self, commit=True, *args, **kwargs):
+        fundo = super(CriarFundoForm, self).save(commit=False)
+        arquivo = self.cleaned_data['regulamentacao_arquivo']
+
+        if not fundo.regulamentacao:
+            fundo.tipo = 2
+            fundo.arquivo = None
+            fundo.save()
+            if 'arquivo' in self.changed_data:
+                fundo.situacao = 1
+            fundo.arquivo = self.cleaned_data['arquivo']
+
+            sistema_cultura = fundo.fundo_cultura
+            sistema_cultura.add(self.sistema)
+
+            fundo.regulamentacao = ArquivoComponente2()
+            if 'regulamentacao_arquivo' in self.changed_data:
+                fundo.regulamentacao.situacao = 1
+            fundo.regulamentacao.save()
+
+            fundo.regulamentacao.fundos.add(fundo)
+            fundo.regulamentacao.arquivo = arquivo
+            fundo.regulamentacao.save()
+
+            self.sistema.fundo_cultura = fundo
+            self.sistema.save()
+        else:
+            fundo.regulamentacao.arquivo = arquivo
+            fundo.regulamentacao.save()
+        
+        fundo.save()
 
     class Meta:
         model = FundoDeCultura
-        fields = ('cnpj', 'arquivo', 'data_publicacao')
+        fields = ('cnpj', 'arquivo', 'data_publicacao',)
 
 
 class CriarConselheiroForm(ModelForm):

@@ -43,6 +43,21 @@
     {{ form.arquivo.errors }}
   </div>
 
+  <div class="form-group">
+    <label for="{{ form.arquivo.id_for_label }}">
+      Regulamentação do Fundo Estadual/Municipal de Cultura
+    </label>
+    {% if form.regulamentacao_arquivo.value %}
+    <p><a href="{{ form.regulamentacao_arquivo.value.url }}">Baixar arquivo atual</a></p>
+    {% if view.kwargs.sistema.fundo_cultura.regulamentacao.situacao != 2 %}
+    <p>Modificar: {% render_field form.regulamentacao_arquivo %}</p>
+    {% endif %}
+    {% else %}
+    <p>{% render_field form.regulamentacao_arquivo %}</p>
+    {% endif %}
+    {{ form.regulamentacao_arquivo.errors }}
+  </div>
+
   <div class="alert alert-info" role="alert">
     <strong>Para execução, sugerimos as seguintes atividades:</strong><br>
     - Elaborar minuta (proposta) de regulamentação do fundo e de outros mecanismos de financiamento;<br>

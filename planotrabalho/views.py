@@ -112,6 +112,9 @@ class AlterarFundoCultura(UpdateView):
         self.sistema = SistemaCultura.objects.get(id=sistema_id)
         kwargs['sistema'] = self.sistema
         kwargs['tipo'] = 'fundo_cultura'
+        if self.object.regulamentacao:
+            kwargs['initial'] = {'regulamentacao_arquivo': self.object.regulamentacao.arquivo}
+
         return kwargs
 
     def get_success_url(self):

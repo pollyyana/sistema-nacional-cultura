@@ -62,21 +62,11 @@
         <p>
           c) Fundo de Cultura
         </p>
-        {% if sistema.fundo_cultura.situacao != 2 %}
-          {% if sistema.fundo_cultura.situacao == 1 %}
+        {% if sistema.fundo_cultura.situacao != 2 or sistema.fundo_cultura.regulamentacao.situacao != 2 %}
+          {% if sistema.fundo_cultura.situacao == 1 or sistema.fundo_cultura.regulamentacao.situacao == 1 %}
             <a class="btn btn-warning" style="color:#FFF" href="{% url 'planotrabalho:cadastrar_componente' tipo='fundo_cultura' %}">Aguarda Análise</a>
           {% elif request.session.sistema_cultura_selecionado.estado_processo == '6' %}
             <a class="btn btn-success" style="color:#FFF" href="{% url 'planotrabalho:cadastrar_componente' tipo='fundo_cultura' %}" >Enviar Comprovação</a>
-          {% endif %}
-        {% endif %}
-        <br />
-        <br />
-
-        {% if sistema.fundo_cultura.situacao != 2 %}
-          {% if sistema.fundo_cultura.situacao == 1 %}
-            <a class="btn btn-warning" style="color:#FFF" href="{% url 'planotrabalho:cadastrar_componente' tipo='fundo_cultura' %}">Aguarda Análise</a>
-          {% elif request.session.sistema_cultura_selecionado.estado_processo == '6' %}
-            <a class="btn btn-success" style="color:#FFF" href="{% url 'planotrabalho:cadastrar_componente' tipo='fundo_cultura' %}" >Enviar Regulamentação</a>
           {% endif %}
         {% endif %}
 
