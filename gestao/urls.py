@@ -39,6 +39,9 @@ urlpatterns = [
         staff_member_required(views.aditivar_prazo, login_url='adesao:login'), name='aditivar_prazo'),
     
     # Acompanhar componentes
+    path('plano-trabalho/',
+            staff_member_required(views.plano_trabalho),
+            name='plano_trabalho'),
     path('acompanhar/<str:componente>',
             staff_member_required(views.AcompanharComponente.as_view()),
             name='acompanhar_componente'),

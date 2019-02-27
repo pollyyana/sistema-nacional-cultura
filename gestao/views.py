@@ -84,6 +84,11 @@ def dashboard(request, **kwargs):
     return render(request, "dashboard.html")
 
 
+def plano_trabalho(request, **kwargs):
+
+    return render(request, "plano_trabalho.html")
+
+
 def ajax_consulta_entes(request):
 
     if not request.is_ajax():
