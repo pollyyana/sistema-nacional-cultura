@@ -154,7 +154,7 @@ def exportar_csv(request):
     )
 
     for sistema in SistemaCultura.objects.distinct('ente_federado__cod_ibge').order_by(
-        'ente_federado__cod_ibge', 'ente_federado__nome'):
+        'ente_federado__cod_ibge', 'ente_federado__nome', '-alterado_em'):
         if sistema.ente_federado:
             nome = sistema.ente_federado.__str__()
             cod_ibge = sistema.ente_federado.cod_ibge
