@@ -60,7 +60,7 @@ def preenche_planilha(planilha):
     ultima_linha = 0
 
     for i, sistema in enumerate(SistemaCultura.objects.distinct('ente_federado__cod_ibge').order_by(
-        'ente_federado__cod_ibge', 'ente_federado__nome'), start=1):
+        'ente_federado__cod_ibge', 'ente_federado__nome', '-alterado_em'), start=1):
         if sistema.ente_federado:
             nome = sistema.ente_federado.__str__()
             cod_ibge = sistema.ente_federado.cod_ibge
@@ -134,7 +134,7 @@ def preenche_planilha(planilha):
         ultima_linha = i
 
     return ultima_linha
-    
+
 
 def atualiza_session(sistema_cultura, request):
     request.session['sistema_cultura_selecionado'] = model_to_dict(sistema_cultura, exclude=['data_criacao', 'alterado_em',
