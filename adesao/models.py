@@ -361,6 +361,7 @@ class Funcionario(models.Model):
     telefone_dois = models.CharField(max_length=50, blank=True)
     telefone_tres = models.CharField(max_length=50, blank=True)
     email_institucional = models.EmailField()
+    email_pessoal = models.EmailField(null=True, blank=True)
     tipo_funcionario = models.IntegerField(
         choices=LISTA_TIPOS_FUNCIONARIOS,
         default='0')
