@@ -97,14 +97,14 @@ class ArquivoComponente2(models.Model):
         null=True
     )
     data_envio = models.DateField(default=datetime.date.today)
+    data_publicacao = models.DateField(
+        _("Data de Publicação do Arquivo do Componente"), null=True, blank=True)
 
 
 class Componente(ArquivoComponente2):
     tipo = models.IntegerField(
         choices=LISTA_TIPOS_COMPONENTES,
         default=0)
-    data_publicacao = models.DateField(
-        _("Data de Publicação do Componente"), null=True, blank=True)
 
     def __str__(self):
         return str(self.id)
