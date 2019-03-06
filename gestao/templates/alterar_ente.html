@@ -1,12 +1,269 @@
-{% extends "gestao/base_gestao.html" %} {% load gestao_tags %} {% block content %}
+{% extends "gestao/base_gestao.html" %} {% load gestao_tags %} {% block content %} {% load widget_tweaks %}
+<div class="row">
+	{{form.media}}
+	<div class="col-md-12">
+		<div class="card">
+		<div class="card-header card-header-primary">
+			<h4 class="card-title">Editar Ente</h4>
+			<p class="card-category">{{object.ente_federado}}</p>
+		</div>
+		<div class="card-body">
+			<form method="post" enctype="multipart/form-data">{% csrf_token %}
+			<div class="row">
+				<div class="col-md-3">
+				<div class="form-group">
+					<label class="bmd-label-floating">CPF do Gestor (Prefeito ou Governador)</label>
+					{% render_field form_gestor.cpf class="form-control cpf" %}
+				</div>
+				</div>
+				<div class="col-md-3">
+				<div class="form-group">
+					<label class="bmd-label-floating">RG do Gestor (Prefeito ou Governador)</label>
+					{% render_field form_gestor.rg class="form-control" %}
+				</div>
+				</div>
+				<div class="col-md-2">
+				<div class="form-group">
+					<label class="bmd-label-floating">Órgão Expeditor</label>
+					{% render_field form_gestor.orgao_expeditor_rg class="form-control" %}
+				</div>
+				</div>
+				<div class="col-md-1">
+				<div class="form-group">
+					<label class="bmd-label-floating">UF</label>
+					{% render_field form_gestor.estado_expeditor class="form-control" %}
+				</div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-md-3">
+					{{form_gestor.termo_posse}}
+				</div>
+				<div class="col-md-3">
+					{{form_gestor.rg_copia}}					
+				</div>
+				<div class="col-md-3">
+					{{form_gestor.cpf_copia}}
+				</div>
+			</div>
+			<div class="row">
+				
+				<div class="col-md-4">
+				<div class="form-group">
+					<label class="bmd-label-floating">Nome do Gestor (Prefeito ou Governador)</label>
+					{% render_field form_gestor.nome class="form-control" %}
+				</div>
+				</div>
+				<div class="col-md-4">
+				<div class="form-group">
+					<label class="bmd-label-floating">E-mail Institucional</label>
+					{% render_field form_gestor.email_institucional class="form-control" %}
+				</div>
+				</div>
+				<div class="col-md-4">
+				<div class="form-group">
+					<label class="bmd-label-floating">CNPJ do Ente Federado (Estado ou Município)</label>
+					{% render_field form_sede.cnpj class="form-control cnpj" %}
+				</div>
+				</div>
+				<div class="col-md-4">
+				<div class="form-group">
+					<label class="bmd-label-floating">Complemento</label>
+					{% render_field form_sede.complemento class="form-control" %}
+				</div>
+				</div>
+				<div class="col-md-4">
+				<div class="form-group">
+					<label class="bmd-label-floating">Bairro</label>
+					{% render_field form_sede.bairro class="form-control" %}
+				</div>
+				</div>
+				<div class="col-md-4">
+				<div class="form-group">
+					<label class="bmd-label-floating">CEP</label>
+					{% render_field form_sede.cep class="form-control cep" %}
+				</div>
+				</div>
+				<div class="col-md-4">
+				<div class="form-group">
+					<label class="bmd-label-floating">Endereço Eletrônico (Agenda Digital)</label>
+					<!--  placeholder="http://www.exemplo.com.br" -->
+					{% render_field form_sede.endereco_eletronico class="form-control" %}
+				</div>
+				</div>
+				<div class="col-md-4">
+				<div class="form-group">
+					<label class="bmd-label-floating">Telefone Institucional</label>
+					{% render_field form_sede.telefone_um class="form-control telefone" %}
+				</div>
+				</div>
+				<div class="col-md-4">
+				<div class="form-group">
+					<label class="bmd-label-floating">Telefone Institucional</label>
+					{% render_field form_sede.telefone_dois class="form-control telefone" %}
+				</div>
+				</div>
+				<div class="col-md-4">
+				<div class="form-group">
+					<label class="bmd-label-floating">Telefone Institucional</label>
+					{% render_field form_sede.telefone_tres class="form-control telefone" %}
+				</div>
+				</div>
+				
+			</div>
+			<div class="row">
+				<div class="col-md-12">
+				<div class="form-group">
+					<label>Endereço Institucional</label>
+					<div class="form-group">
+					<!-- <textarea class="form-control" rows="5"></textarea> -->
+					{% render_field form_sede.endereco class="form-control" %}
 
-<div class="panel panel-info">
-	<div class="panel-heading">
-		Dados do Ente Federado
-    </div>
-	<div class="panel-body">
-		{% include "formulario_sistema.html" %}
+					</div>
+				</div>
+				</div>
+			</div>
+			<button type="submit" class="btn btn-primary pull-right">Update Profile</button>
+			<div class="clearfix"></div>
+			</form>
+		</div>
+		</div>
+	</div>
+</div>
+<style>
+	.card-input-file .card-header + .card-footer {
+		border-top: 1px solid #eee;
+		margin-top: 20px;
+	}
+
+	.card-input-file .card-header.card-header-icon, .card-input-file .card-header.card-header-text {
+		text-align: right;
+	}
+	.card-input-file .card-header .file-label-name:not([class*="text-"]) {
+		color: #999999;
+		font-size: 14px;
+	}
+	.card-input-file .card-header .card-icon + .file-name, .card-input-file .card-header .card-icon + .card-category {
+		padding-top: 10px;
+	}
+
+	.card .upload-icon{
+		border-radius: 3px;
+		background-color: white;
+		padding: 15px;
+		margin-top: -20px;
+		margin-right: 15px;
+		float: left;
+		border-style:dashed;
+		border-color: #999999;
+	}
+	
+	.upload-icon .material-icons{
+		color: #999999;
+	}
+
+
+	.card .card-footer .stats {
+		color: #999999;
+		font-size: 12px;
+		line-height: 22px;
+	}
+	.card .card-header.card-header-icon .file-name, .card .card-header.card-header-text .file-name{
+		margin-top: 15px;
+		color: #3C4858;
+	}
+
+	.card .upload-icon:hover{
+		-webkit-transform: scale(1.1);
+        -ms-transform: scale(1.1);
+		transform: scale(1.1);
+		cursor: pointer;
+	}
+
+	input[type='file'] {
+		/* display: none */
+	}
+
+
+</style>
+
+<div class="row">
+	<div class="col-md-12">
+		<div class="card">
+			<div class="card-body">
+				<div class="col-xl-3 col-lg-6 col-md-6 col-sm-6">
+						<div class="card card-input-file">
+						<div class="card-header card-header-warning card-header-icon">
+							<div class="upload-icon">
+								<i class="material-icons">cloud_upload</i>
+							</div>
+							<p class="file-label-name">%(label)s</p>
+							<h5 class="file-name">
+								%(file_name)s
+							</h5>
+						</div>
+						<div class="card-footer">
+							<div class="stats">
+							<i class="material-icons">save_alt</i>
+							<a href="%(file_url)s" class="warning-link">Download</a>
+							</div>
+						</div>
+					</div>
+					<input type="file" id="wfileInput" />
+				</div>
+			</div>
+		</div>
 	</div>
 </div>
 
+
 {% endblock content %}
+
+{% block js%}
+<script>
+
+
+
+onDragEnter = function(event) {
+    event.preventDefault();
+}, 
+
+onDragOver = function(event) {
+    event.preventDefault(); 
+}, 
+
+onDragLeave = function(event) {
+    event.preventDefault();
+},
+
+onDrop = function(event, a) {
+	event.preventDefault();
+	var inputId = $(event.target).data('target');
+	var input = document.getElementById(inputId);
+	var inputName = input.name
+	var fileName = event.originalEvent.dataTransfer.files[0].name;
+	var file = event.originalEvent.dataTransfer.files;
+
+	console.log(fileName);
+	$('#file-name-termo_posse').html(fileName);
+
+$(`file-name-termo_posse`)
+	// $(`#footer-${inputName}`).hide()
+
+	input.files = event.originalEvent.dataTransfer.files;
+	
+};
+
+$('input[type="file"]').each((key,element) => {
+	$(`#drag-space-${element.name}`)
+	.on("dragenter", onDragEnter)
+	.on("dragover", onDragOver)
+	.on("dragleave", onDragLeave)
+	.on("drop", onDrop)
+	.on("click", function(){
+		$(`#${element.id}`).trigger('click');
+	});
+});
+
+</script>
+{% endblock js%}

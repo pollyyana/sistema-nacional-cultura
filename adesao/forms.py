@@ -13,6 +13,8 @@ from snc.forms import RestrictedFileField
 
 from .models import Usuario, Municipio, Responsavel
 from .models import Secretario, Funcionario, SistemaCultura, Sede, Gestor
+
+from snc.widgets import FileUploadWidget
 from .utils import limpar_mascara
 import re
 
@@ -88,14 +90,25 @@ class CadastrarUsuarioForm(UserCreationForm):
 class CadastrarGestor(ModelForm):
     cpf = BRCPFField()
     termo_posse = RestrictedFileField(
+        widget=FileUploadWidget(attrs={
+            'label': 'Termo de Posse'
+        }),
         content_types=content_types,
         max_upload_size=52428800)
     rg_copia = RestrictedFileField(
+        widget=FileUploadWidget(attrs={
+            'label': 'Cópia do RG'
+        }),
         content_types=content_types,
         max_upload_size=52428800)
     cpf_copia = RestrictedFileField(
+        widget=FileUploadWidget(attrs={
+            'label': 'Cópia do CPF'
+        }),
         content_types=content_types,
         max_upload_size=52428800)
+    
+    # termo_posse.widget.attrs.update({'class': 'wtf'})
 
     class Meta:
         model = Gestor
