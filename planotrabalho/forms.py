@@ -6,6 +6,9 @@ from django.forms import inlineformset_factory
 
 from localflavor.br.forms import BRCNPJField
 
+from snc.forms import RestrictedFileField
+
+from gestao.forms import content_types
 from .models import CriacaoSistema, OrgaoGestor, ConselhoCultural
 from .models import FundoCultura, Componente
 from .models import FundoDeCultura, PlanoCultura
@@ -83,7 +86,13 @@ class CriarComponenteForm(ModelForm):
 
 class CriarFundoForm(CriarComponenteForm):
     cnpj = BRCNPJField()
-    regulamentacao_arquivo = forms.FileField(required=False, widget=FileInput)
+    regulamentacao_arquivo = RestrictedFileField(
+        content_types=content_types,
+        max_upload_size=52428800)
+    arquivo = RestrictedFileField(
+        content_types=content_types,
+        max_upload_size=52428800)
+    regulamentacao_data_publicacao = forms.DateField(required=False)
 
     def save(self, commit=True, *args, **kwargs):
         fundo = super(CriarFundoForm, self).save(commit=False)
@@ -93,9 +102,12 @@ class CriarFundoForm(CriarComponenteForm):
             fundo.tipo = 2
             fundo.arquivo = None
             fundo.save()
+
             if 'arquivo' in self.changed_data:
                 fundo.situacao = 1
-            fundo.arquivo = self.cleaned_data['arquivo']
+                fundo.arquivo = self.cleaned_data['arquivo']
+            else:
+                fundo.arquivo = self.initial['arquivo']
 
             sistema_cultura = fundo.fundo_cultura
             sistema_cultura.add(self.sistema)
@@ -103,6 +115,10 @@ class CriarFundoForm(CriarComponenteForm):
             fundo.regulamentacao = ArquivoComponente2()
             if 'regulamentacao_arquivo' in self.changed_data:
                 fundo.regulamentacao.situacao = 1
+
+            if 'regulamentacao_data_publicacao' in self.changed_data:
+                fundo.regulamentacao.data_publicacao = self.cleaned_data['regulamentacao_data_publicacao']
+
             fundo.regulamentacao.save()
 
             fundo.regulamentacao.fundos.add(fundo)

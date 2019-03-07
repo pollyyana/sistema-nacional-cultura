@@ -471,16 +471,12 @@ class InserirComponente(CreateView):
         return kwargs
 
     def get_form_class(self):
-        import ipdb; ipdb.set_trace()
         if self.kwargs['componente'] == 'fundo_cultura':
             form_class = CriarFundoForm
         else:
             form_class = CriarComponenteForm
 
         return form_class
-
-    def form_invalid(self, form):
-        return self.render_to_response(self.get_context_data(form=form), status=400)
 
     def get_success_url(self):
         messages.success(self.request, 'Sistema da Cultura inserido com sucesso')
@@ -510,6 +506,10 @@ class AlterarFundoCultura(UpdateView):
         self.sistema = SistemaCultura.objects.get(id=sistema_id)
         kwargs['sistema'] = self.sistema
         kwargs['tipo'] = 'fundo_cultura'
+        if self.object.regulamentacao:
+            kwargs['initial'] = {'regulamentacao_arquivo': self.object.regulamentacao.arquivo,
+                'regulamentacao_data_publicacao': self.object.regulamentacao.data_publicacao}
+
         return kwargs
 
     def get_success_url(self):

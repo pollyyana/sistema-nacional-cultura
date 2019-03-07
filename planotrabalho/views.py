@@ -113,7 +113,8 @@ class AlterarFundoCultura(UpdateView):
         kwargs['sistema'] = self.sistema
         kwargs['tipo'] = 'fundo_cultura'
         if self.object.regulamentacao:
-            kwargs['initial'] = {'regulamentacao_arquivo': self.object.regulamentacao.arquivo}
+            kwargs['initial'] = {'regulamentacao_arquivo': self.object.regulamentacao.arquivo,
+                'regulamentacao_data_publicacao': self.object.regulamentacao.data_publicacao}
 
         return kwargs
 

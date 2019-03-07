@@ -2091,16 +2091,50 @@ def test_criar_dados_secretario(client, login_staff):
 
 
 def test_insere_fundo_regulamentacao(client, login_staff, sistema_cultura):
-    arquivo = SimpleUploadedFile(
+    arquivo_regulamentacao = SimpleUploadedFile(
         "regulamentacao.txt", b"file_content", content_type="text/plain"
+    )
+    arquivo = SimpleUploadedFile(
+        "arquivo.txt", b"file_content", content_type="text/plain"
     )
 
     url = reverse(
         "gestao:inserir_componente", kwargs={"pk": sistema_cultura.id, "componente": "fundo_cultura"}
     )
 
-    client.post(url, data={"regulamentacao_arquivo": arquivo})
+    client.post(url, data={"regulamentacao_arquivo": arquivo_regulamentacao,
+        'cnpj': '34.305.662/0001-91',
+        'arquivo': arquivo,
+        'data_publicacao': '09/06/2018'})
 
     sistema_atualizado = SistemaCultura.sistema.get(ente_federado__cod_ibge=sistema_cultura.ente_federado.cod_ibge)
 
-    assert sistema_atualizado.fundo_cultura.regulamentacao.arquivo.name.split("fundo_cultura/")[1]
+    assert sistema_atualizado.fundo_cultura.regulamentacao.arquivo.name.split(
+        "fundo_cultura/")[1] == 'regulamentacao.txt'
+
+
+def test_altera_fundo_regulamentacao(client, login_staff, sistema_cultura):
+    arquivo_regulamentacao = SimpleUploadedFile(
+        "regulamentacao_atualizada.txt", b"file_content", content_type="text/plain"
+    )
+    arquivo = SimpleUploadedFile(
+        "arquivo.txt", b"file_content", content_type="text/plain"
+    )
+
+    url = reverse(
+        "gestao:alterar_fundo", kwargs={"pk": sistema_cultura.fundo_cultura.id }
+    )
+
+    client.post(url, data={"regulamentacao_arquivo": arquivo_regulamentacao,
+        'cnpj': '34.305.662/0001-91',
+        'arquivo': arquivo,
+        'data_publicacao': '09/06/2018'})
+
+    sistema_atualizado = SistemaCultura.sistema.get(ente_federado__cod_ibge=sistema_cultura.ente_federado.cod_ibge)
+
+    assert sistema_atualizado.fundo_cultura.regulamentacao.arquivo.name.split(
+        "fundo_cultura/")[1] == 'regulamentacao_atualizada.txt'
+    assert sistema_atualizado.fundo_cultura.arquivo.name.split(
+        "fundo_cultura/")[1] == 'arquivo.txt'
+    assert sistema_atualizado.fundo_cultura.cnpj == '34.305.662/0001-91'
+    assert sistema_atualizado.fundo_cultura.data_publicacao == datetime.date(2018, 6, 9)
