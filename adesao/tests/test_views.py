@@ -539,10 +539,11 @@ def test_importar_secretario_id_invalido(client, login):
 
 
 def test_detalhar_conselheiros(client):
-    sistema_cultura = mommy.make("SistemaCultura", _fill_optional=['conselho'])
+    sistema_cultura = mommy.make("SistemaCultura", _fill_optional=['conselho', 'ente_federado'],
+        ente_federado__cod_ibge=123456)
     conselheiro = mommy.make("Conselheiro", conselho=sistema_cultura.conselho)
 
-    url = reverse("adesao:detalhar", kwargs={'pk': sistema_cultura.id})
+    url = reverse("adesao:detalhar", kwargs={'cod_ibge': sistema_cultura.ente_federado.cod_ibge})
     response = client.get(url)
 
     assert response.context_data['conselheiros'][0] == conselheiro
