@@ -573,6 +573,12 @@ class Detalhar(DetailView):
     model = SistemaCultura
     template_name = "consultar/detalhar.html"
 
+    def get_object(self):
+        try:
+            return SistemaCultura.sistema.get(ente_federado__cod_ibge=self.kwargs['cod_ibge'])
+        except:
+            raise Http404()
+
     def get_context_data(self, **kwargs):
         context = super(Detalhar, self).get_context_data(**kwargs)
         try:
