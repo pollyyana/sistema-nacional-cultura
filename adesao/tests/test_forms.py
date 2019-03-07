@@ -6,7 +6,7 @@ from django.shortcuts import reverse
 from django.core.files.uploadedfile import SimpleUploadedFile
 from dal.autocomplete import ModelSelect2
 
-from adesao.forms import CadastrarSistemaCulturaForm, CadastrarGestor, CadastrarSede
+from adesao.forms import CadastrarSistemaCulturaForm, CadastrarGestor, CadastrarSede, CadastrarUsuarioForm
 from adesao.models import Usuario
 
 
@@ -153,5 +153,38 @@ def test_save_cadastrar_sede_cnpj_invalido(client, login, sistema_cultura):
             'telefone_um': '999999999' }
 
     form = CadastrarSede(data=data)
+
+    assert not form.is_valid()
+
+
+def test_save_cadastrar_usuario(client, login, sistema_cultura):
+    """ Testa se a função is_valid retorna verdadeiro para a criação de um usuário"""
+
+    data = {'username': '552.091.100-28',
+            'email': 'email@email.com',
+            'confirmar_email': 'email@email.com',
+            'nome_usuario': 'Teste',
+            'password1': '123456',
+            'password2': '123456'}
+
+    form = CadastrarUsuarioForm(data=data)
+
+    assert form.is_valid()
+
+
+def test_save_cadastrar_usuario_email_ja_cadastrado(client, login, sistema_cultura):
+    """ Testa se a função is_valid retorna falso para a criação de um usuário
+    com um email já cadastrado"""
+
+    usuario = Usuario.objects.first()
+
+    data = {'username': '55209110028',
+            'email': usuario.user.email,
+            'confirmar_email': usuario.user.email,
+            'nome_usuario': 'Teste',
+            'password1': '123456', 
+            'password2': '123456'}
+
+    form = CadastrarUsuarioForm(data=data)
 
     assert not form.is_valid()
