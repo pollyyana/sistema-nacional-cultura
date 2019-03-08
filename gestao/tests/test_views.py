@@ -1299,9 +1299,8 @@ def test_alterar_dados_adesao_sem_valores(client, login_staff):
     assert not sistema_atualizado.link_publicacao_acordo
 
 
-def test_alterar_cadastrador_sem_data_publicacao(client, login_staff):
-    """ Testa alteração de cadastrador de um sistema cultura
-    sem data de publicação do acordo """
+def test_alterar_cadastrador(client, login_staff):
+    """ Testa alteração de cadastrador de um sistema cultura"""
 
     new_user = mommy.make('Usuario', user__username='34701068004')
     sistema = mommy.make('SistemaCultura', ente_federado__cod_ibge=123456)
@@ -1316,28 +1315,6 @@ def test_alterar_cadastrador_sem_data_publicacao(client, login_staff):
 
     sistema_atualizado = SistemaCultura.sistema.get(ente_federado__cod_ibge=sistema.ente_federado.cod_ibge)
     assert sistema_atualizado.cadastrador == new_user
-    assert sistema_atualizado.alterado_por == login_staff
-
-
-def test_alterar_cadastrador_com_data_publicacao(client, login_staff):
-    """ Testa alteração de cadastrador de um sistema cultura
-    com data de publicação do acordo"""
-
-    new_user = mommy.make('Usuario', user__username='34701068004')
-    sistema = mommy.make('SistemaCultura', ente_federado__cod_ibge=123456)
-
-    url = reverse('gestao:alterar_cadastrador', kwargs={'cod_ibge': sistema.ente_federado.cod_ibge})
-
-    data = {
-        'cpf_cadastrador': new_user.user.username,
-        'data_publicacao_acordo': "2016-02-02"
-    }
-
-    client.post(url, data=data)
-
-    sistema_atualizado = SistemaCultura.sistema.get(ente_federado__cod_ibge=sistema.ente_federado.cod_ibge)
-    assert sistema_atualizado.cadastrador == new_user
-    assert sistema_atualizado.data_publicacao_acordo == datetime.date(2016, 2, 2)
     assert sistema_atualizado.alterado_por == login_staff
 
 

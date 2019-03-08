@@ -57,7 +57,6 @@ class InserirSEI(ModelForm):
 
 class CadastradorEnte(forms.ModelForm):
     cpf_cadastrador = BRCPFField()
-    data_publicacao_acordo = forms.DateField(required=False)
 
     def clean_cpf_cadastrador(self):
         try:
@@ -71,17 +70,13 @@ class CadastradorEnte(forms.ModelForm):
         sistema = self.instance
         cadastrador = Usuario.objects.get(user__username=self.cleaned_data['cpf_cadastrador'])
         sistema.cadastrador = cadastrador
-
-        if self.cleaned_data['data_publicacao_acordo']:
-            sistema.data_publicacao_acordo = self.cleaned_data['data_publicacao_acordo']
-
         sistema.save()
 
         return sistema
 
     class Meta:
         model = SistemaCultura
-        fields = ["cpf_cadastrador", "data_publicacao_acordo"]
+        fields = ["cpf_cadastrador"]
 
 
 class AlterarDadosEnte(ModelForm):
