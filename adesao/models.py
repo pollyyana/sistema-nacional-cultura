@@ -454,8 +454,6 @@ class SistemaCultura(models.Model):
         sistema_base = sistemas.first()
         historico_cadastradores = [sistema_base]
 
-        #import ipdb; ipdb.set_trace()
-
         for sistema in sistemas:
             if sistema.cadastrador != sistema_base.cadastrador:
                 historico_cadastradores.append(sistema)
