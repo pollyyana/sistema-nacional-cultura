@@ -1964,7 +1964,7 @@ def test_alterar_dados_responsavel(client, login_staff):
 
     funcionario = Funcionario(cpf="381.390.630-29", rg="48.464.068-9",
         orgao_expeditor_rg="SSP", estado_expeditor=29, telefone_um="999999999",
-        nome="Joao silva", email_institucional="joao@email.com")
+        nome="Joao silva", email_institucional="joao@email.com", email_pessoal="email@email.com")
 
     url = reverse("gestao:alterar_funcionario", kwargs={"pk": sistema_cultura.responsavel.id,
         "tipo": "responsavel"})
@@ -1978,6 +1978,7 @@ def test_alterar_dados_responsavel(client, login_staff):
             "estado_expeditor": funcionario.estado_expeditor,
             "nome": funcionario.nome,
             "email_institucional": funcionario.email_institucional,
+            "email_pessoal": funcionario.email_pessoal,
             "telefone_um": funcionario.telefone_um
         },
     )
@@ -2002,7 +2003,7 @@ def test_criar_dados_responsavel(client, login_staff):
 
     funcionario = Funcionario(cpf="381.390.630-29", rg="48.464.068-9",
         orgao_expeditor_rg="SSP", estado_expeditor=29, telefone_um="999999999",
-        nome="Joao silva", email_institucional="joao@email.com")
+        nome="Joao silva", email_institucional="joao@email.com", email_pessoal="email@email.com")
 
     url = reverse("gestao:cadastrar_funcionario", kwargs={"sistema": sistema_cultura.id,
         "tipo": "responsavel"})
@@ -2016,6 +2017,7 @@ def test_criar_dados_responsavel(client, login_staff):
             "estado_expeditor": funcionario.estado_expeditor,
             "nome": funcionario.nome,
             "email_institucional": funcionario.email_institucional,
+            "email_pessoal": funcionario.email_pessoal,
             "telefone_um": funcionario.telefone_um
         },
     )
@@ -2030,6 +2032,7 @@ def test_criar_dados_responsavel(client, login_staff):
     assert sistema_cultura.responsavel.estado_expeditor == funcionario.estado_expeditor
     assert sistema_cultura.responsavel.nome == funcionario.nome
     assert sistema_cultura.responsavel.email_institucional == funcionario.email_institucional
+    assert sistema_cultura.responsavel.email_pessoal == funcionario.email_pessoal
     assert sistema_cultura.responsavel.telefone_um == funcionario.telefone_um
     assert sistema_cultura.responsavel.tipo_funcionario == 1
 
@@ -2040,7 +2043,7 @@ def test_criar_dados_secretario(client, login_staff):
 
     funcionario = Funcionario(cpf="381.390.630-29", rg="48.464.068-9",
         orgao_expeditor_rg="SSP", estado_expeditor=29, telefone_um="999999999",
-        nome="Joao silva", email_institucional="joao@email.com")
+        nome="Joao silva", email_institucional="joao@email.com", email_pessoal="email@email.com")
 
     url = reverse("gestao:cadastrar_funcionario", kwargs={"sistema": sistema_cultura.id,
         "tipo": "secretario"})
@@ -2054,6 +2057,7 @@ def test_criar_dados_secretario(client, login_staff):
             "estado_expeditor": funcionario.estado_expeditor,
             "nome": funcionario.nome,
             "email_institucional": funcionario.email_institucional,
+            "email_pessoal": funcionario.email_pessoal,
             "telefone_um": funcionario.telefone_um
         },
     )
@@ -2068,5 +2072,6 @@ def test_criar_dados_secretario(client, login_staff):
     assert sistema_cultura.secretario.estado_expeditor == funcionario.estado_expeditor
     assert sistema_cultura.secretario.nome == funcionario.nome
     assert sistema_cultura.secretario.email_institucional == funcionario.email_institucional
+    assert sistema_cultura.secretario.email_pessoal == funcionario.email_pessoal
     assert sistema_cultura.secretario.telefone_um == funcionario.telefone_um
     assert sistema_cultura.secretario.tipo_funcionario == 0
