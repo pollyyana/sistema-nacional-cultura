@@ -10,127 +10,132 @@
 		<div class="card-body">
 			<form method="post" enctype="multipart/form-data">{% csrf_token %}
 			<div class="row">
+				<div class="col-md-4">
+				<div class="form-group">
+					<label>Nome do Gestor (Prefeito ou Governador)</label>
+					{% render_field form_gestor.nome class="form-control" %}
+				</div>
+				</div>
 				<div class="col-md-3">
 				<div class="form-group">
-					<label class="bmd-label-floating">CPF do Gestor (Prefeito ou Governador)</label>
+					<label>CPF do Gestor (Prefeito ou Governador)</label>
 					{% render_field form_gestor.cpf class="form-control cpf" %}
 				</div>
 				</div>
 				<div class="col-md-3">
 				<div class="form-group">
-					<label class="bmd-label-floating">RG do Gestor (Prefeito ou Governador)</label>
+					<label>RG do Gestor (Prefeito ou Governador)</label>
 					{% render_field form_gestor.rg class="form-control" %}
 				</div>
 				</div>
-				<div class="col-md-2">
+				<div class="col-md-1">
 				<div class="form-group">
-					<label class="bmd-label-floating">Órgão Expeditor</label>
+					<label>Órgão Expeditor</label>
 					{% render_field form_gestor.orgao_expeditor_rg class="form-control" %}
 				</div>
 				</div>
 				<div class="col-md-1">
 				<div class="form-group">
-					<label class="bmd-label-floating">UF</label>
+					<label>UF</label>
 					{% render_field form_gestor.estado_expeditor class="form-control" %}
 				</div>
 				</div>
 			</div>
 			<div class="row">
-				<div class="col-md-3">
-					{{form_gestor.termo_posse}}
-				</div>
-				<div class="col-md-3">
-					{{form_gestor.rg_copia}}					
-				</div>
-				<div class="col-md-3">
-					{{form_gestor.cpf_copia}}
-				</div>
-			</div>
-			<div class="row">
-				
-				<div class="col-md-4">
+
+				<div class="col-md-5">
 				<div class="form-group">
-					<label class="bmd-label-floating">Nome do Gestor (Prefeito ou Governador)</label>
-					{% render_field form_gestor.nome class="form-control" %}
-				</div>
-				</div>
-				<div class="col-md-4">
-				<div class="form-group">
-					<label class="bmd-label-floating">E-mail Institucional</label>
+					<label>E-mail Institucional</label>
 					{% render_field form_gestor.email_institucional class="form-control" %}
 				</div>
 				</div>
-				<div class="col-md-4">
+				<div class="col-md-3">
 				<div class="form-group">
-					<label class="bmd-label-floating">CNPJ do Ente Federado (Estado ou Município)</label>
+					<label>CNPJ do Ente Federado (Estado ou Município)</label>
 					{% render_field form_sede.cnpj class="form-control cnpj" %}
 				</div>
 				</div>
 				<div class="col-md-4">
 				<div class="form-group">
-					<label class="bmd-label-floating">Complemento</label>
-					{% render_field form_sede.complemento class="form-control" %}
-				</div>
-				</div>
-				<div class="col-md-4">
-				<div class="form-group">
-					<label class="bmd-label-floating">Bairro</label>
-					{% render_field form_sede.bairro class="form-control" %}
-				</div>
-				</div>
-				<div class="col-md-4">
-				<div class="form-group">
-					<label class="bmd-label-floating">CEP</label>
+					<label>CEP</label>
 					{% render_field form_sede.cep class="form-control cep" %}
 				</div>
 				</div>
 				<div class="col-md-4">
 				<div class="form-group">
-					<label class="bmd-label-floating">Endereço Eletrônico (Agenda Digital)</label>
-					<!--  placeholder="http://www.exemplo.com.br" -->
-					{% render_field form_sede.endereco_eletronico class="form-control" %}
+					<label>Complemento</label>
+					{% render_field form_sede.complemento class="form-control" %}
 				</div>
 				</div>
 				<div class="col-md-4">
 				<div class="form-group">
-					<label class="bmd-label-floating">Telefone Institucional</label>
+					<label>Bairro</label>
+					{% render_field form_sede.bairro class="form-control" %}
+				</div>
+				</div>
+				<div class="col-md-4">
+				<div class="form-group">
+					<label>Endereço Eletrônico (Agenda Digital)</label>
+					{% render_field form_sede.endereco_eletronico class="form-control" placeholder="http://www.exemplo.com.br" %}
+				</div>
+				</div>
+				<div class="col-md-4">
+				<div class="form-group">
+					<label>Telefone Institucional</label>
 					{% render_field form_sede.telefone_um class="form-control telefone" %}
 				</div>
 				</div>
 				<div class="col-md-4">
 				<div class="form-group">
-					<label class="bmd-label-floating">Telefone Institucional</label>
+					<label>Telefone Institucional</label>
 					{% render_field form_sede.telefone_dois class="form-control telefone" %}
 				</div>
 				</div>
 				<div class="col-md-4">
 				<div class="form-group">
-					<label class="bmd-label-floating">Telefone Institucional</label>
+					<label>Telefone Institucional</label>
 					{% render_field form_sede.telefone_tres class="form-control telefone" %}
 				</div>
 				</div>
-				
+
 			</div>
 			<div class="row">
 				<div class="col-md-12">
 				<div class="form-group">
 					<label>Endereço Institucional</label>
 					<div class="form-group">
-					<!-- <textarea class="form-control" rows="5"></textarea> -->
 					{% render_field form_sede.endereco class="form-control" %}
 
 					</div>
 				</div>
 				</div>
 			</div>
-			<button type="submit" class="btn btn-primary pull-right">Update Profile</button>
-			<div class="clearfix"></div>
+			<div class="row">
+					{% if form_gestor.termo_posse %}
+					<div class="col-md-3">
+						{{form_gestor.termo_posse}}
+					</div>
+					{% endif %}
+					{% if form_gestor.rg_copia %}
+					<div class="col-md-3">
+						{{form_gestor.rg_copia }}
+					</div>
+					{% endif %}
+					{% if form_gestor.cpf_copia %}
+					<div class="col-md-3">
+						{{form_gestor.cpf_copia}}
+					</div>
+					{% endif %}
+				</div>
+			<button type="submit" class="btn btn-primary pull-right">Salvar</button>
+			<a class="btn btn-secondary pull-right" href="{% url 'gestao:acompanhar_adesao' %}">Cancelar</a>
 			</form>
 		</div>
 		</div>
 	</div>
 </div>
 <style>
+	/* @TODO migrar para arquivo separado */
 	.card-input-file .card-header + .card-footer {
 		border-top: 1px solid #eee;
 		margin-top: 20px;
@@ -157,7 +162,7 @@
 		border-style:dashed;
 		border-color: #999999;
 	}
-	
+
 	.upload-icon .material-icons{
 		color: #999999;
 	}
@@ -181,56 +186,22 @@
 	}
 
 	input[type='file'] {
-		/* display: none */
+		display: none
 	}
-
-
 </style>
-
-<div class="row">
-	<div class="col-md-12">
-		<div class="card">
-			<div class="card-body">
-				<div class="col-xl-3 col-lg-6 col-md-6 col-sm-6">
-						<div class="card card-input-file">
-						<div class="card-header card-header-warning card-header-icon">
-							<div class="upload-icon">
-								<i class="material-icons">cloud_upload</i>
-							</div>
-							<p class="file-label-name">%(label)s</p>
-							<h5 class="file-name">
-								%(file_name)s
-							</h5>
-						</div>
-						<div class="card-footer">
-							<div class="stats">
-							<i class="material-icons">save_alt</i>
-							<a href="%(file_url)s" class="warning-link">Download</a>
-							</div>
-						</div>
-					</div>
-					<input type="file" id="wfileInput" />
-				</div>
-			</div>
-		</div>
-	</div>
-</div>
-
 
 {% endblock content %}
 
 {% block js%}
 <script>
 
-
-
 onDragEnter = function(event) {
     event.preventDefault();
-}, 
+},
 
 onDragOver = function(event) {
-    event.preventDefault(); 
-}, 
+    event.preventDefault();
+},
 
 onDragLeave = function(event) {
     event.preventDefault();
@@ -244,17 +215,20 @@ onDrop = function(event, a) {
 	var fileName = event.originalEvent.dataTransfer.files[0].name;
 	var file = event.originalEvent.dataTransfer.files;
 
-	console.log(fileName);
 	$('#file-name-termo_posse').html(fileName);
-
-$(`file-name-termo_posse`)
-	// $(`#footer-${inputName}`).hide()
+	$(`#footer-${inputName}`).hide()
 
 	input.files = event.originalEvent.dataTransfer.files;
-	
 };
 
 $('input[type="file"]').each((key,element) => {
+	$(`#${element.id}`).on("change", function(event){
+		var inputName = event.target.name;
+		var newFile = event.target.files[0];
+		$(`#file-name-${inputName}`).html(newFile.name);
+		$(`#footer-${inputName}`).hide();
+	});
+
 	$(`#drag-space-${element.name}`)
 	.on("dragenter", onDragEnter)
 	.on("dragover", onDragOver)
