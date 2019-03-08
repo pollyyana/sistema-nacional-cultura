@@ -1266,7 +1266,6 @@ def test_alterar_dados_adesao_detalhe_municipio(client, login_staff, sistema_cul
     sistema_atualizado = SistemaCultura.sistema.get(ente_federado__cod_ibge=sistema_cultura
         .ente_federado.cod_ibge)
 
-    #assert response.status_code == 302
     assert sistema_atualizado.estado_processo == "6"
     assert sistema_atualizado.data_publicacao_acordo == datetime.date.today()
     assert sistema_atualizado.processo_sei == "123456765"
