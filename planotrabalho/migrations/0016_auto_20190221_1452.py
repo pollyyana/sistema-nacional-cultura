@@ -26,11 +26,4 @@ class Migration(migrations.Migration):
             name='diligencia_arquivo',
             field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, to='gestao.DiligenciaSimples'),
         ),
-        migrations.AddField(
-            model_name='fundodecultura',
-            name='regulamentacao',
-            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, related_name='fundos', to='planotrabalho.ArquivoComponente2'),
-        ),
-        # migrations.RunPython(
-        #     migrar_diligencia_para_arquivo, migrations.RunPython.noop),
     ]

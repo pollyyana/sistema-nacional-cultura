@@ -8,7 +8,7 @@ class Migration(migrations.Migration):
 
     dependencies = [
         ('planotrabalho', '0014_auto_20190208_1733'),
-        ('adesao', '0032_merge_20190221_1414'),
+        ('adesao', '0032_merge_20190228_1927'),
     ]
 
     def copia_fks(apps, schema_editor):
