@@ -56,6 +56,7 @@ def preenche_planilha(planilha):
     planilha.write(0, 19, "Email do Cadastrador")
     planilha.write(0, 20, "Email do Responsável")
     planilha.write(0, 21, "Localização do processo")
+    planilha.write(0, 22, "Última atualização")
     
     ultima_linha = 0
 
@@ -130,6 +131,7 @@ def preenche_planilha(planilha):
         planilha.write(i, 19, email_cadastrador)
         planilha.write(i, 20, email_responsavel)
         planilha.write(i, 21, local)
+        planilha.write(i, 22, sistema.alterado_em.strftime("%d/%m/%Y às %H:%M:%S"))
         
         ultima_linha = i
 
@@ -139,6 +141,7 @@ def preenche_planilha(planilha):
 def atualiza_session(sistema_cultura, request):
     request.session['sistema_cultura_selecionado'] = model_to_dict(sistema_cultura, exclude=['data_criacao', 'alterado_em',
         'data_publicacao_acordo'])
+    request.session['sistema_cultura_selecionado']['alterado_em'] = sistema_cultura.alterado_em.strftime("%d/%m/%Y às %H:%M:%S")
     request.session['sistema_situacao'] = sistema_cultura.get_estado_processo_display()
     request.session['sistema_sede'] = model_to_dict(sistema_cultura.sede)
     request.session['sistema_gestor'] = model_to_dict(sistema_cultura.gestor, exclude=['termo_posse', 'rg_copia', 'cpf_copia'])

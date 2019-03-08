@@ -132,6 +132,10 @@
     </p>
     
   {% endif %}
+
+  {% if request.session.sistema_cultura_selecionado.alterado_em %}
+    <p>Última atualização em: {{ request.session.sistema_cultura_selecionado.alterado_em }}</p>
+  {% endif %}
 {% endif %}
 
 {% if historico %}

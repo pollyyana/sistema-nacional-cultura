@@ -150,6 +150,7 @@ def exportar_csv(request):
             "CEP",
             "Telefone",
             "Email",
+            "Última atualização",
         ]
     )
 
@@ -211,6 +212,7 @@ def exportar_csv(request):
                 cep,
                 telefone,
                 email,
+                sistema.alterado_em,
             ]
         )
 
