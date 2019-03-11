@@ -36,7 +36,7 @@
                     </p>
                     <p><strong>E-mail Institucional:</strong> {{ ente.gestor.email_institucional }}</p>
                     {% if ente.secretario.email_pessoal %}
-                      <p><strong>E-mail Pessoal:</strong> {{ ente.secretario.email_pessoal }}</p>
+                      <p><strong>E-mail Pessoal:</strong> {{ ente.gestor.email_pessoal }}</p>
                     {% endif %}
                     <p>
                       <strong>Participou da Conferência Nacional:</strong>
@@ -140,7 +140,7 @@
                     <p><strong>Instituição:</strong> {{ ente.responsavel.instituicao }}</p>
                     <p><strong>E-mail Institucional:</strong> {{ ente.responsavel.email_institucional }}</p>
                     {% if ente.secretario.email_pessoal %}
-                      <p><strong>E-mail Pessoal:</strong> {{ ente.secretario.email_pessoal }}</p>
+                      <p><strong>E-mail Pessoal:</strong> {{ ente.responsavel.email_pessoal }}</p>
                     {% endif %}
                     <p><strong>Telefone:</strong> {{ ente.responsavel.telefone_um }}</p>
                   </div>
