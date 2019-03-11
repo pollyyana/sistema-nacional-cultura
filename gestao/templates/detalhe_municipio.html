@@ -34,7 +34,10 @@
                          {{ ente.gestor.rg }}
                          {% endif %}
                     </p>
-                    <p><strong>E-mail:</strong> {{ ente.gestor.email_institucional }}</p>
+                    <p><strong>E-mail Institucional:</strong> {{ ente.gestor.email_institucional }}</p>
+                    {% if ente.gestor.email_pessoal %}
+                      <p><strong>E-mail Pessoal:</strong> {{ ente.gestor.email_pessoal }}</p>
+                    {% endif %}
                     <p>
                       <strong>Participou da Conferência Nacional:</strong>
                       {% if ente.conferencia_nacional %}
@@ -98,7 +101,10 @@
             <p><strong>RG:</strong> {{ ente.secretario.rg }}</p>
             <p><strong>Cargo:</strong> {{ ente.secretario.cargo }}</p>
             <p><strong>Instituição:</strong> {{ ente.secretario.instituicao }}</p>
-            <p><strong>E-mail:</strong> {{ ente.secretario.email_institucional }}</p>
+            <p><strong>E-mail Institucional:</strong> {{ ente.secretario.email_institucional }}</p>
+            {% if ente.secretario.email_pessoal %}
+              <p><strong>E-mail Pessoal:</strong> {{ ente.secretario.email_pessoal }}</p>
+            {% endif %}
             <p><strong>Telefone:</strong> {{ ente.secretario.telefone_um }}</p>
           </div>
         </div>
@@ -132,7 +138,10 @@
                   <div class="col-md-6">
 
                     <p><strong>Instituição:</strong> {{ ente.responsavel.instituicao }}</p>
-                    <p><strong>E-mail:</strong> {{ ente.responsavel.email_institucional }}</p>
+                    <p><strong>E-mail Institucional:</strong> {{ ente.responsavel.email_institucional }}</p>
+                    {% if ente.responsavel.email_pessoal %}
+                      <p><strong>E-mail Pessoal:</strong> {{ ente.responsavel.email_pessoal }}</p>
+                    {% endif %}
                     <p><strong>Telefone:</strong> {{ ente.responsavel.telefone_um }}</p>
                   </div>
 
