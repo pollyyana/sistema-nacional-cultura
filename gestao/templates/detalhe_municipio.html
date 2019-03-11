@@ -35,7 +35,7 @@
                          {% endif %}
                     </p>
                     <p><strong>E-mail Institucional:</strong> {{ ente.gestor.email_institucional }}</p>
-                    {% if ente.secretario.email_pessoal %}
+                    {% if ente.gestor.email_pessoal %}
                       <p><strong>E-mail Pessoal:</strong> {{ ente.gestor.email_pessoal }}</p>
                     {% endif %}
                     <p>
@@ -139,7 +139,7 @@
 
                     <p><strong>Instituição:</strong> {{ ente.responsavel.instituicao }}</p>
                     <p><strong>E-mail Institucional:</strong> {{ ente.responsavel.email_institucional }}</p>
-                    {% if ente.secretario.email_pessoal %}
+                    {% if ente.respondavel.email_pessoal %}
                       <p><strong>E-mail Pessoal:</strong> {{ ente.responsavel.email_pessoal }}</p>
                     {% endif %}
                     <p><strong>Telefone:</strong> {{ ente.responsavel.telefone_um }}</p>
