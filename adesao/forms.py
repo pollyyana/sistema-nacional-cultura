@@ -49,11 +49,11 @@ class CadastrarUsuarioForm(UserCreationForm):
         return self.cleaned_data['confirmar_email']
 
     def clean_email(self):
-        try:
-            User.objects.get(email=self.cleaned_data['email'])
-            raise forms.ValidationError('Este e-mail já foi cadastrado!')
-        except User.DoesNotExist:
+        usuarios = User.objects.filter(email=self.cleaned_data['email'])
+        if not usuarios:
             return self.cleaned_data['email']
+        else:
+            raise forms.ValidationError('Este e-mail já foi cadastrado!')
 
     def clean_username(self):
         try:

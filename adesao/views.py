@@ -142,19 +142,20 @@ def exportar_csv(request):
             "Situação do Fundo de Cultura",
             "Situação do Plano de Cultura",
             "Participou da Conferência Nacional",
-            "IDH",
-            "PIB",
-            "População",
+            "IDH [2010]",
+            "PIB [2016]",
+            "População [2018]",
             "Endereço",
             "Bairro",
             "CEP",
             "Telefone",
             "Email",
+            "Última atualização",
         ]
     )
 
     for sistema in SistemaCultura.objects.distinct('ente_federado__cod_ibge').order_by(
-        'ente_federado__cod_ibge', 'ente_federado__nome'):
+        'ente_federado__cod_ibge', 'ente_federado__nome', '-alterado_em'):
         if sistema.ente_federado:
             nome = sistema.ente_federado.__str__()
             cod_ibge = sistema.ente_federado.cod_ibge
@@ -211,6 +212,7 @@ def exportar_csv(request):
                 cep,
                 telefone,
                 email,
+                sistema.alterado_em,
             ]
         )
 
@@ -572,6 +574,12 @@ class RelatorioAderidos(ListView):
 class Detalhar(DetailView):
     model = SistemaCultura
     template_name = "consultar/detalhar.html"
+
+    def get_object(self):
+        try:
+            return SistemaCultura.sistema.get(ente_federado__cod_ibge=self.kwargs['cod_ibge'])
+        except:
+            raise Http404()
 
     def get_context_data(self, **kwargs):
         context = super(Detalhar, self).get_context_data(**kwargs)
