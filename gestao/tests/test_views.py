@@ -856,17 +856,26 @@ def test_inserir_documentos_conselho_cultural(client, sistema_cultura, login_sta
     arquivo = SimpleUploadedFile(
         "conselho_cultural.txt", b"file_content", content_type="text/plain"
     )
+    arquivo_lei = SimpleUploadedFile(
+        "lei_conselho_cultural.txt", b"file_content", content_type="text/plain"
+    )
 
     url = reverse("gestao:inserir_componente", kwargs={"pk": sistema_cultura.id,
         "componente": "conselho"})
 
-    client.post(url, data={"arquivo": arquivo, "data_publicacao": "28/06/2018"})
+    client.post(url, data={"arquivo": arquivo, "data_publicacao": "28/06/2018",
+        "arquivo_lei": arquivo_lei, "data_publicacao_lei": "08/03/2019"})
 
-    name = Componente.objects.last().arquivo.name.split("conselho/")[1]
-    situacao = Componente.objects.last().situacao
+    sistema_atualizado = SistemaCultura.sistema.get(
+        ente_federado__nome=sistema_cultura.ente_federado.nome)
+
+    name = sistema_atualizado.conselho.arquivo.name.split("conselho/")[1]
+    name_lei = sistema_atualizado.conselho.lei.arquivo.name.split("conselho/")[1]
 
     assert name == arquivo.name
-    assert situacao == 1
+    assert name_lei == arquivo_lei.name
+    assert sistema_atualizado.conselho.lei.situacao == 1
+    assert sistema_atualizado.conselho.arquivo.situacao == 1
 
 
 def test_retorna_200_para_diligencia_geral(client, url, login_staff):
