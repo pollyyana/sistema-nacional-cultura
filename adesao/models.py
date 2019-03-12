@@ -119,6 +119,21 @@ class EnteFederado(models.Model):
         digito = str(self.cod_ibge)[0]
         regiao = REGIOES[digito]  
         return regiao
+
+    def faixa(self):
+        if self.populacao <= 5000:
+            return "Até 5.000"
+        elif self.populacao > 5000 and self.populacao <= 10000:
+            return "De 5.001 até 10.000"
+        elif self.populacao > 10000 and self.populacao <= 20000:
+            return "De 10.001 até 20.000"
+        elif self.populacao > 20000 and self.populacao <= 50000:
+            return "De 20.001 até 50.000"
+        elif self.populacao > 50000 and self.populacao <= 100000:
+            return "De De 50.001 até 100.000"
+        elif self.populacao > 100000 and self.populacao <= 500000:
+            return "De 100.001 até 500.000"
+        return "Acima de 500.000"
     
     @property
     def is_municipio(self):

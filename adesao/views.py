@@ -145,6 +145,7 @@ def exportar_csv(request):
             "IDH [2010]",
             "PIB [2016]",
             "População [2018]",
+            "Faixa Populacional",
             "Endereço",
             "Bairro",
             "CEP",
@@ -164,6 +165,7 @@ def exportar_csv(request):
             idh = sistema.ente_federado.idh
             pib = sistema.ente_federado.pib
             populacao = sistema.ente_federado.populacao
+            faixa = sistema.ente_federado.faixa()
         else:
             nome = "Nome não cadastrado"
             cod_ibge = "Código não cadastrado"
@@ -172,6 +174,7 @@ def exportar_csv(request):
             idh = "Não encontrado"
             pib = "Não encontrado"
             populacao = "Não encontrada"
+            faixa = "Não encontrada"
 
         estado_processo = sistema.get_estado_processo_display()
 
@@ -207,6 +210,7 @@ def exportar_csv(request):
                 idh,
                 pib,
                 populacao,
+                faixa,
                 endereco,
                 bairro,
                 cep,
