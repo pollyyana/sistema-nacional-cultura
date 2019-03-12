@@ -97,7 +97,7 @@
               <li class="nav-item" id="menu-documentacao" >
                 <a class="nav-link" href="./notifications.html">
                   <i class="material-icons">backup</i>
-                  <p>Inserção de Documentação</p>
+                  <p>Inserir Documentos</p>
                 </a>
               </li>
 
@@ -260,21 +260,6 @@
 
         let menu_target_active = $('menu').data('target');
         $('#menu-'+ menu_target_active).addClass('active')
-
-        $('#tabela-ente').DataTable({
-          "bLengthChange": false,
-          "language":{
-            "url": "http://cdn.datatables.net/plug-ins/1.10.19/i18n/Portuguese-Brasil.json"
-          }
-        });
-
-        $('.tabela-datatable').DataTable({
-          "bLengthChange": false,
-          "pageLength": 10,
-          "language":{
-            "url": "http://cdn.datatables.net/plug-ins/1.10.19/i18n/Portuguese-Brasil.json"
-          }
-        });
 
         {% verbatim %}
 

@@ -1,196 +1,115 @@
 {% extends "gestao/base_gestao.html" %} {% load gestao_tags %} {% block content %}
 <menu data-target="ente" ></menu>
 <div class="row">
-  <div class="col-lg-12">
-    <div class="card card-default">
-      <div class="card-header card-plain card-header-primary">
-          <h4 class="card-title">Ente Federados</h4>
-          <p class="card-category">Aderidos ao Sistema Nacional de Cultura</p>
-      </div>
-      <div class="card-body table-responsive">
-          {% if not object_list %}
-          <p></p>
-          <p>Ente federado não encontrado</p>   
-          {% else %}
-            <table class="table table-hover tabela-datatable">
-              <thead>
-                <tr>
-                  <th>Análise</th>
-                  <th>Município/Estado</th>
-                  <th>Prefeito/Governador</th>
-                  <th>RG</th>
-                  <th>CPF</th>
-                  <th>CNPJ</th>
-                  <th>Situação <a data-toggle="modal" data-target="#situacoes" ><i class="fa fa-search" title="Filtrar Por Situação"></i><a/></th>
-                </tr>
-              </thead>
-              <tbody>
-                {% for sistema in object_list %}
-                <tr class="odd gradeX">
-                  <td><center><a href="{% url 'gestao:detalhar' cod_ibge=sistema.ente_federado.cod_ibge %}"><i class="fa fa-file"></i></a></center></td>
-                  <td>{{ sistema.ente_federado }}</td>
-  
-                  {% if sistema.gestor.termo_posse %}
-                  <td><a href="{{ sistema.gestor.termo_posse.url }}">{{ sistema.gestor.nome }}</a></td>
-                  {% else %}
-                  <td>{{ sistema.gestor.nome }}</td>
-                  {% endif %}
-                  {% if sistema.gestor.rg_copia %}
-                  <td><a href="{{ sistema.gestor.rg_copia.url }}">{{ sistema.gestor.rg }}</a></td>
-                  {% else %}
-                  <td><a href="#">{{ sistema.gestor.rg }}</a></td>
-                  {% endif %}
-  
-                  {% if sistema.gestor.cpf_copia %}
-                  <td><a href="{{ sistema.gestor.cpf_copia.url }}">{{ sistema.gestor.cpf }}</a></td>
-                  {% else %}
-                  <td><a href="#">{{ sistema.gestor.cpf }}</a></td>
-                  {% endif %}
-                  <td>{{ sistema.sede.cnpj }}</td>
-                  <td>
-                    {% if sistema.estado_processo == '0' %}Aguardando dados cadastrais{% endif %}
-                    {% if sistema.estado_processo == '1' %}Aguardando envio da documentação{% endif %}
-                    {% if sistema.estado_processo == '2' %}Documentação Recebida - Aguarda Análise{% endif %}
-                    {% if sistema.estado_processo == '3' %}Diligência Documental{% endif %}
-                    {% if sistema.estado_processo == '4' %}Encaminhado para assinatura do Secretário SAI{% endif %}
-                    {% if sistema.estado_processo == '5' %}Aguarda Publicação no DOU{% endif %}
-                    {% if sistema.estado_processo == '6' %}Publicado no DOU{% endif %}
-                  </td>
-                </tr>
-                {% endfor %}
-              </tbody>
-            </table>          
-          {% endif %}
-                  
-      </div>
-    </div>
-  </div>
-</div>
-
-
-
-<div class="form-group">
-  <div class="col-sm-offset-3 col-sm-11">
-    <!-- <a class="btn btn-default" href="#" >Cancelar</a>
-      <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModal">Salvar</button> -->
-
-      <div class="modal fade" id="situacoes" role="dialog">
-        <div class="modal-dialog">
-
-          <!-- Modal content-->
-          <div class="modal-content">
-            <div class="modal-header">
-              <button type="button" class="close" data-dismiss="modal">&times;</button>
-              <h4 class="modal-title ">Escolha uma situação para filtrar</h4>
-            </div>
-            <div class="modal-body">
-              <div class="list-group row">
-                <a href="/gestao/?situacao=0" class="list-group-item">
-                  Aguardando dados cadastrais
-                </a>
-                <a href="/gestao/?situacao=1" class="list-group-item">
-                  Aguardando envio da documentação
-                </a>
-                <a href="/gestao/?situacao=2" class="list-group-item">
-                  Documentação Recebida - Aguarda Análise
-                </a>
-                <a href="/gestao/?situacao=3" class="list-group-item">
-                  Diligência Documental
-                </a>
-                <a href="/gestao/?situacao=4" class="list-group-item">
-                  Encaminhado para assinatura do Secretário SAI
-                </a>
-                <a href="/gestao/?situacao=5" class="list-group-item">
-                  Aguarda Publicação no DOU
-                </a>
-                <a href="/gestao/?situacao=6" class="list-group-item">
-                  Publicado no DOU
-                </a>
-              </div>
-            </div>
-
-            <div class="modal-footer">
-              <form action="/gestao">
-                <input type="submit" class="btn btn-default" value="Limpar" />
-              </form>
-            </div>
-
+    <div class="col-lg-12">
+        <div class="card card-default">
+          <div class="card-header card-plain card-header-primary">
+              <h4 class="card-title">Ente Federados</h4>
+              <p class="card-category">Aderidos ao Sistema Nacional de Cultura</p>
           </div>
-
+          <div class="card-body table-responsive">
+              <table id="tabela-ente" class="datatable table table-hover">
+                  <thead>
+                      <tr>
+                          <th>Análise</th>
+                          <th>Município/Estado</th>
+                          <th>Prefeito/Governador</th>
+                          <th>RG</th>
+                          <th>CPF</th>
+                          <th>CNPJ</th>
+                          <th>Situação</th>
+                      </tr>
+                  </thead>
+                  <tbody>
+                  </tbody>
+              </table>
+          </div>
         </div>
       </div>
-
-  </div>
 </div>
-
-
-
-
-
 
 {% endblock content %}
 {% block js%}
 <script type="text/javascript">
 $(document).ready(function(){
-  $("[id^='select_situacao']").change(function(e){
-  index = $(this).parent().parent().index();
-  if($(this).val()==="2"){
-  $("input[id$='_"+index+"'], textarea[id$='_"+index+"']").each(function(){
-  if(!$(this).hasClass('hide')){
-  $(this).addClass('hide');
-  $(this).fadeIn();
-}
-});
-  if($("#localizacao_"+index).hasClass('hide')){
-  $("#localizacao_"+index).removeClass('hide');
-  $("#localizacao_"+index).fadeIn();
-}
-}
-  else if($(this).val()==="3"){
-  $("input[id$='_"+index+"'], textarea[id$='_"+index+"']").each(function(){
-  if(!$(this).hasClass('hide')){
-  $(this).addClass('hide');
-  $(this).fadeIn();
-}
-});
-  if($("#justificativa_"+index).hasClass('hide')){
-  $("#justificativa_"+index).removeClass('hide');
-  $("#justificativa_"+index).fadeIn();
-}
-}
-  else if($(this).val()==="4"){
-  $("input[id$='_"+index+"'], textarea[id$='_"+index+"']").each(function(){
-  if(!$(this).hasClass('hide')){
-  $(this).addClass('hide');
-  $(this).fadeIn();
-}
-});
-  if($("#num_processo_"+index).hasClass('hide')){
-  $("#num_processo_"+index).removeClass('hide');
-  $("#num_processo_"+index).fadeIn();
-}
-}
-  else if($(this).val()==="6"){
-  $("input[id$='_"+index+"'], textarea[id$='_"+index+"']").each(function(){
-  if(!$(this).hasClass('hide')){
-  $(this).addClass('hide');
-  $(this).fadeIn();
-}
-});
-  if($("#data_acordo_"+index).hasClass('hide')){
-  $("#data_acordo_"+index).removeClass('hide');
-  $("#data_acordo_"+index).fadeIn();
-}
-}
-  else {
-  $("input[id$='_"+index+"'], textarea[id$='_"+index+"']").each(function(){
-  if(!$(this).hasClass('hide')){
-  $(this).addClass('hide');
-  $(this).fadeIn();
-}
-});
-}
-});
+  $('#tabela-ente').dataTable({
+    order: [[ 'ente_federado', "desc" ]],
+    language:{
+            "url": "http://cdn.datatables.net/plug-ins/1.10.19/i18n/Portuguese-Brasil.json"
+          },
+    columns: [
+        {
+          width: '5%',
+          data: null,
+          name: "id",
+          orderable: false,
+          render: function (data, type, row) {
+            return `<center><a href="/gestao/ente/${data[7]}"><i class="fa fa-file"></i></a></center>`
+          }
+        },
+        {
+          data: null,
+          name: "ente_federado",
+          render: (data) => data[1]
+        },
+        {
+          width: '25%',
+          data: null,
+          name: "gestor__nome",
+          render: (data) => {
+            if (data[9].length > 0){
+              return `<a href="${data[9]}">${data[2]}</a>`
+            }
+            return data[2]
+          }
+        },
+        {
+          data: null,
+          name: "gestor__rg",
+          render: (data) => {
+            if (data[10].length > 0){
+              return `<a href="${data[10]}">${data[3]}</a>`
+            }
+            return data[3]
+          }
+        },
+        {
+          width: '15%',
+          data: null,
+          name: "gestor__cpf",
+          render: function (data, type, row) {
+            return data[4]
+          },
+          render: (data) => {
+            if (data[11].length > 0){
+              return `<a href="${data[11]}">${data[4]}</a>`
+            }
+            return data[4]
+          }
+        },
+        {
+          data: null,
+          name: "sede__cnpj",
+          render: (data) => data[5]
+        },
+        {
+          data: null,
+          name: "estado_processo",
+          render: (data) => data[6]
+        },
+    ],
+    searching: true,
+    processing: true,
+    serverSide: true,
+    stateSave: true,
+    ajax: {
+      url: "{% url 'gestao:ajax_entes' %}",
+      data: {
+        csrfmiddlewaretoken: "{{ csrf_token }}"
+      },
+      type: "POST",
+    },
+  });
 });
 </script>
-{% endblock js%}
+{% endblock js %}

@@ -1,9 +1,9 @@
 import json
 
-from django.core import serializers
+from django_datatables_view.base_datatable_view import BaseDatatableView
+from django.utils.html import escape
 from django.core.serializers.json import DjangoJSONEncoder
-from django.db.models import Case, When, DateField, Count, Q
-from django.db.models.functions import Least
+from django.db.models import Q
 from django.utils.translation import gettext as _
 
 from django.shortcuts import redirect
@@ -22,9 +22,7 @@ from django.views.generic.detail import SingleObjectMixin
 from django.views.generic import CreateView
 from django.views.generic import DetailView
 from django.views.generic import ListView
-from django.views.generic import View
 
-from django.views.generic.edit import FormView
 from django.views.generic.edit import UpdateView
 
 from django.urls import reverse_lazy
@@ -34,35 +32,23 @@ from dal import autocomplete
 from templated_email.generic_views import TemplatedEmailFormViewMixin
 
 from adesao.models import Usuario
-from adesao.models import Cidade
 from adesao.models import Municipio
-from adesao.models import Historico
 from adesao.models import SistemaCultura
 from adesao.models import EnteFederado
 from adesao.models import Gestor
 from adesao.models import Funcionario
+from adesao.models import LISTA_ESTADOS_PROCESSO
 
-
-from adesao.forms import CadastrarSistemaCulturaForm
-
-from planotrabalho.models import PlanoTrabalho
-from planotrabalho.models import CriacaoSistema
-from planotrabalho.models import PlanoCultura
-from planotrabalho.models import FundoCultura
-from planotrabalho.models import OrgaoGestor
-from planotrabalho.models import ConselhoCultural
-from planotrabalho.models import SituacoesArquivoPlano
 from planotrabalho.models import Componente
 from planotrabalho.models import FundoDeCultura
 
 from gestao.utils import empty_to_none, get_uf_by_mun_cod
 
-from adesao.models import Uf
-
 from .models import DiligenciaSimples
 
-from .forms import DiligenciaComponenteForm, DiligenciaGeralForm, AlterarDocumentosEnteFederadoForm
-
+from .forms import DiligenciaComponenteForm
+from .forms import DiligenciaGeralForm
+from .forms import AlterarDocumentosEnteFederadoForm
 from .forms import AlterarUsuarioForm
 from .forms import AlterarComponenteForm
 from .forms import AlterarDadosEnte
@@ -71,9 +57,6 @@ from planotrabalho.forms import CriarComponenteForm
 from planotrabalho.forms import CriarFundoForm
 
 from .forms import CadastradorEnte
-
-from itertools import chain
-import datetime
 
 from adesao.views import AlterarSistemaCultura
 from adesao.views import AlterarFuncionario
@@ -147,7 +130,9 @@ class EnteChain(autocomplete.Select2QuerySetView):
 def ajax_consulta_cpf(request):
 
     if not request.is_ajax():
-        return JsonResponse(data={"message": "Esta não é uma requisição AJAX"}, status=400)
+        return JsonResponse(
+            data={"message": "Esta não é uma requisição AJAX"},
+            status=400)
 
     cpf = request.POST.get('cpf', None)
     if not cpf:
@@ -190,21 +175,26 @@ class AcompanharPrazo(ListView):
     def get_queryset(self):
         ente_federado = self.request.GET.get('ente_federado', None)
 
-        sistemas = SistemaCultura.sistema.filter(estado_processo='6', data_publicacao_acordo__isnull=False)
+        sistemas = SistemaCultura.sistema.filter(
+            estado_processo='6',
+            data_publicacao_acordo__isnull=False)
 
         if ente_federado:
-            sistemas = sistemas.filter(ente_federado__nome__unaccent__icontains=ente_federado)
+            sistemas = sistemas.filter(
+                ente_federado__nome__unaccent__icontains=ente_federado)
 
         return sistemas
 
 
-def aditivar_prazo(request, id,page):
+def aditivar_prazo(request, id, page):
     if request.method == "POST":
         sistema = SistemaCultura.sistema.get(id=id)
         sistema.prazo = sistema.prazo + 2
         sistema.save()
 
-        message = 'Prazo de ' + sistema.ente_federado.__str__() + ' alterado para '+ str(sistema.prazo) + ' anos com sucesso'
+        message = \
+            'Prazo de ' + sistema.ente_federado.__str__() + \
+            ' alterado para ' + str(sistema.prazo) + ' anos com sucesso'
         messages.success(request, message)
 
     return redirect(reverse_lazy('gestao:acompanhar_prazo') + '?page=' + page)
@@ -213,97 +203,6 @@ def aditivar_prazo(request, id,page):
 class AcompanharSistemaCultura(ListView):
     model = SistemaCultura
     template_name = 'gestao/adesao/acompanhar.html'
-    paginate_by = 10
-
-    def remove_repeticoes(self, lista):
-        ja_adicionados = set()
-        lista_sem_repeticoes = []
-        for sistema in lista:
-                if sistema not in ja_adicionados:
-                    lista_sem_repeticoes.append(sistema)
-                    ja_adicionados.add(sistema)
-
-        return lista_sem_repeticoes
-
-    def annotate_componente_mais_antigo_por_situacao(self, componentes, *args):
-        componentes = componentes.annotate(
-            data_legislacao_sem_analise=Case(
-                When(legislacao__situacao__in=args, then='legislacao__data_envio'),
-                default=None,
-                output_field=DateField(),
-            ),
-             data_orgao_sem_analise=Case(
-                When(orgao_gestor__situacao__in=args, then='orgao_gestor__data_envio'),
-                default=None,
-                output_field=DateField(),
-            ),
-             data_conselho_sem_analise=Case(
-                When(conselho__situacao__in=args, then='conselho__data_envio'),
-                default=None,
-                output_field=DateField(),
-            ),
-             data_plano_sem_analise=Case(
-                When(plano__situacao__in=args, then='plano__data_envio'),
-                default=None,
-                output_field=DateField(),
-            ),
-            data_fundo_sem_analise=Case(
-                When(fundo_cultura__situacao__in=args, then='fundo_cultura__data_envio'),
-                default=None,
-                output_field=DateField(),
-            )
-        ).annotate(
-            mais_antigo=Least('data_legislacao_sem_analise', 'data_orgao_sem_analise', 'data_conselho_sem_analise', 'data_plano_sem_analise',
-                'data_fundo_sem_analise')
-        )
-
-        return componentes
-
-    def get_queryset(self):
-        situacao = self.request.GET.get('situacao', None)
-        ente_federado = self.request.GET.get('ente_federado', None)
-
-        sistemas = SistemaCultura.objects.all()
-
-        if situacao in ('0', '1', '2', '3', '4', '5', '6'):
-            sistemas = SistemaCultura.objects.filter(estado_processo=situacao)
-
-        if ente_federado:
-            sistemas = SistemaCultura.objects.filter(
-                ente_federado__nome__unaccent__icontains=ente_federado)
-
-
-        sistemas_entes_distintos = sistemas.distinct('ente_federado__nome', 'ente_federado')
-
-        sistemas_concluidos = self.annotate_componente_mais_antigo_por_situacao(sistemas, 2, 3).filter(
-            estado_processo='6').exclude(mais_antigo=None).order_by('mais_antigo').filter(id__in=sistemas_entes_distintos)
-
-        sistemas_diligencia = self.annotate_componente_mais_antigo_por_situacao(sistemas, 4, 5, 6).filter(
-            estado_processo='6').exclude(mais_antigo=None).order_by('mais_antigo').filter(id__in=sistemas_entes_distintos)
-
-        sistemas_nao_enviados = self.annotate_componente_mais_antigo_por_situacao(sistemas, 0).filter(
-            estado_processo='6').exclude(mais_antigo=None).order_by('mais_antigo').filter(id__in=sistemas_entes_distintos)
-
-        sistemas_nao_analisados = self.annotate_componente_mais_antigo_por_situacao(sistemas, 1).filter(
-            estado_processo='6').exclude(mais_antigo=None).order_by('mais_antigo').filter(id__in=sistemas_entes_distintos)
-
-        sistemas_publicados_sem_componentes = sistemas.filter(Q(estado_processo='6') &
-            Q(legislacao=None) &
-            Q(orgao_gestor=None) &
-            Q(conselho=None) &
-            Q(plano=None) &
-            Q(fundo_cultura=None)).filter(
-            id__in=sistemas_entes_distintos)
-
-        sistemas = sistemas.exclude(estado_processo='6').annotate(
-            tem_cadastrador=Count('cadastrador')).order_by('-tem_cadastrador', '-estado_processo').filter(
-            id__in=sistemas_entes_distintos)
-
-        sistemas = list(chain(sistemas_nao_analisados, sistemas_diligencia,
-            sistemas_nao_enviados, sistemas_concluidos, sistemas_publicados_sem_componentes, sistemas))
-        sistemas = self.remove_repeticoes(sistemas)
-
-        return sistemas
 
 
 class AcompanharComponente(ListView):
@@ -393,7 +292,9 @@ class AlterarDadosSistemaCultura(AlterarSistemaCultura):
 
     def get_success_url(self):
         sistema = SistemaCultura.objects.get(id=self.kwargs['pk'])
-        return reverse_lazy('gestao:detalhar', kwargs={'cod_ibge': sistema.ente_federado.cod_ibge})
+        return reverse_lazy(
+            'gestao:detalhar',
+            kwargs={'cod_ibge': sistema.ente_federado.cod_ibge})
 
 
 class AlterarFuncionario(AlterarFuncionario):
@@ -402,7 +303,9 @@ class AlterarFuncionario(AlterarFuncionario):
     def get_success_url(self):
         funcionario = Funcionario.objects.get(id=self.kwargs['pk'])
         sistema = getattr(funcionario, 'sistema_cultura_%s' % self.kwargs['tipo'])
-        return reverse_lazy('gestao:detalhar', kwargs={'cod_ibge': sistema.all()[0].ente_federado.cod_ibge})
+        return reverse_lazy(
+            'gestao:detalhar',
+            kwargs={'cod_ibge': sistema.all()[0].ente_federado.cod_ibge})
 
 
 class CadastrarFuncionario(CadastrarFuncionario):
@@ -410,7 +313,9 @@ class CadastrarFuncionario(CadastrarFuncionario):
 
     def get_success_url(self):
         sistema = SistemaCultura.objects.get(id=self.kwargs['sistema'])
-        return reverse_lazy('gestao:detalhar', kwargs={'cod_ibge': sistema.ente_federado.cod_ibge})
+        return reverse_lazy(
+            'gestao:detalhar',
+            kwargs={'cod_ibge': sistema.ente_federado.cod_ibge})
 
 
 class AlterarDadosEnte(UpdateView, LookUpAnotherFieldMixin):
@@ -443,7 +348,8 @@ class ListarUsuarios(ListView):
         usuarios = Usuario.objects.all()
 
         if q:
-            usuarios = usuarios.filter(Q(user__username__icontains=q) | Q(user__email__icontains=q))
+            usuarios = usuarios.filter(
+                Q(user__username__icontains=q) | Q(user__email__icontains=q))
 
         return usuarios
 
@@ -454,9 +360,10 @@ class AlterarUsuario(UpdateView):
     template_name = 'gestao/listar_usuarios.html'
     success_url = reverse_lazy('gestao:usuarios')
 
-
     def get_success_url(self):
-        messages.success(self.request, 'Situação de CPF: '+ str(self.object) + ' alterada com sucesso.')
+        messages.success(
+            self.request,
+            'Situação de CPF: ' + str(self.object) + ' alterada com sucesso.')
         return reverse_lazy('gestao:usuarios')
 
 
@@ -470,7 +377,8 @@ class ListarDocumentosEnteFederado(ListView):
         sistema = SistemaCultura.sistema.filter(estado_processo__range=('1', '5'))
 
         if ente_federado:
-            sistema = sistema.filter(ente_federado__nome__unaccent__icontains=ente_federado)
+            sistema = sistema.filter(
+                ente_federado__nome__unaccent__icontains=ente_federado)
 
         return sistema
 
@@ -538,7 +446,9 @@ class AlterarComponente(UpdateView):
 
     def get_success_url(self):
         messages.success(self.request, 'Sistema da Cultura alterado com sucesso')
-        return reverse_lazy('gestao:listar_documentos',kwargs={'template': 'listar_%s' % self.kwargs['componente']})
+        return reverse_lazy(
+            'gestao:listar_documentos',
+            kwargs={'template': 'listar_%s' % self.kwargs['componente']})
 
 
 class AlterarFundoCultura(UpdateView):
@@ -556,7 +466,9 @@ class AlterarFundoCultura(UpdateView):
 
     def get_success_url(self):
         messages.success(self.request, 'Sistema da Cultura alterado com sucesso')
-        return reverse_lazy('gestao:listar_documentos',kwargs={'template': 'listar_fundo_cultura'})
+        return reverse_lazy(
+            'gestao:listar_documentos',
+            kwargs={'template': 'listar_fundo_cultura'})
 
 
 class Prorrogacao(ListView):
@@ -607,8 +519,9 @@ class DiligenciaComponenteView(CreateView):
         componente = None
 
         try:
-            componente = getattr(sistema_cultura,
-                                       self.kwargs['componente'])
+            componente = getattr(
+                sistema_cultura,
+                self.kwargs['componente'])
             assert componente
         except(AssertionError, AttributeError):
             raise Http404('Componente não existe')
@@ -652,13 +565,15 @@ class DiligenciaGeralCreateView(TemplatedEmailFormViewMixin, CreateView):
         context['sistema_cultura'] = self.get_sistema_cultura()
         context['situacoes'] = self.get_sistema_cultura().get_situacao_componentes()
         context['historico_diligencias'] = self.get_historico_diligencias()
-        context['historico_diligencias_componentes'] = self.get_sistema_cultura().get_componentes_diligencias()
+        context['historico_diligencias_componentes'] = \
+            self.get_sistema_cultura().get_componentes_diligencias()
 
         return context
 
     def get_historico_diligencias(self):
         historico_diligencias = DiligenciaSimples.objects.filter(
-            sistema_cultura__ente_federado__cod_ibge=self.get_sistema_cultura().ente_federado.cod_ibge)
+            sistema_cultura__ente_federado__cod_ibge=self.get_sistema_cultura()
+            .ente_federado.cod_ibge)
 
         return historico_diligencias
 
@@ -671,7 +586,8 @@ class DiligenciaGeralCreateView(TemplatedEmailFormViewMixin, CreateView):
         return recipiente_list
 
     def get_success_url(self):
-        return reverse_lazy("gestao:detalhar", kwargs={"cod_ibge": self.get_sistema_cultura().ente_federado.cod_ibge})
+        return reverse_lazy("gestao:detalhar", kwargs={
+            "cod_ibge": self.get_sistema_cultura().ente_federado.cod_ibge})
 
 
 class DiligenciaGeralDetailView(DetailView):
@@ -690,3 +606,74 @@ class DiligenciaGeralDetailView(DetailView):
 class SituacaoArquivoComponenteUpdateView(UpdateView):
     model = Componente
     fields = ['situacao']
+
+
+class DataTableEntes(BaseDatatableView):
+    max_display_length = 150
+
+    def get_initial_queryset(self):
+        sistema = SistemaCultura.objects.distinct('ente_federado__cod_ibge').order_by(
+            'ente_federado__cod_ibge').filter(
+                ente_federado__isnull=False
+            ).values_list('id', flat=True)
+
+        return SistemaCultura.objects.filter(id__in=sistema)
+
+    def filter_queryset(self, qs):
+        query = Q()
+        search = self.request.POST.get('search[value]', None)
+
+        filtros_queryset = [
+            Q(ente_federado__nome__unaccent__icontains=search),
+            Q(gestor__nome__unaccent__icontains=search),
+            Q(gestor__rg__contains=search),
+            Q(gestor__cpf__contains=search),
+            Q(sede__cnpj__contains=search)
+        ]
+
+        if search:
+            estados_para_pesquisa = []
+            for tupla_estado_processo in LISTA_ESTADOS_PROCESSO:
+
+                contem_pesquisa = \
+                    True if search.lower() in tupla_estado_processo[1].lower() \
+                    else False
+                if contem_pesquisa:
+                    estados_para_pesquisa.append(
+                        Q(estado_processo=tupla_estado_processo[0])
+                    )
+
+            filtros_queryset.extend(estados_para_pesquisa)
+
+            for filtro in filtros_queryset:
+                query |= filtro
+
+            qs = qs.filter(query)
+
+        return qs
+
+    def prepare_results(self, qs):
+        json_data = []
+
+        for item in qs:
+            json_data.append([
+                escape(item.id),
+                escape(item.ente_federado),
+                escape(item.gestor.nome) if item.gestor else '',
+                escape(item.gestor.rg) if item.gestor else '',
+                escape(item.gestor.cpf) if item.gestor else '',
+                escape(item.sede.cnpj) if item.sede else '',
+                escape(item.get_estado_processo_display()),
+                escape(item.ente_federado.cod_ibge) if item.ente_federado else '',
+                escape(item.data_criacao),
+                escape(
+                    item.gestor.termo_posse.url if item.gestor.termo_posse else ''
+                ),
+                escape(
+                    item.gestor.rg_copia.url if item.gestor.rg_copia else ''
+                ),
+                escape(
+                    item.gestor.cpf_copia.url if item.gestor.cpf_copia else ''
+                ),
+            ])
+        return json_data
