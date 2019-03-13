@@ -130,7 +130,7 @@ class EnteFederado(models.Model):
         elif self.populacao > 20000 and self.populacao <= 50000:
             return "De 20.001 até 50.000"
         elif self.populacao > 50000 and self.populacao <= 100000:
-            return "De De 50.001 até 100.000"
+            return "De 50.001 até 100.000"
         elif self.populacao > 100000 and self.populacao <= 500000:
             return "De 100.001 até 500.000"
         return "Acima de 500.000"
