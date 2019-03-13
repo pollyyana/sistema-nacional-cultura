@@ -361,6 +361,7 @@ class Funcionario(models.Model):
     telefone_dois = models.CharField(max_length=50, blank=True)
     telefone_tres = models.CharField(max_length=50, blank=True)
     email_institucional = models.EmailField()
+    email_pessoal = models.EmailField(null=True, blank=True)
     tipo_funcionario = models.IntegerField(
         choices=LISTA_TIPOS_FUNCIONARIOS,
         default='0')
@@ -444,8 +445,6 @@ class SistemaCultura(models.Model):
         sistemas = SistemaCultura.historico.ente(self.ente_federado.cod_ibge)
         sistema_base = sistemas.first()
         historico_cadastradores = [sistema_base]
-
-        #import ipdb; ipdb.set_trace()
 
         for sistema in sistemas:
             if sistema.cadastrador != sistema_base.cadastrador:

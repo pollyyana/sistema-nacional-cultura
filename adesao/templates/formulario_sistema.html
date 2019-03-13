@@ -104,6 +104,18 @@
 
   </div>
 
+  <div class="form-group {% if form_gestor.email_pessoal.errors %} has-error {% endif %}">
+    <label for="{{ form_gestor.email_pessoal.id_for_label }}" class="col-sm-4 control-label">E-mail Pessoal</label>
+
+    <div class="col-sm-8">
+      {% render_field form_gestor.email_pessoal class="form-control" %}
+      {% if form_gestor.email_pessoal.errors %}
+        <span class="help-block">{{ form_gestor.email_pessoal.errors }}</span>
+      {% endif %}
+    </div>
+
+  </div>
+
   <div class="form-group {% if form_sede.cnpj.errors %} has-error {% endif %}">
     <label for="{{ form_sede.cnpj.id_for_label }}" class="col-sm-4 control-label">CNPJ do Ente Federado (Estado ou Município)</label>
     <div class="col-sm-4">
