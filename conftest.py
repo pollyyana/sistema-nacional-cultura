@@ -184,7 +184,7 @@ def sistema_cultura():
 
     ente_federado = mommy.make("EnteFederado", cod_ibge=111, _fill_optional=True, nome="Bahia")
 
-    conselho = mommy.make("Componente", tipo=3, _fill_optional=True)
+    conselho = mommy.make("ConselhoDeCultura", tipo=3, _fill_optional=True)
 
     conselheiros = mommy.make("Conselheiro", _quantity=3, conselho=conselho, situacao=1, _fill_optional=True)
 

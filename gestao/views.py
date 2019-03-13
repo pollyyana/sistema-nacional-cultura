@@ -47,6 +47,7 @@ from planotrabalho.models import ConselhoCultural
 from planotrabalho.models import SituacoesArquivoPlano
 from planotrabalho.models import Componente
 from planotrabalho.models import FundoDeCultura
+from planotrabalho.models import ConselhoDeCultura
 
 from gestao.utils import empty_to_none
 
@@ -63,6 +64,7 @@ from .forms import AlterarDadosEnte
 from planotrabalho.forms import CriarComponenteForm
 from planotrabalho.forms import CriarFundoForm
 from planotrabalho.forms import CriarConselhoForm
+from planotrabalho.forms import AlterarConselhoForm
 
 from .forms import CadastradorEnte
 
@@ -491,6 +493,27 @@ class AlterarComponente(UpdateView):
     def get_success_url(self):
         messages.success(self.request, 'Sistema da Cultura alterado com sucesso')
         return reverse_lazy('gestao:listar_documentos',kwargs={'template': 'listar_%s' % self.kwargs['componente']})
+
+
+class AlterarConselhoCultura(UpdateView):
+    form_class = AlterarConselhoForm
+    model = ConselhoDeCultura
+    template_name = 'gestao/inserir_documentos/inserir_conselho.html'
+
+    def get_form_kwargs(self):
+        kwargs = super(AlterarConselhoCultura, self).get_form_kwargs()
+        sistema_id = self.object.conselho.last().id
+        self.sistema = SistemaCultura.objects.get(id=sistema_id)
+        kwargs['sistema'] = self.sistema
+        kwargs['tipo'] = 'conselho'
+        if self.object.lei:
+            kwargs['initial'] = {'arquivo_lei': self.object.lei.arquivo,
+                'data_publicacao_lei': self.object.lei.data_publicacao}
+        return kwargs
+
+    def get_success_url(self):
+        messages.success(self.request, 'Sistema da Cultura alterado com sucesso')
+        return reverse_lazy('gestao:listar_documentos',kwargs={'template': 'listar_conselho'})
 
 
 class AlterarFundoCultura(UpdateView):

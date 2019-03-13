@@ -131,7 +131,7 @@ def test_renderiza_template(url, client, plano_trabalho, login_staff):
 def test_renderiza_template_diligencia(url, client, login_staff):
     """Testa se o template específico da diligência é renderizado corretamente"""
 
-    conselho = mommy.make("Componente", tipo=3, situacao=1)
+    conselho = mommy.make("ConselhoDeCultura", tipo=3, situacao=1)
     sistema_cultura = mommy.make(
         "SistemaCultura",
         ente_federado__cod_ibge=123456,
@@ -300,7 +300,7 @@ def test_ente_federado_retornado_na_diligencia(url, client, login_staff):
     Testa se ente_federado retornado está relacionado com o plano trabalho passado como parâmetro
     """
 
-    conselho = mommy.make("Componente", tipo=3, situacao=1)
+    conselho = mommy.make("ConselhoDeCultura", tipo=3, situacao=1)
     sistema_cultura = mommy.make(
         "SistemaCultura",
         ente_federado__cod_ibge=123456,
@@ -381,7 +381,7 @@ def test_redirecionamento_de_pagina_apos_POST(url, client, login_staff):
 def test_arquivo_enviado_pelo_componente(url, client, login_staff):
     """ Testa se o arquivo enviado pelo componente está correto """
 
-    conselho = mommy.make("Componente", tipo=3, situacao=1)
+    conselho = mommy.make("ConselhoDeCultura", tipo=3, situacao=1)
     sistema_cultura = mommy.make(
         "SistemaCultura",
         ente_federado__cod_ibge=123456,
@@ -827,26 +827,32 @@ def test_alterar_documentos_conselho_cultural(client, login_staff):
     """ Testa se funcionalidade de alterar documento para conselho cultural na
     tela de gestão salva no field arquivo """
 
-    conselho = mommy.make("Componente", tipo=3)
+    conselho = mommy.make("ConselhoDeCultura", tipo=3)
     sistema_cultura = mommy.make("SistemaCultura", _fill_optional='ente_federado',
         conselho=conselho)
 
     arquivo = SimpleUploadedFile(
-        "conselho_cultural.txt", b"file_content", content_type="text/plain"
+        "ata_conselho_cultural.txt", b"file_content", content_type="text/plain"
+    )
+
+    lei = SimpleUploadedFile(
+        "lei_cultural.txt", b"file_content", content_type="text/plain"
     )
 
     url = reverse(
-        "gestao:alterar_componente", kwargs={"pk": sistema_cultura.conselho.id, "componente": "conselho"}
+        "gestao:alterar_conselho", kwargs={"pk": sistema_cultura.conselho.id }
     )
 
-    client.post(url, data={"arquivo": arquivo, "data_publicacao": "28/06/2018"})
+    client.post(
+        url,
+        data={"arquivo": arquivo, "data_publicacao": "28/06/2018", "arquivo_lei": lei, "data_publicacao_lei": "13/03/2019"}
+    )
 
     conselho.refresh_from_db()
-    name =conselho.arquivo.name.split("conselho/")[1]
-    situacao = conselho.situacao
-
-    assert name == arquivo.name
-    assert situacao == 1
+    assert lei.name == conselho.lei.arquivo.name.split("conselho/")[1]
+    assert arquivo.name == conselho.arquivo.name.split("conselho/")[1]
+    assert conselho.situacao == 1
+    assert conselho.lei.situacao == 1
 
 
 def test_inserir_documentos_conselho_cultural(client, sistema_cultura, login_staff):
@@ -875,7 +881,7 @@ def test_inserir_documentos_conselho_cultural(client, sistema_cultura, login_sta
     assert name == arquivo.name
     assert name_lei == arquivo_lei.name
     assert sistema_atualizado.conselho.lei.situacao == 1
-    assert sistema_atualizado.conselho.arquivo.situacao == 1
+    assert sistema_atualizado.conselho.situacao == 1
 
 
 def test_retorna_200_para_diligencia_geral(client, url, login_staff):
@@ -949,7 +955,7 @@ def test_situacoes_componentes_diligencia(url, client, login_staff):
     legislacao = mommy.make("Componente", tipo=0, situacao=1, _create_files=True)
     orgao = mommy.make("Componente", tipo=1, situacao=2, _create_files=True)
     fundo = mommy.make("FundoDeCultura", tipo=2, situacao=3, _create_files=True)
-    conselho = mommy.make("Componente", tipo=3, situacao=4, _create_files=True)
+    conselho = mommy.make("ConselhoDeCultura", tipo=3, situacao=4, _create_files=True)
     plano = mommy.make("Componente", tipo=4, situacao=5, _create_files=True)
 
     sistema_cultura = mommy.make(

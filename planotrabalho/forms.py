@@ -13,6 +13,7 @@ from .models import FundoDeCultura, PlanoCultura, ConselhoDeCultura
 from .models import Conselheiro, SITUACAO_CONSELHEIRO
 from .models import ArquivoComponente2
 from .utils import add_anos
+from adesao.models import SistemaCultura
 from gestao.forms import content_types
 
 SETORIAIS = (
@@ -90,7 +91,7 @@ class CriarFundoForm(CriarComponenteForm):
         fields = ('cnpj', 'arquivo', 'data_publicacao')
 
 
-class CriarConselhoForm(CriarComponenteForm):
+class CriarConselhoForm(ModelForm):
     arquivo_lei = RestrictedFileField(
         content_types=content_types,
         max_upload_size=52428800)
@@ -99,9 +100,13 @@ class CriarConselhoForm(CriarComponenteForm):
         content_types=content_types,
         max_upload_size=52428800)
 
+    def __init__(self, *args, **kwargs):
+        self.sistema = kwargs.pop('sistema')
+        self.tipo_componente = kwargs.pop('tipo')
+        super(CriarConselhoForm, self).__init__(*args, **kwargs)
+
     def save(self, commit=True, *args, **kwargs):
         conselho = super(CriarConselhoForm, self).save(commit=False)
-
         conselho.tipo = 3
         conselho.arquivo = None
         conselho.save()
@@ -109,32 +114,72 @@ class CriarConselhoForm(CriarComponenteForm):
         if 'arquivo' in self.changed_data:
             conselho.situacao = 1
             conselho.arquivo = self.cleaned_data['arquivo']
-        else:
-            conselho.arquivo = self.initial['arquivo']
 
         sistema_cultura = conselho.conselho
         sistema_cultura.add(self.sistema)
 
-        if 'arquivo_lei' in self.changed_data:
-            conselho.lei.situacao = 1
+        conselho.lei = ArquivoComponente2()
+        conselho.lei.save()
+        conselho.lei.conselhos.add(conselho)
 
         if 'data_publicacao_lei' in self.changed_data:
             conselho.lei.data_publicacao = self.cleaned_data['data_publicacao_lei']
 
-        conselho.lei.save()
+        if 'arquivo_lei' in self.changed_data:
+            conselho.lei.arquivo = self.cleaned_data['arquivo_lei']
+            conselho.lei.situacao = 1
 
-        conselho.lei.conselhos.add(conselho)
-        conselho.lei.arquivo = self.cleaned_data['arquivo_lei']
         conselho.lei.save()
-
-        self.sistema.conselho = conselho
-        self.sistema.save()
 
         conselho.save()
 
     class Meta:
         model = ConselhoDeCultura
-        fields = ('lei', 'arquivo', 'data_publicacao')
+        fields = ('arquivo', 'data_publicacao')
+
+
+class AlterarConselhoForm(ModelForm):
+    arquivo_lei = RestrictedFileField(
+        content_types=content_types,
+        max_upload_size=52428800)
+    data_publicacao_lei = forms.DateField()
+    arquivo = RestrictedFileField(
+        content_types=content_types,
+        max_upload_size=52428800)
+
+    def __init__(self, *args, **kwargs):
+        self.sistema = kwargs.pop('sistema')
+        self.tipo_componente = kwargs.pop('tipo')
+        super(AlterarConselhoForm, self).__init__(*args, **kwargs)
+
+    def save(self, commit=True, *args, **kwargs):
+        conselho = super(AlterarConselhoForm, self).save(commit=False)
+
+        if 'arquivo' in self.changed_data:
+            conselho.situacao = 1
+            conselho.arquivo = self.cleaned_data['arquivo']
+        else:
+            conselho.arquivo = self.initial['arquivo']
+
+        if not conselho.lei:
+            conselho.lei = ArquivoComponente2()
+            conselho.lei.save()
+            conselho.lei.conselhos.add(conselho)
+
+        if 'data_publicacao_lei' in self.changed_data:
+            conselho.lei.data_publicacao = self.cleaned_data['data_publicacao_lei']
+
+        if 'arquivo_lei' in self.changed_data:
+            conselho.lei.arquivo = self.cleaned_data['arquivo_lei']
+            conselho.lei.situacao = 1
+
+        conselho.lei.save()
+
+        conselho.save()
+
+    class Meta:
+        model = ConselhoDeCultura
+        fields = ('arquivo', 'data_publicacao')
 
 
 class CriarConselheiroForm(ModelForm):
