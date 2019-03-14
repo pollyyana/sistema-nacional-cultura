@@ -317,38 +317,38 @@ def test_campos_entidade_EnteFederado():
 
 def test_faixa_populacional_ate_5000():
     ente = mommy.make("EnteFederado", populacao = 650)
-    faixa = ente.faixa()
-    assert faixa == "Até 5.000"
+    faixa_populacional = ente.faixa_populacional()
+    assert faixa_populacional == "Até 5.000"
 
-def test_faixa_populacional_de_5001_ate_10000():
+def test_faixa_populacional_ate_10000():
     ente = mommy.make("EnteFederado", populacao = 6500)
-    faixa = ente.faixa()
-    assert faixa == "De 5.001 até 10.000"
+    faixa_populacional = ente.faixa_populacional()
+    assert faixa_populacional == "De 5.001 até 10.000"
 
-def test_faixa_populacional_de_10001_ate_20000():
+def test_faixa_populacional_ate_20000():
     ente = mommy.make("EnteFederado", populacao = 16500)
-    faixa = ente.faixa()
-    assert faixa == "De 10.001 até 20.000"
+    faixa_populacional = ente.faixa_populacional()
+    assert faixa_populacional == "De 10.001 até 20.000"
 
-def test_faixa_populacional_de_20001_ate_50000():
+def test_faixa_populacional_ate_50000():
     ente = mommy.make("EnteFederado", populacao = 26500)
-    faixa = ente.faixa()
-    assert faixa == "De 20.001 até 50.000"
+    faixa_populacional = ente.faixa_populacional()
+    assert faixa_populacional == "De 20.001 até 50.000"
 
-def test_faixa_populacional_de_50001_ate_100000():
+def test_faixa_populacional_ate_100000():
     ente = mommy.make("EnteFederado", populacao = 56500)
-    faixa = ente.faixa()
-    assert faixa == "De 50.001 até 100.000"
+    faixa_populacional = ente.faixa_populacional()
+    assert faixa_populacional == "De 50.001 até 100.000"
 
-def test_faixa_populacional_de_100001_ate_500000():
+def test_faixa_populacional_ate_500000():
     ente = mommy.make("EnteFederado", populacao = 106500)
-    faixa = ente.faixa()
-    assert faixa == "De 100.001 até 500.000"
+    faixa_populacional = ente.faixa_populacional()
+    assert faixa_populacional == "De 100.001 até 500.000"
 
 def test_faixa_populacional_acima_500000():
     ente = mommy.make("EnteFederado", populacao = 650000)
-    faixa = ente.faixa()
-    assert faixa == "Acima de 500.000"
+    faixa_populacional = ente.faixa_populacional()
+    assert faixa_populacional == "Acima de 500.000"
     
 
 

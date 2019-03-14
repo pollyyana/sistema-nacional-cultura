@@ -71,7 +71,7 @@ def preenche_planilha(planilha):
             idh = sistema.ente_federado.idh
             pib = sistema.ente_federado.pib
             populacao = sistema.ente_federado.populacao
-            faixa = sistema.ente_federado.faixa()
+            faixa_populacional = sistema.ente_federado.faixa_populacional()
                 
         else:
             nome = "Não cadastrado"
@@ -126,7 +126,7 @@ def preenche_planilha(planilha):
         planilha.write(i, 11, idh)
         planilha.write(i, 12, pib)
         planilha.write(i, 13, populacao)
-        planilha.write(i, 14, faixa)
+        planilha.write(i, 14, faixa_populacional)
         planilha.write(i, 15, endereco)
         planilha.write(i, 16, bairro)
         planilha.write(i, 17, cep)
