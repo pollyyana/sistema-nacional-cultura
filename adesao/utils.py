@@ -81,6 +81,7 @@ def preenche_planilha(planilha):
             idh = "Não encontrado"
             pib = "Não encontrado"
             populacao = "Não encontrada"
+            faixa_populacional = "Não encontrada"
 
         estado_processo = sistema.get_estado_processo_display()
 
