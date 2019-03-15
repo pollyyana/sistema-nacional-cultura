@@ -1,4 +1,6 @@
 import json
+import locale
+import re
 
 from django_datatables_view.base_datatable_view import BaseDatatableView
 from django.utils.html import escape
@@ -186,18 +188,14 @@ class AcompanharPrazo(ListView):
         return sistemas
 
 
-def aditivar_prazo(request, id, page):
+def aditivar_prazo(request):
     if request.method == "POST":
-        sistema = SistemaCultura.sistema.get(id=id)
+        id = request.POST.get('id', None)
+        sistema = SistemaCultura.objects.get(id=id)
         sistema.prazo = sistema.prazo + 2
         sistema.save()
 
-        message = \
-            'Prazo de ' + sistema.ente_federado.__str__() + \
-            ' alterado para ' + str(sistema.prazo) + ' anos com sucesso'
-        messages.success(request, message)
-
-    return redirect(reverse_lazy('gestao:acompanhar_prazo') + '?page=' + page)
+    return JsonResponse(data={}, status=200)
 
 
 class AcompanharSistemaCultura(ListView):
@@ -675,5 +673,44 @@ class DataTableEntes(BaseDatatableView):
                 escape(
                     item.gestor.cpf_copia.url if item.gestor.cpf_copia else ''
                 ),
+            ])
+        return json_data
+
+
+class DataTablePrazo(BaseDatatableView):
+    def get_initial_queryset(self):
+        sistema = SistemaCultura.sistema.values_list('id', flat=True)
+
+        return SistemaCultura.objects.filter(id__in=sistema).filter(
+            estado_processo='6',
+            data_publicacao_acordo__isnull=False)
+
+    def filter_queryset(self, qs):
+        search = self.request.POST.get('search[value]', None)
+
+        if search:
+            where = \
+                Q(ente_federado__nome__unaccent__icontains=search) | \
+                Q(sede__cnpj__contains=search)
+            if search.isdigit():
+                where |= Q(prazo=search)
+
+            print(where)
+
+            return qs.filter(where)
+
+        return qs
+
+    def prepare_results(self, qs):
+        json_data = []
+        locale.setlocale(locale.LC_ALL, 'pt_BR.UTF-8')
+        for item in qs:
+            json_data.append([
+                item.id,
+                escape(item.ente_federado),
+                escape(item.sede.cnpj) if item.sede else '',
+                item.data_publicacao_acordo.strftime(
+                    "%d de %B de %Y") if item.data_publicacao_acordo else '',
+                escape(item.prazo),
             ])
         return json_data

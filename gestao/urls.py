@@ -35,7 +35,7 @@ urlpatterns = [
     # Acompanhar e aditivar prazos dos municípios
     url(r'^acompanhar/prazo/',
         staff_member_required(views.AcompanharPrazo.as_view()), name='acompanhar_prazo'),
-     url(r'^aditivar/prazo/(?P<id>[\w]+)/(?P<page>[\w]+)$',
+    url(r'^aditivar-prazo/',
         staff_member_required(views.aditivar_prazo, login_url='adesao:login'), name='aditivar_prazo'),
 
     # Acompanhar componentes
@@ -121,8 +121,10 @@ urlpatterns = [
     # ajax leaflet
     url(r'^ajax-consulta-entes$', staff_member_required(views.ajax_consulta_entes), name='ajax_consulta_entes'),
 
-    #ajax datatable
+    # ajax datatable
     url(r'^datatable-entes$', staff_member_required(views.DataTableEntes.as_view()),
         name='ajax_entes'),
+    url(r'^datatable-prazo$', staff_member_required(views.DataTablePrazo.as_view()),
+        name='ajax_prazo'),
 
     ]
