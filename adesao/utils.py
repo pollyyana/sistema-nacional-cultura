@@ -48,15 +48,16 @@ def preenche_planilha(planilha):
     planilha.write(0, 11, "IDH [2010]")
     planilha.write(0, 12, "PIB [2016]")
     planilha.write(0, 13, "População [2018]")
-    planilha.write(0, 14, "Endereço")
-    planilha.write(0, 15, "Bairro")
-    planilha.write(0, 16, "CEP")
-    planilha.write(0, 17, "Telefone")
-    planilha.write(0, 18, "Email Prefeito")
-    planilha.write(0, 19, "Email do Cadastrador")
-    planilha.write(0, 20, "Email do Responsável")
-    planilha.write(0, 21, "Localização do processo")
-    planilha.write(0, 22, "Última atualização")
+    planilha.write(0, 14, "Faixa Populacional")
+    planilha.write(0, 15, "Endereço")
+    planilha.write(0, 16, "Bairro")
+    planilha.write(0, 17, "CEP")
+    planilha.write(0, 18, "Telefone")
+    planilha.write(0, 19, "Email Prefeito")
+    planilha.write(0, 20, "Email do Cadastrador")
+    planilha.write(0, 21, "Email do Responsável")
+    planilha.write(0, 22, "Localização do processo")
+    planilha.write(0, 23, "Última atualização")
     
     ultima_linha = 0
 
@@ -70,6 +71,8 @@ def preenche_planilha(planilha):
             idh = sistema.ente_federado.idh
             pib = sistema.ente_federado.pib
             populacao = sistema.ente_federado.populacao
+            faixa_populacional = sistema.ente_federado.faixa_populacional()
+                
         else:
             nome = "Não cadastrado"
             cod_ibge = "Não cadastrado"
@@ -78,6 +81,7 @@ def preenche_planilha(planilha):
             idh = "Não encontrado"
             pib = "Não encontrado"
             populacao = "Não encontrada"
+            faixa_populacional = "Não encontrada"
 
         estado_processo = sistema.get_estado_processo_display()
 
@@ -123,15 +127,16 @@ def preenche_planilha(planilha):
         planilha.write(i, 11, idh)
         planilha.write(i, 12, pib)
         planilha.write(i, 13, populacao)
-        planilha.write(i, 14, endereco)
-        planilha.write(i, 15, bairro)
-        planilha.write(i, 16, cep)
-        planilha.write(i, 17, telefone)
-        planilha.write(i, 18, email_gestor)
-        planilha.write(i, 19, email_cadastrador)
-        planilha.write(i, 20, email_responsavel)
-        planilha.write(i, 21, local)
-        planilha.write(i, 22, sistema.alterado_em.strftime("%d/%m/%Y às %H:%M:%S"))
+        planilha.write(i, 14, faixa_populacional)
+        planilha.write(i, 15, endereco)
+        planilha.write(i, 16, bairro)
+        planilha.write(i, 17, cep)
+        planilha.write(i, 18, telefone)
+        planilha.write(i, 19, email_gestor)
+        planilha.write(i, 20, email_cadastrador)
+        planilha.write(i, 21, email_responsavel)
+        planilha.write(i, 22, local)
+        planilha.write(i, 23, sistema.alterado_em.strftime("%d/%m/%Y às %H:%M:%S"))
         
         ultima_linha = i
 
