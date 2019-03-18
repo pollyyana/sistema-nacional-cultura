@@ -35,9 +35,7 @@
                          {% endif %}
                     </p>
                     <p><strong>E-mail Institucional:</strong> {{ ente.gestor.email_institucional }}</p>
-                    {% if ente.gestor.email_pessoal %}
-                      <p><strong>E-mail Pessoal:</strong> {{ ente.gestor.email_pessoal }}</p>
-                    {% endif %}
+                    <p><strong>E-mail Pessoal:</strong> {% if ente.gestor.email_pessoal %} {{ ente.gestor.email_pessoal }} {% endif %}</p>
                     <p>
                       <strong>Participou da Conferência Nacional:</strong>
                       {% if ente.conferencia_nacional %}
@@ -102,9 +100,7 @@
             <p><strong>Cargo:</strong> {{ ente.secretario.cargo }}</p>
             <p><strong>Instituição:</strong> {{ ente.secretario.instituicao }}</p>
             <p><strong>E-mail Institucional:</strong> {{ ente.secretario.email_institucional }}</p>
-            {% if ente.secretario.email_pessoal %}
-              <p><strong>E-mail Pessoal:</strong> {{ ente.secretario.email_pessoal }}</p>
-            {% endif %}
+            <p><strong>E-mail Pessoal:</strong> {% if ente.secretario.email_pessoal %} {{ ente.secretario.email_pessoal }} {% endif %}</p>
             <p><strong>Telefone:</strong> {{ ente.secretario.telefone_um }}</p>
           </div>
         </div>
@@ -139,9 +135,7 @@
 
                     <p><strong>Instituição:</strong> {{ ente.responsavel.instituicao }}</p>
                     <p><strong>E-mail Institucional:</strong> {{ ente.responsavel.email_institucional }}</p>
-                    {% if ente.responsavel.email_pessoal %}
-                      <p><strong>E-mail Pessoal:</strong> {{ ente.responsavel.email_pessoal }}</p>
-                    {% endif %}
+                    <p><strong>E-mail Pessoal:</strong> {% if ente.responsavel.email_pessoal %}{{ ente.responsavel.email_pessoal }}{% endif %}</p>
                     <p><strong>Telefone:</strong> {{ ente.responsavel.telefone_um }}</p>
                   </div>
 
