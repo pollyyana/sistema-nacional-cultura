@@ -135,6 +135,9 @@ def exportar_csv(request):
             "UF",
             "Região",
             "Cod.IBGE",
+            "PIB [2016]",
+            "IDH [2010]",
+            "População [2018]",
             "Situação",
             "Situação da Lei do Sistema de Cultura",
             "Situação do Órgão Gestor",
@@ -142,9 +145,6 @@ def exportar_csv(request):
             "Situação do Fundo de Cultura",
             "Situação do Plano de Cultura",
             "Participou da Conferência Nacional",
-            "IDH [2010]",
-            "PIB [2016]",
-            "População [2018]",
             "Endereço",
             "Bairro",
             "CEP",
@@ -157,20 +157,23 @@ def exportar_csv(request):
     for sistema in SistemaCultura.objects.distinct('ente_federado__cod_ibge').order_by(
         'ente_federado__cod_ibge', 'ente_federado__nome', '-alterado_em'):
         if sistema.ente_federado:
-            nome = sistema.ente_federado.__str__()
+            if sistema.ente_federado.cod_ibge > 100 or sistema.ente_federado.cod_ibge == 53:
+                nome = sistema.ente_federado.nome
+            else:
+                nome = "Estado de " + sistema.ente_federado.nome
             cod_ibge = sistema.ente_federado.cod_ibge
             sigla = sistema.ente_federado.sigla
             regiao = sistema.ente_federado.get_regiao()
-            idh = sistema.ente_federado.idh
             pib = sistema.ente_federado.pib
+            idh = sistema.ente_federado.idh
             populacao = sistema.ente_federado.populacao
         else:
             nome = "Nome não cadastrado"
             cod_ibge = "Código não cadastrado"
             regiao = "Não encontrada"
             sigla = "Não encontrada"
-            idh = "Não encontrado"
             pib = "Não encontrado"
+            idh = "Não encontrado"
             populacao = "Não encontrada"
 
         estado_processo = sistema.get_estado_processo_display()
@@ -197,6 +200,9 @@ def exportar_csv(request):
                 sigla,
                 regiao,
                 cod_ibge,
+                pib,
+                idh,
+                populacao,
                 estado_processo,
                 verificar_anexo(sistema, "legislacao"),
                 verificar_anexo(sistema, "orgao_gestor"),
@@ -204,9 +210,6 @@ def exportar_csv(request):
                 verificar_anexo(sistema, "fundo_cultura"),
                 verificar_anexo(sistema, "plano"),
                 "Sim" if sistema.conferencia_nacional else "Não",
-                idh,
-                pib,
-                populacao,
                 endereco,
                 bairro,
                 cep,
