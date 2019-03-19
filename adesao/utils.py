@@ -41,7 +41,7 @@ def preenche_planilha(planilha):
     planilha.write(0, 4, "PIB [2016]")
     planilha.write(0, 5, "IDH [2010]")
     planilha.write(0, 6, "População [2018]")
-    planilha.write(0, 7, "Endereço")
+    planilha.write(0, 7, "Faixa Populacional")
     planilha.write(0, 8, "Situação")
     planilha.write(0, 9, "Situação da Lei do Sistema de Cultura")
     planilha.write(0, 10, "Situação do Órgão Gestor")
@@ -49,14 +49,15 @@ def preenche_planilha(planilha):
     planilha.write(0, 12, "Situação do Fundo de Cultura")
     planilha.write(0, 13, "Situação do Plano de Cultura")
     planilha.write(0, 14, "Participou da Conferência Nacional")
-    planilha.write(0, 15, "Bairro")
-    planilha.write(0, 16, "CEP")
-    planilha.write(0, 17, "Telefone")
-    planilha.write(0, 18, "Email Prefeito")
-    planilha.write(0, 19, "Email do Cadastrador")
-    planilha.write(0, 20, "Email do Responsável")
-    planilha.write(0, 21, "Localização do processo")
-    planilha.write(0, 22, "Última atualização")
+    planilha.write(0, 15, "Endereço")
+    planilha.write(0, 16, "Bairro")
+    planilha.write(0, 17, "CEP")
+    planilha.write(0, 18, "Telefone")
+    planilha.write(0, 19, "Email Prefeito")
+    planilha.write(0, 20, "Email do Cadastrador")
+    planilha.write(0, 21, "Email do Responsável")
+    planilha.write(0, 22, "Localização do processo")
+    planilha.write(0, 23, "Última atualização")
     
     ultima_linha = 0
 
@@ -73,6 +74,8 @@ def preenche_planilha(planilha):
             idh = sistema.ente_federado.idh
             pib = sistema.ente_federado.pib
             populacao = sistema.ente_federado.populacao
+            faixa_populacional = sistema.ente_federado.faixa_populacional()
+                
         else:
             nome = "Não cadastrado"
             cod_ibge = "Não cadastrado"
@@ -81,6 +84,7 @@ def preenche_planilha(planilha):
             idh = "Não encontrado"
             pib = "Não encontrado"
             populacao = "Não encontrada"
+            faixa_populacional = "Não encontrada"
 
         estado_processo = sistema.get_estado_processo_display()
 
@@ -119,22 +123,23 @@ def preenche_planilha(planilha):
         planilha.write(i, 4, pib)
         planilha.write(i, 5, idh)
         planilha.write(i, 6, populacao)
-        planilha.write(i, 7, estado_processo)
-        planilha.write(i, 8, verificar_anexo(sistema, "legislacao"))
-        planilha.write(i, 9, verificar_anexo(sistema, "orgao_gestor"),)
-        planilha.write(i, 10, verificar_anexo(sistema, "conselho"),)
-        planilha.write(i, 11, verificar_anexo(sistema, "fundo_cultura"))
-        planilha.write(i, 12, verificar_anexo(sistema, "plano"))
-        planilha.write(i, 13, "Sim" if sistema.conferencia_nacional else "Não")
-        planilha.write(i, 14, endereco)
-        planilha.write(i, 15, bairro)
-        planilha.write(i, 16, cep)
-        planilha.write(i, 17, telefone)
-        planilha.write(i, 18, email_gestor)
-        planilha.write(i, 19, email_cadastrador)
-        planilha.write(i, 20, email_responsavel)
-        planilha.write(i, 21, local)
-        planilha.write(i, 22, sistema.alterado_em.strftime("%d/%m/%Y às %H:%M:%S"))
+        planilha.write(i, 7, faixa_populacional)
+        planilha.write(i, 8, estado_processo)
+        planilha.write(i, 9, verificar_anexo(sistema, "legislacao"))
+        planilha.write(i, 10, verificar_anexo(sistema, "orgao_gestor"),)
+        planilha.write(i, 11, verificar_anexo(sistema, "conselho"),)
+        planilha.write(i, 12, verificar_anexo(sistema, "fundo_cultura"))
+        planilha.write(i, 13, verificar_anexo(sistema, "plano"))
+        planilha.write(i, 14, "Sim" if sistema.conferencia_nacional else "Não")
+        planilha.write(i, 15, endereco)
+        planilha.write(i, 16, bairro)
+        planilha.write(i, 17, cep)
+        planilha.write(i, 18, telefone)
+        planilha.write(i, 19, email_gestor)
+        planilha.write(i, 20, email_cadastrador)
+        planilha.write(i, 21, email_responsavel)
+        planilha.write(i, 22, local)
+        planilha.write(i, 23, sistema.alterado_em.strftime("%d/%m/%Y às %H:%M:%S"))
         
         ultima_linha = i
 

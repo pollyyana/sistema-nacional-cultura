@@ -138,6 +138,7 @@ def exportar_csv(request):
             "PIB [2016]",
             "IDH [2010]",
             "População [2018]",
+            "Faixa Populacional",
             "Situação",
             "Situação da Lei do Sistema de Cultura",
             "Situação do Órgão Gestor",
@@ -167,6 +168,7 @@ def exportar_csv(request):
             pib = sistema.ente_federado.pib
             idh = sistema.ente_federado.idh
             populacao = sistema.ente_federado.populacao
+            faixa_populacional = sistema.ente_federado.faixa_populacional()
         else:
             nome = "Nome não cadastrado"
             cod_ibge = "Código não cadastrado"
@@ -175,6 +177,7 @@ def exportar_csv(request):
             pib = "Não encontrado"
             idh = "Não encontrado"
             populacao = "Não encontrada"
+            faixa_populacional = "Não encontrada"
 
         estado_processo = sistema.get_estado_processo_display()
 
@@ -203,6 +206,7 @@ def exportar_csv(request):
                 pib,
                 idh,
                 populacao,
+                faixa_populacional,
                 estado_processo,
                 verificar_anexo(sistema, "legislacao"),
                 verificar_anexo(sistema, "orgao_gestor"),
