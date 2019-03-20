@@ -79,6 +79,9 @@ urlpatterns = [
     path("inserir-documentos/fundo/alterar/<int:pk>", staff_member_required(
         views.AlterarFundoCultura.as_view(),
         login_url='adesao:login'), name='alterar_fundo'),
+    path("inserir-documentos/conselho/alterar/<int:pk>", staff_member_required(
+        views.AlterarConselhoCultura.as_view(),
+        login_url='adesao:login'), name='alterar_conselho'),
     path("inserir-documentos/<str:componente>/alterar/<int:pk>", staff_member_required(
         views.AlterarComponente.as_view(),
         login_url='adesao:login'), name='alterar_componente'), 
@@ -96,7 +99,7 @@ urlpatterns = [
         staff_member_required(views.DiligenciaGeralCreateView.as_view()),
         name="diligencia_geral_adicionar"),
 
-    path("<int:pk>/diligencia/<str:componente>", 
+    path("<int:pk>/diligencia/<str:componente>/<str:arquivo>", 
         staff_member_required(views.DiligenciaComponenteView.as_view()),
         name="diligencia_componente"),
 

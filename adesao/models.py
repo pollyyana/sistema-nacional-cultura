@@ -10,9 +10,12 @@ from django.contrib.contenttypes.fields import GenericRelation
 
 from planotrabalho.models import PlanoTrabalho
 from planotrabalho.models import Componente
+from planotrabalho.models import ConselhoDeCultura
+
 from gestao.models import Diligencia
 
 from planotrabalho.models import FundoDeCultura
+
 from adesao.managers import SistemaManager
 from adesao.managers import HistoricoManager
 
@@ -418,8 +421,9 @@ class SistemaCultura(models.Model):
     legislacao = models.ForeignKey(Componente, on_delete=models.SET_NULL, null=True, related_name="legislacao")
     orgao_gestor = models.ForeignKey(Componente, on_delete=models.SET_NULL, null=True, related_name="orgao_gestor")
     fundo_cultura = models.ForeignKey(FundoDeCultura, on_delete=models.SET_NULL, null=True, related_name="fundo_cultura")
-    conselho = models.ForeignKey(Componente, on_delete=models.SET_NULL, null=True, related_name="conselho")
+    conselho = models.ForeignKey(ConselhoDeCultura, on_delete=models.SET_NULL, null=True, related_name="conselho")
     plano = models.ForeignKey(Componente, on_delete=models.SET_NULL, null=True, related_name="plano")
+    
     secretario = models.ForeignKey(Funcionario, on_delete=models.SET_NULL, null=True, related_name="sistema_cultura_secretario")
     responsavel = models.ForeignKey(Funcionario, on_delete=models.SET_NULL, null=True, related_name="sistema_cultura_responsavel")
     gestor = models.ForeignKey(Gestor, on_delete=models.SET_NULL, null=True)
