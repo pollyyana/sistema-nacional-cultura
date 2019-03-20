@@ -57,9 +57,9 @@ urlpatterns = [
         staff_member_required(
             views.ListarUsuarios.as_view(),
             login_url='adesao:login'), name='usuarios'),
-    url(r'^alterar/usuario/(?P<pk>[\d]+)$',
+    url(r'^alterar/usuario/',
         staff_member_required(
-            views.AlterarUsuario.as_view(),
+            views.alterar_usuario,
             login_url='adesao:login'), name='alterar_usuario'),
 
     # UF e Município aninhados
@@ -126,5 +126,7 @@ urlpatterns = [
         name='ajax_entes'),
     url(r'^datatable-prazo$', staff_member_required(views.DataTablePrazo.as_view()),
         name='ajax_prazo'),
+    url(r'^datatable-usuarios$', staff_member_required(views.DataTableUsuarios.as_view()),
+        name='ajax_usuarios'),
 
     ]

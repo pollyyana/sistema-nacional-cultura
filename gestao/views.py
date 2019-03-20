@@ -7,6 +7,7 @@ from django.utils.html import escape
 from django.core.serializers.json import DjangoJSONEncoder
 from django.db.models import Q
 from django.utils.translation import gettext as _
+from django.http import QueryDict
 
 from django.shortcuts import redirect
 from django.shortcuts import render
@@ -24,6 +25,7 @@ from django.views.generic.detail import SingleObjectMixin
 from django.views.generic import CreateView
 from django.views.generic import DetailView
 from django.views.generic import ListView
+from django.views.generic import TemplateView
 
 from django.views.generic.edit import UpdateView
 
@@ -170,22 +172,8 @@ def ajax_cadastrador_cpf(request):
         return JsonResponse(status=415, data={"erro": "Método não permitido"})
 
 
-class AcompanharPrazo(ListView):
+class AcompanharPrazo(TemplateView):
     template_name = 'gestao/acompanhar_prazo.html'
-    paginate_by = 10
-
-    def get_queryset(self):
-        ente_federado = self.request.GET.get('ente_federado', None)
-
-        sistemas = SistemaCultura.sistema.filter(
-            estado_processo='6',
-            data_publicacao_acordo__isnull=False)
-
-        if ente_federado:
-            sistemas = sistemas.filter(
-                ente_federado__nome__unaccent__icontains=ente_federado)
-
-        return sistemas
 
 
 def aditivar_prazo(request):
@@ -198,8 +186,7 @@ def aditivar_prazo(request):
     return JsonResponse(data={}, status=200)
 
 
-class AcompanharSistemaCultura(ListView):
-    model = SistemaCultura
+class AcompanharSistemaCultura(TemplateView):
     template_name = 'gestao/adesao/acompanhar.html'
 
 
@@ -336,20 +323,8 @@ class AlterarCadastradorEnte(UpdateView, LookUpAnotherFieldMixin):
     lookup_field = "ente_federado__cod_ibge"
 
 
-class ListarUsuarios(ListView):
-    model = Usuario
+class ListarUsuarios(TemplateView):
     template_name = 'gestao/listar_usuarios.html'
-    paginate_by = 10
-
-    def get_queryset(self):
-        q = self.request.GET.get('q', None)
-        usuarios = Usuario.objects.all()
-
-        if q:
-            usuarios = usuarios.filter(
-                Q(user__username__icontains=q) | Q(user__email__icontains=q))
-
-        return usuarios
 
 
 class AlterarUsuario(UpdateView):
@@ -363,6 +338,36 @@ class AlterarUsuario(UpdateView):
             self.request,
             'Situação de CPF: ' + str(self.object) + ' alterada com sucesso.')
         return reverse_lazy('gestao:usuarios')
+
+
+def alterar_usuario(request):
+    field_name = request.POST.get('name', None)
+    field_value = request.POST.get('value', None)
+    id = request.POST.get('pk', None)
+
+    try:
+        kwargs = QueryDict(mutable=True)
+        kwargs[field_name] = field_value
+
+        form = AlterarUsuarioForm(kwargs)
+        if form.is_valid():
+            user = User.objects.get(id=id)
+            setattr(user, field_name, field_value)
+            user.save()
+            return JsonResponse(data={"data": {
+                "code": 200,
+                "id": id,
+                field_name: field_value,
+                "message": "Alterado com sucesso!"
+            }}, status=200)
+    except Exception:
+        return JsonResponse(data={
+            "error": {
+                "code": 500,
+                "message": "Ocorreu algum problema ao editar o usuário.",
+                "errors": [{"message": "Ocorreu algum problema ao editar o usuário."}]
+            }
+        }, status=500)
 
 
 class ListarDocumentosEnteFederado(ListView):
@@ -618,18 +623,17 @@ class DataTableEntes(BaseDatatableView):
         return SistemaCultura.objects.filter(id__in=sistema)
 
     def filter_queryset(self, qs):
-        query = Q()
         search = self.request.POST.get('search[value]', None)
 
-        filtros_queryset = [
-            Q(ente_federado__nome__unaccent__icontains=search),
-            Q(gestor__nome__unaccent__icontains=search),
-            Q(gestor__rg__contains=search),
-            Q(gestor__cpf__contains=search),
-            Q(sede__cnpj__contains=search)
-        ]
-
         if search:
+            query = Q()
+            filtros_queryset = [
+                Q(ente_federado__nome__unaccent__icontains=search),
+                Q(gestor__nome__unaccent__icontains=search),
+                Q(gestor__rg__contains=search),
+                Q(gestor__cpf__contains=search),
+                Q(sede__cnpj__contains=search)
+            ]
             estados_para_pesquisa = []
             for tupla_estado_processo in LISTA_ESTADOS_PROCESSO:
 
@@ -695,8 +699,6 @@ class DataTablePrazo(BaseDatatableView):
             if search.isdigit():
                 where |= Q(prazo=search)
 
-            print(where)
-
             return qs.filter(where)
 
         return qs
@@ -712,5 +714,56 @@ class DataTablePrazo(BaseDatatableView):
                 item.data_publicacao_acordo.strftime(
                     "%d de %B de %Y") if item.data_publicacao_acordo else '',
                 escape(item.prazo),
+            ])
+        return json_data
+
+
+class DataTableUsuarios(BaseDatatableView):
+    def get_initial_queryset(self):
+        return Usuario.objects.all()
+
+    def filter_queryset(self, qs):
+        search = self.request.POST.get('search[value]', None)
+
+        if search:
+            query = Q()
+            search_bool_field = {}
+            search_lower = search.lower()
+
+            search_bool_field['is_staff'] = True if search_lower in 'administrador' else False \
+                if search_lower in 'cadastrador' else ''
+            search_bool_field['is_active'] = True if search_lower in 'ativo' else False \
+                if search_lower in 'inativo' else ''
+
+            filtros_queryset = [
+                Q(user__username__icontains=search),
+                Q(nome_usuario__icontains=search),
+                Q(user__email__icontains=search)
+            ]
+
+            for key, value in search_bool_field.items():
+                if type(value) != bool:
+                    continue
+                q = Q(**{"user__%s" % key: value})
+                filtros_queryset.append(q)
+
+            for filtro in filtros_queryset:
+                query |= filtro
+
+            qs = qs.filter(query)
+
+        return qs
+
+    def prepare_results(self, qs):
+        json_data = []
+        locale.setlocale(locale.LC_ALL, 'pt_BR.UTF-8')
+        for item in qs:
+            json_data.append([
+                item.user.id,
+                item.user.username,
+                item.nome_usuario,
+                item.user.email,
+                'Ativo' if item.user.is_active else 'Inativo',
+                'Administrador' if item.user.is_staff else 'Cadastrador'
             ])
         return json_data

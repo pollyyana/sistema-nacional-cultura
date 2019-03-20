@@ -1,160 +1,179 @@
 {% extends "gestao/base_gestao.html" %} {% load gestao_tags %} {% block content %}
 {% include 'messages.html' %}
+<style>
+.editable-input, .form-inline .form-control {
+  width: 100%
+}
+.editable-error-block{
+  display: none !important;
+}
+</style>
 <menu data-target="usuarios" ></menu>
 <div class="row">
-  <div class="col-lg-12">
-    <div class="card">
+    <div class="col-lg-12">
+      <div class="card card-default">
         <div class="card-header card-plain card-header-primary">
             <h4 class="card-title">Usuarios</h4>
             <p class="card-category">Gerenciar acessos ao sistema</p>
         </div>
-      <div class="card-body table-responsive">
-          <table class="table table-hover tabela-datatable">
-            <thead>
-              <tr>
-                <th>CPF</th>
-                <th>Nome Completo</th>
-                <th>E-mail</th>
-                <th>Ativo</th>
-                <th>Administrador</th>
-                <th>Salvar</th>
-              </tr>
-            </thead>
-            <tbody>
-              {% for usuario in object_list %}
-                <tr class="">
-                    <!--<td><center><a href="{% url 'gestao:detalhar' usuario.id %}"><i class="fa fa-file"></i></a></center></td>-->
-                    <td>{{ usuario.user.username }}</td>
-                    <td>{{ usuario.nome_usuario }}</td>
-                    <form name="form" action="{% url 'gestao:alterar_usuario' usuario.user.id %}" method="post">
-                        {% csrf_token %}
-                        <td>
-                          <div style="display:none;">{{ usuario.user.email }}</div>
-                          <input type="text" class="form-control" name="email" value="{{ usuario.user.email }}"/>
-                        </td>
-                        {% if usuario.user.is_active %}
-                        <td>
-                          <div class="form-check">
-                            <label class="form-check-label">
-                                <input class="form-check-input" type="checkbox" name="is_active" checked>
-                                <span class="form-check-sign">
-                                    <span class="check"></span>
-                                </span>
-                            </label>
-                          </div>
-                        </td>
-                        {% else %}
-                        <td>
-                          <div class="form-check">
-                              <label class="form-check-label">
-                                  <input class="form-check-input" type="checkbox" name="is_active">
-                                  <span class="form-check-sign">
-                                      <span class="check"></span>
-                                  </span>
-                              </label>
-                          </div>
-                        </td>
-                        {% endif %}
-                        {% if usuario.user.is_staff %}
-                        <td>
-                          <div class="form-check">
-                                <label class="form-check-label">
-                                    <input class="form-check-input" type="checkbox" name="is_staff" checked>
-                                    <span class="form-check-sign">
-                                        <span class="check"></span>
-                                    </span>
-                                </label>
-                            </div>
-                        </td>
-                        {% else %}
-                        <td>
-                          <div class="form-check">
-                                <label class="form-check-label">
-                                    <input class="form-check-input" type="checkbox" name="is_staff">
-                                    <span class="form-check-sign">
-                                        <span class="check"></span>
-                                    </span>
-                                </label>
-                            </div>
-                        </td>
-                        {% endif %}
-                        <td>
-                          <button type="submit" rel="tooltip" title="Salvar Mudanças" class="btn btn-white btn-link btn-sm">
-                              <i class="material-icons">save_alt</i>
-                          </button>
-                        </td>
-                    </form>
-                </tr>
-              {% endfor %}
-            </tbody>
-          </table>
+        <div class="card-body table-responsive">
+            <table id="tabela-ente" class="datatable table table-hover">
+                <thead class="text-primary">
+                    <tr>
+                      <th>CPF</th>
+                      <th>Nome Completo</th>
+                      <th>E-mail</th>
+                      <th>Situação</th>
+                      <th>Perfil</th>
+                    </tr>
+                  </thead>
+            </table>
+        </div>
       </div>
     </div>
-  </div>
 </div>
+
 {% endblock content %}
 {% block js%}
 <script type="text/javascript">
-  $(document).ready(function(){
-    $("[id^='select_situacao']").change(function(e){
-      index = $(this).parent().parent().index();
-      if($(this).val()==="2"){
-        $("input[id$='_"+index+"'], textarea[id$='_"+index+"']").each(function(){
-          if(!$(this).hasClass('hide')){
-            $(this).addClass('hide');
-            $(this).fadeIn();
-          }
-        });
-        if($("#localizacao_"+index).hasClass('hide')){
-          $("#localizacao_"+index).removeClass('hide');
-          $("#localizacao_"+index).fadeIn();
+(function ($) {
+    var errorOld = $.fn.editableform.error;
+    $.fn.editableform.defaults.error = function(response, newValue) {
+      if(response.status == 500){
+        let response_message = response.responseJSON.error.message;
+        $.notify(
+          {
+            icon: "error",
+            message: response_message,
+          },
+          {type: "danger"}
+        );
+      }
+    }
+})(jQuery);
+
+$(document).ready(function(){
+  csrf_token = '{{ csrf_token }}';
+  alterar_usuario_url = '/gestao/alterar/usuario/'
+
+  $.ajaxSetup({
+    data: {csrfmiddlewaretoken: csrf_token},
+  });
+
+  var tabela = $('#tabela-ente').DataTable({
+    order: [1, 'asc'],
+    language:{
+            "url": "http://cdn.datatables.net/plug-ins/1.10.19/i18n/Portuguese-Brasil.json"
+          },
+    columns: [
+        {
+          data: null,
+          name: "user__username",
+          render: (data) => data[1],
+        },
+        {
+          data: null,
+          name: "nome_usuario",
+          render: (data) => data[2],
+        },
+        {
+          data: null,
+          name: "user__email",
+          render: (data) => `
+              <a
+              href="#"
+              class="user__email"
+              data-name="email"
+              data-type="text"
+              data-pk="${data[0]}"
+              data-url="${alterar_usuario_url}${data[0]}"
+              data-title="Alterar E-mail">
+                ${data[3]}
+              </a>`
+        },
+        {
+          data: null,
+          name: "user__is_active",
+          render: (data) =>`
+              <a
+              href="#"
+              class="user__is_active"
+              data-name="is_active"
+              data-pk="${data[0]}"
+              data-url="${alterar_usuario_url}${data[0]}"
+              data-value="${data[4] == 'Ativo' ? 1 : 0}"
+              data-title="Alterar Situação">
+                ${data[4]}
+              </a>`
+        },
+        {
+          data: null,
+          name: "user__is_staff",
+          render: (data) => `
+              <a
+              href="#"
+              class="user__is_staff"
+              data-name="is_staff"
+              data-pk="${data[0]}"
+              data-url="${alterar_usuario_url}${data[0]}"
+              data-value="${data[5] == 'Administrador' ? 1 : 0}"
+              data-title="Alterar Perfil">
+                ${data[5]}
+              </a>`
+        },
+    ],
+    searching: true,
+    processing: true,
+    serverSide: true,
+    stateSave: true,
+    ajax: {
+      url: "{% url 'gestao:ajax_usuarios' %}",
+      type: "POST",
+    },
+  });
+
+  $('#tabela-ente').on('draw.dt', function () {
+    $('.user__email').editable({
+      validate: function(value){
+        if($.trim(value) == ''){
+          $.notify(
+          {
+            icon: "error",
+            message: 'Não é possível salvar o campo email vazio.',
+          },
+          {type: "danger"}
+        );
         }
       }
-      else if($(this).val()==="3"){
-        $("input[id$='_"+index+"'], textarea[id$='_"+index+"']").each(function(){
-          if(!$(this).hasClass('hide')){
-            $(this).addClass('hide');
-            $(this).fadeIn();
-          }
-        });
-        if($("#justificativa_"+index).hasClass('hide')){
-          $("#justificativa_"+index).removeClass('hide');
-          $("#justificativa_"+index).fadeIn();
-        }
-      }
-      else if($(this).val()==="4"){
-        $("input[id$='_"+index+"'], textarea[id$='_"+index+"']").each(function(){
-          if(!$(this).hasClass('hide')){
-            $(this).addClass('hide');
-            $(this).fadeIn();
-          }
-        });
-        if($("#num_processo_"+index).hasClass('hide')){
-          $("#num_processo_"+index).removeClass('hide');
-          $("#num_processo_"+index).fadeIn();
-        }
-      }
-      else if($(this).val()==="6"){
-        $("input[id$='_"+index+"'], textarea[id$='_"+index+"']").each(function(){
-          if(!$(this).hasClass('hide')){
-            $(this).addClass('hide');
-            $(this).fadeIn();
-          }
-        });
-        if($("#data_acordo_"+index).hasClass('hide')){
-          $("#data_acordo_"+index).removeClass('hide');
-          $("#data_acordo_"+index).fadeIn();
-        }
-      }
-      else {
-        $("input[id$='_"+index+"'], textarea[id$='_"+index+"']").each(function(){
-          if(!$(this).hasClass('hide')){
-            $(this).addClass('hide');
-            $(this).fadeIn();
-          }
-        });
+    });
+
+    $('.user__is_active').editable({
+      type: 'select',
+      title: 'Selecione',
+      source: [
+        {value: 1, text: 'Ativo'},
+        {value: 0, text: 'Inativo'},
+      ]
+    });
+
+    $('.user__is_staff').editable({
+      type: 'select',
+      source: [
+        {value: 1, text: 'Administrador'},
+        {value: 0, text: 'Cadastrador'},
+      ],
+      success: function(response, newValue) {
+        $.notify(
+          {
+            icon: "check_circle",
+            message: 'Alterado com sucesso!',
+          },
+          {type: "success"}
+        );
       }
     });
   });
+
+});
 </script>
 {% endblock js%}
