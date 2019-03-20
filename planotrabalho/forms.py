@@ -203,7 +203,7 @@ class CriarConselheiroForm(ModelForm):
     def save(self, commit=True, *args, **kwargs):
         conselheiro = super(CriarConselheiroForm, self).save(commit=False)
         conselho = Componente.objects.get(id=self.conselho_id)
-        conselheiro.conselho = conselho
+        conselheiro.conselho = conselho.conselhodecultura
         conselheiro.data_cadastro = datetime.datetime.now()
         conselheiro.data_situacao = datetime.datetime.now()
         conselheiro.situacao = 1  # Situação 1 = Habilitado
