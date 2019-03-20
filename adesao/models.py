@@ -10,9 +10,12 @@ from django.contrib.contenttypes.fields import GenericRelation
 
 from planotrabalho.models import PlanoTrabalho
 from planotrabalho.models import Componente
+from planotrabalho.models import ConselhoDeCultura
+
 from gestao.models import Diligencia
 
 from planotrabalho.models import FundoDeCultura
+
 from adesao.managers import SistemaManager
 from adesao.managers import HistoricoManager
 
@@ -120,6 +123,25 @@ class EnteFederado(models.Model):
         regiao = REGIOES[digito]  
         return regiao
 
+    def faixa_populacional(self):
+
+        if self.populacao <= 5000:
+            faixa = "Até 5.000"
+        elif self.populacao <= 10000:
+            faixa = "De 5.001 até 10.000"
+        elif self.populacao <= 20000:
+            faixa = "De 10.001 até 20.000"
+        elif self.populacao <= 50000:
+            faixa = "De 20.001 até 50.000"
+        elif self.populacao <= 100000:
+            faixa = "De 50.001 até 100.000"
+        elif self.populacao <= 500000:
+            faixa = "De 100.001 até 500.000" 
+        else:
+            faixa =  "Acima de 500.000"         
+        return faixa
+        
+    
     @property
     def is_municipio(self):
         digits = int(math.log10(self.cod_ibge))+1
@@ -399,8 +421,9 @@ class SistemaCultura(models.Model):
     legislacao = models.ForeignKey(Componente, on_delete=models.SET_NULL, null=True, related_name="legislacao")
     orgao_gestor = models.ForeignKey(Componente, on_delete=models.SET_NULL, null=True, related_name="orgao_gestor")
     fundo_cultura = models.ForeignKey(FundoDeCultura, on_delete=models.SET_NULL, null=True, related_name="fundo_cultura")
-    conselho = models.ForeignKey(Componente, on_delete=models.SET_NULL, null=True, related_name="conselho")
+    conselho = models.ForeignKey(ConselhoDeCultura, on_delete=models.SET_NULL, null=True, related_name="conselho")
     plano = models.ForeignKey(Componente, on_delete=models.SET_NULL, null=True, related_name="plano")
+    
     secretario = models.ForeignKey(Funcionario, on_delete=models.SET_NULL, null=True, related_name="sistema_cultura_secretario")
     responsavel = models.ForeignKey(Funcionario, on_delete=models.SET_NULL, null=True, related_name="sistema_cultura_responsavel")
     gestor = models.ForeignKey(Gestor, on_delete=models.SET_NULL, null=True)
