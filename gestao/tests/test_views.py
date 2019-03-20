@@ -1483,7 +1483,7 @@ def test_pesquisa_por_ente_federado_com_arquivo_fundo_cultura(client, login_staf
     sistema.fundo_cultura.arquivo = arquivo
     sistema.fundo_cultura.save()
 
-    url = reverse("gestao:acompanhar_componente", kwargs={"componente":"fundo_cultura", "arquivo":"arquivo"}) + "?q=Abaete&anexo=arquivo"
+    url = reverse("gestao:acompanhar_componente", kwargs={"componente":"fundo_cultura"}) + "?q=Abaete&anexo=arquivo"
     response = client.get(url)
 
     assert response.context_data["object_list"][0] == sistema
