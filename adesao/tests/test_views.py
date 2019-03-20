@@ -209,6 +209,7 @@ def test_cadastrar_funcionario_tipo_responsavel(login, client):
         exclude=['data_criacao', 'alterado_em', 'data_publicacao_acordo'])
     session['sistema_cultura_selecionado']['alterado_em'] = sistema_cultura_atualizado.alterado_em.strftime(
         "%d/%m/%Y às %H:%M:%S")
+    session['sistema_cultura_selecionado']['alterado_por'] = sistema_cultura_atualizado.alterado_por.user.username
     assert client.session['sistema_cultura_selecionado'] == session['sistema_cultura_selecionado']
 
 
@@ -257,6 +258,7 @@ def test_cadastrar_funcionario_tipo_secretario(login, client):
         exclude=['data_criacao', 'alterado_em', 'data_publicacao_acordo'])
     session['sistema_cultura_selecionado']['alterado_em'] = sistema_cultura_atualizado.alterado_em.strftime(
         "%d/%m/%Y às %H:%M:%S")
+    session['sistema_cultura_selecionado']['alterado_por'] = sistema_cultura_atualizado.alterado_por.user.username
     assert client.session['sistema_cultura_selecionado'] == session['sistema_cultura_selecionado']
 
 
@@ -579,5 +581,6 @@ def test_home_apos_cadastro_de_secretario_e_responsavel(client, login):
         exclude=['data_criacao', 'alterado_em', 'data_publicacao_acordo'])
     session['sistema_cultura_selecionado']['alterado_em'] = sistema_cultura_atualizado.alterado_em.strftime(
         "%d/%m/%Y às %H:%M:%S")
+    session['sistema_cultura_selecionado']['alterado_por'] = sistema_cultura_atualizado.alterado_por.user.username
     assert client.session['sistema_cultura_selecionado'] == session['sistema_cultura_selecionado']
     assert len(mail.outbox) == 1
