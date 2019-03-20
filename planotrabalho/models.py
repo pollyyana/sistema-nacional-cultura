@@ -280,7 +280,7 @@ class Conselheiro(models.Model):
         default=1)
     data_cadastro = models.DateField(blank=True, null=True)
     data_situacao = models.DateField(blank=True, null=True)
-    conselho = models.ForeignKey('Componente', on_delete=models.CASCADE)
+    conselho = models.ForeignKey('ConselhoDeCultura', on_delete=models.CASCADE)
 
 
 class SituacoesArquivoPlano(models.Model):
