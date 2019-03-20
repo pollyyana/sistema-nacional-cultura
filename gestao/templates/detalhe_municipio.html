@@ -75,6 +75,12 @@
                       <strong>Última atualização:</strong>
                         {{ente.alterado_em}}
                     </p>
+                    <p>
+                      <strong>Atualizado pelo usuário de CPF:</strong>
+                        {% if ente.alterado_por %} 
+                          {{ente.alterado_por}}
+                        {% endif %}
+                    </p>
                 </div>
             </div>
           </div>

@@ -150,6 +150,9 @@ def atualiza_session(sistema_cultura, request):
     request.session['sistema_cultura_selecionado'] = model_to_dict(sistema_cultura, exclude=['data_criacao', 'alterado_em',
         'data_publicacao_acordo'])
     request.session['sistema_cultura_selecionado']['alterado_em'] = sistema_cultura.alterado_em.strftime("%d/%m/%Y às %H:%M:%S")
+    
+    if sistema_cultura.alterado_por:
+        request.session['sistema_cultura_selecionado']['alterado_por'] = sistema_cultura.alterado_por.user.username
     request.session['sistema_situacao'] = sistema_cultura.get_estado_processo_display()
     request.session['sistema_sede'] = model_to_dict(sistema_cultura.sede)
     request.session['sistema_gestor'] = model_to_dict(sistema_cultura.gestor, exclude=['termo_posse', 'rg_copia', 'cpf_copia'])
