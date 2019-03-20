@@ -237,6 +237,30 @@
     </div>
     {% endif %}
 
+    {% if ente.conselho.lei.arquivo %}
+    <div class="list-group row">
+       <div class="col-md-12">
+          <div class="list-group-item col-xs-8">
+            Conselho Cultural - Lei
+          </div>
+
+          <div class="list-group-item col-xs-2 text-center">
+            <a href="{{ ente.conselho.lei.arquivo.url }}">Download</a>
+          </div>
+          {% if ente.conselho.lei.situacao == 1 %}
+            <div class="list-group-item col-xs-2 text-center">
+                <a href="{% url 'gestao:diligencia_componente' pk=ente.id componente='conselho' arquivo='lei' %}">Avaliar</a>
+            </div>
+          {% else %}
+          <div class="list-group-item col-xs-2 text-center">
+              <b>{{ ente.conselho.lei.get_situacao_display }}</b>
+          </div>
+          {% endif %}
+
+       </div>
+    </div>
+    {% endif %}
+
     {% if ente.fundo_cultura.arquivo %}
     <div class="list-group row">
        <div class="col-md-12">
