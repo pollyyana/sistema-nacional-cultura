@@ -122,6 +122,25 @@ class EnteFederado(models.Model):
         digito = str(self.cod_ibge)[0]
         regiao = REGIOES[digito]  
         return regiao
+
+    def faixa_populacional(self):
+
+        if self.populacao <= 5000:
+            faixa = "Até 5.000"
+        elif self.populacao <= 10000:
+            faixa = "De 5.001 até 10.000"
+        elif self.populacao <= 20000:
+            faixa = "De 10.001 até 20.000"
+        elif self.populacao <= 50000:
+            faixa = "De 20.001 até 50.000"
+        elif self.populacao <= 100000:
+            faixa = "De 50.001 até 100.000"
+        elif self.populacao <= 500000:
+            faixa = "De 100.001 até 500.000" 
+        else:
+            faixa =  "Acima de 500.000"         
+        return faixa
+        
     
     @property
     def is_municipio(self):
@@ -364,6 +383,7 @@ class Funcionario(models.Model):
     telefone_dois = models.CharField(max_length=50, blank=True)
     telefone_tres = models.CharField(max_length=50, blank=True)
     email_institucional = models.EmailField()
+    email_pessoal = models.EmailField(null=True, blank=True)
     tipo_funcionario = models.IntegerField(
         choices=LISTA_TIPOS_FUNCIONARIOS,
         default='0')
