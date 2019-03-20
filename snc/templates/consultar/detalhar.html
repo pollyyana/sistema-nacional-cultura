@@ -346,7 +346,7 @@
                                 <div id="parent-fieldname-description" class="documentDescription" style="color:#ffffff">
                                     {% if object.orgao_gestor.situacao == 2 or object.orgao_gestor.situacao == 3 %}
                                     <i class="fa fa-check"></i>
-                                    <a href="{{ oobject.orgao_gestor.arquivo.url }}" style="color:#ffffff">
+                                    <a href="{{ object.orgao_gestor.arquivo.url }}" style="color:#ffffff">
                                         Relatório de Atividades do Órgão Gestor
                                     </a>
                                     {% else %}
@@ -361,6 +361,16 @@
                                     </a>
                                     {% else %}
                                     <i class="fa fa-times"></i> Ata de Reunião de Criação do Conselho de Políticas Culturais
+                                    {% endif %}
+                                </div>
+                                <div id="parent-fieldname-description" class="documentDescription" style="color:#ffffff">
+                                    {% if object.conselho.lei.situacao == 2 or object.conselho.lei.situacao == 3 %}
+                                    <i class="fa fa-check"></i>
+                                    <a href="{{ object.conselho.lei.arquivo.url }}" style="color:#ffffff">
+                                        Lei de Regulamentação da Criação do Conselho de Políticas Culturais
+                                    </a>
+                                    {% else %}
+                                    <i class="fa fa-times"></i> Lei de Regulamentação da Criação do Conselho de Políticas Culturais
                                     {% endif %}
                                 </div>
                                 <div id="parent-fieldname-description" class="documentDescription" style="color:#ffffff">
