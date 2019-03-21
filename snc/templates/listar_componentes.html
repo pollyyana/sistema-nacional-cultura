@@ -1,5 +1,5 @@
 {% extends "gestao/base_gestao.html" %} {% load gestao_tags %} {% block content %}
-<menu data-target="plano" ></menu>
+<menu data-target="documentacao" ></menu>
 
 <div class="row">
     <div class="col-lg-12  col-md-12">
@@ -53,19 +53,19 @@
         <div class="card-body">
             <div class="tab-content">
             <div class="tab-pane active" id="sistema">
-                {% include "gestao/planotrabalho/acompanhar_legislacao.html" %}
+                {% include "gestao/inserir_documentos/listar_legislacao.html" %}
             </div>
             <div class="tab-pane" id="orgao">
-                {% include "gestao/planotrabalho/acompanhar_orgao_gestor.html" %}
+                {% include "gestao/inserir_documentos/listar_orgao_gestor.html" %}
             </div>
             <div class="tab-pane" id="conselho">
-                {% include "gestao/planotrabalho/acompanhar_conselho.html" %}
+                {% include "gestao/inserir_documentos/listar_conselho.html" %}
             </div>
             <div class="tab-pane" id="fundo">
-                {% include "gestao/planotrabalho/acompanhar_fundo_cultura.html" %}
+                {% include "gestao/inserir_documentos/listar_fundo_cultura.html" %}
             </div>
             <div class="tab-pane" id="plano">
-                {% include "gestao/planotrabalho/acompanhar_plano.html" %}
+                {% include "gestao/inserir_documentos/listar_plano.html" %}
             </div>
             </div>
         </div>
@@ -77,8 +77,7 @@
 {% block js%}
 <script type="text/javascript">
   csrf_token = '{{ csrf_token }}';
-
-  var tabela = $('#tabela-componente').DataTable({
+  var tabela = $('#tabela-docs').DataTable({
     order: [1, 'asc'],
     language:{
             "url": "http://cdn.datatables.net/plug-ins/1.10.19/i18n/Portuguese-Brasil.json"
@@ -96,21 +95,23 @@
         },
         {
           data: null,
-          name: "link",
-          orderable: false,
-          //abstrair pra todos os componentes
-          render: (data) => `
-            <a href="/gestao/${data[0]}/diligencia/legislacao">
-                Avaliar
-            </a>`
-        },
-        {
-          data: null,
-          name: "sede__cnpj",
+          //TODO abstrair pra todos os componentes
+          //TODO colocar if para só mostrar se tiver dado
+          name: "legislacao__arquivo__url",
           orderable: false,
           render: (data) => `
             <a href="${data[3]}">
                 Download
+            </a>`
+        },
+        {
+          data: null,
+          name: "link",
+          orderable: false,
+          //TODO colocar link pro upload de arquivo
+          render: (data) => `
+            <a href="">
+                Upload
             </a>`
         },
     ],
@@ -119,7 +120,7 @@
     serverSide: true,
     stateSave: true,
     ajax: {
-      url: "{% url 'gestao:ajax_plano_trabalho' %}",
+      url: "{% url 'gestao:ajax_docs_componentes' %}",
       data: {
         csrfmiddlewaretoken: csrf_token,
       },

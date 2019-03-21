@@ -42,6 +42,9 @@ urlpatterns = [
     path('plano-trabalho/',
             staff_member_required(views.plano_trabalho),
             name='plano_trabalho'),
+    path('docs-componentes/',
+            staff_member_required(views.listar_componentes),
+            name='listar_componentes'),
     path('acompanhar/<str:componente>',
             staff_member_required(views.AcompanharComponente.as_view()),
             name='acompanhar_componente'),
@@ -128,7 +131,9 @@ urlpatterns = [
         name='ajax_prazo'),
     url(r'^datatable-usuarios$', staff_member_required(views.DataTableUsuarios.as_view()),
         name='ajax_usuarios'),
-     url(r'^datatable-plano-trabalho$', staff_member_required(views.DataTablePlanoTrabalho.as_view()),
+    url(r'^datatable-plano-trabalho$', staff_member_required(views.DataTablePlanoTrabalho.as_view()),
         name='ajax_plano_trabalho'),
+    url(r'^datatable-docs-componentes$', staff_member_required(views.DataTableListarDocumentos.as_view()),
+        name='ajax_docs_componentes'),
 
     ]
