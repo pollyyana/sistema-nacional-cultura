@@ -128,5 +128,7 @@ urlpatterns = [
         name='ajax_prazo'),
     url(r'^datatable-usuarios$', staff_member_required(views.DataTableUsuarios.as_view()),
         name='ajax_usuarios'),
+     url(r'^datatable-plano-trabalho$', staff_member_required(views.DataTablePlanoTrabalho.as_view()),
+        name='ajax_plano_trabalho'),
 
     ]

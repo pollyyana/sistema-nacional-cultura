@@ -1,5 +1,4 @@
 import json
-import locale
 import re
 
 from django_datatables_view.base_datatable_view import BaseDatatableView
@@ -190,32 +189,37 @@ class AcompanharSistemaCultura(TemplateView):
     template_name = 'gestao/adesao/acompanhar.html'
 
 
-class AcompanharComponente(ListView):
-    paginate_by = 10
-
+class AcompanharComponente(TemplateView):
     def get_template_names(self):
-        return ['gestao/planotrabalho/acompanhar_%s.html' % self.kwargs['componente']]
+        return ['gestao/planotrabalho/acompanhar_legislacao.html' % self.kwargs['componente']]
 
-    def get_queryset(self):
-        anexo = self.request.GET.get('anexo', None)
-        q = self.request.GET.get('q', None)
-        sistemas = SistemaCultura.sistema.filter(estado_processo='6')
-        kwargs = {'{0}'.format(self.kwargs['componente']): None}
-        sistemas = sistemas.exclude(**kwargs)
 
-        if anexo == 'arquivo':
-            kwargs = {'{0}__situacao'.format(self.kwargs['componente']): 1}
-            sistemas = sistemas.filter(**kwargs)
-            kwargs = {'{0}__arquivo'.format(self.kwargs['componente']): None}
-            sistemas = sistemas.exclude(**kwargs)
-        else:
-            raise Http404
+# class AcompanharComponente(ListView):
+#     paginate_by = 10
 
-        if q:
-            sistemas = sistemas.filter(
-                ente_federado__nome__unaccent__icontains=q)
+#     def get_template_names(self):
+#         return ['gestao/planotrabalho/acompanhar_%s.html' % self.kwargs['componente']]
 
-        return sistemas
+#     def get_queryset(self):
+#         anexo = self.request.GET.get('anexo', None)
+#         q = self.request.GET.get('q', None)
+#         sistemas = SistemaCultura.sistema.filter(estado_processo='6')
+#         kwargs = {'{0}'.format(self.kwargs['componente']): None}
+#         sistemas = sistemas.exclude(**kwargs)
+
+#         if anexo == 'arquivo':
+#             kwargs = {'{0}__situacao'.format(self.kwargs['componente']): 1}
+#             sistemas = sistemas.filter(**kwargs)
+#             kwargs = {'{0}__arquivo'.format(self.kwargs['componente']): None}
+#             sistemas = sistemas.exclude(**kwargs)
+#         else:
+#             raise Http404
+
+#         if q:
+#             sistemas = sistemas.filter(
+#                 ente_federado__nome__unaccent__icontains=q)
+
+#         return sistemas
 
 
 class LookUpAnotherFieldMixin(SingleObjectMixin):
@@ -705,7 +709,6 @@ class DataTablePrazo(BaseDatatableView):
 
     def prepare_results(self, qs):
         json_data = []
-        locale.setlocale(locale.LC_ALL, 'pt_BR.UTF-8')
         for item in qs:
             json_data.append([
                 item.id,
@@ -756,7 +759,6 @@ class DataTableUsuarios(BaseDatatableView):
 
     def prepare_results(self, qs):
         json_data = []
-        locale.setlocale(locale.LC_ALL, 'pt_BR.UTF-8')
         for item in qs:
             json_data.append([
                 item.user.id,
@@ -765,5 +767,39 @@ class DataTableUsuarios(BaseDatatableView):
                 item.user.email,
                 'Ativo' if item.user.is_active else 'Inativo',
                 'Administrador' if item.user.is_staff else 'Cadastrador'
+            ])
+        return json_data
+
+
+class DataTablePlanoTrabalho(BaseDatatableView):
+    def get_initial_queryset(self):
+        sistemas = SistemaCultura.sistema.values_list('id', flat=True)
+        sistemas = SistemaCultura.objects.filter(id__in=sistemas, estado_processo='6')
+
+        kwargs = {'{0}__situacao'.format('legislacao'): 1}
+        sistemas = sistemas.filter(**kwargs)
+        kwargs = {'{0}__arquivo'.format('legislacao'): None}
+        sistemas = sistemas.exclude(**kwargs)
+
+        return sistemas
+
+
+    def filter_queryset(self, qs):
+        search = self.request.POST.get('search[value]', None)
+
+        if search:           
+            return qs.filter(Q(ente_federado__nome__unaccent__icontains=search) | \
+                Q(sede__cnpj__contains=search))
+
+        return qs
+
+    def prepare_results(self, qs):
+        json_data = []
+        for item in qs:
+            json_data.append([
+                item.id,
+                escape(item.ente_federado),
+                escape(item.sede.cnpj) if item.sede else '',
+                item.legislacao.arquivo.url,
             ])
         return json_data

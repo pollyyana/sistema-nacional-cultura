@@ -75,5 +75,53 @@
 </div>
 {% endblock content %}
 {% block js%}
-
+<script type="text/javascript">
+  csrf_token = '{{ csrf_token }}';
+console.log($)
+  var tabela = $('#tabela-componente').DataTable({
+    order: [1, 'asc'],
+    language:{
+            "url": "http://cdn.datatables.net/plug-ins/1.10.19/i18n/Portuguese-Brasil.json"
+          },
+    columns: [
+        {
+          data: null,
+          name: "ente_federado",
+          render: (data) => data[1],
+        },
+        {
+          data: null,
+          name: "sede__cnpj",
+          render: (data) => data[2],
+        },
+        {
+          data: null,
+          name: "link",
+          render: (data) => `
+            <a href="/gestao/${data[0]}/diligencia/legislacao">
+                Avaliar
+            </a>`
+        },
+        {
+          data: null,
+          name: "sede__cnpj",
+          render: (data) => `
+            <a href="${data[3]}">
+                Download
+            </a>`
+        },
+    ],
+    searching: true,
+    processing: true,
+    serverSide: true,
+    stateSave: true,
+    ajax: {
+      url: "{% url 'gestao:ajax_plano_trabalho' %}",
+      data: {
+        csrfmiddlewaretoken: csrf_token,
+      },
+      type: "POST",
+    },
+  });
+</script>
 {% endblock js%}
